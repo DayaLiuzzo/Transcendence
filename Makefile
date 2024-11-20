@@ -1,64 +1,45 @@
-SRCS = ./srcs/services/frontend/Dockerfile
+all: create_dirs start 
 
-all : 
-	 docker compose -f ./srcs/docker-compose.yml up -d --build
+start:
+	docker compose -f srcs/docker-compose.yml up --build -d
 
-# create_volumes_repo :
-						
-# 						@if [ ! -d /home/madavid/data/ ]; \
-# 						then \
-# 							mkdir /home/madavid/data; \
-# 						fi ; \
-# 						if [ ! -d /home/madavid/data/wordpress ]; \
-# 						then \
-# 							mkdir /home/madavid/data/wordpress; \
-# 						fi ; \
-# 						if [ ! -d /home/madavid/data/mariadb ]; \
-# 						then \
-# 							mkdir /home/madavid/data/mariadb; \
-# 						fi ; 
+re: clean all
 
-stop :
-	docker compose -f ./srcs/docker-compose.yml stop
+stop:
+	docker compose -f srcs/docker-compose.yml down 
 
-start :
-	docker compose -f ./srcs/docker-compose.yml start
+# enter_mariadb:
+# 	docker exec -it mariadb bash
 
-restart :
-	docker compose -f ./srcs/docker-compose.yml restart
+# enter_wordpress:
+# 	docker exec -it wordpress sh
 
-down	: ${SRCS}
-			docker compose -f ./srcs/docker-compose.yml down 
+# enter_nginx:
+# 	docker exec -it nginx bash
 
-status	:
-	docker ps -a ; docker logs nginx ; docker logs wordpress ; docker logs mariadb
+logs:
+	docker compose -f srcs/docker-compose.yml logs
 
-clean : down
-				
-				@if [ "docker images nginx" ]; \
-				then \
-					docker rmi -f nginx; \
-				fi ; \
-				if [ "docker images mariadb" ]; \
-				then \
-					docker rmi -f mariadb; \
-				fi ; \
-				if [ "docker images wordpress" ]; \
-				then \
-					docker rmi -f wordpress; \
-				fi ; \
-				if [ "docker volume ls -f name=srcs_mariadb" ]; \
-				then \
-					docker volume rm -f mariadb; \
-				fi ; \
-				if [ "docker volume ls -f name=srcs_wordpress" ]; \
-				then \
-					docker volume rm -f wordpress; \
-				fi ; \
-				docker system prune -af;
+create_dirs:
+	@echo "Creating necessary directories..."
+	@if [ ! -d /home/dliuzzo/data/wordpress ]; then \
+		mkdir -p /home/dliuzzo/data/wordpress; \
+	fi
 
-				rm -rf /home/madavid/data
+	@if [ ! -d /home/dliuzzo/data/mariadb ]; then \
+		mkdir -p /home/dliuzzo/data/mariadb; \
+	fi
 
-re : clean all
+	@echo "Directories created."
 
-.PHONY: all create_volumes_repo down clean re status 
+clean:
+	@echo "Cleaning up volume stored at /home/dliuzzo/data..."
+	@-docker rmi $$(docker images -q) 2>/dev/null
+	docker image prune -f
+	docker container prune -f
+	docker volume prune -f
+	docker network prune -f
+	docker system prune -f --volumes
+	rm -rf $(data)
+	@rm -rf /home/dliuzzo/data/*
+	@echo "Cleanup completed."
