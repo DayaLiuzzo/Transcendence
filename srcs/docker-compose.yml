@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: frontend
+    container_name: frontend
+    build: services/frontend
+    ports:
+      - "4430:4430"
+    restart: on-failure
+    env_file: .env
+
+  user-management:
+    image: user-management
+    container_name: user-management
+    build: services/user-management
+    ports:
+      - "8000:8000"
+    restart: on-failure
+    env_file: .env
+
