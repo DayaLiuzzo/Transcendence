@@ -1,4 +1,5 @@
-SRCS = ./srcs/services/frontend/Dockerfile
+SRCS = ./srcs/services/frontend/Dockerfile \
+		./srcs/services/user-management/Dockerfile
 
 all : 
 	 docker compose -f ./srcs/docker-compose.yml up -d --build
