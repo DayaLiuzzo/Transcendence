@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: frontend
+    build: services/frontend
+    ports:
+      - "4430:4430"
+    restart: on-failure
+    env_file: .env
+
