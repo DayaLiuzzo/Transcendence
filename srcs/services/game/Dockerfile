@@ -1,14 +1,14 @@
-FROM nginx:1.24
+FROM python:3.12.7
 
+# WORKDIR	.
 
-RUN mkdir -p /etc/nginx/ssl
-RUN openssl req -x509 -nodes -days 365 \
-	-newkey rsa:2048 \
-	-keyout /etc/ssl/private/madavid.key \
-	-out /etc/ssl/certs/madavid.42.fr.crt \
-	-subj "/C=FR/ST=Paris/L=Paris/O=42_Paris/CN=["${DOMAIN}"](http://"${HOST}".42.fr/)/UID="${HOST}
+# copier les requirements
+RUN		pip install --upgrade pip
+RUN		pip install django
+COPY	requirements.txt .
+RUN		pip install -r requirements.txt
 
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY	./app_game .
+EXPOSE 8001
 
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["python", "manage.py", "runserver", "0.0.0.0:8001"]

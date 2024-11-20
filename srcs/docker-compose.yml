@@ -19,3 +19,30 @@ services:
     restart: on-failure
     env_file: .env
 
+  game:
+    image: game
+    container_name: game
+    build: services/game
+    ports:
+      - "8001:8001"
+    restart: on-failure
+    env_file: .env
+
+  auth:
+    build: services/auth
+    container_name: auth
+    ports:
+      - "8003:8003"  # Exposing the auth service on port 8000
+    restart: on-failure
+  friends:
+    build: services/friends
+    container_name: friends
+    ports:
+      - "8004:8004"  # Exposing the auth service on port 8000
+    restart: on-failure
+  rooms:
+    build: services/rooms
+    container_name: rooms
+    ports:
+      - "8005:8005"  # Exposing the auth service on port 8000
+    restart: on-failure
