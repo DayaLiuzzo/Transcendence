@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My SPA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to My SPA</h1>
+        <p>Please login to continue</p>
+
+        <!-- Login Form -->
+        <div id="login-form" class="form">
+            <input type="text" id="username" placeholder="Username" />
+            <input type="password" id="password" placeholder="Password" />
+            <button id="login-btn" onclick="login()">Login</button>
+        </div>
+
+        <!-- User Profile (hidden until logged in) -->
+        <div id="user-profile" class="form" style="display: none;">
+            <h2>User Profile</h2>
+            <p id="user-name"></p>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
