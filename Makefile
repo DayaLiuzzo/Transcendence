@@ -1,45 +1,90 @@
-all: start 
+all: up 
+
+up:
+	docker compose -f srcs/docker-compose.yml up --build -d
+
+stop:
+	docker compose -f srcs/docker-compose.yml stop 
 
 start:
-	docker compose -f srcs/docker-compose.yml up --build -d
+	docker compose -f srcs/docker-compose.yml start
+
+restart:
+	docker compose -f srcs/docker-compose.yml restart
+
+down:
+	docker compose -f srcs/docker-compose.yml down
+
+clean: down
+	@-docker rmi $$(docker images -q) 2>/dev/null
+	docker image prune -f
+	docker container prune -f
+	docker network prune -f
+	docker system prune -af
+	@echo "Cleanup completed."
 
 re: clean all
 
-stop:
-	docker compose -f srcs/docker-compose.yml down 
+########################################################################
+######### Execute individual dockers with interactive terminal #########
+########################################################################
 
-# enter_mariadb:
-# 	docker exec -it mariadb bash
+enter_frontend:
+	docker exec -it frontend bash
 
-# enter_wordpress:
-# 	docker exec -it wordpress sh
+enter_user-management:
+	docker exec -it user-management sh
 
-# enter_nginx:
-# 	docker exec -it nginx bash
+enter_game:
+	docker exec -it game bash
+
+enter_auth:
+	docker exec -it auth sh
+
+enter_friends:
+	docker exec -it friends bash
+
+enter_rooms:
+	docker exec -it rooms bash
+
+########################################################################
+########################### Get service logs ###########################
+########################################################################
 
 logs:
 	docker compose -f srcs/docker-compose.yml logs
 
-# create_dirs:
-# 	@echo "Creating necessary directories..."
-# 	@if [ ! -d /home/dliuzzo/data/wordpress ]; then \
-# 		mkdir -p /home/dliuzzo/data/wordpress; \
-# 	fi
+logs_frontend:
+	docker logs frontend
 
-# 	@if [ ! -d /home/dliuzzo/data/mariadb ]; then \
-# 		mkdir -p /home/dliuzzo/data/mariadb; \
-# 	fi
+logs_user-management:
+	docker logs user-management
 
-# 	@echo "Directories created."
+logs_game:
+	docker logs game
 
-clean:
-	# @echo "Cleaning up volume stored at /home/dliuzzo/data..."
-	@-docker rmi $$(docker images -q) 2>/dev/null
-	docker image prune -f
-	docker container prune -f
-	# docker volume prune -f
-	docker network prune -f
-	docker system prune -f --volumes
-	rm -rf $(data)
-	# @rm -rf /home/dliuzzo/data/*
-	@echo "Cleanup completed."
+logs_auth:
+	docker logs auth
+
+logs_friends:
+	docker logs friends
+
+logs_rooms:
+	docker logs rooms
+
+########################################################################
+######################## Get status and all logs #######################
+########################################################################
+
+status	: logs ; docker ps -a
+
+########################################################################
+########################## Manage directories ##########################
+########################################################################
+
+
+########################################################################
+################################ .PHONY ################################
+########################################################################
+
+.PHONY: all up stop start restart down clean re enter_frontend enter_user-management enter_game enter_auth enter_friends enter_rooms logs logs_frontend logs_user-management logs_game logs_auth logs_friends logs_rooms status 
