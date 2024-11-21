@@ -32,7 +32,7 @@ services:
     build: services/auth
     container_name: auth
     ports:
-      - "8003:8003"  # Exposing the auth service on port 8000
+      - "8003" 
     restart: on-failure
   friends:
     build: services/friends
