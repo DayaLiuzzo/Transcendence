@@ -15,11 +15,21 @@ function loadView(view) {
           app.innerHTML = module.default();
         });
         break;
-      case '/jeu':
-        import('./jeu.js').then(module => {
+      case '/play':
+        import('./play.js').then(module => {
           app.innerHTML = module.default();
         });
         break;
+        case '/about':
+          import('./about.js').then(module => {
+            app.innerHTML = module.default();
+          });
+          break;
+          case '/login':
+            import('./login.js').then(module => {
+              app.innerHTML = module.default();
+            });
+            break;  
       default:
         import('./404.js').then(module => {
           app.innerHTML = module.default();
