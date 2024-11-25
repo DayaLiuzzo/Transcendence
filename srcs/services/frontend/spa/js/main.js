@@ -15,21 +15,71 @@ function loadView(view) {
           app.innerHTML = module.default();
         });
         break;
+      case '/':
+        import('./home.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
       case '/play':
         import('./play.js').then(module => {
           app.innerHTML = module.default();
         });
         break;
-        case '/about':
-          import('./about.js').then(module => {
-            app.innerHTML = module.default();
-          });
-          break;
-          case '/login':
-            import('./login.js').then(module => {
-              app.innerHTML = module.default();
-            });
-            break;  
+      case '/about':
+        import('./about.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/log-in':
+        import('./log-in.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/sign-up':
+        import('./sign-up.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/delete-user':
+        import('./delete-user.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/edit-profile':
+        import('./edit-profile.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/game-custom':
+        import('./game-custom.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/play-tournament':
+        import('./play-tournament.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/game':
+        import('./game.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/play-alone':
+        import('./play-alone.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/game-ai':
+        import('./game-ai.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
+      case '/game-multi':
+        import('./game-multi.js').then(module => {
+          app.innerHTML = module.default();
+        });
+        break;
       default:
         import('./404.js').then(module => {
           app.innerHTML = module.default();

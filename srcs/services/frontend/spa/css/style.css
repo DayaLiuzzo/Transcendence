@@ -1,16 +1,20 @@
-/* Style de la page */
+/*******************************************************************/
+/*************** Style general de la page de la page ***************/
+/*******************************************************************/
 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    position: relative;
   }
   
   nav {
     background-color: #333;
     color: white;
     padding: 10px;
+    position: relative; /* Nécessaire pour positionner le drapeau par rapport à la nav */
   }
   
   nav ul {
@@ -18,7 +22,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    justify-content: right;
   }
   
   nav ul li {
@@ -35,27 +39,164 @@ body {
     text-decoration: underline;
   }
   
-  #app {
-    padding: 20px;
-    text-align: center;
+.flag, .accessibility {
+  height: 50%; /* La hauteur du drapeau correspond à celle de la navigation */
+  max-height: 50px; /* Limite la taille maximale du drapeau */
+}
+
+#app {
+  padding: 20px;
+  text-align: center;
+}
+  
+h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #5cb85c;
+  border: none;
+  color: white;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #4cae4c;
+}
+
+/*******************************************************************/
+/********************** Style des formulaires **********************/
+/*******************************************************************/
+  
+/* Style de base pour tous les formulaires */
+.form-container {
+  width: 300px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-container button:hover {
+  background-color: #555;
+}
+
+/*******************************************************************/
+/********************** Style de la page home **********************/
+/*******************************************************************/
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; /* Espacement entre les éléments */
+    width: 100%;
+    height: auto; /*Hauteur égale à la fenêtre*/
+    justify-items: center; /* Centre les éléments horizontalement */
+    align-items: center; /* Centre les éléments verticalement */
+  }
+
+  .shadowbox {
+    border: 1px solid #333;
+    box-shadow: 8px 8px 5px #444;
+    padding: 8px 12px;
+    background-image: linear-gradient(180deg, #fff, #ddd 40%, #ccc);
+  }
+
+  .profile {
+    width: 100%;
+    height: 400px;
+    border-radius: 15%; /* Rend l'image circulaire */
+    overflow: hidden;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
   }
   
-  h1 {
-    font-size: 2rem;
-    color: #333;
+  .item {
+    width: 100%;
+    height: 400px;
+    border-radius: 15%; /* Rend l'image circulaire */
+    overflow: hidden;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
   }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #5cb85c;
-    border: none;
-    color: white;
-    border-radius: 5px;
+
+  .profile-img {
+    width: 50%;
+    height: 50%;
+    object-fit: cover; /*Assure que l'image remplit la div sans distorsion*/
   }
-  
-  button:hover {
-    background-color: #4cae4c;
+
+/*******************************************************************/
+/********************** Style de la page home **********************/
+/*******************************************************************/
+
+/* Style de la barre de chargement */
+#loader-container {
+  width: 100%;
+  height: 5px;
+  background-color: #f3f3f3;
+  margin: 50px 0;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.loader {
+  width: 30%;
+  height: 100%;
+  background-color: #4caf50;
+  position: absolute;
+  animation: move 1.5s infinite linear;
+}
+
+@keyframes move {
+  0% {
+    left: -30%;
   }
-  
+  100% {
+    left: 100%;
+  }
+}
