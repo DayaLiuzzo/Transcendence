@@ -41,6 +41,9 @@ enter_game:
 enter_auth:
 	docker exec -it auth sh
 
+enter_db_auth:
+	docker exec -it db_auth sh
+
 enter_friends:
 	docker exec -it friends bash
 
