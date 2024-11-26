@@ -4,8 +4,11 @@ FROM python:3.9
 COPY friends_app .
 COPY ./conf/requirements.txt .
 
+COPY /conf/start.sh .
+RUN chmod +x start.sh
 
-RUN pip install --upgrade pip && pip install -r requirements.txt
+EXPOSE 8004 
+
+ENTRYPOINT [ "bash", "start.sh" ]
 
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8004"]
