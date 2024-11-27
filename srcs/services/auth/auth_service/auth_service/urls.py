@@ -1,6 +1,6 @@
 
 from django.urls import re_path
-from . import views
+from auth_app import views
 
 urlpatterns = [
     re_path('login', views.login),

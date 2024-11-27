@@ -1,7 +1,7 @@
 FROM python:3.9
 
 
-COPY friends_app .
+COPY friends_service .
 COPY ./conf/requirements.txt .
 
 COPY /conf/start.sh .
