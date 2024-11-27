@@ -1,6 +1,7 @@
 FROM python:3.9
 
-COPY auth_app .
+
+COPY auth_service .
 COPY ./conf/requirements.txt .
 EXPOSE 8003
 
