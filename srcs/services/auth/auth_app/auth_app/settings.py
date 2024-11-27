@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
+    'auth_app',
 ]
 
 REST_FRAMEWORK = {
@@ -83,14 +84,13 @@ WSGI_APPLICATION = 'auth_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'postgres_db'),
-        'USER': os.getenv('DB_USER', 'postgres_user'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres_password'),
-        'HOST': os.getenv('DB_HOST', 'db_auth'),
-        'PORT': os.getenv('DB_PORT', 5432),
+        'NAME': os.getenv('DB_AUTH'),
+        'USER': os.getenv('DB_AUTH_USER'),
+        'PASSWORD': os.getenv('DB_AUTH_PASSWORD'),
+        'HOST': os.getenv('DB_AUTH_HOST'),
+        'PORT': os.getenv('DB_AUTH_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
