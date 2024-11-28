@@ -1,12 +1,12 @@
 FROM python:3.9
 
 
-COPY app_game .
+COPY game_service .
 COPY ./conf/requirements.txt .
+EXPOSE 8001
 
 COPY /conf/start.sh .
 RUN chmod +x start.sh
 
-EXPOSE 8001
 
 ENTRYPOINT [ "bash", "start.sh" ]
