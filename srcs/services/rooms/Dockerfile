@@ -1,11 +1,12 @@
 FROM python:3.9
 
-COPY rooms_app .
+
+COPY rooms_service .
 COPY ./conf/requirements.txt .
+EXPOSE 8005
 
 COPY /conf/start.sh .
 RUN chmod +x start.sh
 
-EXPOSE 8005
 
 ENTRYPOINT [ "bash", "start.sh" ]

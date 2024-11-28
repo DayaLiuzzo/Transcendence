@@ -1,4 +1,5 @@
-Django==4.1
-djangorestframework==3.14
-psycopg2==2.9.3
+django
+djangorestframework
+djangorestframework-simplejwt
+psycopg2-binary
 gunicorn
