@@ -19,5 +19,5 @@ from friends_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('friends/', views.friends_view, name='friends'),
+    path('api/friends/', views.friends_view, name='friends'),
 ]
