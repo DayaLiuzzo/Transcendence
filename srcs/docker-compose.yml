@@ -10,10 +10,10 @@ services:
     restart: on-failure
     env_file: .env
 
-  user-management:
-    image: user-management
-    container_name: user-management
-    build: services/user-management
+  users:
+    image: users
+    container_name: users
+    build: services/users
     ports:
       - "8000"
     restart: on-failure
