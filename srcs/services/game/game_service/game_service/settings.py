@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'game_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_AUTH'),
-        'USER': os.getenv('DB_AUTH_USER'),
-        'PASSWORD': os.getenv('DB_AUTH_PASSWORD'),
-        'HOST': os.getenv('DB_AUTH_HOST'),
-        'PORT': os.getenv('DB_AUTH_PORT'),
+        'NAME': os.getenv('DB_GAME'),
+        'USER': os.getenv('DB_GAME_USER'),
+        'PASSWORD': os.getenv('DB_GAME_PASSWORD'),
+        'HOST': os.getenv('DB_GAME_HOST'),
+        'PORT': os.getenv('DB_GAME_PORT'),
     }
 }
 

@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'rooms_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_AUTH'),
-        'USER': os.getenv('DB_AUTH_USER'),
-        'PASSWORD': os.getenv('DB_AUTH_PASSWORD'),
-        'HOST': os.getenv('DB_AUTH_HOST'),
-        'PORT': os.getenv('DB_AUTH_PORT'),
+        'NAME': os.getenv('DB_ROOMS'),
+        'USER': os.getenv('DB_ROOMS_USER'),
+        'PASSWORD': os.getenv('DB_ROOMS_PASSWORD'),
+        'HOST': os.getenv('DB_ROOMS_HOST'),
+        'PORT': os.getenv('DB_ROOMS_PORT'),
     }
 }
 
