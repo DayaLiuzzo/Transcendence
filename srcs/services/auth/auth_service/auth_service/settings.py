@@ -27,10 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', "auth"]
 
-        # "users": "http://users:8000",
-        # "game": "http://game:8001",
-        # "friends": "http://friends:8004",
-        # "rooms": "http://rooms:8005",
 # Application definition
 
 INSTALLED_APPS = [

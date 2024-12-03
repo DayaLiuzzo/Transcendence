@@ -9,9 +9,6 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.http import JsonResponse
 
-def auth_root(request):
-    return JsonResponse({"message": "Auth API Root"}, status=200)
-
 @api_view(['POST'])
 def login(request):
     user = get_object_or_404(User, username=request.data['username'])
