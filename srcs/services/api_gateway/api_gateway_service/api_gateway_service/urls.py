@@ -23,7 +23,7 @@ import requests
 def route_to_service(request, service_name):
     """Route API requests to the appropriate microservice."""
     service_map = {
-        ""
+        # "":
         "users": "http://users:8000",
         "game": "http://game:8001",
         "auth": "http://auth:8003",
@@ -51,5 +51,6 @@ def route_to_service(request, service_name):
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Administration panel
-    path('api/<str:service_name>', route_to_service),  # Dynamic routing to services
+    path('api/<str:service_name>/', route_to_service),  # Dynamic routing to services
+    # path('api/auth/', route_to_service),  # Dynamic routing to services
 ]

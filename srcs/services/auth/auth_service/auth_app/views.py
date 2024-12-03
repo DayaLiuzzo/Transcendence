@@ -7,6 +7,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status 
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.http import JsonResponse
+
+def auth_root(request):
+    return JsonResponse({"message": "Auth API Root"}, status=200)
 
 @api_view(['POST'])
 def login(request):
