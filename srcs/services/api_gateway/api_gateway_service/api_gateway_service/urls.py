@@ -15,15 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from api_gateway_app import views
 from django.http import JsonResponse
 import requests
-
-def route_to_service(request, service_name):
+def route_to_service(request, service_name, extra_path=''):
     """Route API requests to the appropriate microservice."""
     service_map = {
-        # "":
         "users": "http://users:8000",
         "game": "http://game:8001",
         "auth": "http://auth:8003",
@@ -32,13 +30,20 @@ def route_to_service(request, service_name):
     }
 
     if service_name in service_map:
-        url = f"{service_map[service_name]}{request.get_full_path()}"
+        # Construire l'URL cible
+        service_url = service_map[service_name]
+        url = f"{service_url}/{extra_path.lstrip('/')}"  # Ajouter le sous-chemin extra_path si présent
+
         try:
-            # Forward the request to the appropriate service
+            # Transférer la requête au microservice
+            headers = {
+                "Content-Type": request.headers.get("Content-Type", ""),
+                "Authorization": request.headers.get("Authorization", ""),
+            }
             response = requests.request(
                 method=request.method,
                 url=url,
-                headers=request.headers,
+                headers=headers,
                 data=request.body,
             )
             return JsonResponse(response.json(), status=response.status_code, safe=False)
@@ -47,10 +52,10 @@ def route_to_service(request, service_name):
                 {"error": f"Service {service_name} is unavailable", "details": str(e)},
                 status=503,
             )
+
     return JsonResponse({"error": "Service not found"}, status=404)
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Administration panel
-    path('api/<str:service_name>/', route_to_service),  # Dynamic routing to services
-    # path('api/auth/', route_to_service),  # Dynamic routing to services
+    re_path(r'^api/(?P<service_name>\w+)(?P<extra_path>/?.*)$', route_to_service),
 ]
