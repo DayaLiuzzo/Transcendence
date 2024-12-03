@@ -19,8 +19,16 @@ Content-Type: application/json
 
 ###
 
+get https://localhost:4430/api/auth/welcome
+Content-Type: application/json
+
+{
+
+}
+###
+
 get https://localhost:4430/api/auth/test_token
 Content-Type: application/json
-Authorization: Token 60f89c7f4099aeb971c421fbe90495f87c338299
+# Authorization: Token 60f89c7f4099aeb971c421fbe90495f87c338299
 
 {}
