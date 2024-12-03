@@ -25,9 +25,12 @@ SECRET_KEY = 'django-insecure-#xu(5&8#^k176zh6&#%v981i7myx=oxurxcow5$e&%yegzqu5-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', "auth"]
 
-
+        # "users": "http://users:8000",
+        # "game": "http://game:8001",
+        # "friends": "http://friends:8004",
+        # "rooms": "http://rooms:8005",
 # Application definition
 
 INSTALLED_APPS = [
