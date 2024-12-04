@@ -1,3 +1,4 @@
+
 POST https://localhost:4430/api/auth/login
 Content-Type: application/json
 
@@ -5,6 +6,7 @@ Content-Type: application/json
   "username": "singeuse",
   "password": "pass123"
 }
+
 
 ###
 
@@ -16,6 +18,7 @@ Content-Type: application/json
   "password": "pass123",
   "email": "singeuse@gmail.com"
 }
+
 
 ###
 
@@ -29,6 +32,6 @@ Content-Type: application/json
 
 get https://localhost:4430/api/auth/test_token
 Content-Type: application/json
-# Authorization: Token 60f89c7f4099aeb971c421fbe90495f87c338299
+Authorization: Token c14b916d312308a87046c1616567f3a1e6262180
 
 {}

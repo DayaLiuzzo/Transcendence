@@ -19,6 +19,8 @@ from django.urls import path, re_path
 from api_gateway_app import views
 from django.http import JsonResponse
 import requests
+
+
 def route_to_service(request, service_name, extra_path=''):
     """Route API requests to the appropriate microservice."""
     service_map = {
