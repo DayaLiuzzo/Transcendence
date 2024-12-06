@@ -23,7 +23,13 @@ function loadView(view)
         import('./log-in.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/sign-up':
-        import('./sign-up.js').then(module => { app.innerHTML = module.default();});
+        // Charge la vue et attache le gestionnaire d'événements
+        import('./sign-up.js').then(module => { 
+          app.innerHTML = module.default();
+          if (module.attachSignupFormHandler) {
+            module.attachSignupFormHandler(); // Attache le gestionnaire ici
+          }
+        });
         break;
       case '/delete-user':
         import('./delete-user.js').then(module => { app.innerHTML = module.default();});

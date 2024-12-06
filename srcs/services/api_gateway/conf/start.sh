@@ -2,6 +2,7 @@
 
 pip install --upgrade pip --no-input
 pip install -r ../requirements.txt --no-input
+pip install django-cors-headers --noinput
 python3 manage.py makemigrations --noinput
 python3 manage.py migrate --noinput
 

@@ -39,13 +39,15 @@ def login(request):
 @api_view(['POST'])
 def signup(request):
     serializer = UserSerializer(data=request.data)
-    
+    print("Requête reçue avec données :", request.data)
+
     if serializer.is_valid():
         serializer.save()
         user = get_user_model().objects.get(username=serializer.data['username'])
         user.set_password(request.data['password'])
         user.save()
-        
+        print("1")
+
         token = Token.objects.create(user=user)
         
         # Create response with token in cookie
@@ -53,6 +55,8 @@ def signup(request):
             'message': 'Signup successful',
             'user': serializer.data
         })
+        print("2")
+
         # Set the token in the cookie
         response.set_cookie(
             'auth_token', token.key, domain='localhost', httponly=True, secure=False, samesite='None', path='/'
@@ -62,9 +66,22 @@ def signup(request):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['GET'])
 def welcome(request):
-    return Response({'Hello world'})
+    user_data = {
+        'id': 99,
+        'username': 'Jdoe',
+        'password': 'strongpwd',
+        'email': 'johndoe@gmail.com'
+    }
+    
+    # Sérialiser les données utilisateur
+    serializer = UserSerializer(data=user_data)
+    
+    if serializer.is_valid():
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
