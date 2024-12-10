@@ -10,16 +10,16 @@ services:
     restart: on-failure
     env_file: .env
 
-  users:
-    image: users
-    container_name: users
-    build: services/users
-    ports:
-      - "8000"
-    restart: on-failure
-    depends_on:
-      - db_users
-    env_file: .env
+  # users:
+  #   image: users
+  #   container_name: users
+  #   build: services/users
+  #   ports:
+  #     - "8000"
+  #   restart: on-failure
+  #   depends_on:
+  #     - db_users
+  #   env_file: .env
 
   game:
     image: game
@@ -28,8 +28,8 @@ services:
     ports:
       - "8001"
     restart: on-failure
-    depends_on:
-      - db_game
+    # depends_on:
+    #   - db_game
     env_file: .env
 
   api_gateway:
@@ -40,76 +40,76 @@ services:
       - "8002"
     restart: on-failure
 
-  auth:
-    build: services/auth
-    container_name: auth
-    ports:
-      - "8003" 
-    restart: on-failure
-    depends_on:
-      - db_auth
-    env_file: .env
+  # auth:
+  #   build: services/auth
+  #   container_name: auth
+  #   ports:
+  #     - "8003" 
+  #   restart: on-failure
+  #   depends_on:
+  #     - db_auth
+  #   env_file: .env
 
-  friends:
-    build: services/friends
-    container_name: friends
-    ports:
-      - "8004"  # Exposing the auth service on port 8000
-    restart: on-failure
-    depends_on:
-      - db_friends
-    env_file: .env
+  # friends:
+  #   build: services/friends
+  #   container_name: friends
+  #   ports:
+  #     - "8004"  # Exposing the auth service on port 8000
+  #   restart: on-failure
+  #   depends_on:
+  #     - db_friends
+  #   env_file: .env
 
-  rooms:
-    build: services/rooms
-    container_name: rooms
-    ports:
-      - "8005"  # Exposing the auth service on port 8000
-    restart: on-failure
-    depends_on:
-      - db_rooms
-    env_file: .env
+  # rooms:
+  #   build: services/rooms
+  #   container_name: rooms
+  #   ports:
+  #     - "8005"  # Exposing the auth service on port 8000
+  #   restart: on-failure
+  #   depends_on:
+  #     - db_rooms
+  #   env_file: .env
 
-  db_auth:
-    image: db_auth
-    container_name: db_auth
-    build: services/db_auth
-    restart: on-failure
-    env_file: .env
-    ports:
-      - '5432'
+  # db_auth:
+  #   image: db_auth
+  #   container_name: db_auth
+  #   build: services/db_auth
+  #   restart: on-failure
+  #   env_file: .env
+  #   ports:
+  #     - '5432'
 
-  db_game:
-    image: db_game
-    container_name: db_game
-    build: services/db_game
-    restart: on-failure
-    env_file: .env
-    ports:
-      - '5432'
+  # db_game:
+  #   image: db_game
+  #   container_name: db_game
+  #   build: services/db_game
+  #   restart: on-failure
+  #   env_file: .env
+  #   ports:
+  #     - '5432'
 
-  db_friends:
-    image: db_friends
-    container_name: db_friends
-    build: services/db_friends
-    restart: on-failure
-    env_file: .env
-    ports:
-      - '5432'
-  db_rooms:
-    image: db_rooms
-    container_name: db_rooms
-    build: services/db_rooms
-    restart: on-failure
-    env_file: .env
-    ports:
-      - '5432'
+  # db_friends:
+  #   image: db_friends
+  #   container_name: db_friends
+  #   build: services/db_friends
+  #   restart: on-failure
+  #   env_file: .env
+  #   ports:
+  #     - '5432'
+  # db_rooms:
+  #   image: db_rooms
+  #   container_name: db_rooms
+  #   build: services/db_rooms
+  #   restart: on-failure
+  #   env_file: .env
+  #   ports:
+  #     - '5432'
 
-  db_users:
-    image: db_users
-    container_name: db_users
-    build: services/db_users
-    restart: on-failure
-    env_file: .env
-    ports:
-      - '5432'
+  # db_users:
+  #   image: db_users
+  #   container_name: db_users
+  #   build: services/db_users
+  #   restart: on-failure
+  #   env_file: .env
+  #   ports:
+  #     - '5432'

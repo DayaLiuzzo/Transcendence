@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
   <html lang="fr">
     <head>
       <meta charset="UTF-8">
@@ -19,5 +19,31 @@
       </nav>
     <div id="app"></div>
       <script type="module" src="/js/main.js"></script>
+    </body>
+  </html> -->
+
+  <!DOCTYPE html>
+  <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Pong</title>
+      <link rel="stylesheet" href="/css/style.css">
+
+      	<!-- JS THREE Scripts -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.148.0/three.min.js"></script>
+	<script src="https://unpkg.com/three@0.138/examples/js/loaders/GLTFLoader.js"></script> -->
+	<script type="importmap">
+		{
+		"imports": {
+			"three": "https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.module.js",
+			"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/"
+		}
+		}
+	</script>
+    </head>
+    <body>
+    <div id="app"></div>
+      <script type="module" src="/js/game/game.js"></script>
     </body>
   </html>
