@@ -1,16 +1,5 @@
 
-POST https://localhost:4430/api/auth/login
-Content-Type: application/json
-
-{
-  "username": "singeuse",
-  "password": "pass123"
-}
-
-
-###
-
-POST https://localhost:4430/api/auth/signup
+POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
@@ -22,16 +11,14 @@ Content-Type: application/json
 
 ###
 
-get https://localhost:4430/api/auth/welcome
+POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-
+  "username": "singeuse",
+  "password": "pass123"
 }
+
 ###
-
-get https://localhost:4430/api/auth/test_token
-Content-Type: application/json
-Authorization: Token c14b916d312308a87046c1616567f3a1e6262180
-
-{}
+GET https://localhost:4430/api/auth/protected/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzOTI3MTk2LCJpYXQiOjE3MzM5MjY4OTYsImp0aSI6IjU1MjE4OTllZmQxMTRlMzg5YzU1MjNhNTRkMWYwYzY5IiwidXNlcl9pZCI6MX0.broeQktxFPNGu0IeyDrzPsPor9gyBYCZlbmcv_kw1zc

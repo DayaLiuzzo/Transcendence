@@ -180,3 +180,39 @@ Service: rooms, App: rooms_app, Database: rooms
 
 
 
+
+
+
+[0;36m------------------- TESTING rooms -------------------[0m
+Service: rooms, App: rooms_app, Database: rooms
+-------------------
+
+
+[0;33mSaving data in the Python container (rooms) for app 'rooms_app'...[0m
+
+
+[0;36mRunning the Django shell script inside container rooms...[0m
+[0;32mData saved successfully in Django:[0m
+<QuerySet [{'id': 1, 'title': 'rooms Test', 'author': 'Test Script'}]>
+
+
+
+[0;33mVerifying data in the database (rooms) using container (db_rooms)...[0m
+[0;32mData in the database for rooms_app:[0m
+ id |   title    |   author    
+----+------------+-------------
+  1 | rooms Test | Test Script
+(1 row)
+
+
+
+[0;33mTesting connectivity to database (rooms) in container (db_rooms)...[0m
+[0;32mDatabase connectivity test passed:[0m
+ ?column? 
+----------
+        1
+(1 row)
+
+
+
+
