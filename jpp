@@ -1,0 +1,444 @@
+Requirement already satisfied: pip in /usr/local/lib/python3.9/site-packages (23.0.1)
+Collecting pip
+  Downloading pip-24.3.1-py3-none-any.whl (1.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 3.9 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 23.0.1
+    Uninstalling pip-23.0.1:
+      Successfully uninstalled pip-23.0.1
+Successfully installed pip-24.3.1
+Collecting django (from -r ../requirements.txt (line 1))
+  Downloading Django-4.2.17-py3-none-any.whl.metadata (4.1 kB)
+Collecting channels (from -r ../requirements.txt (line 2))
+  Downloading channels-4.2.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting channels-redis (from -r ../requirements.txt (line 3))
+  Downloading channels_redis-4.2.1-py3-none-any.whl.metadata (12 kB)
+Collecting djangorestframework (from -r ../requirements.txt (line 4))
+  Downloading djangorestframework-3.15.2-py3-none-any.whl.metadata (10 kB)
+Collecting djangorestframework-simplejwt (from -r ../requirements.txt (line 5))
+  Downloading djangorestframework_simplejwt-5.3.1-py3-none-any.whl.metadata (4.3 kB)
+Collecting psycopg2-binary (from -r ../requirements.txt (line 6))
+  Downloading psycopg2_binary-2.9.10-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting gunicorn (from -r ../requirements.txt (line 7))
+  Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+Collecting daphne (from -r ../requirements.txt (line 8))
+  Downloading daphne-4.1.2-py3-none-any.whl.metadata (6.5 kB)
+Collecting asgiref<4,>=3.6.0 (from django->-r ../requirements.txt (line 1))
+  Downloading asgiref-3.8.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.3.1 (from django->-r ../requirements.txt (line 1))
+  Downloading sqlparse-0.5.3-py3-none-any.whl.metadata (3.9 kB)
+Collecting redis>=4.6 (from channels-redis->-r ../requirements.txt (line 3))
+  Downloading redis-5.2.1-py3-none-any.whl.metadata (9.1 kB)
+Collecting msgpack~=1.0 (from channels-redis->-r ../requirements.txt (line 3))
+  Downloading msgpack-1.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (8.4 kB)
+Collecting pyjwt<3,>=1.7.1 (from djangorestframework-simplejwt->-r ../requirements.txt (line 5))
+  Downloading PyJWT-2.10.1-py3-none-any.whl.metadata (4.0 kB)
+Collecting packaging (from gunicorn->-r ../requirements.txt (line 7))
+  Downloading packaging-24.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting autobahn>=22.4.2 (from daphne->-r ../requirements.txt (line 8))
+  Downloading autobahn-24.4.2-py2.py3-none-any.whl.metadata (18 kB)
+Collecting twisted>=22.4 (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading twisted-24.11.0-py3-none-any.whl.metadata (20 kB)
+Collecting typing-extensions>=4 (from asgiref<4,>=3.6.0->django->-r ../requirements.txt (line 1))
+  Downloading typing_extensions-4.12.2-py3-none-any.whl.metadata (3.0 kB)
+Collecting txaio>=21.2.1 (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8))
+  Downloading txaio-23.1.1-py2.py3-none-any.whl.metadata (5.4 kB)
+Collecting cryptography>=3.4.6 (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8))
+  Downloading cryptography-44.0.0-cp39-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+Collecting hyperlink>=21.0.0 (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8))
+  Downloading hyperlink-21.0.0-py2.py3-none-any.whl.metadata (1.5 kB)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (58.1.0)
+Collecting async-timeout>=4.0.3 (from redis>=4.6->channels-redis->-r ../requirements.txt (line 3))
+  Downloading async_timeout-5.0.1-py3-none-any.whl.metadata (5.1 kB)
+Collecting attrs>=22.2.0 (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading attrs-24.2.0-py3-none-any.whl.metadata (11 kB)
+Collecting automat>=24.8.0 (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading Automat-24.8.1-py3-none-any.whl.metadata (8.4 kB)
+Collecting constantly>=15.1 (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading constantly-23.10.4-py3-none-any.whl.metadata (1.8 kB)
+Collecting incremental>=24.7.0 (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading incremental-24.7.2-py3-none-any.whl.metadata (8.1 kB)
+Collecting zope-interface>=5 (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading zope.interface-7.2-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (44 kB)
+Collecting idna>=2.4 (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+Collecting pyopenssl>=21.0.0 (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading pyOpenSSL-24.3.0-py3-none-any.whl.metadata (15 kB)
+Collecting service-identity>=18.1.0 (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading service_identity-24.2.0-py3-none-any.whl.metadata (5.1 kB)
+Collecting cffi>=1.12 (from cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8))
+  Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+Collecting setuptools (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8))
+  Downloading setuptools-75.6.0-py3-none-any.whl.metadata (6.7 kB)
+Collecting tomli (from incremental>=24.7.0->twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading tomli-2.2.1-py3-none-any.whl.metadata (10 kB)
+Collecting pyasn1 (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading pyasn1-0.6.1-py3-none-any.whl.metadata (8.4 kB)
+Collecting pyasn1-modules (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8))
+  Downloading pyasn1_modules-0.4.1-py3-none-any.whl.metadata (3.5 kB)
+Collecting pycparser (from cffi>=1.12->cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8))
+  Downloading pycparser-2.22-py3-none-any.whl.metadata (943 bytes)
+Downloading Django-4.2.17-py3-none-any.whl (8.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.0/8.0 MB 2.7 MB/s eta 0:00:00
+Downloading channels-4.2.0-py3-none-any.whl (30 kB)
+Downloading channels_redis-4.2.1-py3-none-any.whl (20 kB)
+Downloading djangorestframework-3.15.2-py3-none-any.whl (1.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 2.8 MB/s eta 0:00:00
+Downloading djangorestframework_simplejwt-5.3.1-py3-none-any.whl (101 kB)
+Downloading psycopg2_binary-2.9.10-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 5.0 MB/s eta 0:00:00
+Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+Downloading daphne-4.1.2-py3-none-any.whl (30 kB)
+Downloading asgiref-3.8.1-py3-none-any.whl (23 kB)
+Downloading autobahn-24.4.2-py2.py3-none-any.whl (666 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 667.0/667.0 kB 4.4 MB/s eta 0:00:00
+Downloading msgpack-1.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (377 kB)
+Downloading PyJWT-2.10.1-py3-none-any.whl (22 kB)
+Downloading redis-5.2.1-py3-none-any.whl (261 kB)
+Downloading sqlparse-0.5.3-py3-none-any.whl (44 kB)
+Downloading twisted-24.11.0-py3-none-any.whl (3.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 6.0 MB/s eta 0:00:00
+Downloading packaging-24.2-py3-none-any.whl (65 kB)
+Downloading async_timeout-5.0.1-py3-none-any.whl (6.2 kB)
+Downloading attrs-24.2.0-py3-none-any.whl (63 kB)
+Downloading Automat-24.8.1-py3-none-any.whl (42 kB)
+Downloading constantly-23.10.4-py3-none-any.whl (13 kB)
+Downloading cryptography-44.0.0-cp39-abi3-manylinux_2_34_x86_64.whl (4.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.2/4.2 MB 1.0 MB/s eta 0:00:00
+Downloading hyperlink-21.0.0-py2.py3-none-any.whl (74 kB)
+Downloading idna-3.10-py3-none-any.whl (70 kB)
+Downloading incremental-24.7.2-py3-none-any.whl (20 kB)
+Downloading pyOpenSSL-24.3.0-py3-none-any.whl (56 kB)
+Downloading service_identity-24.2.0-py3-none-any.whl (11 kB)
+Downloading setuptools-75.6.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 2.4 MB/s eta 0:00:00
+Downloading txaio-23.1.1-py2.py3-none-any.whl (30 kB)
+Downloading typing_extensions-4.12.2-py3-none-any.whl (37 kB)
+Downloading zope.interface-7.2-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (253 kB)
+Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (445 kB)
+Downloading pyasn1-0.6.1-py3-none-any.whl (83 kB)
+Downloading pyasn1_modules-0.4.1-py3-none-any.whl (181 kB)
+Downloading tomli-2.2.1-py3-none-any.whl (14 kB)
+Downloading pycparser-2.22-py3-none-any.whl (117 kB)
+Installing collected packages: typing-extensions, txaio, tomli, sqlparse, setuptools, pyjwt, pycparser, pyasn1, psycopg2-binary, packaging, msgpack, idna, constantly, attrs, async-timeout, zope-interface, redis, pyasn1-modules, incremental, hyperlink, gunicorn, cffi, automat, asgiref, twisted, django, cryptography, service-identity, pyopenssl, djangorestframework, channels, autobahn, djangorestframework-simplejwt, channels-redis, daphne
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 58.1.0
+    Uninstalling setuptools-58.1.0:
+      Successfully uninstalled setuptools-58.1.0
+Successfully installed asgiref-3.8.1 async-timeout-5.0.1 attrs-24.2.0 autobahn-24.4.2 automat-24.8.1 cffi-1.17.1 channels-4.2.0 channels-redis-4.2.1 constantly-23.10.4 cryptography-44.0.0 daphne-4.1.2 django-4.2.17 djangorestframework-3.15.2 djangorestframework-simplejwt-5.3.1 gunicorn-23.0.0 hyperlink-21.0.0 idna-3.10 incremental-24.7.2 msgpack-1.1.0 packaging-24.2 psycopg2-binary-2.9.10 pyasn1-0.6.1 pyasn1-modules-0.4.1 pycparser-2.22 pyjwt-2.10.1 pyopenssl-24.3.0 redis-5.2.1 service-identity-24.2.0 setuptools-75.6.0 sqlparse-0.5.3 tomli-2.2.1 twisted-24.11.0 txaio-23.1.1 typing-extensions-4.12.2 zope-interface-7.2
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8789 kB]
+Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [8856 B]
+Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [216 kB]
+Fetched 9268 kB in 8s (1225 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libjemalloc2 liblzf1 redis-tools
+Suggested packages:
+  ruby-redis
+The following NEW packages will be installed:
+  libjemalloc2 liblzf1 redis-server redis-tools
+0 upgraded, 4 newly installed, 0 to remove and 0 not upgraded.
+Need to get 1347 kB of archives.
+After this operation, 7095 kB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian bookworm/main amd64 libjemalloc2 amd64 5.3.0-1 [275 kB]
+Get:2 http://deb.debian.org/debian bookworm/main amd64 liblzf1 amd64 3.6-3 [10.2 kB]
+Get:3 http://deb.debian.org/debian bookworm/main amd64 redis-tools amd64 5:7.0.15-1~deb12u1 [989 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 redis-server amd64 5:7.0.15-1~deb12u1 [72.4 kB]
+Fetched 1347 kB in 1s (948 kB/s)
+Selecting previously unselected package libjemalloc2:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 23969 files and directories currently installed.)
+Preparing to unpack .../libjemalloc2_5.3.0-1_amd64.deb ...
+Unpacking libjemalloc2:amd64 (5.3.0-1) ...
+Selecting previously unselected package liblzf1:amd64.
+Preparing to unpack .../liblzf1_3.6-3_amd64.deb ...
+Unpacking liblzf1:amd64 (3.6-3) ...
+Selecting previously unselected package redis-tools.
+Preparing to unpack .../redis-tools_5%3a7.0.15-1~deb12u1_amd64.deb ...
+Unpacking redis-tools (5:7.0.15-1~deb12u1) ...
+Selecting previously unselected package redis-server.
+Preparing to unpack .../redis-server_5%3a7.0.15-1~deb12u1_amd64.deb ...
+Unpacking redis-server (5:7.0.15-1~deb12u1) ...
+Setting up libjemalloc2:amd64 (5.3.0-1) ...
+Setting up liblzf1:amd64 (3.6-3) ...
+Setting up redis-tools (5:7.0.15-1~deb12u1) ...
+Setting up redis-server (5:7.0.15-1~deb12u1) ...
+invoke-rc.d: could not determine current runlevel
+invoke-rc.d: policy-rc.d denied execution of start.
+Processing triggers for libc-bin (2.36-9+deb12u9) ...
+Requirement already satisfied: pip in /usr/local/lib/python3.9/site-packages (24.3.1)
+Requirement already satisfied: django in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 1)) (4.2.17)
+Requirement already satisfied: channels in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 2)) (4.2.0)
+Requirement already satisfied: channels-redis in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 3)) (4.2.1)
+Requirement already satisfied: djangorestframework in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 4)) (3.15.2)
+Requirement already satisfied: djangorestframework-simplejwt in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 5)) (5.3.1)
+Requirement already satisfied: psycopg2-binary in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 6)) (2.9.10)
+Requirement already satisfied: gunicorn in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 7)) (23.0.0)
+Requirement already satisfied: daphne in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 8)) (4.1.2)
+Requirement already satisfied: asgiref<4,>=3.6.0 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (3.8.1)
+Requirement already satisfied: sqlparse>=0.3.1 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (0.5.3)
+Requirement already satisfied: redis>=4.6 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (5.2.1)
+Requirement already satisfied: msgpack~=1.0 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (1.1.0)
+Requirement already satisfied: pyjwt<3,>=1.7.1 in /usr/local/lib/python3.9/site-packages (from djangorestframework-simplejwt->-r ../requirements.txt (line 5)) (2.10.1)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from gunicorn->-r ../requirements.txt (line 7)) (24.2)
+Requirement already satisfied: autobahn>=22.4.2 in /usr/local/lib/python3.9/site-packages (from daphne->-r ../requirements.txt (line 8)) (24.4.2)
+Requirement already satisfied: twisted>=22.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.11.0)
+Requirement already satisfied: typing-extensions>=4 in /usr/local/lib/python3.9/site-packages (from asgiref<4,>=3.6.0->django->-r ../requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: txaio>=21.2.1 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (23.1.1)
+Requirement already satisfied: cryptography>=3.4.6 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (44.0.0)
+Requirement already satisfied: hyperlink>=21.0.0 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (21.0.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (75.6.0)
+Requirement already satisfied: async-timeout>=4.0.3 in /usr/local/lib/python3.9/site-packages (from redis>=4.6->channels-redis->-r ../requirements.txt (line 3)) (5.0.1)
+Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: automat>=24.8.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.8.1)
+Requirement already satisfied: constantly>=15.1 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (23.10.4)
+Requirement already satisfied: incremental>=24.7.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.7.2)
+Requirement already satisfied: zope-interface>=5 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (7.2)
+Requirement already satisfied: idna>=2.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (3.10)
+Requirement already satisfied: pyopenssl>=21.0.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.3.0)
+Requirement already satisfied: service-identity>=18.1.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: cffi>=1.12 in /usr/local/lib/python3.9/site-packages (from cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (1.17.1)
+Requirement already satisfied: tomli in /usr/local/lib/python3.9/site-packages (from incremental>=24.7.0->twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (2.2.1)
+Requirement already satisfied: pyasn1 in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.6.1)
+Requirement already satisfied: pyasn1-modules in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.4.1)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.9/site-packages (from cffi>=1.12->cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (2.22)
+Hit:1 http://deb.debian.org/debian bookworm InRelease
+Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+redis-server is already the newest version (5:7.0.15-1~deb12u1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Requirement already satisfied: pip in /usr/local/lib/python3.9/site-packages (24.3.1)
+Requirement already satisfied: django in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 1)) (4.2.17)
+Requirement already satisfied: channels in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 2)) (4.2.0)
+Requirement already satisfied: channels-redis in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 3)) (4.2.1)
+Requirement already satisfied: djangorestframework in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 4)) (3.15.2)
+Requirement already satisfied: djangorestframework-simplejwt in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 5)) (5.3.1)
+Requirement already satisfied: psycopg2-binary in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 6)) (2.9.10)
+Requirement already satisfied: gunicorn in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 7)) (23.0.0)
+Requirement already satisfied: daphne in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 8)) (4.1.2)
+Requirement already satisfied: asgiref<4,>=3.6.0 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (3.8.1)
+Requirement already satisfied: sqlparse>=0.3.1 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (0.5.3)
+Requirement already satisfied: redis>=4.6 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (5.2.1)
+Requirement already satisfied: msgpack~=1.0 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (1.1.0)
+Requirement already satisfied: pyjwt<3,>=1.7.1 in /usr/local/lib/python3.9/site-packages (from djangorestframework-simplejwt->-r ../requirements.txt (line 5)) (2.10.1)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from gunicorn->-r ../requirements.txt (line 7)) (24.2)
+Requirement already satisfied: autobahn>=22.4.2 in /usr/local/lib/python3.9/site-packages (from daphne->-r ../requirements.txt (line 8)) (24.4.2)
+Requirement already satisfied: twisted>=22.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.11.0)
+Requirement already satisfied: typing-extensions>=4 in /usr/local/lib/python3.9/site-packages (from asgiref<4,>=3.6.0->django->-r ../requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: txaio>=21.2.1 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (23.1.1)
+Requirement already satisfied: cryptography>=3.4.6 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (44.0.0)
+Requirement already satisfied: hyperlink>=21.0.0 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (21.0.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (75.6.0)
+Requirement already satisfied: async-timeout>=4.0.3 in /usr/local/lib/python3.9/site-packages (from redis>=4.6->channels-redis->-r ../requirements.txt (line 3)) (5.0.1)
+Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: automat>=24.8.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.8.1)
+Requirement already satisfied: constantly>=15.1 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (23.10.4)
+Requirement already satisfied: incremental>=24.7.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.7.2)
+Requirement already satisfied: zope-interface>=5 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (7.2)
+Requirement already satisfied: idna>=2.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (3.10)
+Requirement already satisfied: pyopenssl>=21.0.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.3.0)
+Requirement already satisfied: service-identity>=18.1.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: cffi>=1.12 in /usr/local/lib/python3.9/site-packages (from cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (1.17.1)
+Requirement already satisfied: tomli in /usr/local/lib/python3.9/site-packages (from incremental>=24.7.0->twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (2.2.1)
+Requirement already satisfied: pyasn1 in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.6.1)
+Requirement already satisfied: pyasn1-modules in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.4.1)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.9/site-packages (from cffi>=1.12->cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (2.22)
+Hit:1 http://deb.debian.org/debian bookworm InRelease
+Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+redis-server is already the newest version (5:7.0.15-1~deb12u1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Requirement already satisfied: pip in /usr/local/lib/python3.9/site-packages (24.3.1)
+Requirement already satisfied: django in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 1)) (4.2.17)
+Requirement already satisfied: channels in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 2)) (4.2.0)
+Requirement already satisfied: channels-redis in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 3)) (4.2.1)
+Requirement already satisfied: djangorestframework in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 4)) (3.15.2)
+Requirement already satisfied: djangorestframework-simplejwt in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 5)) (5.3.1)
+Requirement already satisfied: psycopg2-binary in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 6)) (2.9.10)
+Requirement already satisfied: gunicorn in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 7)) (23.0.0)
+Requirement already satisfied: daphne in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 8)) (4.1.2)
+Requirement already satisfied: asgiref<4,>=3.6.0 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (3.8.1)
+Requirement already satisfied: sqlparse>=0.3.1 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (0.5.3)
+Requirement already satisfied: redis>=4.6 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (5.2.1)
+Requirement already satisfied: msgpack~=1.0 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (1.1.0)
+Requirement already satisfied: pyjwt<3,>=1.7.1 in /usr/local/lib/python3.9/site-packages (from djangorestframework-simplejwt->-r ../requirements.txt (line 5)) (2.10.1)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from gunicorn->-r ../requirements.txt (line 7)) (24.2)
+Requirement already satisfied: autobahn>=22.4.2 in /usr/local/lib/python3.9/site-packages (from daphne->-r ../requirements.txt (line 8)) (24.4.2)
+Requirement already satisfied: twisted>=22.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.11.0)
+Requirement already satisfied: typing-extensions>=4 in /usr/local/lib/python3.9/site-packages (from asgiref<4,>=3.6.0->django->-r ../requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: txaio>=21.2.1 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (23.1.1)
+Requirement already satisfied: cryptography>=3.4.6 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (44.0.0)
+Requirement already satisfied: hyperlink>=21.0.0 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (21.0.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (75.6.0)
+Requirement already satisfied: async-timeout>=4.0.3 in /usr/local/lib/python3.9/site-packages (from redis>=4.6->channels-redis->-r ../requirements.txt (line 3)) (5.0.1)
+Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: automat>=24.8.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.8.1)
+Requirement already satisfied: constantly>=15.1 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (23.10.4)
+Requirement already satisfied: incremental>=24.7.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.7.2)
+Requirement already satisfied: zope-interface>=5 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (7.2)
+Requirement already satisfied: idna>=2.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (3.10)
+Requirement already satisfied: pyopenssl>=21.0.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.3.0)
+Requirement already satisfied: service-identity>=18.1.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: cffi>=1.12 in /usr/local/lib/python3.9/site-packages (from cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (1.17.1)
+Requirement already satisfied: tomli in /usr/local/lib/python3.9/site-packages (from incremental>=24.7.0->twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (2.2.1)
+Requirement already satisfied: pyasn1 in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.6.1)
+Requirement already satisfied: pyasn1-modules in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.4.1)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.9/site-packages (from cffi>=1.12->cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (2.22)
+Hit:1 http://deb.debian.org/debian bookworm InRelease
+Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+redis-server is already the newest version (5:7.0.15-1~deb12u1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Requirement already satisfied: pip in /usr/local/lib/python3.9/site-packages (24.3.1)
+Requirement already satisfied: django in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 1)) (4.2.17)
+Requirement already satisfied: channels in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 2)) (4.2.0)
+Requirement already satisfied: channels-redis in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 3)) (4.2.1)
+Requirement already satisfied: djangorestframework in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 4)) (3.15.2)
+Requirement already satisfied: djangorestframework-simplejwt in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 5)) (5.3.1)
+Requirement already satisfied: psycopg2-binary in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 6)) (2.9.10)
+Requirement already satisfied: gunicorn in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 7)) (23.0.0)
+Requirement already satisfied: daphne in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 8)) (4.1.2)
+Requirement already satisfied: asgiref<4,>=3.6.0 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (3.8.1)
+Requirement already satisfied: sqlparse>=0.3.1 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (0.5.3)
+Requirement already satisfied: redis>=4.6 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (5.2.1)
+Requirement already satisfied: msgpack~=1.0 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (1.1.0)
+Requirement already satisfied: pyjwt<3,>=1.7.1 in /usr/local/lib/python3.9/site-packages (from djangorestframework-simplejwt->-r ../requirements.txt (line 5)) (2.10.1)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from gunicorn->-r ../requirements.txt (line 7)) (24.2)
+Requirement already satisfied: autobahn>=22.4.2 in /usr/local/lib/python3.9/site-packages (from daphne->-r ../requirements.txt (line 8)) (24.4.2)
+Requirement already satisfied: twisted>=22.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.11.0)
+Requirement already satisfied: typing-extensions>=4 in /usr/local/lib/python3.9/site-packages (from asgiref<4,>=3.6.0->django->-r ../requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: txaio>=21.2.1 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (23.1.1)
+Requirement already satisfied: cryptography>=3.4.6 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (44.0.0)
+Requirement already satisfied: hyperlink>=21.0.0 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (21.0.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (75.6.0)
+Requirement already satisfied: async-timeout>=4.0.3 in /usr/local/lib/python3.9/site-packages (from redis>=4.6->channels-redis->-r ../requirements.txt (line 3)) (5.0.1)
+Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: automat>=24.8.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.8.1)
+Requirement already satisfied: constantly>=15.1 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (23.10.4)
+Requirement already satisfied: incremental>=24.7.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.7.2)
+Requirement already satisfied: zope-interface>=5 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (7.2)
+Requirement already satisfied: idna>=2.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (3.10)
+Requirement already satisfied: pyopenssl>=21.0.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.3.0)
+Requirement already satisfied: service-identity>=18.1.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: cffi>=1.12 in /usr/local/lib/python3.9/site-packages (from cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (1.17.1)
+Requirement already satisfied: tomli in /usr/local/lib/python3.9/site-packages (from incremental>=24.7.0->twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (2.2.1)
+Requirement already satisfied: pyasn1 in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.6.1)
+Requirement already satisfied: pyasn1-modules in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.4.1)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.9/site-packages (from cffi>=1.12->cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (2.22)
+Hit:1 http://deb.debian.org/debian bookworm InRelease
+Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+redis-server is already the newest version (5:7.0.15-1~deb12u1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Requirement already satisfied: pip in /usr/local/lib/python3.9/site-packages (24.3.1)
+Requirement already satisfied: django in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 1)) (4.2.17)
+Requirement already satisfied: channels in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 2)) (4.2.0)
+Requirement already satisfied: channels-redis in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 3)) (4.2.1)
+Requirement already satisfied: djangorestframework in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 4)) (3.15.2)
+Requirement already satisfied: djangorestframework-simplejwt in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 5)) (5.3.1)
+Requirement already satisfied: psycopg2-binary in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 6)) (2.9.10)
+Requirement already satisfied: gunicorn in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 7)) (23.0.0)
+Requirement already satisfied: daphne in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 8)) (4.1.2)
+Requirement already satisfied: asgiref<4,>=3.6.0 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (3.8.1)
+Requirement already satisfied: sqlparse>=0.3.1 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (0.5.3)
+Requirement already satisfied: redis>=4.6 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (5.2.1)
+Requirement already satisfied: msgpack~=1.0 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (1.1.0)
+Requirement already satisfied: pyjwt<3,>=1.7.1 in /usr/local/lib/python3.9/site-packages (from djangorestframework-simplejwt->-r ../requirements.txt (line 5)) (2.10.1)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from gunicorn->-r ../requirements.txt (line 7)) (24.2)
+Requirement already satisfied: autobahn>=22.4.2 in /usr/local/lib/python3.9/site-packages (from daphne->-r ../requirements.txt (line 8)) (24.4.2)
+Requirement already satisfied: twisted>=22.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.11.0)
+Requirement already satisfied: typing-extensions>=4 in /usr/local/lib/python3.9/site-packages (from asgiref<4,>=3.6.0->django->-r ../requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: txaio>=21.2.1 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (23.1.1)
+Requirement already satisfied: cryptography>=3.4.6 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (44.0.0)
+Requirement already satisfied: hyperlink>=21.0.0 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (21.0.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (75.6.0)
+Requirement already satisfied: async-timeout>=4.0.3 in /usr/local/lib/python3.9/site-packages (from redis>=4.6->channels-redis->-r ../requirements.txt (line 3)) (5.0.1)
+Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: automat>=24.8.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.8.1)
+Requirement already satisfied: constantly>=15.1 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (23.10.4)
+Requirement already satisfied: incremental>=24.7.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.7.2)
+Requirement already satisfied: zope-interface>=5 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (7.2)
+Requirement already satisfied: idna>=2.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (3.10)
+Requirement already satisfied: pyopenssl>=21.0.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.3.0)
+Requirement already satisfied: service-identity>=18.1.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: cffi>=1.12 in /usr/local/lib/python3.9/site-packages (from cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (1.17.1)
+Requirement already satisfied: tomli in /usr/local/lib/python3.9/site-packages (from incremental>=24.7.0->twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (2.2.1)
+Requirement already satisfied: pyasn1 in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.6.1)
+Requirement already satisfied: pyasn1-modules in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.4.1)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.9/site-packages (from cffi>=1.12->cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (2.22)
+Hit:1 http://deb.debian.org/debian bookworm InRelease
+Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+redis-server is already the newest version (5:7.0.15-1~deb12u1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Requirement already satisfied: pip in /usr/local/lib/python3.9/site-packages (24.3.1)
+Requirement already satisfied: django in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 1)) (4.2.17)
+Requirement already satisfied: channels in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 2)) (4.2.0)
+Requirement already satisfied: channels-redis in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 3)) (4.2.1)
+Requirement already satisfied: djangorestframework in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 4)) (3.15.2)
+Requirement already satisfied: djangorestframework-simplejwt in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 5)) (5.3.1)
+Requirement already satisfied: psycopg2-binary in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 6)) (2.9.10)
+Requirement already satisfied: gunicorn in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 7)) (23.0.0)
+Requirement already satisfied: daphne in /usr/local/lib/python3.9/site-packages (from -r ../requirements.txt (line 8)) (4.1.2)
+Requirement already satisfied: asgiref<4,>=3.6.0 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (3.8.1)
+Requirement already satisfied: sqlparse>=0.3.1 in /usr/local/lib/python3.9/site-packages (from django->-r ../requirements.txt (line 1)) (0.5.3)
+Requirement already satisfied: redis>=4.6 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (5.2.1)
+Requirement already satisfied: msgpack~=1.0 in /usr/local/lib/python3.9/site-packages (from channels-redis->-r ../requirements.txt (line 3)) (1.1.0)
+Requirement already satisfied: pyjwt<3,>=1.7.1 in /usr/local/lib/python3.9/site-packages (from djangorestframework-simplejwt->-r ../requirements.txt (line 5)) (2.10.1)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from gunicorn->-r ../requirements.txt (line 7)) (24.2)
+Requirement already satisfied: autobahn>=22.4.2 in /usr/local/lib/python3.9/site-packages (from daphne->-r ../requirements.txt (line 8)) (24.4.2)
+Requirement already satisfied: twisted>=22.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.11.0)
+Requirement already satisfied: typing-extensions>=4 in /usr/local/lib/python3.9/site-packages (from asgiref<4,>=3.6.0->django->-r ../requirements.txt (line 1)) (4.12.2)
+Requirement already satisfied: txaio>=21.2.1 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (23.1.1)
+Requirement already satisfied: cryptography>=3.4.6 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (44.0.0)
+Requirement already satisfied: hyperlink>=21.0.0 in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (21.0.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.9/site-packages (from autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (75.6.0)
+Requirement already satisfied: async-timeout>=4.0.3 in /usr/local/lib/python3.9/site-packages (from redis>=4.6->channels-redis->-r ../requirements.txt (line 3)) (5.0.1)
+Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: automat>=24.8.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.8.1)
+Requirement already satisfied: constantly>=15.1 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (23.10.4)
+Requirement already satisfied: incremental>=24.7.0 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.7.2)
+Requirement already satisfied: zope-interface>=5 in /usr/local/lib/python3.9/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (7.2)
+Requirement already satisfied: idna>=2.4 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (3.10)
+Requirement already satisfied: pyopenssl>=21.0.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.3.0)
+Requirement already satisfied: service-identity>=18.1.0 in /usr/local/lib/python3.9/site-packages (from twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (24.2.0)
+Requirement already satisfied: cffi>=1.12 in /usr/local/lib/python3.9/site-packages (from cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (1.17.1)
+Requirement already satisfied: tomli in /usr/local/lib/python3.9/site-packages (from incremental>=24.7.0->twisted>=22.4->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (2.2.1)
+Requirement already satisfied: pyasn1 in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.6.1)
+Requirement already satisfied: pyasn1-modules in /usr/local/lib/python3.9/site-packages (from service-identity>=18.1.0->twisted[tls]>=22.4->daphne->-r ../requirements.txt (line 8)) (0.4.1)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.9/site-packages (from cffi>=1.12->cryptography>=3.4.6->autobahn>=22.4.2->daphne->-r ../requirements.txt (line 8)) (2.22)
+Hit:1 http://deb.debian.org/debian bookworm InRelease
+Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+redis-server is already the newest version (5:7.0.15-1~deb12u1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.

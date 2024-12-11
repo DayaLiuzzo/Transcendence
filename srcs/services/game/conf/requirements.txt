@@ -1,5 +1,8 @@
 django
+channels
+channels-redis
 djangorestframework
 djangorestframework-simplejwt
 psycopg2-binary
 gunicorn
+daphne
