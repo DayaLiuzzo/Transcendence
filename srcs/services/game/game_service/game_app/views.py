@@ -8,6 +8,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
+
 @api_view(['POST'])
 def login(request):
     user = get_object_or_404(User, username=request.data['username'])
@@ -19,6 +20,7 @@ def login(request):
 
 @api_view(['POST'])
 def signup(request):
+    print("signup")
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

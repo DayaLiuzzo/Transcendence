@@ -169,3 +169,39 @@ Service: auth, App: auth_app, Database: auth
 
 
 
+
+
+
+[0;36m------------------- TESTING auth -------------------[0m
+Service: auth, App: auth_app, Database: auth
+-------------------
+
+
+[0;33mSaving data in the Python container (auth) for app 'auth_app'...[0m
+
+
+[0;36mRunning the Django shell script inside container auth...[0m
+[0;32mData saved successfully in Django:[0m
+<QuerySet [{'id': 1, 'title': 'auth Test', 'author': 'Test Script'}]>
+
+
+
+[0;33mVerifying data in the database (auth) using container (db_auth)...[0m
+[0;32mData in the database for auth_app:[0m
+ id |   title   |   author    
+----+-----------+-------------
+  1 | auth Test | Test Script
+(1 row)
+
+
+
+[0;33mTesting connectivity to database (auth) in container (db_auth)...[0m
+[0;32mDatabase connectivity test passed:[0m
+ ?column? 
+----------
+        1
+(1 row)
+
+
+
+

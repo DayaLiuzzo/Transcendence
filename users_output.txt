@@ -180,3 +180,39 @@ Service: users, App: users_app, Database: users
 
 
 
+
+
+
+[0;36m------------------- TESTING users -------------------[0m
+Service: users, App: users_app, Database: users
+-------------------
+
+
+[0;33mSaving data in the Python container (users) for app 'users_app'...[0m
+
+
+[0;36mRunning the Django shell script inside container users...[0m
+[0;32mData saved successfully in Django:[0m
+<QuerySet [{'id': 1, 'title': 'users Test', 'author': 'Test Script'}]>
+
+
+
+[0;33mVerifying data in the database (users) using container (db_users)...[0m
+[0;32mData in the database for users_app:[0m
+ id |   title    |   author    
+----+------------+-------------
+  1 | users Test | Test Script
+(1 row)
+
+
+
+[0;33mTesting connectivity to database (users) in container (db_users)...[0m
+[0;32mDatabase connectivity test passed:[0m
+ ?column? 
+----------
+        1
+(1 row)
+
+
+
+
