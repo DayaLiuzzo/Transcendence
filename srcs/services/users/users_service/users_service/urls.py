@@ -1,9 +1,10 @@
 
-from django.urls import re_path
+from django.urls import re_path, path, include
 from users_app import views
 
 urlpatterns = [
-    re_path('login', views.login),
-    re_path('signup', views.signup),
-    re_path('test_token', views.test_token),
+    path('api/users/', include([
+        path('create_profile/', views.CreateUserProfileView.as_view(), name='create_user_profile'),
+    ]))
+
 ]

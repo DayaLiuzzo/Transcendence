@@ -8,15 +8,13 @@ Content-Type: application/json
 
 ###
 
-POST https://localhost:4430/api/auth/signup
+POST https://localhost:4430/api/users/create_profile/
 Content-Type: application/json
 
 {
-  "username": "singeuse",
-  "password": "pass123",
-  "email": "singeuse@gmail.com"
+  "pseudo": "singeuse_pseudo",
+  "biography": "I am a singer"
 }
-
 ###
 
 get https://localhost:4430/api/auth/test_token
