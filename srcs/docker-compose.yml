@@ -9,6 +9,8 @@ services:
       - "4430:4430"
     restart: on-failure
     env_file: .env
+    depends_on:
+      - auth
 
   users:
     image: users
