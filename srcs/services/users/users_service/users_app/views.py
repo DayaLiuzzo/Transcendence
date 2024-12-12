@@ -25,9 +25,3 @@ class CreateUserProfileView(APIView):
             return Response({'error': 'Database integrity error occurred (pseudo may already exist).'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-# def api_auth_view(request):
-#     return JsonResponse({"message": "Auth API is running"})
-
-
-# def auth_view(request):
-#     return JsonResponse({"message": "Auth service is running"})
