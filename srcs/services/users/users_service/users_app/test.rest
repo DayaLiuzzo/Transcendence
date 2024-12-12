@@ -8,12 +8,12 @@ Content-Type: application/json
 
 ###
 
-POST https://localhost:4430/api/users/create_profile/
+POST https://localhost:4430/api/users/create/
 Content-Type: application/json
 
 {
-  "pseudo": "singeuse_pseudo",
-  "biography": "I am a singer"
+  "username": "singeuse_pseudo"
+
 }
 ###
 
