@@ -18,5 +18,6 @@ urlpatterns = [
         path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
         path('protected/', views.ProtectedView.as_view(), name='protected_view'),
         path('signup/', views.SignUpView.as_view(), name='signup'),
+        path('delete_user/<str:username>/', views.DeleteUserView.as_view(), name='delete_user')
     ]))
 ]

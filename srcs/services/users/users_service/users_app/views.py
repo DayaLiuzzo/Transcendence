@@ -17,3 +17,14 @@ from django.db import IntegrityError
 class CreateUserProfileView(generics.CreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+
+@api_view(['GET'])
+def get_example(request):
+    return Response({"message": "This is a GET endpoint"}, status=status.HTTP_200_OK)
+
+
+class DeleteUserProfileView(generics.DestroyAPIView):
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
+    lookup_field = "username"
