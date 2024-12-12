@@ -9,7 +9,10 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .serializers import UserSerializer
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import User
+from .requests_custom import send_create_requests
+import requests
 
 @api_view(['GET'])
 def get_example(request):
@@ -29,6 +32,10 @@ class SignUpView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
+        req_urls = [ 'http://users:8000/api/users/create/',
+                    ]
+        if send_create_requests(urls=req_urls, body={'username':username}) == False:
+            raise ValidationError("Error creating user")
         user = serializer.save()
         return user
 

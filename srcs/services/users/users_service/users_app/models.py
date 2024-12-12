@@ -9,8 +9,8 @@ class Book(models.Model):
 
 
 class UserProfile(models.Model):
-    pseudo = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
     biography = models.TextField()
    
     def __str__(self):
-        return self.pseudo
+        return self.username

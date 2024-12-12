@@ -3,9 +3,9 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "singeuse",
+  "username": "singeuse_pseudo",
   "password": "pass123456",
-  "email": "singeuse@gmail.com"
+  "email": "singeuse2@gmail.com"
 }
 
 

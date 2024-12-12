@@ -4,7 +4,7 @@ from users_app import views
 
 urlpatterns = [
     path('api/users/', include([
-        path('create_profile/', views.CreateUserProfileView.as_view(), name='create_user_profile'),
+        path('create/', views.CreateUserProfileView.as_view(), name='create_user_profile'),
     ]))
 
 ]
