@@ -8,6 +8,13 @@ Content-Type: application/json
   "email": "singeuse2@gmail.com"
 }
 
+###
+DELETE  https://localhost:4430/api/auth/delete_user/singeuse_pseudo/
+Content-Type: application/json
+
+{
+  "username": "singeuse_pseudo",
+}
 
 ###
 

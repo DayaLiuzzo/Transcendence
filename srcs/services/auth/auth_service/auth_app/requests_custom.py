@@ -11,6 +11,12 @@ def send_request(url:str, method:str, body={}, headers={}) -> int:
     print(f'Request at url {url} return {response.status_code}')
     return response.status_code
 
+def send_delete_requests(urls:list, body={}, headers={}) -> bool :
+    for url in urls:
+        if send_request(url=url, method='delete', body=body, headers=headers) not in  [204, 304]:
+            return False
+    return True
+
 
 
 def send_create_requests(urls:list, body={}, headers={}) -> bool:
