@@ -10,7 +10,7 @@ class Book(models.Model):
         return self.title
     
 class CustomUser(AbstractUser):
-    last_active = models.DateTimeField(default=now)
+    last_log = models.DateTimeField(default=now)
     @property
     def is_authenticated(self):
         return True

@@ -9,10 +9,13 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .serializers import  CustomUserSerializer
+from django.contrib.auth import authenticate
 from .models import CustomUser
 from rest_framework.exceptions import ValidationError
 from .requests_custom import send_create_requests, send_delete_requests
 import requests
+from .serializers import CustomTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 @api_view(['GET'])
 def get_example(request):
@@ -66,3 +69,17 @@ class DeleteUserView (generics.DestroyAPIView):
         if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
             raise ValidationError("Error deleting user")
         instance.delete()
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        if not username or not password:
+            return Response({"error": "Please provide both username and password"}, status=status.HTTP_400_BAD_REQUEST)
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        token = CustomTokenObtainPairSerializer.get_token(user)
+        access_token = str(token.access_token)
+        refresh_token = str(token)
+        return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)

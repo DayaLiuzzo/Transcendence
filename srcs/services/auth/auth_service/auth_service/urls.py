@@ -6,14 +6,14 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-from auth_app.views import GetCSRFTokenView
+from auth_app.views import GetCSRFTokenView, CustomTokenObtainPairView
 
 urlpatterns = [
     # path('api/auth/', views.auth_root),
     path('api/auth/', include([
         path('post_example/', views.post_example),
         path('get_example/', GetCSRFTokenView.as_view(), name='get_csrf_token'),
-        path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
         path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
         path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
         path('protected/', views.ProtectedView.as_view(), name='protected_view'),

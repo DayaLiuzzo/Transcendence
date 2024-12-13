@@ -28,7 +28,7 @@ def send_create_requests(urls:list, body={}, headers={}) -> bool:
             successefull_elements.append(url)
     if len(urls) != len(successefull_elements):
         return False
-        # for url in successefull_elements:
-        #     rollback_url = url.replace('create', 'delete') + body['username'] + '/' 
-        #     send_request(url=rollback_url, method='delete', headers=headers)
+        for url in successefull_elements:
+            rollback_url = url.replace('create', 'delete') + body['username'] + '/' 
+            send_request(url=rollback_url, method='delete', headers=headers)
     return True
