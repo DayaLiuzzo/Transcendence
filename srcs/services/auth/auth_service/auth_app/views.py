@@ -61,7 +61,7 @@ class DeleteUserView (generics.DestroyAPIView):
     lookup_field = 'username'
 
     def perform_destroy(self, instance):
-        req_urls = [ f'http://users:8000/api/users/{instance.username}/delete/',
+        req_urls = [ f'http://users:8000/api/users/delete/{instance.username}/',
                     ]
         if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
             raise ValidationError("Error deleting user")
