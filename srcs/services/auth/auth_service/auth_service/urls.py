@@ -11,6 +11,7 @@ from auth_app.views import GetCSRFTokenView, CustomTokenObtainPairView
 urlpatterns = [
     # path('api/auth/', views.auth_root),
     path('api/auth/', include([
+        path('welcome/', views.welcome),
         path('post_example/', views.post_example),
         path('get_example/', GetCSRFTokenView.as_view(), name='get_csrf_token'),
         path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
