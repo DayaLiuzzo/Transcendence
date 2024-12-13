@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE  https://localhost:4430/api/auth/delete_user/singeuse_pseudo/
+DELETE  https://localhost:4430/api/auth/delete/singeuse_pseudo/
 Content-Type: application/json
 
 {
