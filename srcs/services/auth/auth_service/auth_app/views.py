@@ -18,6 +18,10 @@ from .serializers import CustomTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 @api_view(['GET'])
+def welcome(request):
+    return Response({"message": "Hello World"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
 def get_example(request):
     return Response({"message": "This is a GET endpoint"}, status=status.HTTP_200_OK)
 
