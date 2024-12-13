@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', "auth"]
 
 # Application definition
+AUTH_USER_MODEL = "auth_app.CustomUser"
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
