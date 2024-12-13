@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from .models import CustomUser
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from datetime import timedelta, datetime
+from django.utils.timezone import now
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta(object):
@@ -28,3 +31,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create(**validated_data)
 
         return user
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        # del token['user_id']
+        token.set_exp(lifetime=timedelta(minutes=5))
+        token.payload['exp'] = (datetime.utcnow() + timedelta(days=1)).timestamp()
+        user.last_log = now()
+        user.save()
+        return token
