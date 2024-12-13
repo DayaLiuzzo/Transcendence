@@ -8,9 +8,9 @@ from django.middleware.csrf import get_token
 from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from .serializers import UserSerializer
+from .serializers import  CustomUserSerializer
+from .models import CustomUser
 from rest_framework.exceptions import ValidationError
-from django.contrib.auth.models import User
 from .requests_custom import send_create_requests, send_delete_requests
 import requests
 
@@ -41,8 +41,8 @@ class ProtectedView(APIView):
 
 
 class SignUpView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
     lookup_field = 'username'
 
     def perform_create(self, serializer):
@@ -56,8 +56,8 @@ class SignUpView(generics.ListCreateAPIView):
         return user
 
 class DeleteUserView (generics.DestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
     lookup_field = 'username'
 
     def perform_destroy(self, instance):
