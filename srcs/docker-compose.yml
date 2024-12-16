@@ -12,16 +12,16 @@ services:
     depends_on:
       - auth
 
-  # users:
-  #   image: users
-  #   container_name: users
-  #   build: services/users
-  #   ports:
-  #     - "8000"
-  #   restart: on-failure
-  #   depends_on:
-  #     - db_users
-  #   env_file: .env
+  users:
+    image: users
+    container_name: users
+    build: services/users
+    ports:
+      - "8000"
+    restart: on-failure
+    depends_on:
+      - db_users
+    env_file: .env
 
   game:
     image: game
@@ -34,13 +34,13 @@ services:
       - db_game
     env_file: .env
 
-  api_gateway:
-    image: api_gateway
-    container_name: api_gateway
-    build: services/api_gateway
-    ports:
-      - "8002"
-    restart: on-failure
+  # api_gateway:
+  #   image: api_gateway
+  #   container_name: api_gateway
+  #   build: services/api_gateway
+  #   ports:
+  #     - "8002"
+  #   restart: on-failure
 
   auth:
     build: services/auth
@@ -107,11 +107,11 @@ services:
   #   ports:
   #     - '5432'
 
-  # db_users:
-  #   image: db_users
-  #   container_name: db_users
-  #   build: services/db_users
-  #   restart: on-failure
-  #   env_file: .env
-  #   ports:
-  #     - '5432'
+  db_users:
+    image: db_users
+    container_name: db_users
+    build: services/db_users
+    restart: on-failure
+    env_file: .env
+    ports:
+      - '5432'
