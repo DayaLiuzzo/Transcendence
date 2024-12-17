@@ -12,7 +12,7 @@ POST https://localhost:4430/api/users/create/
 Content-Type: application/json
 
 {
-  "username": "singeuse_pseudo"
+  "username": ""
 
 }
 ###
@@ -22,3 +22,6 @@ Content-Type: application/json
 Authorization: Token 60f89c7f4099aeb971c421fbe90495f87c338299
 
 {}
+
+###
+get https://localhost:4430/api/users/singeue_pseudo/

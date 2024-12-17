@@ -74,6 +74,12 @@ class DeleteUserView (generics.DestroyAPIView):
             raise ValidationError("Error deleting user")
         instance.delete()
 
+class RetrieveUserView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
