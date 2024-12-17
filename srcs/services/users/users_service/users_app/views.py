@@ -28,3 +28,8 @@ class DeleteUserProfileView(generics.DestroyAPIView):
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
     serializer_class = UserProfileSerializer
     lookup_field = "username"
+
+class RetrieveUserProfile(generics.RetrieveAPIView):
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
+    lookup_field = "username"
