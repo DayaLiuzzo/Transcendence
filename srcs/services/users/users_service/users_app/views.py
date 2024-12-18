@@ -10,7 +10,7 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from .models import UserProfile
-
+from .authentication import CustomJWTAuth
 from django.db import IntegrityError
 
 
@@ -33,3 +33,10 @@ class RetrieveUserProfile(generics.RetrieveAPIView):
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
     serializer_class = UserProfileSerializer
     lookup_field = "username"
+
+class ProtectedView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"message": "This is a protected view!"})
+
