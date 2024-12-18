@@ -20,6 +20,7 @@ USERS
 /api/users/create/
 /api/users/<str:username>/
 
+GAME
 
 AUTH
 
