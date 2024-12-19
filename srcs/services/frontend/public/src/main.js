@@ -6,6 +6,7 @@
 */
 
 // Fonction pour charger les modules de vues (home, jeu, 404)
+
 function loadView(view)
 {
     const app = document.getElementById('app');
@@ -15,49 +16,49 @@ function loadView(view)
 
     switch (view) {
       case '/home':
-        import('../views/home.js').then(module => { app.innerHTML = module.default();});
+        import('./views/home.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/':
-        import('../views/home.js').then(module => { app.innerHTML = module.default();});
+        import('./views/home.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/play':
-        import('../views/play.js').then(module => { app.innerHTML = module.default();});
+        import('./views/play.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/about':
-        import('../views/about.js').then(module => { app.innerHTML = module.default();});
+        import('./views/about.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/log-in':
-        import('../views/log-in.js').then(module => { app.innerHTML = module.default();});
+        import('./views/log-in.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/sign-up':
-        import('../views/sign-up.js').then(module => { app.innerHTML = module.default();});
+        import('./views/sign-up.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/delete-user':
-        import('../views/delete-user.js').then(module => { app.innerHTML = module.default();});
+        import('./views/delete-user.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/edit-profile':
-        import('../views/edit-profile.js').then(module => { app.innerHTML = module.default();});
+        import('./views/edit-profile.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/game-custom':
-        import('../views/game-custom.js').then(module => { app.innerHTML = module.default();});
+        import('./views/game-custom.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/play-tournament':
-        import('../views/play-tournament.js').then(module => { app.innerHTML = module.default();});
+        import('./views/play-tournament.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/game':
-        import('../views/game.js').then(module => { app.innerHTML = module.default();});
+        import('./views/game.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/play-alone':
-        import('../views/play-alone.js').then(module => { app.innerHTML = module.default();});
+        import('./views/play-alone.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/game-ai':
-        import('../views/game-ai.js').then(module => { app.innerHTML = module.default();});
+        import('./views/game-ai.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/game-multi':
-        import('../views/game-multi.js').then(module => { app.innerHTML = module.default();});
+        import('./views/game-multi.js').then(module => { app.innerHTML = module.default();});
         break;
       default:
-        import('../views/404.js').then(module => { app.innerHTML = module.default();});
+        import('./views/404.js').then(module => { app.innerHTML = module.default();});
         break;
     }
   }

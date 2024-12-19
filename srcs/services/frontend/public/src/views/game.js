@@ -5,7 +5,7 @@ if (ready)
   return `
       <h1>Play in tournament</h1>
       <p>Ici on va jouuuuer</p>
-      <img src="../media/pong_1.gif" alt="Profile picture" class="profile-img">
+      <img src="../../assets/images/images/pong_1.gif" alt="Profile picture" class="profile-img">
     `;
 else
   return `
@@ -16,4 +16,3 @@ else
   `;
 
   }
-  
