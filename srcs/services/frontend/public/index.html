@@ -6,20 +6,20 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Pong</title>
-      <link rel="stylesheet" href="/css/style.css">
+      <link rel="stylesheet" href="./src/styles/core.css">
     </head>
     <body>
-      <nav>
+      <nav class ="nav">
         <ul>
-          <li><a href="/home">Home</a></li> // data link ?
-          <li><a href="/play">Play</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/log-in">Log-in</a></li>
-          <li><a onclick="alert('Language changed !')"><img src="/media/flag.png" alt="english" class="flag"></a></li>
-          <li><a onclick="alert('Accessibility mode on')"><img src="/media/accessibility.png" alt="accessibility" class="accessibility"></a></li>
+          <li><a class="nav-link" href="/home">Home</a></li>
+          <li><a class="nav-link" href="/play">Play</a></li>
+          <li><a class="nav-link" href="/about">About</a></li>
+          <li><a class="nav-link" href="/log-in">Log-in</a></li>
+          <li><a onclick="alert('Language changed !')"><img src="./assets/images/flag.png" alt="english" class="flag"></a></li>
+          <li><a onclick="alert('Accessibility mode on')"><img src="./assets/images/accessibility.png" alt="accessibility" class="accessibility"></a></li>
         </ul>
       </nav>
     <div id="app"></div>
-      <script type="module" src="/js/main.js"></script>
+      <script type="module" src="./src/main.js"></script>
     </body>
   </html>

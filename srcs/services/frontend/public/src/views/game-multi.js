@@ -3,9 +3,9 @@ let ready = 1;
 export default function() {
 if (ready)
   return `
-      <h1>Play against AI</h1>
+      <h1>Play on the same keyboard</h1>
       <p>Ici on va jouuuuer</p>
-      <img src="../media/ai.gif" alt="Profile picture" class="profile-img">
+      <img src="../assets/images/pong_1.gif" alt="Profile picture" class="profile-img">
     `;
 else
   return `
@@ -16,4 +16,3 @@ else
   `;
 
   }
-  
