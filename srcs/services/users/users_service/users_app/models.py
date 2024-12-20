@@ -9,8 +9,9 @@ class Book(models.Model):
 
 
 class UserProfile(models.Model):
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)
     biography = models.TextField()
-   
-    def __str__(self):
-        return self.username
+    
+    @property
+    def is_authenticated(self):
+        return True
