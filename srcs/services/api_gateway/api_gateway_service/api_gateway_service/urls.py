@@ -19,7 +19,19 @@ from django.urls import path, re_path
 from api_gateway_app import views
 from django.http import JsonResponse
 import requests
+import logging
 
+logging.basicConfig(level=logging.INFO)
+
+# Crée un logger spécifique au module courant
+logger = logging.getLogger(__name__)
+
+# # Exemple de logs à différents niveaux
+# logger.debug("C'est un message de niveau DEBUG.")
+# logger.info("C'est un message de niveau INFO.")
+# logger.warning("C'est un message de niveau WARNING.")
+# logger.error("C'est un message de niveau ERROR.")
+# logger.critical("C'est un message de niveau CRITICAL.")
 
 def route_to_service(request, service_name, extra_path=''):
     """Route API requests to the appropriate microservice."""
@@ -41,13 +53,24 @@ def route_to_service(request, service_name, extra_path=''):
             headers = {
                 "Content-Type": request.headers.get("Content-Type", ""),
                 "Authorization": request.headers.get("Authorization", ""),
+                "X-CSRFToken": request.headers.get("X-CSRFToken", ""),
             }
+            logger.info(f"headers de la requête: {headers}")
+        
+            cookies = {
+                'csrftoken': request.COOKIES.get('csrftoken'),
+            }
+
+            logger.info(f"Cookies de la requête: {cookies}")
+
             response = requests.request(
                 method=request.method,
                 url=url,
                 headers=headers,
+                cookies=cookies,
                 data=request.body,
             )
+            logger.info(f"Réponse du service {service_name}: {response.status_code} - {response.text[:500]}")
             return JsonResponse(response.json(), status=response.status_code, safe=False)
         except requests.exceptions.RequestException as e:
             return JsonResponse(
