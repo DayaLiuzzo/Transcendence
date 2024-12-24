@@ -12,6 +12,17 @@ from rest_framework.authtoken.models import Token
 from .models import UserProfile
 from .authentication import CustomJWTAuth
 from django.db import IntegrityError
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    # filename="basic.log",
+    )
+
+# Crée un logger spécifique au module courant
+logger = logging.getLogger(__name__)
 
 
 class CreateUserProfileView(generics.CreateAPIView):
@@ -34,9 +45,12 @@ class RetrieveUserProfile(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
+
 class ProtectedView(APIView):
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        user = request.user
+        logger.debug(f"Authenticated user in view: {user}")
         return Response({"message": "This is a protected view!"})
-
