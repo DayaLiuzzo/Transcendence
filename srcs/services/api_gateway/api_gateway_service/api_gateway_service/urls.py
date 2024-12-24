@@ -21,17 +21,15 @@ from django.http import JsonResponse
 import requests
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    # filename="basic.log",
+    )
 
 # Crée un logger spécifique au module courant
 logger = logging.getLogger(__name__)
-
-# # Exemple de logs à différents niveaux
-# logger.debug("C'est un message de niveau DEBUG.")
-# logger.info("C'est un message de niveau INFO.")
-# logger.warning("C'est un message de niveau WARNING.")
-# logger.error("C'est un message de niveau ERROR.")
-# logger.critical("C'est un message de niveau CRITICAL.")
 
 def route_to_service(request, service_name, extra_path=''):
     """Route API requests to the appropriate microservice."""
@@ -55,13 +53,13 @@ def route_to_service(request, service_name, extra_path=''):
                 "Authorization": request.headers.get("Authorization", ""),
                 "X-CSRFToken": request.headers.get("X-CSRFToken", ""),
             }
-            logger.info(f"headers de la requête: {headers}")
+            logger.debug(f"headers de la requête: {headers}")
         
             cookies = {
                 'csrftoken': request.COOKIES.get('csrftoken'),
             }
 
-            logger.info(f"Cookies de la requête: {cookies}")
+            logger.debug(f"Cookies de la requête: {cookies}")
 
             response = requests.request(
                 method=request.method,
@@ -70,7 +68,7 @@ def route_to_service(request, service_name, extra_path=''):
                 cookies=cookies,
                 data=request.body,
             )
-            logger.info(f"Réponse du service {service_name}: {response.status_code} - {response.text[:500]}")
+            logger.debug(f"Réponse du service {service_name}: {response.status_code} - {response.text[:500]}")
             return JsonResponse(response.json(), status=response.status_code, safe=False)
         except requests.exceptions.RequestException as e:
             return JsonResponse(
