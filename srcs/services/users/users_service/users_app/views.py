@@ -47,10 +47,10 @@ class RetrieveUserProfile(generics.RetrieveAPIView):
 
 
 class ProtectedView(APIView):
-
-    permission_classes = [IsAuthenticated]
-
+    logger.debug("begin view")
+    permission_classes = []
     def get(self, request):
+        logger.debug("In a view")
         user = request.user
         logger.debug(f"Authenticated user in view: {user}")
         return Response({"message": "This is a protected view!"})

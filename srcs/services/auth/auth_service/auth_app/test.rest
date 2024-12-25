@@ -3,9 +3,9 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "singeuse_pseudo",
+  "username": "singuse_pseudo",
   "password": "pass123456",
-  "email": "singeuse@gmail.com"
+  "email": "singuse@gmail.com"
 }
 
 ###
@@ -15,14 +15,14 @@ Content-Type: application/json
 {
   "username": "singeuse_pseudo",
 }
-
 ###
+
 
 POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "singeuse_pseudo",
+  "username": "singuse_pseudo",
   "password": "pass123456"
 }
 ###
@@ -31,4 +31,4 @@ GET https://localhost:4430/api/auth/singeuse_pseudo/
 
 ###
 GET https://localhost:4430/api/users/protected/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MDU3OTk3LCJpYXQiOjE3MzUwNTI1OTcsImp0aSI6IjAzNTRkNzJmYjlmMTQ4Mzk4NjQ3NTFiNzg1ZmM3Mjg3IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJzaW5nZXVzZV9wc2V1ZG8ifQ.BQHR_bPAyVIRxAibe3MwqYXsKGDZvKO81iL304l0JLstMyzd_RTeQ9xtMuCPKywASZ21Ke92m_0P1t5unzlrcv-Svjqme-gn4i9btpXKRPdSO2U7KSVcwwH4awhfde6z6wNsY5WSC56GGkZV1n47kIhS7K8uKxUVPo4DQXzRfuXHalSdxIojd7QMsHf-jhmYsn-4RlMMnRaKgdZjRASGXgL79iccx31uPDCgbkRWKjMNNwLAQ5-EobRHQ5JY8-o7zgo9A2LfZiHz8iioh8tNcTG6xb8np3Eq5Ch74oCksIw_ojJ7T2bCkYGxN3tfULCwpj9NfR7RD34Irg_raW6yfw
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTUwNTcxLCJpYXQiOjE3MzUxNDUxNzEsImp0aSI6IjIyN2VlOWVhM2U5YTRkOTM4MGIwNGU3ZDU0YzhkZWQwIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJzaW5ndXNlX3BzZXVkbyJ9.f7D6UBA6n_cG5g-84xbb32xSASv_m8AGXYolrgqAXA9iLXr-KEA09HnnSuWh8Ykg3ebH_oz7jPSZyD0gGZNh6XK8XlKYyd2qXUhF8HcYzNfClmoi6hbZ-LV2_djCfJnCr1nlxVnNkMOZ3AVHhdQLTYVWcp4SzjLFpZ37YR9hGX5135Ccy9lk7cByhqodFB__IH2810hpHbOgdBPY8T-akIcDZfxizUqGTmJlkLOFTv4_yDI7X6NlXkMHg8L6SnQQumNuxhfSh3g-raj5FRH8Mx6E94Q6zFQxQkA20QsGv49ju82nEF6Enz3YI_O8LcKCHIxZGnTOi7EIbRcZcbX9Mg

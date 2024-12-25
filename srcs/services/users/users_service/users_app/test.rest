@@ -24,4 +24,4 @@ Authorization: iyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNz
 {}
 
 ###
-get https://localhost:4430/api/users/singeue_pseudo/
+get https://localhost:4430/api/users/singuse_pseudo/

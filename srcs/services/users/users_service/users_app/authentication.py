@@ -23,7 +23,7 @@ class CustomJWTAuth(BaseAuthentication):
         self.algorithm = SIMPLE_JWT["ALGORITHM"]
         self.verifying_key = SIMPLE_JWT["VERIFYING_KEY"]
         self.auth_header_types = SIMPLE_JWT["AUTH_HEADER_TYPES"]
-        
+        logger.debug(f"__init__ params: {self.algorithm}")
     def authenticate(self, request):
         auth_header = request.headers.get("Authorization")
         if not auth_header:
@@ -31,6 +31,7 @@ class CustomJWTAuth(BaseAuthentication):
     
         auth_header_parts = auth_header.split()
         if len(auth_header_parts) != 2 or auth_header_parts[0] not in self.auth_header_types:
+            logger.debug("wrong auth_header len")
             return None
 
         token = auth_header_parts[1]
@@ -47,20 +48,23 @@ class CustomJWTAuth(BaseAuthentication):
             raise AuthenticationFailed("Token has expired.")
         except jwt.InvalidTokenError as e:
             raise AuthenticationFailed(f"Invalid token: {str(e)}")
-
         user = self.get_user_from_payload(payload)
+        logger.debug(f"user: {user}")
         return (user, payload)
     
     def get_user_from_payload(self, payload):
-        username = payload.get("username")  # Extracting `username` from the token
+        if not isinstance(payload, dict):
+            raise AuthenticationFailed("Invalid token payload format.")
+        
+        username = payload.get("username")
         if not username:
-            raise AuthenticationFailed("Token payload is missing 'username'.")
+            raise AuthenticationFailed("Token payload does not contain a valid 'username'.")
+        logger.debug(f"Received username from token payload: {username}")
         
         try:
             user = UserProfile.objects.get(username=username)
+            logger.debug(f"Found user with username: {username}")
             return user
         except UserProfile.DoesNotExist:
-            logger.debug(f"User with username '{username}' does not exist.")  # Debug line
+            logger.debug(f"User with username '{username}' does not exist.")
             raise AuthenticationFailed("User does not exist.")
-        
-        return user
