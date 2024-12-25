@@ -16,6 +16,7 @@ urlpatterns = [
         path('protected/', views.ProtectedView.as_view(), name='protected_view'),
         path('signup/', views.SignUpView.as_view(), name='signup'),
         path('delete/<str:username>/', views.DeleteUserView.as_view(), name='delete'),
+        path('service-token/', views.ServiceJWTObtainPair.as_view(), name='create-service-token'),
         path('<str:username>/', views.RetrieveUserView.as_view(), name='user_auth')
     ]))
 ]

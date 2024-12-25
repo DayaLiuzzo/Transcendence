@@ -32,8 +32,7 @@ class CustomJWTAuth(BaseAuthentication):
         auth_header_parts = auth_header.split()
         if len(auth_header_parts) != 2 or auth_header_parts[0] not in self.auth_header_types:
             logger.debug("wrong auth_header len")
-            return None
-
+            raise AuthenticationFailed(message)
         token = auth_header_parts[1]
         return self.authenticate_token(token)
         

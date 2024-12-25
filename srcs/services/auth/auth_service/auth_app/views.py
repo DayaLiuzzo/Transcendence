@@ -1,6 +1,7 @@
 
 from rest_framework.decorators import api_view
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
@@ -14,7 +15,7 @@ from .models import CustomUser
 from rest_framework.exceptions import ValidationError
 from .requests_custom import send_create_requests, send_delete_requests
 import requests
-from .serializers import CustomTokenObtainPairSerializer
+from .serializers import CustomTokenObtainPairSerializer, ServiceTokenSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 @api_view(['GET'])
@@ -80,6 +81,17 @@ class RetrieveUserView(generics.RetrieveAPIView):
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
 
+
+class ServiceJWTObtainPair(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ServiceTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            service_token = serializer.save()
+            return Response({
+                'service_token': service_token.token,
+                'expires_at': service_token.expires_at
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
