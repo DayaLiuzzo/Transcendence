@@ -3,9 +3,9 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "singuse_pseudo",
+  "username": "sinuse_pseudo",
   "password": "pass123456",
-  "email": "singuse@gmail.com"
+  "email": "sinuse@gmail.com"
 }
 
 ###
@@ -31,4 +31,3 @@ GET https://localhost:4430/api/auth/singeuse_pseudo/
 
 ###
 GET https://localhost:4430/api/users/protected/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MTUwNTcxLCJpYXQiOjE3MzUxNDUxNzEsImp0aSI6IjIyN2VlOWVhM2U5YTRkOTM4MGIwNGU3ZDU0YzhkZWQwIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJzaW5ndXNlX3BzZXVkbyJ9.f7D6UBA6n_cG5g-84xbb32xSASv_m8AGXYolrgqAXA9iLXr-KEA09HnnSuWh8Ykg3ebH_oz7jPSZyD0gGZNh6XK8XlKYyd2qXUhF8HcYzNfClmoi6hbZ-LV2_djCfJnCr1nlxVnNkMOZ3AVHhdQLTYVWcp4SzjLFpZ37YR9hGX5135Ccy9lk7cByhqodFB__IH2810hpHbOgdBPY8T-akIcDZfxizUqGTmJlkLOFTv4_yDI7X6NlXkMHg8L6SnQQumNuxhfSh3g-raj5FRH8Mx6E94Q6zFQxQkA20QsGv49ju82nEF6Enz3YI_O8LcKCHIxZGnTOi7EIbRcZcbX9Mg
