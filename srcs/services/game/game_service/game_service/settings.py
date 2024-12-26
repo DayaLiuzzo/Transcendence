@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', "game"]
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'game_app',
     'channels',
 ]
+
+ROOT_URLCONF = 'game_service.urls'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
@@ -58,7 +61,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'game_service.urls'
 
 TEMPLATES = [
     {
@@ -131,6 +133,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 ASGI_APPLICATION = "game_service.routing.application"
+
+CHANNEL_LAYERS = {
+    "default" : {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
