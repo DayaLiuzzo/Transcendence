@@ -69,7 +69,7 @@ def route_to_service(request, service_name, extra_path=''):
                 cookies=cookies,
                 data=request.body,
             )
-            logger.debug(f"Réponse du service {service_name}: {response.status_code} - {response.text[:500]}")
+            logger.debug(f"Réponse du service {service_name}: {response.status_code} - {response.text[:10000]}")
             return JsonResponse(response.json(), status=response.status_code, safe=False)
         except requests.exceptions.RequestException as e:
             return JsonResponse(
