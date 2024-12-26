@@ -33,6 +33,7 @@ Authorization: Bearer your_jwt_token_here
 <h2>AUTH</h2>
 
 **Sign Up**
+
 Endpoint: /api/auth/signup/
 Method: POST
 Description: Registers a new user in the authentication service and its associated data in other services.
@@ -46,6 +47,7 @@ Description: Registers a new user in the authentication service and its associat
     }
 
 **Login**
+
 Endpoint: /api/auth/login/
 Method: POST
 Description: Authenticates the user and returns a pair of tokens (access token and refresh token).
@@ -57,7 +59,8 @@ Description: Authenticates the user and returns a pair of tokens (access token a
         "password": "password123"
     }
 
-**User** 
+**User**
+
 Endpoint /api/auth/<str:username>
 Method: GET 
 Description: retrieves data from user
