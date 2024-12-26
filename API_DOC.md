@@ -1,4 +1,6 @@
-<h1>Base URL for all API requests:</h1>
+<h1>API documentation</h1>
+
+<h2>Base URL for all API requests:</h2>
 
 https://localhost:4430/api/<service_name>/...
 
