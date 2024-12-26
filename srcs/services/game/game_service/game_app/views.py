@@ -9,8 +9,17 @@ from rest_framework.authtoken.models import Token
 from django.shortcuts import render
 
 @api_view(['GET'])
+def test(request):
+    return Response({"message": "Hello le jeu"}, status=status.HTTP_200_OK)
+
+# @api_view(['GET'])
+# def grr(request):
+#     return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
 def index(request):
-    return render(request, 'index.html', {}, status=status.HTTP_200_OK)
+    return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
+    # return render(request, 'index.html', {}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def gameroom(request, room_name):
