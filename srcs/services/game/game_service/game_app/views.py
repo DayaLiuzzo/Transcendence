@@ -23,4 +23,9 @@ def index(request):
 
 @api_view(['GET'])
 def gameroom(request, room_name):
-    return render(request, 'gameroom.html', {'room_name': room_name}, status=status.HTTP_200_OK)
+    # Retourner les données sous forme de JSON
+    data = {
+        'room_name': room_name,
+        'message': 'Bienvenue dans la salle !'
+    }
+    return Response(data, status=status.HTTP_200_OK)
