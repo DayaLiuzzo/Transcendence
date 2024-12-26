@@ -45,6 +45,7 @@ def route_to_service(request, service_name, extra_path=''):
         # Construire l'URL cible
         service_url = service_map[service_name]
         url = f"{service_url}/api/{service_name}/{extra_path.lstrip('/')}"  # Ajouter le sous-chemin extra_path si présent
+        logger.debug(f"*********************************************")
 
         try:
             # Transférer la requête au microservice

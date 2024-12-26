@@ -1,28 +1,36 @@
-Base URL for all API requests:
+<h1>Base URL for all API requests:</h1>
 
 https://localhost:4430/api/<service_name>/...
 
-Authentication :
+<h2>Authentication :</h2>
 
 The API uses Bearer JWT token Authentication
 Authorization: Bearer your_jwt_token_here
 
-AUTH
+<h2>AUTH</h2>
 
-/api/auth/signup/
-/api/auth/login/ 
-/api/auth/delete/<str:username>/ 
-/api/auth/<str:username>/
+<ol>
+  <li>/api/auth/signup/</li>
+  <li>/api/auth/login/</li>
+  <li>/api/auth/delete/<str:username>/ </li>
+  <li>/api/auth/<str:username>/</li>
+</ol>
 
-USERS
+<h2>USERS</h2>
 
-/api/users/delete/<str:username>/ 
-/api/users/create/
-/api/users/<str:username>/
+<ol>
+  <li>/api/users/delete/<str:username>/</li>
+  <li>/api/users/create/</li>
+  <li>/api/users/<str:username>/</li>
+</ol>
 
-GAME
+<h2>GAME</h2>
 
-AUTH
+<ol>
+  <li>/api/game/a_creer/</li>
+</ol>
+
+<h2>AUTH</h2>
 
     Sign Up
     Endpoint: /api/auth/signup/
@@ -73,7 +81,7 @@ AUTH
         DELETE https://localhost:4430/api/auth/delete/john_doe/
 
 
-USERS
+<h2>USERS</h2>
 
     Delete User  
     Endpoint: /api/users/delete/<str:username>/
