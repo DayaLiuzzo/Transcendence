@@ -12,7 +12,3 @@ application = ProtocolTypeRouter({
         )
     )
 })
-
-print("Les URL WebSocket définies sont :")
-for pattern in websocket_urlpatterns:
-    print(pattern)
