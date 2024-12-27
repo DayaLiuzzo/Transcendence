@@ -7,9 +7,14 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.shortcuts import render
+import logging
+
+logger = logging.getLogger('game_app')  # Utilisez le logger de votre application spécifique
 
 @api_view(['GET'])
 def test(request):
+    logger.debug(f"*********************************************")
+    logger.debug(f"Client attempting a test")
     return Response({"message": "Hello le jeu"}, status=status.HTTP_200_OK)
 
 # @api_view(['GET'])
@@ -23,6 +28,8 @@ def index(request):
 
 @api_view(['GET'])
 def gameroom(request, room_name):
+    logger.debug(f"*********************************************")
+    logger.debug(f"Client attempting to connect to room via API")
     # Retourner les données sous forme de JSON
     data = {
         'room_name': room_name,

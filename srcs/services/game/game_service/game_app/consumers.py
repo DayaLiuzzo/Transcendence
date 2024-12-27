@@ -2,16 +2,8 @@ import json
 import logging
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%M-%d %H:-%M:%S:",
-
-)
-
 # Configure logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('game_app')  # Utilisez le logger de votre application spécifique
 
 class RoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -19,7 +11,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         self.room_groupname = 'room%s' % self.room_name
 
         logger.debug(f"*********************************************")
-        logger.debug(f"Client attempting to connect to room: {self.room_name}")
+        logger.debug(f"Client attempting to connect to room  via WS: {self.room_name}")
 
         # Ajouter le consommateur au groupe
         await self.channel_layer.group_add(
