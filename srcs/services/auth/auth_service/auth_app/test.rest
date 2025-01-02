@@ -26,6 +26,15 @@ Content-Type: application/json
   "password": "pass123456"
 }
 ###
+POST https://localhost:4430/api/auth/service-token/
+Content-Type: application/json
+
+{
+  "service_name": "service",
+  "password": "private"
+}
+
+###
 
 GET https://localhost:4430/api/auth/singeuse_pseudo/
 
