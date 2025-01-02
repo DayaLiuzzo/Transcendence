@@ -17,10 +17,9 @@ class CustomUser(AbstractUser):
         return True
     
 class Service(models.Model):
-    serviceName = models.CharField(max_length=255, unique=True)
+    service_name = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
 
 class Token(models.Model):
-    serviceName = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="tokens")
+    service_name = models.CharField(max_length=255)
     token = models.TextField()
-    expires_at = models.DateTimeField()
