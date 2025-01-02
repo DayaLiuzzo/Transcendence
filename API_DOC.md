@@ -72,7 +72,7 @@ AUTH
     Example Request:
         DELETE https://localhost:4430/api/auth/delete/john_doe/
 
-
+.
 USERS
 
     Delete User  
