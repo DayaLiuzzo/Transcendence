@@ -10,8 +10,19 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from .models import UserProfile
-
+from .authentication import CustomJWTAuth
 from django.db import IntegrityError
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    # filename="basic.log",
+    )
+
+# Crée un logger spécifique au module courant
+logger = logging.getLogger(__name__)
 
 
 class CreateUserProfileView(generics.CreateAPIView):
@@ -28,3 +39,18 @@ class DeleteUserProfileView(generics.DestroyAPIView):
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
     serializer_class = UserProfileSerializer
     lookup_field = "username"
+
+class RetrieveUserProfile(generics.RetrieveAPIView):
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
+    lookup_field = "username"
+
+
+class ProtectedView(APIView):
+    logger.debug("begin view")
+    permission_classes = []
+    def get(self, request):
+        logger.debug("In a view")
+        user = request.user
+        logger.debug(f"Authenticated user in view: {user}")
+        return Response({"message": "This is a protected view!"})

@@ -1,11 +1,12 @@
 let ready = 1;
 
 export default function() {
-if (ready)
-  return `
+  if (ready) {
+    // Créer un contenu HTML à insérer dans le DOM
+    const htmlContent = `
       <h1>Play in tournament</h1>
       <p>Ici on va jouuuuer</p>
-      <img src="../../assets/images/images/pong_1.gif" alt="Profile picture" class="profile-img">
+      <img src="../media/pong_1.gif" alt="Profile picture" class="profile-img">
     `;
 else
   return `
