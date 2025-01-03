@@ -2,17 +2,37 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status 
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.shortcuts import render
+import logging
 
+logger = logging.getLogger('game_app')  # Utilisez le logger de votre application spécifique
+
+@api_view(['GET'])
+def test(request):
+    logger.debug(f"*********************************************")
+    logger.debug(f"Client attempting a test")
+    return Response({"message": "Hello le jeu"}, status=status.HTTP_200_OK)
+
+# @api_view(['GET'])
+# def grr(request):
+#     return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
 def index(request):
-    return render(request, 'index.html', {})
+    return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
+    # return render(request, 'index.html', {}, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
 def gameroom(request, room_name):
-    return render(request, 'gameroom.html', {
-        'room_name': room_name
-    })
+    logger.debug(f"*********************************************")
+    logger.debug(f"Client attempting to connect to room via API")
+    # Retourner les données sous forme de JSON
+    data = {
+        'room_name': room_name,
+        'message': 'Bienvenue dans la salle !'
+    }
+    return Response(data, status=status.HTTP_200_OK)
