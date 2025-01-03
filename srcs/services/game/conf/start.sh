@@ -7,4 +7,4 @@ pip install daphne
 python3 manage.py makemigrations --noinput
 python3 manage.py migrate --noinput
 
-exec gunicorn game_service.wsgi:application --bind 0.0.0.0:8001 
+exec daphne -b 0.0.0.0 -p 8001 game_service.asgi:application
