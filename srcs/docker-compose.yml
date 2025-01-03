@@ -12,6 +12,18 @@ services:
     depends_on:
       - auth
 
+  auth:
+    build: services/auth
+    container_name: auth
+    ports:
+      - "8003" 
+    restart: on-failure
+    volumes:
+      - auth_keys:/keys
+    depends_on:
+      - db_auth
+    env_file: .env
+
   users:
     image: users
     container_name: users
@@ -19,6 +31,8 @@ services:
     ports:
       - "8000"
     restart: on-failure
+    volumes:
+      - auth_keys:/keys
     depends_on:
       - db_users
     env_file: .env
@@ -34,23 +48,13 @@ services:
       - db_game
     env_file: .env
 
-  # api_gateway:
-  #   image: api_gateway
-  #   container_name: api_gateway
-  #   build: services/api_gateway
-  #   ports:
-  #     - "8002"
-  #   restart: on-failure
-
-  auth:
-    build: services/auth
-    container_name: auth
+  api_gateway:
+    image: api_gateway
+    container_name: api_gateway
+    build: services/api_gateway
     ports:
-      - "8003" 
+      - "8002"
     restart: on-failure
-    depends_on:
-      - db_auth
-    env_file: .env
 
   # friends:
   #   build: services/friends
@@ -115,3 +119,6 @@ services:
     env_file: .env
     ports:
       - '5432'
+
+volumes:
+  auth_keys:

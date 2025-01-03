@@ -1,11 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Room</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gameroooooom</title>
 </head>
 <body>
-	<p>Ici c'est une room</p>
+    <div id="user-hello"></div>
+
+    {{ room_name|json_script:"room_name"}}    
+    <script>
+        const roomName = JSON.parse(document.getElementById('room_name').textContent);
+        console.log("coucou")
+        const gameSocket = new WebSocket(
+            'wss://' +
+            window.location.host +
+            '/ws/game/' +
+            roomName +
+            '/'
+        );
+        console.log("debut du test")
+        gameSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+            document.querySelector('#user-hello').innerHTML = (data.tester);
+        }
+        console.log("fin du test")
+    </script>
+    <p>lol</p>
 </body>
 </html>

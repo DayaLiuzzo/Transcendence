@@ -1,12 +1,13 @@
 
 from rest_framework.decorators import api_view
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views import View
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from .serializers import  CustomUserSerializer
 from django.contrib.auth import authenticate
@@ -14,8 +15,9 @@ from .models import CustomUser
 from rest_framework.exceptions import ValidationError
 from .requests_custom import send_create_requests, send_delete_requests
 import requests
-from .serializers import CustomTokenObtainPairSerializer
+from .serializers import CustomTokenObtainPairSerializer, ServiceTokenSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from .permissions import IsOwnerAndAuthenticated
 
 @api_view(['GET'])
 def welcome(request):
@@ -39,15 +41,14 @@ class GetCSRFTokenView(View):
 
 class ProtectedView(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request):
+        user = request.user
+        print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
         return Response({"message": "This is a protected view!"})
 
 
-
-
-
 class SignUpView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
@@ -63,6 +64,7 @@ class SignUpView(generics.ListCreateAPIView):
         return user
 
 class DeleteUserView (generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
@@ -73,6 +75,21 @@ class DeleteUserView (generics.DestroyAPIView):
         if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
             raise ValidationError("Error deleting user")
         instance.delete()
+
+class RetrieveUserView(generics.RetrieveAPIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+
+
+class ServiceJWTObtainPair(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ServiceTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):

@@ -1,6 +1,5 @@
 FROM python:3.9
 
-
 COPY game_service .
 COPY ./conf/requirements.txt .
 EXPOSE 8001
