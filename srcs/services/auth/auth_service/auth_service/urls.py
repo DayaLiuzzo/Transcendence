@@ -6,7 +6,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-from auth_app.views import GetCSRFTokenView, CustomTokenObtainPairView
+# from auth_app.views import GetCSRFTokenView
+from auth_app.views import CustomTokenObtainPairView
 
 urlpatterns = [
     # path('api/auth/', views.auth_root),
