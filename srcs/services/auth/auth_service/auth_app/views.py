@@ -17,6 +17,7 @@ from .requests_custom import send_create_requests, send_delete_requests
 import requests
 from .serializers import CustomTokenObtainPairSerializer, ServiceTokenSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from .permissions import IsOwnerAndAuthenticated
 
 @api_view(['GET'])
 def welcome(request):
@@ -44,8 +45,6 @@ class ProtectedView(APIView):
         user = request.user
         print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
         return Response({"message": "This is a protected view!"})
-
-
 
 
 class SignUpView(generics.ListCreateAPIView):
@@ -78,7 +77,7 @@ class DeleteUserView (generics.DestroyAPIView):
         instance.delete()
 
 class RetrieveUserView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerAndAuthenticated]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
