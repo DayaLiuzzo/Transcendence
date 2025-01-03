@@ -3,14 +3,13 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "sinuse_pseudo",
+  "username": "sinuase_pseudo",
   "password": "pass123456",
-  "email": "sinuse@gmail.com"
+  "email": "sinuase@gmail.com"
 }
 
 ###
-DELETE  https://localhost:4430/api/auth/delete/sinuse_pseudo/
-Content-Type: application/json
+DELETE  https://localhost:4430/api/auth/delete/sinuse_pseudo
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTExNzQ0LCJpYXQiOjE3MzU5MDYzNDQsImp0aSI6ImVkZWFlYTM5NmZhNTRiM2M4MDIzY2E4ZGYzNzNiMzMzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJzaW51c2VfcHNldWRvIn0.KYLi4DJXtYcUa45HrYL8Y-9nPlUmHcJbXY8LwpHdfsJq33FHQHga2hikQmVlmlzgRGeH3SYrcMT4cHmEFOxkAexjMMhyumaWJQ1uH_mzUa1ayPjhlGw0wNOVZ8wIxKsXvnl0da9FnxmDPmh4A6M8WrL8vMwPup5bLn-9Iy5AvqE1kS3DGADgWC7S47mTK0tM7DDT0X05_DydmRvFW1eyq56dUqErhk3yVLXNYD4rqPE58W0K1m7QlQe4hZjxM4NMq4oy5kToJN86jG4HFFXROq6Fh53f8Nnfgo-gajE72E1NAN8rh3tUQ-nfmZRGlaXflopu0AKwb31N86kFVtMO3w
 {
   "username": "sinuse_pseudo",
@@ -30,13 +29,13 @@ POST https://localhost:4430/api/auth/service-token/
 Content-Type: application/json
 
 {
-  "service_name": "service",
-  "password": "private"
+  "service_name": "users",
+  "password": "your_users_service_password"
 }
 
 ###
-
-GET https://localhost:4430/api/auth/singeuse_pseudo/
+GET https://localhost:4430/api/auth/sinuase_pseudo/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1OTI0OTI4LCJpYXQiOjE3MzU5MTk1MjgsImp0aSI6IjNjNGI5ZDE2YzE0MDQ3YWNiOTY1NjMwYTk1NjgyNjQ4IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJzaW51c2VfcHNldWRvIn0.ZoRe7KR2Phw1CQHitYQsHDn3-7OOofKUbTuZuBddBtN6hrvXSm4vWpJQ4hKxP6Q49WhwoEnUlH2n022-m16is5j0V7FO-w9X7xPXDbP6lFtIC0Ki37Id8pl__mkiRwVDcIn2r0QhmOzJwz-DKFa6rEPfOdZ7sbC21d2aKmKqukgryuyPwPhDEMnUGkOoIjhvDPWBI8xq2aNuxXOqXmAE6UxkYulLHM5on1vNUZsLeP6bevhk0OKu9qneeZQrtWj2-aK9nvpDHgKObKQTp56Ls_V2Nxuw7aAfWmtxYIgUI-2E8Mmd4S_0XHi27SPA7keFe7iqGMmv4dj6_ReeBnf9Jw
 
 ###
 GET https://localhost:4430/api/users/protected/
