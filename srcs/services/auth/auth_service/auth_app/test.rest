@@ -22,12 +22,12 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "singuse_pseudo",
+  "username": "sinuse_pseudo",
   "password": "pass123456"
 }
 ###
 
-GET https://localhost:4430/api/auth/singeuse_pseudo/
+GET https://localhost:4430/api/auth/sineuse_pseudo/
 
-###
+###Ajouter le token recu
 GET https://localhost:4430/api/users/protected/

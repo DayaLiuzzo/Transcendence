@@ -1,14 +1,5 @@
-POST https://localhost:4430/api/auth/login
-Content-Type: application/json
-
-{
-  "username": "singeuse",
-  "password": "pass123"
-}
-
-###
-
 POST https://localhost:4430/api/users/create/
+
 Content-Type: application/json
 Authorization: Bearer iyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0NTUwMjU0LCJpYXQiOjE3MzQ1NDQ4NTQsImp0aSI6IjU0NTY2MDkyOWVlNzRlM2I4ZDJjMjQ3YmY1YWM3MTAzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJzaW5nZXVzZV9wc2V1ZG8ifQ.hU1kiIh1220ECZgRsyhrOplguU-Mp2pRWsk6Xg4qyJ-G5Bubvqq8AmGRzZGL3UY-ndBBsAspvZRWvpl2lDnyV90sueBvmqjzYnJvOmZIEt4ZKEWl5YKVFfnH0OfT_Tj8i4QqVzHYjJ2JIKStMPNFrCkfqDxZbEVfoXN2aKLvl8yvCpTAxp--oEaHCKfkafBj_YEO93WTL90ED7Cro6YRjckudJ1UtOsgZ-0Gxl3xyyRyWWHUg_s5JCaSUazU4hejoUvjT9WrlfOn1DyK4riv3shvAkpDBgOY2R_z6TAhSXJj3n6Nr_xnNRLFKeuufqcsTKQzPJU7YBGVtloj9zGHiw
 {
