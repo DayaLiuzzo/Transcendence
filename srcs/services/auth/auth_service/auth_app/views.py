@@ -7,7 +7,7 @@ from rest_framework import status
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views import View
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from .serializers import  CustomUserSerializer
 from django.contrib.auth import authenticate
@@ -40,7 +40,6 @@ class GetCSRFTokenView(View):
 
 class ProtectedView(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request):
         user = request.user
         print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
@@ -50,6 +49,7 @@ class ProtectedView(APIView):
 
 
 class SignUpView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
@@ -65,6 +65,7 @@ class SignUpView(generics.ListCreateAPIView):
         return user
 
 class DeleteUserView (generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
@@ -77,6 +78,7 @@ class DeleteUserView (generics.DestroyAPIView):
         instance.delete()
 
 class RetrieveUserView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'

@@ -42,12 +42,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['username'] = user.username
-        # del token['user_id']
         token.set_exp(lifetime=timedelta(minutes=5))
         token.payload['exp'] = (datetime.utcnow() + timedelta(days=1)).timestamp()
         user.last_log = now()
         user.save()
         return token
+
 
 class ServiceTokenSerializer(serializers.ModelSerializer):
     service_name = serializers.CharField(write_only=True)
@@ -56,17 +56,19 @@ class ServiceTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ['service_name', 'password']
+
     def validate(self, attrs):
-        password = attrs.get('password')
         service_name = attrs.get('service_name')
-        try :
-            service = Service.objects.get(service_name=service_name)
-        except Service.DoesNotExist:
-            raise ValidationError(f"Service name : {service_name} does not exist")
+        password = attrs.get('password')
+
+        service = Service.objects.filter(service_name=service_name).first()
+        if not service:
+            raise serializers.ValidationError({"service_name": f"Service name '{service_name}' does not exist."})
+
         if not check_password(password, service.password):
-            raise ValidationError(f"password : {password} does not match service.password : {service.password}")
-        token = createServiceToken(service)
-        return {'token': token}
+            raise serializers.ValidationError({"password": f"{password} does not match {service.password} Invalid password."})
+
+        return {'token': createServiceToken(service)}
 
 def createServiceToken(service):
     payload = {
