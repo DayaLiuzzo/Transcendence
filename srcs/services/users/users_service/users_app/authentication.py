@@ -1,9 +1,11 @@
+import logging
+
 import jwt
+from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework import exceptions
+
 from .models import UserProfile
-import logging
 
 logging.basicConfig(
     level=logging.DEBUG,

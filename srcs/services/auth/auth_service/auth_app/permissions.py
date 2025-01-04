@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+
 from auth_app.models import CustomUser
 
 class IsOwnerAndAuthenticated(BasePermission):

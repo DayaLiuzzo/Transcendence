@@ -1,5 +1,7 @@
+from django.urls import include
+from django.urls import path
+from django.urls import re_path
 
-from django.urls import re_path, path, include
 from users_app import views
 
 urlpatterns = [

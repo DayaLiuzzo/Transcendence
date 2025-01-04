@@ -1,6 +1,8 @@
+from datetime import datetime
+from datetime import timedelta
+
 import requests
-import requests
-from datetime import datetime, timedelta
+
 from django.utils import timezone
 
 def send_request(url:str, method:str, body={}, headers={}) -> int:
