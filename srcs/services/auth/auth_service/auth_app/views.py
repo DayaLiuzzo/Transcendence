@@ -1,23 +1,27 @@
 
-from rest_framework.decorators import api_view
-from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views import View
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.views import APIView
-from .serializers import  CustomUserSerializer
-from django.contrib.auth import authenticate
-from .models import CustomUser
-from rest_framework.exceptions import ValidationError
-from .requests_custom import send_create_requests, send_delete_requests
+
 import requests
-from .serializers import CustomTokenObtainPairSerializer, ServiceTokenSerializer
+from rest_framework import generics
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
+from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from .models import CustomUser
 from .permissions import IsOwnerAndAuthenticated
+from .requests_custom import send_create_requests
+from .requests_custom import send_delete_requests
+from .serializers import CustomTokenObtainPairSerializer
+from .serializers import CustomUserSerializer
+from .serializers import ServiceTokenSerializer
 
 @api_view(['GET'])
 def welcome(request):

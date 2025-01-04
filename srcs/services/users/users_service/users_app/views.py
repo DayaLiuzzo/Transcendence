@@ -1,18 +1,24 @@
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from .serializers import UserProfileSerializer
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework import generics
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from .models import UserProfile
-from .authentication import CustomJWTAuth
-from django.db import IntegrityError
 import logging
+
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
+
+from rest_framework import generics
+from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view
+from rest_framework.decorators import authentication_classes
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .authentication import CustomJWTAuth
+from .models import UserProfile
+from .serializers import UserProfileSerializer
 
 logging.basicConfig(
     level=logging.DEBUG,
