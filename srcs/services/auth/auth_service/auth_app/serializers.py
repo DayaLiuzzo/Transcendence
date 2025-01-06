@@ -8,6 +8,18 @@ from auth_service import settings
 import jwt
 from django.utils import timezone
 from django.forms import ValidationError
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    # filename="basic.log",
+    )
+
+# Crée un logger spécifique au module courant
+logger = logging.getLogger(__name__)
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta(object):

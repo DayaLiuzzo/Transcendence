@@ -30,7 +30,7 @@ Content-Type: application/json
 
 {
   "service_name": "users",
-  "password": "your_users_service_password"
+  "password": "private"
 }
 
 ###
