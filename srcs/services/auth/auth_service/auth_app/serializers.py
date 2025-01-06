@@ -79,8 +79,8 @@ class ServiceTokenSerializer(serializers.ModelSerializer):
 
         if not check_password(password, service.password):
             raise serializers.ValidationError({"password": f"{password} does not match {service.password} Invalid password."})
-
-        return {'token': createServiceToken(service)}
+        token = createServiceToken(service)
+        return {'token': token}
 
 def createServiceToken(service):
     payload = {

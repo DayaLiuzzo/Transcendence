@@ -17,7 +17,7 @@ from .requests_custom import send_create_requests, send_delete_requests
 import requests
 from .serializers import CustomTokenObtainPairSerializer, ServiceTokenSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .permissions import IsOwnerAndAuthenticated
+from .permissions import IsOwnerAndAuthenticated, IsService
 
 @api_view(['GET'])
 def welcome(request):
@@ -38,9 +38,16 @@ class GetCSRFTokenView(View):
         return JsonResponse({'csrf_token': token})
 
 
-
-class ProtectedView(APIView):
-    permission_classes = [IsAuthenticated]
+class ProtectedUserView(APIView):
+    permission_classes = [IsService]
+    def get(self, request):
+        user = request.user
+        print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
+        return Response({"message": "This is a protected view!"})
+    
+class ProtectedServiceView(APIView):
+    authentication_classes = []
+    permission_classes = [IsService]
     def get(self, request):
         user = request.user
         print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
