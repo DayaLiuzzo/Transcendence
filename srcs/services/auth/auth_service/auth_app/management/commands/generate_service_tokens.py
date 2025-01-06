@@ -25,6 +25,6 @@ class Command(BaseCommand):
         
         for service in Service.objects.filter(service_name__in=[m['service_name'] for m in microservices]):
             token = createServiceToken(service)
-            Token.objects.create(service_name=service, token=token)
+            Token.objects.create(service_name=service.service_name, token=token)
 
         self.stdout.write(self.style.SUCCESS('Microservices and tokens have been created successfully.'))
