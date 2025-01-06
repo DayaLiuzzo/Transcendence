@@ -6,3 +6,5 @@ gunicorn
 django-cors-headers
 requests
 cryptography
+PyJWT
+pyOpenssl

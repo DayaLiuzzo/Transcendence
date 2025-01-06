@@ -14,7 +14,8 @@ urlpatterns = [
     path('api/auth/', include([
         path('welcome/', views.welcome),
         path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-        path('protected/', views.ProtectedView.as_view(), name='protected_view'),
+        path('protected_user/', views.ProtectedUserView.as_view(), name='protected_user_view'),
+        path('protected_service/', views.ProtectedServiceView.as_view(), name='protected_service_view'),
         path('signup/', views.SignUpView.as_view(), name='signup'),
         path('delete/<str:username>/', views.DeleteUserView.as_view(), name='delete'),
         path('service-token/', views.ServiceJWTObtainPair.as_view(), name='create-service-token'),
