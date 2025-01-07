@@ -33,7 +33,7 @@ export default function() {
       });
 
     // Créer une connexion WebSocket sécurisée
-    const socket = new WebSocket('wss://' + window.location.hostname + '/ws/game/' + 'lol/');
+    const socket = new WebSocket('wss://' + window.location.host + '/ws/game/' + 'lol/');
 
     // Lorsqu'une connexion est établie
     socket.onopen = function() {

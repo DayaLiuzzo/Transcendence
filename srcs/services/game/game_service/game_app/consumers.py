@@ -9,7 +9,7 @@ logger = logging.getLogger('game_app')  # Utilisez le logger de votre applicatio
 class RoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_groupname = 'room%s' % self.room_name
+        self.room_group_name = 'room%s' % self.room_name
 
         logger.debug(f"*********************************************")
         logger.debug(f"Client attempting to connect to room  via WS: {self.room_name}")
