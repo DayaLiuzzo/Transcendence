@@ -13,6 +13,7 @@ from .models import UserProfile
 from .authentication import CustomJWTAuth
 from django.db import IntegrityError
 import logging
+from users_app.permissions import IsService
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -47,10 +48,9 @@ class RetrieveUserProfile(generics.RetrieveAPIView):
 
 
 class ProtectedView(APIView):
-    logger.debug("begin view")
-    permission_classes = []
+    authentication_classes = []
+    permission_classes = [IsService]
     def get(self, request):
-        logger.debug("In a view")
         user = request.user
         logger.debug(f"Authenticated user in view: {user}")
         return Response({"message": "This is a protected view!"})

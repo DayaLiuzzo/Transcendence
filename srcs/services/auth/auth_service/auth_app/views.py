@@ -18,6 +18,20 @@ import requests
 from .serializers import CustomTokenObtainPairSerializer, ServiceTokenSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .permissions import IsOwnerAndAuthenticated, IsService
+import logging 
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    # filename="basic.log",
+    )
+
+# Crée un logger spécifique au module courant
+logger = logging.getLogger(__name__)
+
+logger.debug("------------------CALL-----------")
+
 
 @api_view(['GET'])
 def welcome(request):
@@ -55,6 +69,7 @@ class ProtectedServiceView(APIView):
 
 
 class SignUpView(generics.ListCreateAPIView):
+    logger.debug("IN AUTH CREATE VIEW")
     permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -75,18 +90,21 @@ class DeleteUserView (generics.DestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
+    logger.debug("IN AUTH DELETE VIEW")
 
     def perform_destroy(self, instance):
         req_urls = [ f'http://users:8000/api/users/delete/{instance.username}/',
                     ]
         if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
             raise ValidationError("Error deleting user")
+        logger.debug(f'user deleted : {instance.username}')
         instance.delete()
 
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    logger.debug("IN AUTH RETRIEVE VIEW")
     lookup_field = 'username'
 
 
