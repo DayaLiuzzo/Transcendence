@@ -44,6 +44,7 @@ def route_to_service(request, service_name, extra_path=''):
         "auth": "http://auth:8003",
         "friends": "http://friends:8004",
         "rooms": "http://rooms:8005",
+        "pendu": "http://pendu:8006"
     }
     # logger.debug(f"------------------ON EST LA TU CONNAIS--------------")
 

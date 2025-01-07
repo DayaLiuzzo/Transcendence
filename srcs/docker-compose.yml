@@ -48,6 +48,17 @@ services:
       - db_game
     env_file: .env
 
+  pendu:
+    image: pendu
+    container_name: pendu
+    build: services/pendu
+    ports:
+      - "8006"
+    restart: on-failure
+    depends_on:
+      - db_pendu
+    env_file: .env
+
   api_gateway:
     image: api_gateway
     container_name: api_gateway
@@ -60,7 +71,7 @@ services:
   #   build: services/friends
   #   container_name: friends
   #   ports:
-  #     - "8004"  # Exposing the auth service on port 8000
+  #     - "5"  # Exposing the auth service on port 8000
   #   restart: on-failure
   #   depends_on:
   #     - db_friends
@@ -89,6 +100,15 @@ services:
     image: db_game
     container_name: db_game
     build: services/db_game
+    restart: on-failure
+    env_file: .env
+    ports:
+      - '5432'
+
+  db_pendu:
+    image: db_pendu
+    container_name: db_pendu
+    build: services/db_pendu
     restart: on-failure
     env_file: .env
     ports:

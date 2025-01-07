@@ -1,10 +1,11 @@
 import json
 import logging
+import requests
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 # Configure logging
-logger = logging.getLogger('game_app')  # Utilisez le logger de votre application spécifique
+logger = logging.getLogger('pendu_app')  # Utilisez le logger de votre application spécifique
 
 class RoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -12,7 +13,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         self.room_group_name = 'room%s' % self.room_name
 
         logger.debug(f"*********************************************")
-        logger.debug(f"Client attempting to connect to game app room  via WS: {self.room_name}")
+        logger.debug(f"Client attempting to connect to pendu room  via WS: {self.room_name}")
 
         # Ajouter le consommateur au groupe
         await self.channel_layer.group_add(
@@ -24,6 +25,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         await self.accept()
         logger.debug(f"Client connected to room: {self.room_name}")
 
+  
         # Envoyer un message initial au groupe
         await self.channel_layer.group_send(
             self.room_group_name,

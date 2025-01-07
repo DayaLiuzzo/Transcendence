@@ -1,0 +1,1 @@
+GET https://localhost:4430/api/pendu/word/

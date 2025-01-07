@@ -1,0 +1,7 @@
+django
+djangorestframework
+djangorestframework-simplejwt
+psycopg2-binary
+channels
+daphne
+requests
