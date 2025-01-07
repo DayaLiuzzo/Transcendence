@@ -48,13 +48,13 @@ services:
   #     - db_game
   #   env_file: .env
 
-  # api_gateway:
-  #   image: api_gateway
-  #   container_name: api_gateway
-  #   build: services/api_gateway
-  #   ports:
-  #     - "8002"
-  #   restart: on-failure
+  api_gateway:
+    image: api_gateway
+    container_name: api_gateway
+    build: services/api_gateway
+    ports:
+      - "8002"
+    restart: on-failure
 
   # friends:
   #   build: services/friends
