@@ -1,6 +1,8 @@
-from django.urls import path
-from game_app import views
 import logging
+
+from django.urls import path
+
+from game_app import views
 
 urlpatterns = [
 		path('', views.index, name='index'),#homepage

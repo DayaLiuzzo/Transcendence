@@ -14,14 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, re_path
-from api_gateway_app import views
-# from api_gateway_app.views import GetCSRFTokenView
-from django.http import JsonResponse
-import requests
 import logging
+import requests
+
+from django.contrib import admin
+from django.http import JsonResponse
+from django.urls import path
+from django.urls import re_path
 from django.views import View
+
+from api_gateway_app import views
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -55,30 +57,20 @@ def route_to_service(request, service_name, extra_path=''):
             headers = {
                 "Content-Type": request.headers.get("Content-Type", ""),
                 "Authorization": request.headers.get("Authorization", ""),
-                # "X-CSRFToken": request.headers.get("X-CSRFToken", ""),
             }
             logger.debug(f"headers de la requête: {headers}")
-        
-            # cookies = {
-            #     'csrftoken': request.COOKIES.get('csrftoken'),
-            # }
-
-            # logger.debug(f"Cookies de la requête: {cookies}")
 
             response = requests.request(
                 method=request.method,
                 url=url,
                 headers=headers,
-                # cookies=cookies,
                 data=request.body,
             )
             logger.debug(f"Réponse du service {service_name}: {response.status_code} - {response.text[:10000]}")
             return JsonResponse(response.json(), status=response.status_code, safe=False)
         except requests.exceptions.RequestException as e:
-            return JsonResponse(
-                {"error": f"Service {service_name} is unavailable", "details": str(e)},
-                status=503,
-            )
+            return JsonResponse(data="grrrr", status=response.status_code, safe=False)
+            # return JsonResponse({"error": f"grrrr", "details": str(e)}, status=response.status_code, safe=False)
 
     return JsonResponse({"error": "Service not found"}, status=404)
 

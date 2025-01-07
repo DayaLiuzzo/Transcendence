@@ -1,10 +1,13 @@
 # auth_app/management/commands/create_microservices.py
 
-from django.core.management.base import BaseCommand
-from django.contrib.auth.hashers import make_password
-from auth_app.models import Service, Token
-from auth_app.serializers import createServiceToken
 import os
+
+from django.contrib.auth.hashers import make_password
+from django.core.management.base import BaseCommand
+
+from auth_app.models import Service
+from auth_app.models import Token
+from auth_app.serializers import createServiceToken
 
 class Command(BaseCommand):
     help = 'Create microservice users and tokens in bulk'
