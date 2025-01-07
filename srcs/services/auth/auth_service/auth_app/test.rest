@@ -31,7 +31,7 @@ Content-Type: application/json
 ###
 #check if service can access protected view
 GET https://localhost:4430/api/auth/protected_service/
-Authorization: Bearer <service token>
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM2Mjk3MTc5LCJpYXQiOjE3MzYyNTM5Nzl9.ELpgZkHpG_-X9Bs4KlvhQeof29tBHx4a54FdXgrDTETTSdA_K8qgLIhjziZsgWrNJooV3sNBceNKemcwIjAvMaLZcBTX4E34fN-H6LI6T7gSijAco2SIhurWIdftjzQLSrFig4o7IJ2wluFua_DK86L5ZZ_AE8yUVHskgFZx1wAv5GD-gap3gz4cdm-rPN6P-s5QKbSuuUo2URFCrkZ-uWqR_F9Pbd_Z_YEWjrQMp_S0bm-Iomjxxf6sRVA1DwRIYfy7TLU29hHS_B4z6_rf9PFkuSrD2lrt6whoQVdVVOsaV0biKhlka4QXJLPvmQX1qpX22UAHDkVdibh_HysHAg
 
 ###
 #check if bad input can access protected view
@@ -41,8 +41,7 @@ GET https://localhost:4430/api/auth/protected_service/
 ###
 #check if invalid token can access protected view
 GET https://localhost:4430/api/auth/protected_service/
-Authorization: Bearer <invalidservice token>
-
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM2Mjk0NzM5LCJpYXQiOjE3MzYyNTE1Mzl9.W6JN7Oahw0qRwd3m36_pJu0tmb8VdHCC3KJElPW5C94fReFj6i_l7_NSVGE2CCew6tvtjLEWkbSop6Z8z_1B9PQW6Mw2TNdxSc1K4jBzL6q1t8AxpV6_I1QxNpqCFtRYHQjf2IOJRYqNlsQWGpZGmIUlmCd7bjTJB2Az1D9MH71uZp0mJ-sp4HUWljk2G2W0tZXJB_MvAJx3y1MmkX1O-hBiWugo7tYOTZpUDYPU4ryHYgK2ihLfT6GYztg23VZF9qmRA7X_cdKH0JXKobOICRPmXACb2d9aSiSz-Be16rP9M7tXJ1muGKrAWAD_Ptp4KtQ3QoJf0OuAYngTM2Hyqw
 
 
 
@@ -66,8 +65,7 @@ Authorization: Bearer <invaliduser token>
 GET https://localhost:4430/api/auth/test_user/
 Authorization: Bearer <user token>
 ###
-DELETE  https://localhost:4430/api/auth/delete/test_user
-Authorization: Bearer <user token>
-{
-  "username": "test_user",
-}
+
+DELETE  https://localhost:4430/api/auth/delete/test_user/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM2MjY5NzAwLCJpYXQiOjE3MzYyNjQzMDAsImp0aSI6ImUxYTA5OWE2YzNlYjQ3OGU5MTllZTFiNWJlY2NhNTUzIiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.huEAmo-sOsgm5_LB2xKqqr_CsvmP_Ptz1n1XW3N4x-JQbF0uXLR0W6-64-qH8VzSu5ORrdpgbuL_nijsNRDf5_WZRc6s5PNoarqnZN69Xa9PFNqWFZeQRzEPQK8lmFhor914sgFwT0StNVcxiQuT7xBywDhZpALm-k4wnoLdvDru5loqO8vsoIpDyXuPquuZkhCJLMDMITPi0tKhCDI2UG4eOuOuqefayBBHbfzeDvDp7vbJC4ebuQ2NQQzUu9usirGGJL8hix7fiw1pzCeatV9u1UUc72sIYy5gw1jCKj23SZ4Ai2aGxyd_qo5eLLgF7nRMWWW0yH1hnYMrlfWFgQ
+
