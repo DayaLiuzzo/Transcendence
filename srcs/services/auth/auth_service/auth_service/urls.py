@@ -1,12 +1,12 @@
+from django.urls import include
+from django.urls import path
+from django.urls import re_path
 
-from django.urls import path, re_path, include
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenVerifyView
+
 from auth_app import views
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
-# from auth_app.views import GetCSRFTokenView
 from auth_app.views import CustomTokenObtainPairView
 
 urlpatterns = [
