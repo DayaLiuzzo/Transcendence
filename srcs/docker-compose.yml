@@ -20,6 +20,7 @@ services:
     restart: on-failure
     volumes:
       - auth_keys:/keys
+      - auth_service_data:/service_code
     depends_on:
       - db_auth
     env_file: .env
@@ -122,3 +123,11 @@ services:
 
 volumes:
   auth_keys:
+
+  auth_service_data:
+    name: auth_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/dliuzzo/transcendence/srcs/services/auth/auth_service
