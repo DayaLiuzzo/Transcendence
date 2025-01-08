@@ -1,0 +1,3 @@
+###
+#check if API Gateway is working
+GET https://localhost:4430/api/api_gateway/
