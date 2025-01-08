@@ -25,4 +25,4 @@ class TokenFetchError(APIException):
     status_code = 503
     default_detail = 'Failed to fetch the service token.'
     default_code = 'token_fetch_failed'
-    
+    http://users:8000
