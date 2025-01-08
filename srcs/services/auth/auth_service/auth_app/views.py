@@ -16,13 +16,13 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 import logging 
 
-
+from .models import CustomUser
 from .permissions import IsOwnerAndAuthenticated, IsService
-from auth_app.models import CustomUser
-from auth_app.serializers import CustomTokenObtainPairSerializer
-from auth_app.serializers import ServiceTokenSerializer
-from auth_app.serializers import CustomUserSerializer
-from auth_app.requests_custom import *
+from .serializers import CustomUserSerializer
+from .serializers import CustomTokenObtainPairSerializer
+from .serializers import ServiceTokenSerializer
+from .requests_custom import *
+
 
 logging.basicConfig(
     level=logging.DEBUG,
