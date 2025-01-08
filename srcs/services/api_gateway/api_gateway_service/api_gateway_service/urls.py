@@ -18,6 +18,7 @@ import logging
 import requests
 
 from django.contrib import admin
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.urls import path
 from django.urls import re_path
@@ -44,13 +45,13 @@ def route_to_service(request, service_name, extra_path=''):
         "friends": "http://friends:8004",
         "rooms": "http://rooms:8005",
     }
-    logger.debug(f"------------------ON EST LA TU CONNAIS--------------")
+    # logger.debug(f"------------------ON EST LA TU CONNAIS--------------")
 
     if service_name in service_map:
         # Construire l'URL cible
         service_url = service_map[service_name]
         url = f"{service_url}/api/{service_name}/{extra_path.lstrip('/')}"  # Ajouter le sous-chemin extra_path si présent
-        logger.debug(f"*********************************************")
+        # logger.debug(f"*********************************************")
 
         try:
             # Transférer la requête au microservice
@@ -67,10 +68,12 @@ def route_to_service(request, service_name, extra_path=''):
                 data=request.body,
             )
             logger.debug(f"Réponse du service {service_name}: {response.status_code} - {response.text[:10000]}")
+            if (response.status_code == 204):
+                return(HttpResponse(status=204))
             return JsonResponse(response.json(), status=response.status_code, safe=False)
         except requests.exceptions.RequestException as e:
-            return JsonResponse(data="grrrr", status=response.status_code, safe=False)
-            # return JsonResponse({"error": f"grrrr", "details": str(e)}, status=response.status_code, safe=False)
+            # return JsonResponse(data="grrrr", status=response.status_code, safe=False)
+            return JsonResponse({"details": str(e)}, status=response.status_code, safe=False)
 
     return JsonResponse({"error": "Service not found"}, status=404)
 
