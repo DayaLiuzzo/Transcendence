@@ -14,8 +14,15 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .permissions import IsOwnerAndAuthenticated, IsService
 import logging 
+
+
+from .permissions import IsOwnerAndAuthenticated, IsService
+from auth_app.models import CustomUser
+from auth_app.serializers import CustomTokenObtainPairSerializer
+from auth_app.serializers import ServiceTokenSerializer
+from auth_app.serializers import CustomUserSerializer
+from auth_app.requests_custom import *
 
 logging.basicConfig(
     level=logging.DEBUG,
