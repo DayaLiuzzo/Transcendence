@@ -15,14 +15,11 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 
-logger = logging.getLogger('pendu_app')  # Utilisez le logger de votre application spécifique
+logger = logging.getLogger('pendu_app')
 
 @api_view(['GET'])
-def test(request):
-    logger.debug(f"*********************************************")
-    logger.debug(f"Client attempting a test")
-    return Response({"message": "Hello le jeu"}, status=status.HTTP_200_OK)
-
+def pendu_service_running(request):
+    return Response({"message": "Pendu service is running"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def word(request):
@@ -37,16 +34,6 @@ def word(request):
 
 
         
-
-
-# @api_view(['GET'])
-# def grr(request):
-#     return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def index(request):
-    return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
-    # return render(request, 'index.html', {}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def penduroom(request, room_name):

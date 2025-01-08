@@ -1,1 +1,7 @@
+#
+###Check if pendu service is running
+GET https://localhost:4430/api/pendu/
+
+#
+###Get a random word
 GET https://localhost:4430/api/pendu/word/
