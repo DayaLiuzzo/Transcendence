@@ -37,16 +37,16 @@ services:
       - db_users
     env_file: .env
 
-  game:
-    image: game
-    container_name: game
-    build: services/game
-    ports:
-      - "8001"
-    restart: on-failure
-    depends_on:
-      - db_game
-    env_file: .env
+  # game:
+  #   image: game
+  #   container_name: game
+  #   build: services/game
+  #   ports:
+  #     - "8001"
+  #   restart: on-failure
+  #   depends_on:
+  #     - db_game
+  #   env_file: .env
 
   api_gateway:
     image: api_gateway
@@ -85,14 +85,14 @@ services:
     ports:
       - '5432'
 
-  db_game:
-    image: db_game
-    container_name: db_game
-    build: services/db_game
-    restart: on-failure
-    env_file: .env
-    ports:
-      - '5432'
+  # db_game:
+  #   image: db_game
+  #   container_name: db_game
+  #   build: services/db_game
+  #   restart: on-failure
+  #   env_file: .env
+  #   ports:
+  #     - '5432'
 
   # db_friends:
   #   image: db_friends
