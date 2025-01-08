@@ -15,13 +15,24 @@ restart:
 down:
 	docker compose -f srcs/docker-compose.yml down
 
-clean: down
+clean_migration:
+	@echo "Cleaning Migrations."
+	rm -f srcs/services/api_gateway/api_gateway_service/api_gateway_app/migrations/000*
+	rm -f srcs/services/auth/auth_service/auth_app/migrations/000*
+	rm -f srcs/services/friends/friends_service/friends_app/migrations/000*
+	rm -f srcs/services/game/game_service/game_app/migrations/000*
+	rm -f srcs/services/rooms/rooms_service/rooms_app/migrations/000*
+	rm -f srcs/services/users/users_service/users_app/migrations/000*
+	rm -f srcs/services/users/users_service/microservice_client/migrations/000*	
+	@echo "Cleanup completed."
+	
+clean: down clean_migration
 	@-docker rmi $$(docker images -q) 2>/dev/null
 	docker image prune -f
 	docker container prune -f
 	docker network prune -f
 	docker system prune -af
-	docker volume rm $$(docker volume ls -q)
+	@-docker volume rm $$(docker volume ls -q) 2>/dev/null
 	@echo "Cleanup completed."
 
 re: clean all
