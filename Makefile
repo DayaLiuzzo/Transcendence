@@ -21,6 +21,7 @@ clean: down
 	docker container prune -f
 	docker network prune -f
 	docker system prune -af
+	docker volume rm $$(docker volume ls -q)
 	@echo "Cleanup completed."
 
 re: clean all

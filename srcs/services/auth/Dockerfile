@@ -5,15 +5,15 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y openssl
 
 RUN mkdir -p /keys
+RUN mkdir -p /service_code
+RUN mkdir -p /init
+RUN mkdir -p /certs
 
-COPY auth_service .
+COPY init/* /init 
 
-COPY ./conf/requirements.txt .
+RUN chmod +x /init/start.sh
 
-COPY /conf/start.sh .
-RUN chmod +x start.sh
-
-
+WORKDIR /service_code
 
 EXPOSE 8003
-ENTRYPOINT [ "bash", "start.sh" ]
+ENTRYPOINT [ "bash", "/init/start.sh" ]
