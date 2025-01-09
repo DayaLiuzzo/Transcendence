@@ -53,6 +53,8 @@ services:
     image: api_gateway
     container_name: api_gateway
     build: services/api_gateway
+    volumes:
+      - api_gateway_service_data:/service_code
     ports:
       - "8002"
     restart: on-failure
@@ -131,3 +133,11 @@ volumes:
       type: 'none'
       o: 'bind'
       device: /home/dliuzzo/transcendence/srcs/services/auth/auth_service
+
+  api_gateway_service_data:
+    name: api_gateway_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/dliuzzo/transcendence/srcs/services/api_gateway/api_gateway_service
