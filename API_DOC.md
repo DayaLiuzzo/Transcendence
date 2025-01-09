@@ -4,41 +4,57 @@
 
 https://localhost:4430/api/<service_name>/...
 
-<h2>Authentication :</h2>
-
-The API uses Bearer JWT token Authentication
+Authentication : The API uses Bearer JWT token Authentication  
 Authorization: Bearer your_jwt_token_here
 
-<h2>AUTH</h2>
+<h2>Summary</h2>
+
+<h3>API Gateway</h3>
+
+<ol>
+  <li>/api/api_gateway/</li>
+</ol>
+
+<h3>AUTH</h3>
 
 <ol>
   <li>/api/auth/signup/</li>
   <li>/api/auth/login/</li>
-  <li>/api/auth/delete/<str:username>/ </li>
-  <li>/api/auth/<str:username>/</li>
+  <li>/api/auth/delete/< str:username>/ </li>
+  <li>/api/auth/< str:username>/</li>
 </ol>
 
-<h2>USERS</h2>
+<h3>GAME</h3>
 
 <ol>
-  <li>/api/users/delete/<str:username>/</li>
+  <li>/api/game/</li>
+  <li>/api/game/< str:roomname></li>
+</ol>
+
+<h3>USERS</h3>
+
+<ol>
+  <li>/api/users/delete/< str:username>/</li>
   <li>/api/users/create/</li>
-  <li>/api/users/<str:username>/</li>
+  <li>/api/users/< str:username>/</li>
 </ol>
 
-<h2>GAME</h2>
+<h2>Example</h2>
 
-<ol>
-  <li>/api/game/a_creer/</li>
-</ol>
+<h3>API GATEWAY</h3>
 
-<h2>AUTH</h2>
+**Service is running**
+Endpoint: /api/api_gateway/  
+Method: **GET**  
+Description: Check if API Gateway service is running.  
+
+<h3>AUTH</h3>
 
 **Sign Up**
 
-Endpoint: /api/auth/signup/
-Method: POST
-Description: Registers a new user in the authentication service and its associated data in other services.
+Endpoint: /api/auth/signup/  
+Method: **POST**  
+Description: Registers a new user in the authentication service and its associated data in other services.  
     
 ***Request Body:***
 
@@ -50,9 +66,9 @@ Description: Registers a new user in the authentication service and its associat
 
 **Login**
 
-Endpoint: /api/auth/login/
-Method: POST
-Description: Authenticates the user and returns a pair of tokens (access token and refresh token).
+Endpoint: /api/auth/login/  
+Method: **POST**  
+Description: Authenticates the user and returns a pair of tokens (access token and refresh token).  
 
 ***Request Body:***
 
@@ -63,11 +79,12 @@ Description: Authenticates the user and returns a pair of tokens (access token a
 
 **User**
 
-Endpoint /api/auth/<str:username>
-Method: GET 
-Description: retrieves data from user
+Endpoint /api/auth/<str:username>  
+Method: **GET**   
+Description: retrieves data from user  
 
 ***Request Body:***
+    
     {
 
     }
@@ -87,26 +104,31 @@ Description: retrieves data from user
 
 **Delete User (Delete user from the authentication service)**
 
-Endpoint: /api/auth/delete/<str:username>/
-Method: DELETE
-Description: Deletes a user from the authentication service and its associated data in other services.
-URL Parameters:
-    username (required): The username of the user to delete.
+Endpoint: /api/auth/delete/< str:username>/  
+Method: DELETE  
+Description: Deletes a user from the authentication service and its associated data in other services.  
+**URL Parameters:** username (required) - The username of the user to delete.
 
 ***Example Request:***
 
     DELETE https://localhost:4430/api/auth/delete/john_doe/
 
+<h3>GAME</h3>
 
-<h2>USERS</h2>
+**Service running**
+
+Endpoint: /api/game/  
+Method: **GET**  
+Description: Checks if the game service is working completely.  
+
+<h3>USERS</h3>
 
 **Delete User**
 
-Endpoint: /api/users/delete/<str:username>/
-Method: DELETE
-Description: Deletes a user profile from the user service.
-URL Parameters:
-    username (required): The username of the user whose profile is to be deleted.
+Endpoint: /api/users/delete/< str:username>/  
+Method: DELETE  
+Description: Deletes a user profile from the user service.  
+**URL Parameters:** username (required) - The username of the user whose profile is to be deleted.  
 
 ***Example Request:***
 
@@ -114,9 +136,9 @@ URL Parameters:
 
 **Create User Profile**
 
-Endpoint: /api/users/create/
-Method: POST
-Description: Creates a new user profile in the user service.
+Endpoint: /api/users/create/  
+Method: **POST**  
+Description: Creates a new user profile in the user service.  
 
 ***Request Body:***
 
@@ -139,9 +161,9 @@ Description: Creates a new user profile in the user service.
 
 **User Profile**
 
-Endpoint /api/users/<str:username>
-Method: GET 
-Description: retrieves data from user_profile
+Endpoint /api/users/< str:username>  
+Method: **GET**  
+Description: retrieves data from user_profile  
 
 ***Request Body:***
 

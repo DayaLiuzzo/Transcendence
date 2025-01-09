@@ -25,6 +25,7 @@ from django.urls import re_path
 from django.views import View
 
 from api_gateway_app import views
+from api_gateway_app.views import api_service_running
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -79,5 +80,6 @@ def route_to_service(request, service_name, extra_path=''):
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # Administration panel
+    path('api/api_gateway/', views.api_service_running, name='api_gateway'),
     re_path(r'^api/(?P<service_name>\w+)(?P<extra_path>/?.*)$', route_to_service),
 ]
