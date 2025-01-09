@@ -14,6 +14,7 @@ services:
 
   auth:
     build: services/auth
+    image: auth
     container_name: auth
     ports:
       - "8003" 
@@ -33,6 +34,7 @@ services:
       - "8000"
     restart: on-failure
     volumes:
+      - users_service_data:/service_code
       - auth_keys:/keys
     depends_on:
       - db_users
@@ -44,6 +46,8 @@ services:
   #   build: services/game
   #   ports:
   #     - "8001"
+    # volumes:
+    #   - game_service_data:/service_code
   #   restart: on-failure
   #   depends_on:
   #     - db_game
@@ -65,6 +69,8 @@ services:
   #   ports:
   #     - "8004"  # Exposing the auth service on port 8000
   #   restart: on-failure
+  #   volumes:
+  #     - friends_service_data:/service_code
   #   depends_on:
   #     - db_friends
   #   env_file: .env
@@ -72,6 +78,8 @@ services:
   # rooms:
   #   build: services/rooms
   #   container_name: rooms
+  #   volumes:
+  #     - rooms_service_data:/service_code
   #   ports:
   #     - "8005"  # Exposing the auth service on port 8000
   #   restart: on-failure
@@ -141,3 +149,35 @@ volumes:
       type: 'none'
       o: 'bind'
       device: /home/dliuzzo/transcendence/srcs/services/api_gateway/api_gateway_service
+  
+  friends_service_data:
+    name: friends_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/dliuzzo/transcendence/srcs/services/friends/friends_service
+ 
+  users_service_data:
+    name: users_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/dliuzzo/transcendence/srcs/services/users/users_service
+
+  game_service_data:
+    name: game_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/dliuzzo/transcendence/srcs/services/game/game_service
+
+  rooms_service_data:
+    name: rooms_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/dliuzzo/transcendence/srcs/services/rooms/rooms_service

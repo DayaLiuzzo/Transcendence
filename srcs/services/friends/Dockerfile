@@ -1,14 +1,21 @@
 FROM python:3.9
 
+ENV PYTHONUNBUFFERED=1
 
-COPY friends_service .
-COPY ./conf/requirements.txt .
+RUN apt-get update && apt-get install -y openssl
 
-COPY /conf/start.sh .
-RUN chmod +x start.sh
 
-EXPOSE 8004 
+RUN mkdir -p /service_code
+RUN mkdir -p /init
+RUN mkdir -p /certs
 
-ENTRYPOINT [ "bash", "start.sh" ]
+COPY init/* /init 
+
+RUN chmod +x /init/start.sh
+
+WORKDIR /service_code
+
+EXPOSE 8004
+ENTRYPOINT [ "bash", "/init/start.sh" ]
 
 

@@ -1,7 +1,7 @@
 /bin/bash
 
 pip install --upgrade pip --no-input
-pip install -r ../requirements.txt --no-input
+pip install -r /init/requirements.txt --no-input
 pip install channels
 pip install daphne
 python3 manage.py makemigrations --noinput
