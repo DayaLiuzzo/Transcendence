@@ -39,11 +39,11 @@ logger = logging.getLogger(__name__)
 def route_to_service(request, service_name, extra_path=''):
     """Route API requests to the appropriate microservice."""
     service_map = {
-        "users": "http://users:8000",
-        "game": "http://game:8001",
+        "users": "http://users:8443",
+        "game": "http://game:8443",
         "auth": "http://auth:8443",
-        "friends": "http://friends:8004",
-        "rooms": "http://rooms:8005",
+        "friends": "http://friends:8443",
+        "rooms": "http://rooms:8443",
     }
     # logger.debug(f"------------------ON EST LA TU CONNAIS--------------")
 
