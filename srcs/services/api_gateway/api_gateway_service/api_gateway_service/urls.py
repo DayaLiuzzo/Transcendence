@@ -41,7 +41,7 @@ def route_to_service(request, service_name, extra_path=''):
     service_map = {
         "users": "http://users:8000",
         "game": "http://game:8001",
-        "auth": "http://auth:8003",
+        "auth": "http://auth:8443",
         "friends": "http://friends:8004",
         "rooms": "http://rooms:8005",
     }

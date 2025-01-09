@@ -16,8 +16,8 @@ services:
     build: services/auth
     image: auth
     container_name: auth
-    ports:
-      - "8003" 
+    expose:
+      - "8443" 
     restart: on-failure
     volumes:
       - auth_keys:/keys
@@ -30,7 +30,7 @@ services:
     image: users
     container_name: users
     build: services/users
-    ports:
+    expose:
       - "8000"
     restart: on-failure
     volumes:
@@ -44,7 +44,7 @@ services:
   #   image: game
   #   container_name: game
   #   build: services/game
-  #   ports:
+  #   expose:
   #     - "8001"
     # volumes:
     #   - game_service_data:/service_code
@@ -59,14 +59,14 @@ services:
     build: services/api_gateway
     volumes:
       - api_gateway_service_data:/service_code
-    ports:
+    expose:
       - "8002"
     restart: on-failure
 
   # friends:
   #   build: services/friends
   #   container_name: friends
-  #   ports:
+  #   expose:
   #     - "8004"  # Exposing the auth service on port 8000
   #   restart: on-failure
   #   volumes:
@@ -80,7 +80,7 @@ services:
   #   container_name: rooms
   #   volumes:
   #     - rooms_service_data:/service_code
-  #   ports:
+  #   expose:
   #     - "8005"  # Exposing the auth service on port 8000
   #   restart: on-failure
   #   depends_on:
@@ -93,7 +93,7 @@ services:
     build: services/db_auth
     restart: on-failure
     env_file: .env
-    ports:
+    expose:
       - '5432'
 
   # db_game:
@@ -102,7 +102,7 @@ services:
   #   build: services/db_game
   #   restart: on-failure
   #   env_file: .env
-  #   ports:
+  #   expose:
   #     - '5432'
 
   # db_friends:
@@ -111,7 +111,7 @@ services:
   #   build: services/db_friends
   #   restart: on-failure
   #   env_file: .env
-  #   ports:
+  #   expose:
   #     - '5432'
   # db_rooms:
   #   image: db_rooms
@@ -119,7 +119,7 @@ services:
   #   build: services/db_rooms
   #   restart: on-failure
   #   env_file: .env
-  #   ports:
+  #   expose:
   #     - '5432'
 
   db_users:
@@ -128,7 +128,7 @@ services:
     build: services/db_users
     restart: on-failure
     env_file: .env
-    ports:
+    expose:
       - '5432'
 
 volumes:
