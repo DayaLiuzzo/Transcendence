@@ -146,7 +146,7 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: /home/dliuzzo/transcendence/srcs/services/auth/auth_service
+      device: $PWD/srcs/services/auth/auth_service
 
   api_gateway_service_data:
     name: api_gateway_service_data
@@ -154,7 +154,7 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: /home/dliuzzo/transcendence/srcs/services/api_gateway/api_gateway_service
+      device: $PWD/srcs/services/api_gateway/api_gateway_service
   
   friends_service_data:
     name: friends_service_data
@@ -162,7 +162,7 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: /home/dliuzzo/transcendence/srcs/services/friends/friends_service
+      device: $PWD/srcs/services/friends/friends_service
  
   users_service_data:
     name: users_service_data
@@ -170,7 +170,7 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: /home/dliuzzo/transcendence/srcs/services/users/users_service
+      device: $PWD/srcs/services/users/users_service
 
   game_service_data:
     name: game_service_data
@@ -178,7 +178,7 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: /home/dliuzzo/transcendence/srcs/services/game/game_service
+      device: $PWD/srcs/services/game/game_service
 
   rooms_service_data:
     name: rooms_service_data
@@ -186,4 +186,4 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: /home/dliuzzo/transcendence/srcs/services/rooms/rooms_service
+      device: $PWD/srcs/services/rooms/rooms_service
