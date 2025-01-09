@@ -1,14 +1,20 @@
+
 FROM python:3.9
 
+ENV PYTHONUNBUFFERED=1
 
-COPY api_gateway_service .
-COPY ./conf/requirements.txt .
-
-COPY /conf/start.sh .
-RUN chmod +x start.sh
-
-EXPOSE 8002 
-
-ENTRYPOINT [ "bash", "start.sh" ]
+RUN apt-get update && apt-get install -y openssl
 
 
+RUN mkdir -p /service_code
+RUN mkdir -p /init
+RUN mkdir -p /certs
+
+COPY init/* /init 
+
+RUN chmod +x /init/start.sh
+
+WORKDIR /service_code
+
+EXPOSE 8002
+ENTRYPOINT [ "bash", "/init/start.sh" ]
