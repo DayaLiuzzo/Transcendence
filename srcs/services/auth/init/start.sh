@@ -20,4 +20,4 @@ python3 manage.py makemigrations --no-input
 python3 manage.py migrate --no-input
 python3 manage.py generate_service_tokens
 
-exec gunicorn auth_service.wsgi:application --bind 0.0.0.0:8003 --capture-output --access-logfile - --error-logfile -
+exec gunicorn auth_service.wsgi:application --bind 0.0.0.0:8443 --capture-output --access-logfile - --error-logfile -
