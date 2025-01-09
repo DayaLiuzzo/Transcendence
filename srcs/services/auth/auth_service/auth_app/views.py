@@ -82,7 +82,7 @@ class SignUpView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
-        req_urls = [ 'http://users:8000/api/users/create/',
+        req_urls = [ 'http://users:8443/api/users/create/',
                     ]
         if send_create_requests(urls=req_urls, body={'username':username}) == False:
             raise ValidationError("Error deleting user")
@@ -97,7 +97,7 @@ class DeleteUserView (generics.DestroyAPIView):
     logger.debug("IN AUTH DELETE VIEW")
 
     def perform_destroy(self, instance):
-        req_urls = [ f'http://users:8000/api/users/delete/{instance.username}/',
+        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
                     ]
         if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
             raise ValidationError("Error deleting user")

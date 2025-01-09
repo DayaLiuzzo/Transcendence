@@ -15,5 +15,5 @@ RUN chmod +x /init/start.sh
 
 WORKDIR /service_code
 
-EXPOSE 8000
+EXPOSE 8443
 ENTRYPOINT [ "bash", "/init/start.sh" ]
