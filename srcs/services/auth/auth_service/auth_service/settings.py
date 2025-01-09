@@ -126,7 +126,7 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "RS256",
-    "SIGNING_KEY": get_sjwt_key("/keys/sjwt_private.pem"),
+    "SIGNING_KEY": get_sjwt_key("/private_key/sjwt_private.pem"),
     "VERIFYING_KEY": get_sjwt_key("/keys/sjwt_public.pem"),
     "AUDIENCE": None,
     "ISSUER": None,

@@ -10,7 +10,13 @@ services:
     restart: on-failure
     env_file: .env
     depends_on:
+      - api_gateway
       - auth
+      - users
+      # - game
+      # - friends
+      # - rooms
+
 
   auth:
     build: services/auth
