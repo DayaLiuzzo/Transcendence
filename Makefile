@@ -15,6 +15,10 @@ restart:
 down:
 	docker compose -f srcs/docker-compose.yml down
 
+clean_cache:
+	@echo "Cleaning __pycache__"
+	find . -name "__pycache__" -type d -exec rm -rf {} +
+
 clean_migration:
 	@echo "Cleaning Migrations."
 	rm -f srcs/services/api_gateway/api_gateway_service/api_gateway_app/migrations/000*
@@ -25,14 +29,31 @@ clean_migration:
 	rm -f srcs/services/users/users_service/users_app/migrations/000*
 	rm -f srcs/services/users/users_service/microservice_client/migrations/000*	
 	@echo "Cleanup completed."
-	
-clean: down clean_migration
-	@-docker rmi $$(docker images -q) 2>/dev/null
+
+clean_images:
+	@echo "Cleaning Images."
+	@-if [ "$$(docker images -q)" != "" ]; then \
+		docker rmi $$(docker images -q) 2>/dev/null; \
+	else \
+		echo "No images to remove."; \
+	fi
 	docker image prune -f
+	@echo "Cleanup completed."
+clean_volumes:
+	@echo "Cleaning Volumes."
+	@-if [ "$$(docker volume ls -q)" != "" ]; then \
+		echo "Removing all Docker volumes..."; \
+		docker volume rm $$(docker volume ls -q) 2>/dev/null; \
+		echo "Volumes removed."; \
+	else \
+		echo "No Docker volumes to remove."; \
+	fi
+	@echo "Cleanup completed."
+clean: down clean_images clean_migration clean_cache clean_volumes
+	@echo "Cleaning Containers."
 	docker container prune -f
 	docker network prune -f
 	docker system prune -af
-	@-docker volume rm $$(docker volume ls -q) 2>/dev/null
 	@echo "Cleanup completed."
 
 re: clean all
