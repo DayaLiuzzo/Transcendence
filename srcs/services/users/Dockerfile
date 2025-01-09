@@ -3,14 +3,17 @@ FROM python:3.9
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y openssl
+
 RUN mkdir -p /keys
+RUN mkdir -p /service_code
+RUN mkdir -p /init
+RUN mkdir -p /certs
 
-COPY users_service .
-COPY ./conf/requirements.txt .
+COPY init/* /init 
+
+RUN chmod +x /init/start.sh
+
+WORKDIR /service_code
+
 EXPOSE 8000
-
-COPY /conf/start.sh .
-RUN chmod +x start.sh
-
-
-ENTRYPOINT [ "bash", "start.sh" ]
+ENTRYPOINT [ "bash", "/init/start.sh" ]

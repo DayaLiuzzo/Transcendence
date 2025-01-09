@@ -1,11 +1,18 @@
 FROM python:3.9
 
-COPY game_service .
-COPY ./conf/requirements.txt .
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y openssl
+
+RUN mkdir -p /service_code
+RUN mkdir -p /init
+RUN mkdir -p /certs
+
+COPY init/* /init 
+
+RUN chmod +x /init/start.sh
+
+WORKDIR /service_code
+
 EXPOSE 8001
-
-COPY /conf/start.sh .
-RUN chmod +x start.sh
-
-
-ENTRYPOINT [ "bash", "start.sh" ]
+ENTRYPOINT [ "bash", "/init/start.sh" ]
