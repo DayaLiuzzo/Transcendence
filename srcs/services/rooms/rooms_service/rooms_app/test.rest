@@ -1,26 +1,16 @@
-POST https://localhost:4430/api/auth/login
-Content-Type: application/json
-
-{
-  "username": "singeuse",
-  "password": "pass123"
-}
+###
+#check if room service is working
+GET https://localhost:4430/api/rooms/test/
 
 ###
-
-POST https://localhost:4430/api/auth/signup
-Content-Type: application/json
-
-{
-  "username": "singeuse",
-  "password": "pass123",
-  "email": "singeuse@gmail.com"
-}
+#get available rooms
+GET https://localhost:4430/api/rooms/
 
 ###
+#create a new room
+POST https://localhost:4430/api/rooms/create/
 
-get https://localhost:4430/api/auth/test_token
-Content-Type: application/json
-Authorization: Token 60f89c7f4099aeb971c421fbe90495f87c338299
 
-{}
+###
+#join the room
+POST https://localhost:4430/api/rooms/room_138bc034/join/

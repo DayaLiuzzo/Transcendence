@@ -46,18 +46,18 @@ services:
       - db_users
     env_file: .env
 
-  # game:
-  #   image: game
-  #   container_name: game
-  #   build: services/game
-  #   expose:
-  #     - "8443"
-    # volumes:
-    #   - game_service_data:/service_code
-  #   restart: on-failure
-  #   depends_on:
-  #     - db_game
-  #   env_file: .env
+  game:
+    image: game
+    container_name: game
+    build: services/game
+    expose:
+      - "8443"
+    volumes:
+      - game_service_data:/service_code
+    restart: on-failure
+    depends_on:
+      - db_game
+    env_file: .env
 
   api_gateway:
     image: api_gateway
@@ -69,29 +69,17 @@ services:
       - "8443"
     restart: on-failure
 
-  # friends:
-  #   build: services/friends
-  #   container_name: friends
-  #   expose:
-  #     - "8443"  # Exposing the auth service on port 8000
-  #   restart: on-failure
-  #   volumes:
-  #     - friends_service_data:/service_code
-  #   depends_on:
-  #     - db_friends
-  #   env_file: .env
-
-  # rooms:
-  #   build: services/rooms
-  #   container_name: rooms
-  #   volumes:
-  #     - rooms_service_data:/service_code
-  #   expose:
-  #     - "8443"  # Exposing the auth service on port 8000
-  #   restart: on-failure
-  #   depends_on:
-  #     - db_rooms
-  #   env_file: .env
+  rooms:
+    build: services/rooms
+    container_name: rooms
+    volumes:
+      - rooms_service_data:/service_code
+    expose:
+      - "8443"  # Exposing the auth service on port 8000
+    restart: on-failure
+    depends_on:
+      - db_rooms
+    env_file: .env
 
   db_auth:
     image: db_auth
@@ -102,31 +90,23 @@ services:
     expose:
       - '5432'
 
-  # db_game:
-  #   image: db_game
-  #   container_name: db_game
-  #   build: services/db_game
-  #   restart: on-failure
-  #   env_file: .env
-  #   expose:
-  #     - '5432'
+  db_game:
+    image: db_game
+    container_name: db_game
+    build: services/db_game
+    restart: on-failure
+    env_file: .env
+    expose:
+      - '5432'
 
-  # db_friends:
-  #   image: db_friends
-  #   container_name: db_friends
-  #   build: services/db_friends
-  #   restart: on-failure
-  #   env_file: .env
-  #   expose:
-  #     - '5432'
-  # db_rooms:
-  #   image: db_rooms
-  #   container_name: db_rooms
-  #   build: services/db_rooms
-  #   restart: on-failure
-  #   env_file: .env
-  #   expose:
-  #     - '5432'
+  db_rooms:
+    image: db_rooms
+    container_name: db_rooms
+    build: services/db_rooms
+    restart: on-failure
+    env_file: .env
+    expose:
+      - '5432'
 
   db_users:
     image: db_users

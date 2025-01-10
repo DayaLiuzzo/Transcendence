@@ -22,8 +22,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'game_service.settings')
 
 django_asgi_app = get_asgi_application()
 
-print("Les URL WebSocket de game_app sont :", websocket_urlpatterns)
-
 application = ProtocolTypeRouter(
         {
             "http": django_asgi_app,
