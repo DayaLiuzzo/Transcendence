@@ -17,3 +17,9 @@ class Room(models.Model):
 
     def __str__(self):
         return f"Room {self.room_id} ({self.status})"
+
+
+# add un modele user
+class User(models.Model):
+    username = models.CharField(max_length=255, unique=True)
+    isconnected = models.BooleanField(default=0)

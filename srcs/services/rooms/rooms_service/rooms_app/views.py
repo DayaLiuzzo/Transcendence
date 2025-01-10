@@ -2,8 +2,16 @@ import uuid
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from rest_framework import generics
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
+
 
 from .models import Room
+from .models import User
+from .serializers import UserSerializer
 
 def rooms_service_running(request):
     return JsonResponse({"message": "Rooms service is running"})
@@ -13,6 +21,7 @@ def get_rooms(request):
     return JsonResponse(list(rooms), safe=False)
 
 def join_or_create_room(request):
+    permission_classes = [IsAuthenticated]
     # Vérifier s'il existe des rooms avec le statut "waiting"
     waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).first()
 
@@ -34,3 +43,10 @@ def join_or_create_room(request):
 
         # Retourner l'ID de la nouvelle room
         return JsonResponse({"message": "New room created", "room_id": new_room.room_id})
+    
+#add un endpoint user : is Auth et pas isauthenfication
+
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+

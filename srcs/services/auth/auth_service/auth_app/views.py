@@ -83,6 +83,8 @@ class SignUpView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
         req_urls = [ 'http://users:8443/api/users/create/',
+                    'http://rooms:8443/api/rooms/create/',
+                    
                     ]
         if send_create_requests(urls=req_urls, body={'username':username}) == False:
             raise ValidationError("Error deleting user")

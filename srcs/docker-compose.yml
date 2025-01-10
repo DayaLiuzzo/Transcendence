@@ -74,6 +74,7 @@ services:
     container_name: rooms
     volumes:
       - rooms_service_data:/service_code
+      - auth_keys:/keys
     expose:
       - "8443"
     restart: on-failure
