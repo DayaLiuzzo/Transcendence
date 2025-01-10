@@ -9,37 +9,28 @@ def rooms_service_running(request):
     return JsonResponse({"message": "Rooms service is running"})
 
 def get_rooms(request):
-    rooms = Room.objects.all().values('room_id', 'players_count', 'status')
+    rooms = Room.objects.all().values('room_id', 'players_count', 'status')#add un filter pour qu'on n'affiche que les rooms pas remplies
     return JsonResponse(list(rooms), safe=False)
 
-def join_room(request, room_id):
-    room = get_object_or_404(Room, room_id=room_id)
+def join_or_create_room(request):
+    # Vérifier s'il existe des rooms avec le statut "waiting"
+    waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).first()
 
-    # Vérifier si la room est encore en statut 'waiting' et si elle a de la place
-    if room.status == 'waiting' and room.players_count < 2:
-        # Ajouter le joueur à la room
-        room.players_count += 1
-        room.save()
+    if waiting_room:
+        # Si une room 'waiting' est trouvée et a moins de 2 joueurs, ajouter le joueur
+        waiting_room.players_count += 1
+        # Si la room a atteint 2 joueurs, changer son statut en 'playing'
+        if waiting_room.players_count == 2:
+            waiting_room.status = 'playing'
+        waiting_room.save()
 
-        # Si la room a maintenant 2 joueurs, changer son statut en 'playing'
-        if room.players_count == 2:
-            room.status = 'playing'
-            room.save()
-
-        return JsonResponse({"message": f"You just joined {room_id}", "room_id": room_id})
-
-    elif room.status == 'playing':
-        return JsonResponse({"error": "This room is currently playing."}, status=400)
+        # Retourner l'ID de la room existante
+        return JsonResponse({"message": "Room found", "room_id": waiting_room.room_id})
+    
     else:
-        return JsonResponse({"error": "Room unavalaible."}, status=400)
-    
-def create_room(request):
-    room_id = f"room_{str(uuid.uuid4())[:8]}"
+        # Si aucune room 'waiting' n'existe, créer une nouvelle room
+        room_id = f"room_{str(uuid.uuid4())[:8]}"  # Créer un ID unique
+        new_room = Room.objects.create(room_id=room_id, status='waiting', players_count=1)
 
-    if Room.objects.filter(room_id=room_id).exists():
-        return JsonResponse({"error": "A room with this ID already exists, please retry."}, status=400)
-    
-    # Créer une nouvelle room avec statut 'waiting'
-    room = Room.objects.create(room_id=room_id, status='waiting', players_count=0)
-    
-    return JsonResponse({"message": "Room successfuly created", "room_id": room.room_id})
+        # Retourner l'ID de la nouvelle room
+        return JsonResponse({"message": "New room created", "room_id": new_room.room_id})
