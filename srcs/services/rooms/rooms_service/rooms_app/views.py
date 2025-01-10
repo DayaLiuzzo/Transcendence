@@ -1,49 +1,45 @@
-from django.contrib.auth.models import User
+import uuid
+
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
-from rest_framework import status 
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
-from rest_framework.decorators import authentication_classes
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from .models import Room
 
-from .serializers import UserSerializer
+def rooms_service_running(request):
+    return JsonResponse({"message": "Rooms service is running"})
 
-@api_view(['POST'])
-def login(request):
-    user = get_object_or_404(User, username=request.data['username'])
-    if not user.check_password(request.data['password']):
-        return Response({'detail': 'Not found.'}, status=status.HTTP_400_BAD_REQUEST)
-    token, created = Token.objects.get_or_create(user=user)
-    serializer = UserSerializer(instance=user)
-    return Response({"token": token.key, "user": serializer.data})
+def get_rooms(request):
+    rooms = Room.objects.all().values('room_id', 'players_count', 'status')
+    return JsonResponse(list(rooms), safe=False)
 
-@api_view(['POST'])
-def signup(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = User.objects.get(username=serializer.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
-        token = Token.objects.create(user=user)
-        return Response({'token': token.key, "user": serializer.data})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+def join_room(request, room_id):
+    room = get_object_or_404(Room, room_id=room_id)
 
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def test_token(request):
-    return Response("passed for{}".format(request.user.email))
+    # Vérifier si la room est encore en statut 'waiting' et si elle a de la place
+    if room.status == 'waiting' and room.players_count < 2:
+        # Ajouter le joueur à la room
+        room.players_count += 1
+        room.save()
 
+        # Si la room a maintenant 2 joueurs, changer son statut en 'playing'
+        if room.players_count == 2:
+            room.status = 'playing'
+            room.save()
 
-# def api_auth_view(request):
-#     return JsonResponse({"message": "Auth API is running"})
+        return JsonResponse({"message": f"You just joined {room_id}", "room_id": room_id})
 
+    elif room.status == 'playing':
+        return JsonResponse({"error": "This room is currently playing."}, status=400)
+    else:
+        return JsonResponse({"error": "Room unavalaible."}, status=400)
+    
+def create_room(request):
+    room_id = f"room_{str(uuid.uuid4())[:8]}"
 
-# def auth_view(request):
-#     return JsonResponse({"message": "Auth service is running"})
+    if Room.objects.filter(room_id=room_id).exists():
+        return JsonResponse({"error": "A room with this ID already exists, please retry."}, status=400)
+    
+    # Créer une nouvelle room avec statut 'waiting'
+    room = Room.objects.create(room_id=room_id, status='waiting', players_count=0)
+    
+    return JsonResponse({"message": "Room successfuly created", "room_id": room.room_id})
