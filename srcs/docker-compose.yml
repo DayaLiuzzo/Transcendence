@@ -13,9 +13,8 @@ services:
       - api_gateway
       - auth
       - users
-      # - game
-      # - friends
-      # - rooms
+      - game
+      - rooms
 
 
   auth:
@@ -70,12 +69,13 @@ services:
     restart: on-failure
 
   rooms:
+    image: rooms
     build: services/rooms
     container_name: rooms
     volumes:
       - rooms_service_data:/service_code
     expose:
-      - "8443"  # Exposing the auth service on port 8000
+      - "8443"
     restart: on-failure
     depends_on:
       - db_rooms

@@ -33,40 +33,40 @@ export default function() {
       });
 
     // Créer une connexion WebSocket sécurisée
-    const socket = new WebSocket('wss://' + window.location.host + '/ws/game/' + 'lol/');
+    // const socket = new WebSocket('wss://' + window.location.host + '/ws/game/' + 'lol/');
 
-    // Lorsqu'une connexion est établie
-    socket.onopen = function() {
-      console.log("Connexion WebSocket sécurisée établie!");
-    };
+    // // Lorsqu'une connexion est établie
+    // socket.onopen = function() {
+    //   console.log("Connexion WebSocket sécurisée établie!");
+    // };
 
-    // Lorsqu'un message est reçu du serveur
-    socket.onmessage = function(event) {
-      const data = JSON.parse(event.data);
-      console.log("Message reçu:", data);
+    // // Lorsqu'un message est reçu du serveur
+    // socket.onmessage = function(event) {
+    //   const data = JSON.parse(event.data);
+    //   console.log("Message reçu:", data);
 
-      // Mettre à jour le DOM avec les données reçues via WebSocket
-      const roomNameElement = document.getElementById('room-name');
-      const messageElement = document.getElementById('message');
-      const playersCountElement = document.getElementById('players-count');
+    //   // Mettre à jour le DOM avec les données reçues via WebSocket
+    //   const roomNameElement = document.getElementById('room-name');
+    //   const messageElement = document.getElementById('message');
+    //   const playersCountElement = document.getElementById('players-count');
 
-      if (roomNameElement) roomNameElement.textContent = data.room_name || roomNameElement.textContent;
-      if (messageElement) messageElement.textContent = data.message || messageElement.textContent;
-      if (playersCountElement) playersCountElement.textContent = data.players_count || playersCountElement.textContent;
-    };
+    //   if (roomNameElement) roomNameElement.textContent = data.room_name || roomNameElement.textContent;
+    //   if (messageElement) messageElement.textContent = data.message || messageElement.textContent;
+    //   if (playersCountElement) playersCountElement.textContent = data.players_count || playersCountElement.textContent;
+    // };
 
-    // Lors de la fermeture de la connexion
-    socket.onclose = function(event) {
-      console.log("Connexion WebSocket fermée", event);
-    };
+    // // Lors de la fermeture de la connexion
+    // socket.onclose = function(event) {
+    //   console.log("Connexion WebSocket fermée", event);
+    // };
 
-    // Fonction pour envoyer des messages via WebSocket
-    function sendMessage(message) {
-      socket.send(JSON.stringify({ 'message': message }));
-    }
+    // // Fonction pour envoyer des messages via WebSocket
+    // function sendMessage(message) {
+    //   socket.send(JSON.stringify({ 'message': message }));
+    // }
 
-    // Exemple d'envoi de message (vous pouvez l'appeler plus tard selon l'interaction de l'utilisateur)
-    // sendMessage('Hello, server!');
+    // // Exemple d'envoi de message (vous pouvez l'appeler plus tard selon l'interaction de l'utilisateur)
+    // // sendMessage('Hello, server!');
 
     return htmlContent;
   } else {

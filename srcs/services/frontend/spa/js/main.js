@@ -37,6 +37,9 @@ function loadView(view)
       case '/play-tournament':
         import('./play-tournament.js').then(module => { app.innerHTML = module.default();});
         break;
+      case '/play-remote':
+        import('./play-remote.js').then(module => { app.innerHTML = module.default();});
+        break;
       case '/game':
         import('./game.js').then(module => { app.innerHTML = module.default();});
         break;

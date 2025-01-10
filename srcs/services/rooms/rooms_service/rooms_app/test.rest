@@ -7,10 +7,6 @@ GET https://localhost:4430/api/rooms/test/
 GET https://localhost:4430/api/rooms/
 
 ###
-#create a new room
-POST https://localhost:4430/api/rooms/create/
+#join or create room
+POST https://localhost:4430/api/rooms/join_or_create/
 
-
-###
-#join the room
-POST https://localhost:4430/api/rooms/room_138bc034/join/
