@@ -43,13 +43,24 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'game_app',
     'channels',
+    'microservice_client',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 ROOT_URLCONF = 'game_service.urls'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+    "DEFAULT_AUTHENTICATION_CLASSES": ("game_app.authentication.CustomJWTAuth",),
 }
+def get_sjwt_key(key):
+    with open(key, "r") as file:
+        return file.read()
+    
+SIMPLE_JWT = {
+            "ALGORITHM": "RS256",
+            "VERIFYING_KEY": get_sjwt_key('/keys/sjwt_public.pem'),
+            "AUTH_HEADER_TYPES": ("Bearer",),
+        }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -113,6 +124,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MICROSERVICE_CLIENT = {
+    "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
+    "SERVICE_NAME" : "game",
+    "SERVICE_PASSWORD" : os.getenv("GAME_PASSWORD")
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
