@@ -6,6 +6,14 @@ import logging
 
 import jwt
 
+
+class IsOwnerAndAuthenticated(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if not (request.user and request.user.is_authenticated):
+            return False
+        return obj == request.user
+
+
 class IsService(BasePermission):
     def has_permission(self, request, view):
         auth_header = request.headers.get('Authorization')

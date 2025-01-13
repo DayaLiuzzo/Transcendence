@@ -34,9 +34,6 @@ enter_auth:
 enter_db_auth:
 	docker exec -it db_auth sh
 
-enter_friends:
-	docker exec -it friends bash
-
 enter_rooms:
 	docker exec -it rooms bash
 
@@ -59,8 +56,6 @@ logs_game:
 logs_auth:
 	docker logs auth
 
-logs_friends:
-	docker logs friends
 
 logs_rooms:
 	docker logs rooms

@@ -1,5 +1,4 @@
 import logging
-from users_app.permissions import IsService
 
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -20,6 +19,8 @@ from rest_framework.views import APIView
 from .authentication import CustomJWTAuth
 from .models import UserProfile
 from .serializers import UserProfileSerializer
+from users_app.permissions import IsService
+from users_app.permissions import IsOwnerAndAuthenticated
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -31,32 +32,39 @@ logging.basicConfig(
 # Crée un logger spécifique au module courant
 logger = logging.getLogger(__name__)
 
+@api_view(['GET'])
+def get_example(request):
+    return Response({"message": "This is a GET endpoint"}, status=status.HTTP_200_OK)
 
 class CreateUserProfileView(generics.CreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
 
-@api_view(['GET'])
-def get_example(request):
-    return Response({"message": "This is a GET endpoint"}, status=status.HTTP_200_OK)
-
-
 class DeleteUserProfileView(generics.DestroyAPIView):
+    permission_classes = [IsOwnerAndAuthenticated, IsService]
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
 class RetrieveUserProfile(generics.RetrieveAPIView):
+    permission_classes = [IsOwnerAndAuthenticated,IsService]
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
 
-class ProtectedView(APIView):
+class ProtectedServiceView(APIView):
     authentication_classes = []
     permission_classes = [IsService]
     def get(self, request):
         user = request.user
         logger.debug(f"Authenticated user in view: {user}")
-        return Response({"message": "This is a protected view!"})
+        return Response({"message": "Service is Authenticated"})
+    
+class ProtectedUserView(APIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    def get(self, request):
+        user = request.user
+        logger.debug(f"Authenticated user in view: {user}")
+        return Response({"message": "User is Owner and Authenticated!"})
