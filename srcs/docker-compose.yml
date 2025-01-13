@@ -13,7 +13,7 @@ services:
       - api_gateway
       - auth
       - users
-      # - game
+      - game
       # - rooms
 
 
@@ -45,18 +45,19 @@ services:
       - db_users
     env_file: .env
 
-  # game:
-  #   image: game
-  #   container_name: game
-  #   build: services/game
-  #   expose:
-  #     - "8443"
-    # volumes:
-    #   - game_service_data:/service_code
-  #   restart: on-failure
-  #   depends_on:
-  #     - db_game
-  #   env_file: .env
+  game:
+    image: game
+    container_name: game
+    build: services/game
+    expose:
+      - "8443"
+    volumes:
+      - game_service_data:/service_code
+      - auth_keys:/keys
+    restart: on-failure
+    depends_on:
+      - db_game
+    env_file: .env
 
   api_gateway:
     image: api_gateway
@@ -89,14 +90,14 @@ services:
     expose:
       - '5432'
 
-  # db_game:
-  #   image: db_game
-  #   container_name: db_game
-  #   build: services/db_game
-  #   restart: on-failure
-  #   env_file: .env
-  #   expose:
-  #     - '5432'
+  db_game:
+    image: db_game
+    container_name: db_game
+    build: services/db_game
+    restart: on-failure
+    env_file: .env
+    expose:
+      - '5432'
 
   # db_rooms:
   #   image: db_rooms
