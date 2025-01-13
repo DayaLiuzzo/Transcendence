@@ -14,7 +14,6 @@ services:
       - auth
       - users
       # - game
-      # - friends
       # - rooms
 
 
@@ -69,18 +68,6 @@ services:
       - "8443"
     restart: on-failure
 
-  # friends:
-  #   build: services/friends
-  #   container_name: friends
-  #   expose:
-  #     - "8443"  # Exposing the auth service on port 8000
-  #   restart: on-failure
-  #   volumes:
-  #     - friends_service_data:/service_code
-  #   depends_on:
-  #     - db_friends
-  #   env_file: .env
-
   # rooms:
   #   build: services/rooms
   #   container_name: rooms
@@ -111,14 +98,6 @@ services:
   #   expose:
   #     - '5432'
 
-  # db_friends:
-  #   image: db_friends
-  #   container_name: db_friends
-  #   build: services/db_friends
-  #   restart: on-failure
-  #   env_file: .env
-  #   expose:
-  #     - '5432'
   # db_rooms:
   #   image: db_rooms
   #   container_name: db_rooms
@@ -155,15 +134,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: /home/dliuzzo/transcendence/srcs/services/api_gateway/api_gateway_service
-  
-  friends_service_data:
-    name: friends_service_data
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: /home/dliuzzo/transcendence/srcs/services/friends/friends_service
- 
+
   users_service_data:
     name: users_service_data
     driver: local

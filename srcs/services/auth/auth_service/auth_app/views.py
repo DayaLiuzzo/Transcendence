@@ -108,7 +108,6 @@ class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    logger.debug("IN AUTH RETRIEVE VIEW")
     lookup_field = 'username'
 
 
