@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
+from rest_framework import generics
 from rest_framework import status 
 from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes
@@ -18,8 +19,8 @@ from rest_framework.views import APIView
 
 
 from .authentication import CustomJWTAuth
-from .models import UserProfile
-from .serializers import UserProfileSerializer
+from .models import CustomUser
+from .serializers import CustomUserSerializer
 from game_app.permissions import IsService
 from game_app.permissions import IsOwnerAndAuthenticated
 
@@ -35,6 +36,16 @@ def gameroom(request, room_name):
     data = {'room_name': room_name, 'message': 'Bienvenue dans la salle !'}
     return Response(data, status=status.HTTP_200_OK)
 
+class CreateCustomUserView(generics.CreateAPIView):
+    permission_classes = [IsService]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class DeleteCustomUserView(generics.DestroyAPIView):
+    permission_classes = [IsService]
+    queryset = CustomUser.objects.all().exclude(username="deleted_account")
+    serializer_class = CustomUserSerializer
+    lookup_field = "username"
 
 class ProtectedServiceView(APIView):
     authentication_classes = []

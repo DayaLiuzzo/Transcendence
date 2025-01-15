@@ -18,7 +18,7 @@ class IsService(BasePermission):
     def has_permission(self, request, view):
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
-            raise AuthenticationFailed('ServiceToken ismissing or invalid')
+            raise AuthenticationFailed('ServiceToken is missing or invalid')
         token = auth_header.split('Bearer ')[1]
         try:
             payload = jwt.decode(

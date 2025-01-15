@@ -5,7 +5,8 @@ from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from .models import UserProfile
+from django.conf import settings
+from .models import CustomUser
 
 logging.basicConfig(
     level=logging.FATAL,
@@ -20,52 +21,52 @@ logger = logging.getLogger(__name__)
 
 
 class CustomJWTAuth(BaseAuthentication):
-    def __init__(self): 
-        from game_service.settings import SIMPLE_JWT
-        self.algorithm = SIMPLE_JWT["ALGORITHM"]
-        self.verifying_key = SIMPLE_JWT["VERIFYING_KEY"]
-        self.auth_header_types = SIMPLE_JWT["AUTH_HEADER_TYPES"]
-        logger.debug(f"__init__ params: {self.algorithm}")
     def authenticate(self, request):
-        auth_header = request.headers.get("Authorization")
+        auth_header = request.headers.get('Authorization')
         if not auth_header:
             return None
+        token_type, token = self._extract_token(auth_header)
+        payload = self._decode_token(token)
+        user = self._get_user_from_payload(payload)
+        return (user, token)
     
-        auth_header_parts = auth_header.split()
-        if len(auth_header_parts) != 2 or auth_header_parts[0] not in self.auth_header_types:
-            logger.debug("wrong auth_header len")
-            raise AuthenticationFailed(message)
-        token = auth_header_parts[1]
-        return self.authenticate_token(token)
-        
-    def authenticate_token(self, token):
+    def _extract_token(self, auth_header):
+        """
+        Extract and validate the token from the Authorization header.
+        """
         try:
-            payload = jwt.decode(
+            token_type, token = auth_header.split()
+            if token_type != 'Bearer':
+                raise AuthenticationFailed("Invalid token type. Expected 'Bearer'.")
+            return token_type, token
+        except ValueError:
+            raise AuthenticationFailed("Invalid Authorization header format. Expected 'Bearer <token>'.")
+    
+    def _decode_token(self, token):
+        """
+        Decode the JWT token and validate its claims.
+        """
+        try:
+            return jwt.decode(
                 token,
-                self.verifying_key,
-                algorithms=[self.algorithm],
+                settings.SIMPLE_JWT['VERIFYING_KEY'],
+                algorithms=settings.SIMPLE_JWT['ALGORITHM']
             )
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("Token has expired.")
-        except jwt.InvalidTokenError as e:
-            raise AuthenticationFailed(f"Invalid token: {str(e)}")
-        user = self.get_user_from_payload(payload)
-        logger.debug(f"user: {user}")
-        return (user, payload)
+            raise AuthenticationFailed("The token has expired.")
+        except jwt.InvalidTokenError:
+            raise AuthenticationFailed("Invalid token.")
     
-    def get_user_from_payload(self, payload):
-        if not isinstance(payload, dict):
-            raise AuthenticationFailed("Invalid token payload format.")
-        
-        username = payload.get("username")
+    def _get_user_from_payload(self, payload):
+        """
+        Retrieve the user from the decoded token payload.
+        """
+        username = payload.get('username')
         if not username:
-            raise AuthenticationFailed("Token payload does not contain a valid 'username'.")
-        logger.debug(f"Received username from token payload: {username}")
+            return None
         
         try:
-            user = UserProfile.objects.get(username=username)
-            logger.debug(f"Found user with username: {username}")
-            return user
-        except UserProfile.DoesNotExist:
-            logger.debug(f"User with username '{username}' does not exist.")
-            raise AuthenticationFailed("User does not exist.")
+            user = CustomUser.objects.get(username=username)
+        except CustomUser.DoesNotExist:
+            raise AuthenticationFailed("The user associated with this token does not exist.")
+        return user
