@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from rest_framework import permissions
 from rest_framework.exceptions import AuthenticationFailed
 from jwt import InvalidTokenError
 from django.conf import settings
@@ -17,6 +18,13 @@ logging.basicConfig(
 # Crée un logger spécifique au module courant
 logger = logging.getLogger(__name__)
 
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.username == request.user.username 
+
+class IsAuthenticated(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated 
 
 
 class IsOwnerAndAuthenticated(BasePermission):
@@ -24,23 +32,3 @@ class IsOwnerAndAuthenticated(BasePermission):
         if not (request.user and request.user.is_authenticated):
             return False
         return obj == request.user
-
-class IsService(BasePermission):
-    def has_permission(self, request, view):
-        logger.debug("Start")
-        auth_header = request.headers.get('Authorization')
-        logger.debug(f"Authorization header: {auth_header}")
-        if not auth_header or not auth_header.startswith('Bearer '):
-            raise AuthenticationFailed('ServiceToken ismissing or invalid')
-        token = auth_header.split('Bearer ')[1]
-        try:
-            logger.debug(f"Attempting to decode token: {token}")
-            payload = jwt.decode(
-                token,
-                settings.SIMPLE_JWT['VERIFYING_KEY'],
-                algorithms=['RS256']
-            )
-            logger.debug("Decoded payload:", payload)
-        except InvalidTokenError:
-            raise AuthenticationFailed('Invalid ServiceToken.')
-        return True

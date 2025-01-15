@@ -1,15 +1,10 @@
 
 from django.contrib.auth import authenticate
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
-from django.views import View
 
-import requests
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,7 +12,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 import logging 
 
 from .models import CustomUser
-from .permissions import IsOwnerAndAuthenticated, IsService
+from .permissions import IsOwnerAndAuthenticated
+from .permissions import IsOwner
+
 from .serializers import CustomUserSerializer
 from .serializers import CustomTokenObtainPairSerializer
 from .serializers import ServiceTokenSerializer
@@ -50,27 +47,12 @@ def post_example(request):
     data = request.data
     return Response({"received_data": data}, status=status.HTTP_200_OK)
 
-class GetCSRFTokenView(View):
-    def get(self, request, *args, **kwargs):
-        token = get_token(request)  # Fetches the CSRF token
-        return JsonResponse({'csrf_token': token})
-
-
 class ProtectedUserView(APIView):
-    permission_classes = [IsService]
+    permission_classes = [IsOwner]
     def get(self, request):
         user = request.user
         print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
         return Response({"message": "This is a protected view!"})
-    
-class ProtectedServiceView(APIView):
-    authentication_classes = []
-    permission_classes = [IsService]
-    def get(self, request):
-        user = request.user
-        print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
-        return Response({"message": "This is a protected view!"})
-
 
 class SignUpView(generics.ListCreateAPIView):
     logger.debug("IN AUTH CREATE VIEW")
@@ -91,7 +73,7 @@ class SignUpView(generics.ListCreateAPIView):
         return user
 
 class DeleteUserView (generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwner]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
