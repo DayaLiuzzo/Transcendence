@@ -23,3 +23,10 @@ class Room(models.Model):
 class User(models.Model):
     username = models.CharField(max_length=255, unique=True)
     isconnected = models.BooleanField(default=0)
+    
+    def __str__(self):
+        return self.username
+    
+    @property
+    def is_authenticated(self):
+        return True
