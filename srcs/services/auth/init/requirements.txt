@@ -19,14 +19,14 @@ hyperlink==21.0.0
 idna==3.8
 msgpack==1.1.0
 packaging==24.1
-pillow==10.4.0
+pillow==11.1.0
 psycopg2-binary==2.9.9
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pycparser==2.22
 PyJWT==2.9.0
 pyOpenSSL==24.2.1
-pyotp==2.7.0
+pyotp==2.9.0
 python-dateutil==2.9.0.post0
 python-http-client==3.3.7
 requests==2.32.3
@@ -40,3 +40,4 @@ Twisted==24.7.0
 txaio==23.1.1
 typing_extensions==4.12.2
 urllib3==2.2.2
+qrcode==8.0
