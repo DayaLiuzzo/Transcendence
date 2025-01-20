@@ -10,7 +10,9 @@ from django.utils.timezone import now
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from django.forms import ValidationError
+
 import logging
+import pyotp
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -97,3 +99,32 @@ def createServiceToken(service):
     }
     token = jwt.encode(payload, settings.SIMPLE_JWT['SIGNING_KEY'], algorithm='RS256')
     return token
+
+class TwoFactorSetupSerializer(serializers.Serializer):
+    enable = serializers.BooleanField()
+
+    def to_representation(self, instance):
+        otp_secret = instance.otp_secret
+        otp_uri = pyotp.totp.TOTP(otp_secret).provisioning_uri(
+            name=f"{instance.username}",
+            issuer_name="Auth_app"
+        )
+        return {
+            "message": "2FA enabled. Use this secret to configure your authenticator app.",
+            "otp_secret": otp_secret,
+            "qr_code_url": otp_uri
+        }
+
+
+class TwoFactorVerifySerializer(serializers.Serializer):
+    otp = serializers.CharField()
+
+    def validate(self, attrs):
+        otp = attrs.get('otp')
+        user = self.context['request'].user
+        totp = pyotp.TOTP(user.otp_secret)
+
+        if not totp.verify(otp):
+            raise serializers.ValidationError({"otp": "Invalid OTP. Please try again."})
+
+        return attrs
