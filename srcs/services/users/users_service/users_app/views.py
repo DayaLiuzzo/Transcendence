@@ -69,6 +69,23 @@ class AddFriendView(APIView):
         return Response({"message": f"{friendusername} has been added to your friend list"},
                         status=HTTP_200_OK, )
 
+class RemoveFriendView(APIView):
+    permission_classes = [IsOwner]
+    lookup_field = "username"
+    def delete(self, request, username, friendusername):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        friend_profile = get_object_or_404(UserProfile, username=friendusername)
+        if user_profile == friend_profile:
+            return Response({"error": "You cannot delete yourself that's lame."},
+                            status=HTTP_400_BAD_REQUEST,)
+        if user_profile.is_friend(friend_profile):
+            user_profile.remove_friend(friend_profile)
+            return Response({"message": f"{friendusername} is no longer your friend."},
+                            status=HTTP_200_OK, )
+        return Response({"error": f"{friendusername} is not in your friend list."},
+                        status=HTTP_400_BAD_REQUEST)
+    
+
 class ProtectedServiceView(APIView):
     authentication_classes = []
     permission_classes = [IsAuth]

@@ -4,9 +4,9 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "tesst_user",
+  "username": "test_user",
   "password": "pass123456",
-  "email": "tesst_user@gmail.com"
+  "email": "test_user@gmail.com"
 }
 ###
 #get user token
@@ -14,7 +14,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "test_user",
+  "username": "tesst_user",
   "password": "pass123456"
 }
 ###
@@ -28,8 +28,8 @@ Content-Type: application/json
 }
 
 ###
-PATCH https://localhost:4430/api/users/test_user/friends/add/tesst_user/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NDgwMzY2LCJpYXQiOjE3Mzc0NzQ5NjYsImp0aSI6ImNjYmRkNGQzMTdkNzQ2OTVhYzJlMjhhNTFiYWVmMTE1IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.dZGnT5DzGRFwd_Zr6efyHxq6VvIYp-el7eT7hzGQvBNNsGqKA9pcTFIfuMLggyOluJ3Vq86voruTpReAHcAAZj9a_9gCAL9QAmJG_GPyAmkMENyp4w1B58CcNRzhE0yQnMsRJdEln4hwCdAvsfBJgEfElCBu8jJXglVbyU-DK7lhtMpNhW1fYMSce1lxw00umTgKKKBs6UYaJ2YU9UWrRD5MHtTi2KICYxNKqrtaDJyqaH2yCa-oQMAGgbP3iee66x1tpl_v294c0zFIFX_41TJwBVtf1fIO3Oj-SZpr15SF_-wCXRE0m1c6l-_k3762e3Ai99vwyIPuwyQkbV8lTQ
+DELETE https://localhost:4430/api/users/tesst_user/friends/remove/test_user/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NDgyODQ4LCJpYXQiOjE3Mzc0Nzc0NDgsImp0aSI6IjY2ZjdlYjlmMmMzZjQxYTY4MjU4ZjdhY2Y3ZWRjNmI2IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXNzdF91c2VyIn0.BKb7A5GoOT0F-fwXyaHoMiZ7_VAsLofKhISLjGuM9hacCtLBdpFVVFpGgWTzfVptPh3o7uCLAkjH5P6cSbEc-zB3TffkhG4ILDzmsQt8CKR1sx3Rc-4W-o_vxU31zVHZj8AT9nl5WGDVUN9CAEJpZDAd6O0tIpMEHX0RRsoaAVHRwH7Jgu0y-xHPE75cJvNagNJQtRtT4409KktFZKm4DwxXEicXF92uPtA02jZFJRGV0VUxU4JkSaqDyj5N895UVWB3T712gKu1A7alaktX4u8jtD4jPgueRepqlj55lpXDz5iWcX2K-c7j1hiNy4DXShwYfUTZ8uyLH0o_BaIUvA
 
 ###
 #check if invalid token can access protected view
