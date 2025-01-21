@@ -12,6 +12,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from django.shortcuts import get_object_or_404
 from .models import UserProfile
 from .serializers import UserProfileSerializer
+from .serializers import FriendsSerializer
 from users_app.permissions import IsAuth
 from users_app.permissions import IsRooms
 from users_app.permissions import IsUsers
@@ -84,6 +85,15 @@ class RemoveFriendView(APIView):
                             status=HTTP_200_OK, )
         return Response({"error": f"{friendusername} is not in your friend list."},
                         status=HTTP_400_BAD_REQUEST)
+
+class ListFriendsView(generics.ListAPIView):
+    serializer_class = FriendsSerializer
+    permission_classes = [IsOwner]
+    lookup_field = "username"
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        user_profile = get_object_or_404(UserProfile, username=username)
+        return user_profile.get_friends()
     
 
 class ProtectedServiceView(APIView):
