@@ -4,9 +4,9 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "test_user",
+  "username": "tesst_user",
   "password": "pass123456",
-  "email": "test_user@gmail.com"
+  "email": "tesst_user@gmail.com"
 }
 ###
 #get user token
@@ -27,6 +27,9 @@ Content-Type: application/json
   "password": "private"
 }
 
+###
+PATCH https://localhost:4430/api/users/test_user/friends/add/tesst_user/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NDgwMzY2LCJpYXQiOjE3Mzc0NzQ5NjYsImp0aSI6ImNjYmRkNGQzMTdkNzQ2OTVhYzJlMjhhNTFiYWVmMTE1IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.dZGnT5DzGRFwd_Zr6efyHxq6VvIYp-el7eT7hzGQvBNNsGqKA9pcTFIfuMLggyOluJ3Vq86voruTpReAHcAAZj9a_9gCAL9QAmJG_GPyAmkMENyp4w1B58CcNRzhE0yQnMsRJdEln4hwCdAvsfBJgEfElCBu8jJXglVbyU-DK7lhtMpNhW1fYMSce1lxw00umTgKKKBs6UYaJ2YU9UWrRD5MHtTi2KICYxNKqrtaDJyqaH2yCa-oQMAGgbP3iee66x1tpl_v294c0zFIFX_41TJwBVtf1fIO3Oj-SZpr15SF_-wCXRE0m1c6l-_k3762e3Ai99vwyIPuwyQkbV8lTQ
 
 ###
 #check if invalid token can access protected view

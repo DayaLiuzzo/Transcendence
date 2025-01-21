@@ -11,7 +11,8 @@ urlpatterns = [
         path('delete/<str:username>/', views.DeleteUserProfileView.as_view(), name='delete_user_profile'), 
         path('protected/service/', views.ProtectedServiceView.as_view(), name='protected_view'),
         path('protected/user/', views.ProtectedUserView.as_view(), name='protected_view'),
-        path('<str:username>/', views.RetrieveUserProfile.as_view(), name='user_profile')
+        path('<str:username>/', views.RetrieveUserProfile.as_view(), name='user_profile'),
+        path('<str:username>/friends/add/<str:friendusername>/', views.AddFriendView.as_view(), name='add_friend')
     ]))
 
 ]
