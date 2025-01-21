@@ -1,13 +1,34 @@
-from rest_framework import serializers
-from django.contrib.auth.hashers import check_password, make_password
-from .models import CustomUser, Service, Token
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from datetime import timedelta, datetime
-from django.utils.timezone import now
-from auth_service import settings
+from datetime import timedelta
+from datetime import datetime
+
 import jwt
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from django.utils import timezone
+from django.utils.timezone import now
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password
 from django.forms import ValidationError
+
+import logging
+import pyotp
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    # filename="basic.log",
+    )
+
+# Crée un logger spécifique au module courant
+logger = logging.getLogger(__name__)
+
+
+from .models import CustomUser
+from .models import Service
+from .models import Token
+from auth_service import settings
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta(object):
@@ -67,8 +88,8 @@ class ServiceTokenSerializer(serializers.ModelSerializer):
 
         if not check_password(password, service.password):
             raise serializers.ValidationError({"password": f"{password} does not match {service.password} Invalid password."})
-
-        return {'token': createServiceToken(service)}
+        token = createServiceToken(service)
+        return {'token': token}
 
 def createServiceToken(service):
     payload = {
@@ -78,3 +99,32 @@ def createServiceToken(service):
     }
     token = jwt.encode(payload, settings.SIMPLE_JWT['SIGNING_KEY'], algorithm='RS256')
     return token
+
+class TwoFactorSetupSerializer(serializers.Serializer):
+    enable = serializers.BooleanField()
+
+    def to_representation(self, instance):
+        otp_secret = instance.otp_secret
+        otp_uri = pyotp.totp.TOTP(otp_secret).provisioning_uri(
+            name=f"{instance.username}",
+            issuer_name="Auth_app"
+        )
+        return {
+            "message": "2FA enabled. Use this secret to configure your authenticator app.",
+            "otp_secret": otp_secret,
+            "qr_code_url": otp_uri
+        }
+
+
+class TwoFactorVerifySerializer(serializers.Serializer):
+    otp = serializers.CharField()
+
+    def validate(self, attrs):
+        otp = attrs.get('otp')
+        user = self.context['request'].user
+        totp = pyotp.TOTP(user.otp_secret)
+
+        if not totp.verify(otp):
+            raise serializers.ValidationError({"otp": "Invalid OTP. Please try again."})
+
+        return attrs

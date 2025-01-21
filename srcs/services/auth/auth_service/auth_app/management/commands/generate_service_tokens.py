@@ -1,10 +1,13 @@
 # auth_app/management/commands/create_microservices.py
 
-from django.core.management.base import BaseCommand
-from django.contrib.auth.hashers import make_password
-from auth_app.models import Service, Token
-from auth_app.serializers import createServiceToken
 import os
+
+from django.contrib.auth.hashers import make_password
+from django.core.management.base import BaseCommand
+
+from auth_app.models import Service
+from auth_app.models import Token
+from auth_app.serializers import createServiceToken
 
 class Command(BaseCommand):
     help = 'Create microservice users and tokens in bulk'
@@ -13,6 +16,8 @@ class Command(BaseCommand):
         microservices = [
             {'service_name': 'auth', 'password': os.getenv('AUTH_PASSWORD')},
             {'service_name': 'users', 'password': os.getenv('USERS_PASSWORD')},
+            {'service_name': 'game', 'password': os.getenv('GAME_PASSWORD')},
+            {'service_name': 'rooms', 'password': os.getenv('ROOMS_PASSWORD')},
         ]
         
         services_to_create = []
@@ -25,6 +30,6 @@ class Command(BaseCommand):
         
         for service in Service.objects.filter(service_name__in=[m['service_name'] for m in microservices]):
             token = createServiceToken(service)
-            Token.objects.create(service_name=service, token=token)
+            Token.objects.create(service_name=service.service_name, token=token)
 
         self.stdout.write(self.style.SUCCESS('Microservices and tokens have been created successfully.'))

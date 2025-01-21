@@ -1,9 +1,19 @@
-import requests
-import requests
-from datetime import datetime, timedelta
 from django.utils import timezone
+from django.conf import settings
+from datetime import datetime
+from datetime import timedelta
+import requests
+import jwt
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import TokenError
+
+from auth_app.models import Token
+from .serializers import createServiceToken
 
 def send_request(url:str, method:str, body={}, headers={}) -> int:
+    token = getServiceToken()
+    headers.update({'Authorization': f'Bearer {token}'})
     req_methods = {
             'post':requests.post,
             'delete':requests.delete,
@@ -35,3 +45,21 @@ def send_create_requests(urls:list, body={}, headers={}) -> bool:
             rollback_url = url.replace('create', 'delete') + body['username'] + '/' 
             send_request(url=rollback_url, method='delete', headers=headers)
     return True
+
+def getServiceToken():
+    auth_token = Token.objects.get(service_name='auth')
+
+    try:
+        decoded_token = jwt.decode(
+            auth_token.token,
+            settings.SIMPLE_JWT['VERIFYING_KEY'],
+            settings.SIMPLE_JWT['ALGORITHM']
+        )
+        return auth_token.token
+    except jwt.ExpiredSignatureError:
+        raise ValueError("Token Expired")
+    except jwt.InvalidTokenError:
+        raise ValueError("Invalid Token")
+
+
+

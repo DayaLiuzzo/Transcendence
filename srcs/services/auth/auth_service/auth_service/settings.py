@@ -44,12 +44,21 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'auth_app',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    "django_otp",
+    "django_otp.plugins.otp_totp",
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("auth_app.authentication.CustomJWTAuth",),
 }
+
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',  # Default JWT authentication
+#     ],
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +68,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 ]
 
 ROOT_URLCONF = 'auth_service.urls'
@@ -126,7 +136,7 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "RS256",
-    "SIGNING_KEY": get_sjwt_key("/keys/sjwt_private.pem"),
+    "SIGNING_KEY": get_sjwt_key("/private_key/sjwt_private.pem"),
     "VERIFYING_KEY": get_sjwt_key("/keys/sjwt_public.pem"),
     "AUDIENCE": None,
     "ISSUER": None,

@@ -11,7 +11,6 @@ NC='\033[0m'  # No Color (reset)
 services=(
     "auth auth_app db_auth auth auth_user"
     "users users_app db_users users users_user"
-    "friends friends_app db_friends friends friends_user"
     "rooms rooms_app db_rooms rooms rooms_user"
     "game game_app db_game game game_user"
 )
