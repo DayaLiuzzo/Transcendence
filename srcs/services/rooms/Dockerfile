@@ -1,12 +1,19 @@
-FROM python:3.9
+FROM python:3.12.5-bullseye
+
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y openssl
 
 
-COPY rooms_service .
-COPY ./conf/requirements.txt .
+RUN mkdir -p /service_code
+RUN mkdir -p /init
+RUN mkdir -p /certs
+
+COPY init/* /init 
+
+RUN chmod +x /init/start.sh
+
+WORKDIR /service_code
+
 EXPOSE 8005
-
-COPY /conf/start.sh .
-RUN chmod +x start.sh
-
-
-ENTRYPOINT [ "bash", "start.sh" ]
+ENTRYPOINT [ "bash", "/init/start.sh" ]

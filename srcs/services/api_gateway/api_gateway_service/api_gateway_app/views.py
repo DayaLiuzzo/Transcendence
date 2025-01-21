@@ -1,4 +1,4 @@
 from django.http import JsonResponse
 
-def friends_view(request):
-    return JsonResponse({"message": "API gateway is running"})
+def api_service_running(request):
+    return JsonResponse({"message": "API gateway service is running"})

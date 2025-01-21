@@ -1,14 +1,20 @@
-FROM python:3.9
+
+FROM python:3.12.5-bullseye
+
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y openssl
 
 
-COPY api_gateway_service .
-COPY ./conf/requirements.txt .
+RUN mkdir -p /service_code
+RUN mkdir -p /init
+RUN mkdir -p /certs
 
-COPY /conf/start.sh .
-RUN chmod +x start.sh
+COPY init/* /init 
 
-EXPOSE 8002 
+RUN chmod +x /init/start.sh
 
-ENTRYPOINT [ "bash", "start.sh" ]
+WORKDIR /service_code
 
-
+EXPOSE 8443
+ENTRYPOINT [ "bash", "/init/start.sh" ]

@@ -1,38 +1,56 @@
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status 
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from django.shortcuts import render
 import logging
+from django.http import JsonResponse
+
+from rest_framework import generics
+from rest_framework import status 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+
+
+from .models import CustomUser
+from .serializers import CustomUserSerializer
+from game_app.permissions import IsAuth
+from game_app.permissions import IsRooms
+from game_app.permissions import IsUsers
+from game_app.permissions import IsGame
+from game_app.permissions import IsOwnerAndAuthenticated
+
 
 logger = logging.getLogger('game_app')  # Utilisez le logger de votre application spécifique
 
 @api_view(['GET'])
-def test(request):
-    logger.debug(f"*********************************************")
-    logger.debug(f"Client attempting a test")
-    return Response({"message": "Hello le jeu"}, status=status.HTTP_200_OK)
-
-# @api_view(['GET'])
-# def grr(request):
-#     return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def index(request):
-    return Response({"message": "asgdsegdddd"}, status=status.HTTP_200_OK)
-    # return render(request, 'index.html', {}, status=status.HTTP_200_OK)
+def game_service_running(request):
+    return JsonResponse({"message": "Game service is running"})
 
 @api_view(['GET'])
 def gameroom(request, room_name):
-    logger.debug(f"*********************************************")
-    logger.debug(f"Client attempting to connect to room via API")
-    # Retourner les données sous forme de JSON
-    data = {
-        'room_name': room_name,
-        'message': 'Bienvenue dans la salle !'
-    }
+    data = {'room_name': room_name, 'message': 'Bienvenue dans la salle !'}
     return Response(data, status=status.HTTP_200_OK)
+
+class CreateCustomUserView(generics.CreateAPIView):
+    permission_classes = [IsAuth]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class DeleteCustomUserView(generics.DestroyAPIView):
+    permission_classes = [IsAuth]
+    queryset = CustomUser.objects.all().exclude(username="deleted_account")
+    serializer_class = CustomUserSerializer
+    lookup_field = "username"
+
+class ProtectedServiceView(APIView):
+    authentication_classes = []
+    permission_classes = [IsAuth]
+    def get(self, request):
+        user = request.user
+        logger.debug(f"Authenticated user in view: {user}")
+        return Response({"message": "Service is Authenticated"})
+    
+class ProtectedUserView(APIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    def get(self, request):
+        user = request.user
+        logger.debug(f"Authenticated user in view: {user}")
+        return Response({"message": "User is Owner and Authenticated!"})
