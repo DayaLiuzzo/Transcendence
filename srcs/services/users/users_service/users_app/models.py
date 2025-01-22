@@ -5,12 +5,7 @@ class UserProfile(models.Model):
     username = models.CharField(max_length=100, unique=True)
     biography = models.TextField()
     friends = models.ManyToManyField("self", blank=True, symmetrical=False)
-    avatar = models.ImageField(
-        upload_to='avatars/', 
-        default='avatars/default.png',  
-        blank=True,
-        null=True
-    )
+    avatar = models.ImageField( upload_to='avatars/users_avatars/', default='avatars/default_avatars/default.png', blank=True, null=True)
     
     @property
     def is_authenticated(self):

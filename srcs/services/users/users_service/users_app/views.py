@@ -86,6 +86,20 @@ class RemoveFriendView(APIView):
         return Response({"error": f"{friendusername} is not in your friend list."},
                         status=HTTP_400_BAD_REQUEST)
 
+
+class AvatarView(APIView):
+    permission_classes = [IsOwner]
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        avatar_url = user.avatar.url if user.avatar else None
+        return Response({
+            "message": "Avatar retrieved successfully.",
+            "avatar_url": avatar_url,
+            "is_default": user.avatar.name == user.avatar.field.default
+        }, status=status.HTTP_200_OK)
+
+
+
 class ListFriendsView(generics.ListAPIView):
     serializer_class = FriendsSerializer
     permission_classes = [IsOwner]
