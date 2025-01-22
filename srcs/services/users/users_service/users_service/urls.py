@@ -15,6 +15,7 @@ urlpatterns = [
         path('<str:username>/friends/add/<str:friendusername>/', views.AddFriendView.as_view(), name='add_friend'),
         path('<str:username>/friends/remove/<str:friendusername>/', views.RemoveFriendView.as_view(), name='remove_friend'),
         path('<str:username>/friends/', views.ListFriendsView.as_view(), name='list_friend'),
+        path('<str:username>/avatar/', views.AvatarView.as_view(), name='avatar'),
     ]))
 
 ]
