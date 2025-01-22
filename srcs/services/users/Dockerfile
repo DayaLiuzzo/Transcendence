@@ -8,6 +8,7 @@ RUN mkdir -p /keys
 RUN mkdir -p /service_code
 RUN mkdir -p /init
 RUN mkdir -p /certs
+RUN mkdir -p /media/avatars/
 
 COPY init/* /init 
 
