@@ -1,4 +1,5 @@
 import logging
+import os
 
 from rest_framework import generics
 from rest_framework import status
@@ -8,8 +9,10 @@ from rest_framework.views import APIView
 from rest_framework.status import HTTP_200_OK
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
-
+from django.core.exceptions import ValidationError
+from django.conf import settings
 from django.shortcuts import get_object_or_404
+
 from .models import UserProfile
 from .serializers import UserProfileSerializer
 from .serializers import FriendsSerializer
@@ -97,7 +100,37 @@ class AvatarView(APIView):
             "avatar_url": avatar_url,
             "is_default": user.avatar.name == user.avatar.field.default
         }, status=status.HTTP_200_OK)
+    
+    def patch(self, request, *args, **kwargs):
+        """Update the user's avatar image"""
+        user_profile = request.user
+        avatar = request.FILES.get('avatar')
 
+        if avatar:
+            # Validate the uploaded file (optional)
+            if avatar.size > 5 * 1024 * 1024:  # Limiting size to 5MB
+                raise ValidationError("The file is too large. The maximum size is 5MB.")
+
+            # Get the path to the old avatar to delete it
+            old_avatar = user_profile.avatar.name
+            logger.debug(f"{old_avatar}")
+            if old_avatar and old_avatar != 'default.png':
+                old_avatar_path = os.path.join(settings.MEDIA_ROOT, old_avatar)
+                if os.path.exists(old_avatar_path):
+                    os.remove(old_avatar_path)  # Delete the old avatar if it exists
+
+            # Save the new avatar
+            user_profile.avatar = avatar
+            user_profile.save()
+
+            return Response({
+                'message': 'Avatar updated successfully!',
+                'avatar_url': user_profile.avatar.url
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'error': 'No avatar file provided.'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListFriendsView(generics.ListAPIView):
