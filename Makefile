@@ -95,6 +95,8 @@ clean_migration:
 	rm -f srcs/services/rooms/rooms_service/rooms_app/migrations/000*
 	rm -f srcs/services/users/users_service/users_app/migrations/000*
 	rm -f srcs/services/users/users_service/microservice_client/migrations/000*	
+	rm -f srcs/services/avatar/avatar_service/avatar_app/migrations/000*
+	rm -f srcs/services/avatar/avatar_service/microservice_client/migrations/000*	
 	@echo "Cleanup completed."
 
 clean_images:
@@ -138,6 +140,7 @@ clean_certs:
 	rm -rf srcs/services/rooms/certs
 	rm -rf srcs/services/users/certs
 	rm -rf srcs/services/frontend/certs
+	rm -rf srcs/services/avatar/certs
 
 
 
