@@ -18,6 +18,7 @@ class Command(BaseCommand):
             {'service_name': 'users', 'password': os.getenv('USERS_PASSWORD')},
             {'service_name': 'game', 'password': os.getenv('GAME_PASSWORD')},
             {'service_name': 'rooms', 'password': os.getenv('ROOMS_PASSWORD')},
+            {'service_name': 'avatar', 'password': os.getenv('AVATAR_PASSWORD')},
         ]
         
         services_to_create = []

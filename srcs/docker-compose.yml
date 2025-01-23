@@ -8,6 +8,8 @@ services:
     ports:
       - "4430:4430"
     restart: on-failure
+    volumes: 
+      - avatar_media:/var/www/media
     env_file: .env
     depends_on:
       - api_gateway
@@ -59,6 +61,21 @@ services:
       - db_game
     env_file: .env
 
+  avatar:
+    image: avatar
+    container_name: avatar
+    build: services/avatar
+    expose:
+      - "8443"
+    volumes:
+      - avatar_service_data:/service_code
+      - avatar_media:/media
+      - auth_keys:/keys
+    restart: on-failure
+    depends_on:
+      - db_avatar
+    env_file: .env
+
   api_gateway:
     image: api_gateway
     container_name: api_gateway
@@ -85,6 +102,14 @@ services:
     image: db_auth
     container_name: db_auth
     build: services/db_auth
+    restart: on-failure
+    env_file: .env
+    expose:
+      - '5432'
+  db_avatar:
+    image: db_avatar
+    container_name: db_avatar
+    build: services/db_avatar
     restart: on-failure
     env_file: .env
     expose:
@@ -167,3 +192,20 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/rooms/rooms_service
+  
+  avatar_service_data:
+    name: avatar_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $PWD/srcs/services/avatar/avatar_service
+  
+  avatar_media:
+    name: avatar_media
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $PWD/srcs/services/avatar_media
+  
