@@ -1,4 +1,4 @@
-all: up 
+all: check_certs up 
 
 up:
 	docker compose -f srcs/docker-compose.yml up --build -d --remove-orphans
@@ -34,9 +34,6 @@ enter_auth:
 enter_db_auth:
 	docker exec -it db_auth sh
 
-enter_friends:
-	docker exec -it friends bash
-
 enter_rooms:
 	docker exec -it rooms bash
 
@@ -59,8 +56,6 @@ logs_game:
 logs_auth:
 	docker logs auth
 
-logs_friends:
-	docker logs friends
 
 logs_rooms:
 	docker logs rooms
@@ -70,6 +65,17 @@ logs_rooms:
 ########################################################################
 
 status	: logs ; docker ps -a
+
+#########################################################################
+############################ CERTS ###################################
+#########################################################################
+
+check_certs:
+	if [ ! -f ca.crt ]; then \
+		./init_project.sh; \
+	else \
+		echo "Certs already up"; \
+	fi
 
 #########################################################################
 ############################ CLEANING ###################################
@@ -121,7 +127,21 @@ clean_network:
 	docker network prune -f
 	@echo "Cleanup completed."
 
-clean: down clean_images clean_migration clean_cache clean_volumes clean_containers clean_network
+clean_certs:
+	@echo "Cleaning Certs"
+	rm -f ca.crt 
+	rm -f ca.key
+	rm -rf srcs/services/api_gateway/certs
+	rm -rf srcs/services/auth/certs
+	rm -rf srcs/services/friends/certs
+	rm -rf srcs/services/game/certs
+	rm -rf srcs/services/rooms/certs
+	rm -rf srcs/services/users/certs
+	rm -rf srcs/services/frontend/certs
+
+
+
+clean: down clean_images clean_migration clean_cache clean_volumes clean_containers clean_network clean_certs
 
 re: clean all
 

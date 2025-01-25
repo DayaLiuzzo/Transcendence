@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
-from rest_framework import permissions
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework import permissions
 from django.conf import settings
 import logging 
 
@@ -12,7 +12,6 @@ class IsOwnerAndAuthenticated(BasePermission):
         if not (request.user and request.user.is_authenticated):
             return False
         return obj == request.user
-
 
 
 def IsService(request, micro_service):
