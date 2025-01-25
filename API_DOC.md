@@ -31,6 +31,22 @@ Authorization: Bearer your_jwt_token_here
   <li>/api/game/< str:roomname></li>
 </ol>
 
+<h3>ROOMS</h3>
+
+<ol>
+  <li>/api/rooms/test/</li>
+  <li>/api/rooms/create_room/</li>
+  <li>/api/rooms/join_room/</li>
+  <li>/api/rooms/list_all_rooms/</li>
+  <li>/api/rooms/list_available_rooms/</li>
+  <li>/api/rooms/list_locked_rooms/</li>
+  <li>/api/rooms/count_all_rooms/</li>
+  <li>/api/rooms/count_available_rooms/</li>
+  <li>/api/rooms/count_locked_rooms/</li>
+  <li>/api/rooms/delete_room/< str:room_name>/</li>
+  <li>/api/rooms/create/</li>
+</ol>
+
 <h3>USERS</h3>
 
 <ol>
@@ -120,6 +136,63 @@ Description: Deletes a user from the authentication service and its associated d
 Endpoint: /api/game/  
 Method: **GET**  
 Description: Checks if the game service is working completely.  
+
+<h3>ROOMS</h3>
+
+**Service running**
+
+Endpoint: /api/rooms/test/
+Method: **GET**  
+Description: Checks if the rooms service is working completely.  
+
+
+**Create room**
+
+Endpoint: /api/rooms/create_room/
+Method: **POST**  
+Description: Create a room  
+
+**Join room**
+
+Endpoint: /api/rooms/join_room/
+Method: **POST**  
+Description: Join any available room 
+
+**Listing rooms**
+
+Endpoints: 
+- /api/rooms/list_all_rooms/
+- /api/rooms/list_available_rooms/
+- /api/rooms/list_locked_rooms/
+
+Method: **GET**  
+Description: Respectively, list all rooms, available rooms and locked rooms
+
+**Counting rooms**
+
+Endpoints: 
+- /api/rooms/count_all_rooms/
+- /api/rooms/count_available_rooms/
+- /api/rooms/count_locked_rooms/
+
+Method: **GET**  
+Description: Respectively, count all rooms, available rooms and locked rooms
+
+**Delete room**
+
+Endpoints: 
+- /api/rooms/delete_room/< str:room_name>/
+
+Method: **DELETE**  
+Description: Delete a given room
+
+**Creating a user in the room service**
+
+Endpoints: 
+- /api/rooms/create/
+
+Method: **POST**  
+Description: Called by the auth service when a new user is created to create this user in the room service
 
 <h3>USERS</h3>
 
