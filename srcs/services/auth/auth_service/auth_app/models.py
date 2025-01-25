@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
 
+import pyotp
+
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
@@ -14,6 +16,8 @@ class Book(models.Model):
     
 class CustomUser(AbstractUser):
     last_log = models.DateTimeField(default=now)
+    two_factor_enabled = models.BooleanField(default=False)
+    otp_secret = models.CharField(max_length=32, default=pyotp.random_base32, blank=True, null=True)
     @property
     def is_authenticated(self):
         return True

@@ -16,6 +16,8 @@ class Command(BaseCommand):
         microservices = [
             {'service_name': 'auth', 'password': os.getenv('AUTH_PASSWORD')},
             {'service_name': 'users', 'password': os.getenv('USERS_PASSWORD')},
+            {'service_name': 'game', 'password': os.getenv('GAME_PASSWORD')},
+            {'service_name': 'rooms', 'password': os.getenv('ROOMS_PASSWORD')},
         ]
         
         services_to_create = []

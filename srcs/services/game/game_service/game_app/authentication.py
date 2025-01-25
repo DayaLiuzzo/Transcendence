@@ -3,8 +3,9 @@ import logging
 import jwt
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
+
 from django.conf import settings
-from .models import UserProfile
+from .models import CustomUser
 
 logging.basicConfig(
     level=logging.FATAL,
@@ -15,7 +16,6 @@ logging.basicConfig(
 
 # Crée un logger spécifique au module courant
 logger = logging.getLogger(__name__)
-
 
 
 
@@ -65,7 +65,7 @@ class CustomJWTAuth(BaseAuthentication):
             return None
         
         try:
-            user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
+            user = CustomUser.objects.get(username=username)
+        except CustomUser.DoesNotExist:
             raise AuthenticationFailed("The user associated with this token does not exist.")
         return user
