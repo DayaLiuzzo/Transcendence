@@ -17,6 +17,11 @@ from .models import Room
 from .models import User
 from .serializers import RoomSerializer
 from .serializers import UserSerializer
+from rooms_app.permissions import IsAuth
+from rooms_app.permissions import IsRooms
+from rooms_app.permissions import IsUsers
+from rooms_app.permissions import IsGame
+from rooms_app.permissions import IsOwnerAndAuthenticated
 
 def rooms_service_running(request):
     return JsonResponse({"message": "Rooms service is running"})
@@ -238,40 +243,43 @@ class DeleteRoomView(generics.DestroyAPIView):
 # ************************** CREATE ************************** #
 
 class CreateUserView(generics.CreateAPIView):
+    permission_classes =[IsAuth]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 # *************************** READ *************************** #
 
 class RetrieveUserView(generics.RetrieveAPIView):
-    queryset = User.objects.all()
+    permission_classes = [IsOwnerAndAuthenticated,IsAuth]
+    queryset = User.objects.all().exclude(username="deleted_account")
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
     lookup_field = 'username'
 
     def get_object(self):
         return self.request.user
 
-class ListUserView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+# class ListUserView(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [IsAuthenticated] #a changer
 
 # **************************** PUT *************************** #
 
-class UpdateUserView(generics.UpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated] 
+# class UpdateUserView(generics.UpdateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [IsAuthenticated] 
 
-    def get_object(self):
-        return self.request.user
+#     def get_object(self):
+#         return self.request.user
 
 # ************************** DELETE ************************** #
 
 class DeleteUserView(generics.DestroyAPIView):
-    queryset = User.objects.all()
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuth]
+    queryset = User.objects.all().exclude(username="deleted_account")
+    serializer_class = UserSerializer
+    lookup_field = "username"
 
     def get_object(self):
         return self.request.user

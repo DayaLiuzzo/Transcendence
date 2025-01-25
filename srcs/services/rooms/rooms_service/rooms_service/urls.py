@@ -19,8 +19,8 @@ urlpatterns = [
         path('delete_room/<str:room_id>/', views.DeleteRoomView.as_view(), name='delete_room'),
 
         path('create/', views.CreateUserView.as_view(), name='create_user'),
-        path('list/', views.ListUserView.as_view(), name='list_user'),
-        path('update/', views.UpdateUserView.as_view(), name='update_user'),
+        # path('list/', views.ListUserView.as_view(), name='list_user'),
+        # path('update/', views.UpdateUserView.as_view(), name='update_user'),
         path('delete/', views.DeleteUserView.as_view(), name='delete_user'),
     ]))
 ]
