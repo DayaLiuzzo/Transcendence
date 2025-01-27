@@ -93,6 +93,7 @@ clean_migration:
 	rm -f srcs/services/friends/friends_service/friends_app/migrations/000*
 	rm -f srcs/services/game/game_service/game_app/migrations/000*
 	rm -f srcs/services/rooms/rooms_service/rooms_app/migrations/000*
+	rm -f srcs/services/tournament/tournament_service/tournament_app/migrations/000*
 	rm -f srcs/services/users/users_service/users_app/migrations/000*
 	rm -f srcs/services/users/users_service/microservice_client/migrations/000*	
 	@echo "Cleanup completed."
@@ -136,6 +137,7 @@ clean_certs:
 	rm -rf srcs/services/friends/certs
 	rm -rf srcs/services/game/certs
 	rm -rf srcs/services/rooms/certs
+	rm -rf srcs/services/tournament/certs
 	rm -rf srcs/services/users/certs
 	rm -rf srcs/services/frontend/certs
 

@@ -5,6 +5,8 @@ SERVICES=(
     "users"
     "api_gateway"
     "frontend"
+    "rooms"
+    "tournament"
 )
 
 BASE_PATH="./srcs/services"
