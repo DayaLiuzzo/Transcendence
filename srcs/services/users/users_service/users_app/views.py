@@ -144,7 +144,7 @@ class ListFriendsView(generics.ListAPIView):
     
 
 class ProtectedServiceView(APIView):
-    authentication_classes = []
+    # authentication_classes = []
     permission_classes = [IsAuth]
     def get(self, request):
         user = request.user
