@@ -1,4 +1,4 @@
-
+###
 #add user to db
 POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
@@ -8,6 +8,29 @@ Content-Type: application/json
   "password": "pass123456",
   "email": "test_user@gmail.com"
 }
+
+###
+#add user to db
+POST https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "rinma",
+  "password": "pass123456",
+  "email": "rinma@gmail.com"
+}
+
+###
+#add user to db
+POST https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "lol",
+  "password": "pass123456",
+  "email": "lol@gmail.com"
+}
+
 ###
 #get user token
 POST https://localhost:4430/api/auth/token/

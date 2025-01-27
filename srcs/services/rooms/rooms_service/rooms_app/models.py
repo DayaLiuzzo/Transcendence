@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Room(models.Model):
     ROOM_STATUS_CHOICES = [
         ('waiting', 'Waiting'),
