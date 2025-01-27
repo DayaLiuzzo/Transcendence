@@ -36,6 +36,9 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiO
 GET https://localhost:4430/api/users/test2_user/friends/
 Authorization: Bearer eyJhbGciOiJSUzP1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4MDM3MzczLCJpYXQiOjE3Mzc5OTQxNzN9.d3051RYzd7AApiRDWzFfpKZql4FBDBFTqQmWfrE7r1UfOInDqppe4qDxreU2b-nO5veIho2jb-VP6YmxxLUrxLW8ULPNWYIl379NCRuJfcxnSHkEOqipPXLS1UU-EO1tZ3MK_8rPvGX3J_tdwXnCjNQtQqKf2S-L0apCifEvoeS_YpwPNXsgqEni0-XXT9BzLLNr-ddp8kxAWrDm_jW1_m1s6B7iS2y6SV-Pt41AEbYh5XOIA3t1ZMLdLMi2GeX6sbQffDb4fp5GLPlOwb-0v-6iVrS4Tci4POIp-a40RnlMTe_yH18IZlt7EpslnEScmbBp_zjReo6HO6AL4YVS_A
 
+{
+
+}
 ###
 #check if invalid token can access protected view
 GET https://localhost:4430/api/users/protected/service/
