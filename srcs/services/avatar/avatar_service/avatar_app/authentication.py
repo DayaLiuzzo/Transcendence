@@ -24,6 +24,7 @@ class CustomJWTAuth(BaseAuthentication):
             return None
         token_type, token = self._extract_token(auth_header)
         payload = self._decode_token(token)
+        request.decoded_token = payload
         self._set_username_from_payload(payload, request)
         return None
     
