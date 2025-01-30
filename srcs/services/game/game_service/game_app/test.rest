@@ -1,7 +1,45 @@
 ###
 #Check if game service is working
-get https://localhost:4430/api/game/
+GET https://localhost:4430/api/game/test/
+
+
+################################################################
+#                                                              #
+#                   Game service User tests                    #
+#                                                              #
+################################################################
+
+# ************************** CREATE ************************** #
 
 ###
-#Get a room
-get https://localhost:4430/api/game/random_room/
+#create user
+POST https://localhost:4430/api/game/create/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
+
+# *************************** READ *************************** #
+
+###
+#get a list of users
+GET https://localhost:4430/api/game/list/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
+
+# **************************** PUT *************************** #
+
+# ************************** DELETE ************************** #
+
+###
+#delete user
+DELETE  https://localhost:4430/api/game/delete/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
+
+################################################################
+#                                                              #
+#                 Game service Gamestate tests                 #
+#                                                              #
+################################################################
+
+# *************************** READ *************************** #
+
+###
+#get the gamestate
+GET https://localhost:4430/api/game/gamestate/
