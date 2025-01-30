@@ -1,5 +1,11 @@
 from django.db import models
 
+################################################################
+#                                                              #
+#                             Room                             #
+#                                                              #
+################################################################
+
 class Room(models.Model):
     ROOM_STATUS_CHOICES = [
         ('waiting', 'Waiting'),
@@ -19,7 +25,13 @@ class Room(models.Model):
     @property
     def is_full(self):
         return self.players_count >= 2
-    
+
+################################################################
+#                                                              #
+#                             User                             #
+#                                                              #
+################################################################
+
 class User(models.Model):
     username = models.CharField(max_length=255, unique=True)
     isconnected = models.BooleanField(default=0)   

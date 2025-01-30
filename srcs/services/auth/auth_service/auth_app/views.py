@@ -69,6 +69,7 @@ class SignUpView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
         req_urls = [ 'http://users:8443/api/users/create/',
+                    'http://game:8443/api/game/create/',
                     'http://rooms:8443/api/rooms/create/',
                     'http://tournament:8443/api/tournament/create/',
                     
@@ -87,6 +88,7 @@ class DeleteUserView (generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
+                    f'http://game:8443/api/game/delete/{instance.username}/',
                     f'http://rooms:8443/api/rooms/delete/{instance.username}/',
                     f'http://tournament:8443/api/tournament/delete/{instance.username}/',
                     ]
