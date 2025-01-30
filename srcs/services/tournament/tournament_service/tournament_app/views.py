@@ -16,6 +16,8 @@ from rest_framework.views import APIView
 from .authentication import CustomJWTAuth
 from .models import Tournament
 from .models import User
+from .models import Pool
+from .models import Match
 from .serializers import TournamentSerializer
 from .serializers import UserSerializer
 from tournament_app.permissions import IsAuth
@@ -23,6 +25,7 @@ from tournament_app.permissions import IsTournament
 from tournament_app.permissions import IsUsers
 from tournament_app.permissions import IsGame
 from tournament_app.permissions import IsOwnerAndAuthenticated
+from .utils import calculate_ranking
 
 def tournament_service_running(request):
     return JsonResponse({"message": "Tournament service is running"})
@@ -41,6 +44,7 @@ class CreateTournamentView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         try:
+            tournament_id = uuid.uuid4()
             # Récupérer les usernames envoyés dans le body
             usernames = self.request.data.get('users', [])
 
@@ -63,13 +67,85 @@ class CreateTournamentView(generics.CreateAPIView):
                     raise ValidationError(f"User with username '{username}' does not exist.")
 
             # Créer le tournoi avec le statut "waiting"
-            tournament = serializer.save(status='waiting')  # Ajouter les utilisateurs au tournoi
+            tournament = serializer.save(status='waiting', tournament_id=tournament_id)  # Ajout du tournoi_id
             
             tournament.users.set(users)
             tournament.save()
 
+            tournament.create_pools()
+
         except Exception as e:
             raise ValidationError({"message": "Error while creating tournament", "error": str(e)})
+class EndMatchView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, match_id, format=None):
+        try:
+            match = Match.objects.get(id=match_id)
+            
+            # Vérifier que le match est en cours
+            if match.status != 'playing':
+                return Response({
+                    "message": "Match is not currently being played."
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Obtenir les scores des joueurs
+            score_player_1 = request.data.get('score_player_1')
+            score_player_2 = request.data.get('score_player_2')
+
+            # Vérifier que les deux scores ont été fournis
+            if score_player_1 is None or score_player_2 is None:
+                return Response({
+                    "message": "Both scores must be provided."
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Assigner les scores au match
+            match.score_player_1 = score_player_1
+            match.score_player_2 = score_player_2
+
+            # Vérifier et identifier le gagnant
+            winner_username = request.data.get('winner')  # Nom d'utilisateur du gagnant
+            if not winner_username:
+                return Response({
+                    "message": "Winner must be specified."
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Identifier le gagnant et le perdant
+            winner = User.objects.get(username=winner_username)
+            if winner not in [match.player_1, match.player_2]:
+                return Response({
+                    "message": "Winner must be one of the match participants."
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Affecter le gagnant et le perdant
+            if winner == match.player_1:
+                match.winner = match.player_1
+                match.loser = match.player_2
+            else:
+                match.winner = match.player_2
+                match.loser = match.player_1
+
+            # Marquer le match comme terminé
+            match.status = 'finished'
+            match.save()
+
+            # Mise à jour des statistiques du tournoi
+            match.tournament.update_match_stats()
+
+            return Response({
+                "message": "Match ended successfully.",
+                "match_id": match.id,
+                "winner": winner.username
+            }, status=status.HTTP_200_OK)
+
+        except Match.DoesNotExist:
+            return Response({
+                "message": "Match not found."
+            }, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({
+                "message": "Winner user not found."
+            }, status=status.HTTP_404_NOT_FOUND)
         
 # *************************** READ *************************** #
 
@@ -120,142 +196,70 @@ class CountFinishedTournamentView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         count = Tournament.objects.filter(status='finished').count()
         return Response({"count": count})
-    
+
+class TournamentStatsView(APIView):
+    def get(self, request, tournament_id, format=None):
+        try:
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            
+            # Calculer le classement
+            ranking = calculate_ranking(tournament)
+            
+            return Response({
+                "ranking": ranking
+            }, status=status.HTTP_200_OK)
+        
+        except Tournament.DoesNotExist:
+            return Response({
+                "error": "Tournament not found"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+class PoolMatchesView(APIView):
+    def get(self, request, tournament_id, pool_name, format=None):
+        try:
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            pool = tournament.pools.get(name=pool_name)
+            matches = pool.get_matches()
+
+            match_data = [
+                {
+                    "player_1": match.player_1.username,
+                    "player_2": match.player_2.username,
+                    "status": match.status,
+                    "score_player_1": match.score_player_1,
+                    "score_player_2": match.score_player_2,
+                }
+                for match in matches
+            ]
+
+            return Response(match_data, status=status.HTTP_200_OK)
+
+        except Tournament.DoesNotExist:
+            return Response({"error": "Tournament not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Pool.DoesNotExist:
+            return Response({"error": "Pool not found"}, status=status.HTTP_404_NOT_FOUND)
+        
 # *********************** PUT / PATCH ************************ #
-
-# class AddUsersToTournamentView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request, *args, **kwargs):
-#         tournament = Tournament.objects.get(id=kwargs['pk'])
-
-#         # Vérifier que le tournoi est en 'waiting' avant d'ajouter des utilisateurs
-#         if tournament.status != 'waiting':
-#             return Response({
-#                 "message": "Tournament is not in 'waiting' status, cannot add users."
-#             }, status=status.HTTP_400_BAD_REQUEST)
-        
-#         users_to_add = request.data.get('users', [])
-        
-#         if not users_to_add:
-#             return Response({
-#                 "message": "No users provided."
-#             }, status=status.HTTP_400_BAD_REQUEST)
-        
-#         for user_id in users_to_add:
-#             user = User.objects.get(id=user_id)
-            
-#             # Vérifier si l'utilisateur est déjà dans le tournoi
-#             if user in tournament.users.all():
-#                 return Response({
-#                     "message": f"User {user.username} is already in the tournament."
-#                 }, status=status.HTTP_400_BAD_REQUEST)
-            
-#             tournament.users.add(user)
-        
-#         tournament.save()
-#         return Response({
-#             "message": f"Users added successfully to tournament {tournament.name}",
-#             "users_added": users_to_add
-#         }, status=status.HTTP_200_OK)
-
-# class RemoveUsersFromTournamentView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request, *args, **kwargs):
-#         tournament = Tournament.objects.get(id=kwargs['pk'])
-
-#         # Vérifier que le tournoi est en 'waiting'
-#         if tournament.status != 'waiting':
-#             return Response({
-#                 "message": "Tournament is not in 'waiting' status, cannot remove users."
-#             }, status=status.HTTP_400_BAD_REQUEST)
-
-#         users_to_remove = request.data.get('users', [])
-        
-#         if not users_to_remove:
-#             return Response({
-#                 "message": "No users provided."
-#             }, status=status.HTTP_400_BAD_REQUEST)
-
-#         for user_id in users_to_remove:
-#             user = User.objects.get(id=user_id)
-            
-#             # Vérifier si l'utilisateur est bien dans le tournoi
-#             if user not in tournament.users.all():
-#                 return Response({
-#                     "message": f"User {user.username} is not part of this tournament."
-#                 }, status=status.HTTP_400_BAD_REQUEST)
-            
-#             tournament.users.remove(user)
-
-#         tournament.save()
-#         return Response({
-#             "message": f"Users removed successfully from tournament {tournament.name}",
-#             "users_removed": users_to_remove
-#         }, status=status.HTTP_200_OK)
-
-class LockTournamentView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        tournament = Tournament.objects.get(id=kwargs['pk'])
-
-        if tournament.status == 'waiting':
-            tournament.status = 'playing'
-            tournament.save()
-
-            return Response({
-                "message": "Tournament locked and status changed to 'playing'."
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({
-                "message": "Tournament cannot be locked. Current status is not 'waiting'."
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-class FinishTournamentView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        tournament = Tournament.objects.get(id=kwargs['pk'])
-
-        if tournament.status == 'playing':
-            tournament.status = 'finished'
-            tournament.save()
-
-            return Response({
-                "message": "Tournament finished and status changed to 'finished'."
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({
-                "message": "Tournament cannot be finished. Current status is not 'playing'."
-            }, status=status.HTTP_400_BAD_REQUEST)
-
 
 # ************************** DELETE ************************** #
 
+class DeleteTournamentView(APIView):
+    permission_classes = [IsAuthenticated]
 
-class DeleteUserView(generics.DestroyAPIView):
-    permission_classes = [IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
-    lookup_field = "username"
-
-    def get_object(self):
-        return self.request.user
-
-    def perform_destroy(self, instance):
-        # Avant de supprimer l'utilisateur, dissocier les utilisateurs de leur tournoi
-        if instance.tournaments.exists():
-            for tournament in instance.tournaments.all():
-                if instance in tournament.users.all():
-                    tournament.users.remove(instance)
-                    tournament.players_count -= 1
-                    if tournament.players_count < 2:
-                        tournament.status = 'waiting'
-                    tournament.save()
-
-        instance.delete()
+    def delete(self, request, tournament_id):
+        try:
+            # Récupérer le tournoi à partir de l'ID (ou de son nom)
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            
+            # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
+            if tournament.users.filter(id=request.user.id).exists() or request.user.is_staff:
+                tournament.delete()
+                return Response({"message": "Tournament deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({"message": "You do not have permission to delete this tournament."}, status=status.HTTP_403_FORBIDDEN)
+        
+        except Tournament.DoesNotExist:
+            return Response({"message": "Tournament not found."}, status=status.HTTP_404_NOT_FOUND)
 
 ################################################################
 #                                                              #
