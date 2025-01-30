@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from .models import Tournament
 from .models import User
+from .models import Pool    
+from .models import Match
 
 class UserSerializer(serializers.ModelSerializer):
-    # Si vous voulez savoir si l'utilisateur est authentifié, vous pouvez directement utiliser is_authenticated
     is_authenticated = serializers.SerializerMethodField()
     
     class Meta:
@@ -13,13 +14,27 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_authenticated(self, obj):
         return obj.is_authenticated  # Vérifier l'état d'authentification de l'utilisateur
 
+class MatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Match
+        fields = ['id', 'player_1', 'player_2', 'winner', 'loser', 'status', 'score_player_1', 'score_player_2']
+
+class PoolSerializer(serializers.ModelSerializer):
+    users = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all(), many=True)
+    matches = MatchSerializer(source='match_set', many=True, read_only=True)
+
+    class Meta:
+        model = Pool
+        fields = ['id', 'name', 'tournament', 'users', 'matches']
+
 class TournamentSerializer(serializers.ModelSerializer):
     players_count = serializers.ReadOnlyField()
-    users = UserSerializer(many=True, read_only=True)  # Utilisation de UserSerializer pour les utilisateurs associés
+    users = UserSerializer(many=True, read_only=True)
+    pools = PoolSerializer(many=True, read_only=True)
 
     class Meta:
         model = Tournament
-        fields = ['name', 'status', 'players_count', 'users', 'max_users']
+        fields = ['tournament_id', 'name', 'status', 'players_count', 'users', 'max_users']
 
     def validate_users(self, value):
         """Valider que les usernames existent dans la base de données."""
@@ -31,4 +46,3 @@ class TournamentSerializer(serializers.ModelSerializer):
             except User.DoesNotExist:
                 raise serializers.ValidationError(f"User with username '{username}' does not exist.")
         return users
-    
