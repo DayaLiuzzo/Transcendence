@@ -35,7 +35,7 @@ def send_microservice_request(url: str, method: str, body=None, headers=None) ->
     service_name = settings.MICROSERVICE_CLIENT["SERVICE_NAME"]
     token_instance = Token.objects.filter(service_name=service_name).first()
     if not token_instance:
-        token = fetch_service_token(service_name) 
+        token = fetch_service_token() 
     else:
         token = token_instance.token
 
