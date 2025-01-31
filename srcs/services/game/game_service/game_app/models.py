@@ -8,7 +8,7 @@ from django.db import models
 
 class Paddle(models.Model):
     game = models.ForeignKey('Game', on_delete=models.CASCADE,  related_name='paddles_instance')
-    player = models.ForeignKey('User', on_delete=models.CASCADE)
+    player = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)  # Ajouter null=True et blank=True
     side = models.CharField(max_length=10, choices=[('left', 'Left'), ('right', 'Right')])
     x_position = models.FloatField()
     y_position = models.FloatField(default=0.0)
@@ -72,7 +72,7 @@ class Game(models.Model):
     player2 = models.ForeignKey('User', related_name='game_player2', null=True, blank=True, on_delete=models.SET_NULL)
     
     paddles = models.ManyToManyField(Paddle, related_name='games')
-    ball = models.OneToOneField(Ball, on_delete=models.CASCADE, related_name='game_instance')
+    ball = models.OneToOneField(Ball, null=True, blank=True, on_delete=models.CASCADE, related_name='game_instance')
 
     def __str__(self):
         return f"Game {self.room_id} ({self.status})"

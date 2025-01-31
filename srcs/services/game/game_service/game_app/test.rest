@@ -34,12 +34,32 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ################################################################
 #                                                              #
-#                 Game service Gamestate tests                 #
+#                 Game service tests                 #
 #                                                              #
 ################################################################
+
+
+# ************************** CREATE ************************** #
+
+###
+#create game (for room service)
+POST https://localhost:4430/api/game/create_game/id_hihi/
 
 # *************************** READ *************************** #
 
 ###
+#get a list of all games
+GET https://localhost:4430/api/game/list_all_games/
+
+###
 #get the gamestate
 GET https://localhost:4430/api/game/gamestate/
+
+# **************************** PUT *************************** #
+
+# ************************** DELETE ************************** #
+
+###
+#delete game
+DELETE https://localhost:4430/api/game/delete_game/id_hihi/
+
