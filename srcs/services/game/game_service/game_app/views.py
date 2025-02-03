@@ -57,6 +57,6 @@ class ProtectedUserView(APIView):
     
 
 class IsUsersView(APIView):
-    permission_classes = [IsAuth]  # Requires the user to be authenticated and have the 'isUsers' permission
+    permission_classes = [IsUsers]  # Requires the user to be authenticated and have the 'isUsers' permission
     def get(self, request, *args, **kwargs):
         return Response({"message": "Hello, this is a protected view for Users service!"})
