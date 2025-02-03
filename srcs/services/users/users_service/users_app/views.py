@@ -1,5 +1,7 @@
 import logging
 import os
+from rest_framework.exceptions import APIException
+
 
 from rest_framework import generics
 from rest_framework import status
@@ -9,9 +11,11 @@ from rest_framework.views import APIView
 from rest_framework.status import HTTP_200_OK
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
+
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+import requests
 
 from .models import UserProfile
 from .serializers import UserProfileSerializer
@@ -22,6 +26,8 @@ from users_app.permissions import IsUsers
 from users_app.permissions import IsGame
 from users_app.permissions import IsOwner
 from users_app.permissions import IsOwnerAndAuthenticated
+
+
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -132,21 +138,32 @@ class AvatarView(APIView):
                 'error': 'No avatar file provided.'
             }, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ServiceCommunicationError(APIException):
+    def __init__(self, status_code, detail="Service communication error", response_message=""):
+        self.status_code = status_code
+        self.detail = f"{detail} (Status Code: {status_code}) - {response_message or 'No error message provided'}"
+        self.default_code = "service_error"
+
+
 class TestServiceCommunicationView(APIView):
     permission_classes = [IsAuth]
     def get(self, request, *args, **kwargs):
-        try:
-            sender = MicroServiceClient()
-            sender.send_requests(
-                urls=[
-                    f"http://game:8443/api/game/test/",
-                ],
-                method="get",
-                expected_status=[200,201],
-            )
-        except Exception as e:
-            return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        body = {
+            'service_name': settings.MICROSERVICE_CLIENT["SERVICE_NAME"],
+            'password': settings.MICROSERVICE_CLIENT["SERVICE_PASSWORD"],
+        }
+        response=requests.post(os.getenv("INTERNAL_TOKEN_ENDPOINT"), data = body)
+        if response.status_code != 200:
+            raise ServiceCommunicationError(response.status_code, "Invalid response status", response.json().get('detail', response.text))
+        
+        token = response.json().get('token')
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+        logger.debug(token)
+        response2= requests.get('http://game:8443/api/game/test/', headers=headers)
+        return Response(response2.status_code)
 
 class ListFriendsView(generics.ListAPIView):
     serializer_class = FriendsSerializer
