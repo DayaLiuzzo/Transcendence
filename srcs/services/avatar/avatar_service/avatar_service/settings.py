@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'avatar_app',
-    'microservice_client',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -122,11 +121,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-MICROSERVICE_CLIENT = {
-    "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
-    "SERVICE_NAME" : "users",
-    "SERVICE_PASSWORD" : os.getenv("AVATAR_PASSWORD")
-}
+# MICROSERVICE_CLIENT = {
+#     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
+#     "SERVICE_NAME" : "users",
+#     "SERVICE_PASSWORD" : os.getenv("AVATAR_PASSWORD")
+# }
 
 
 # Internationalization

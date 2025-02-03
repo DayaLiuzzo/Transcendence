@@ -35,11 +35,8 @@ logging.basicConfig(
 # Crée un logger spécifique au module courant
 logger = logging.getLogger(__name__)
 
-logger.debug("------------------CALL-----------")
-
 
 class SignUpView(generics.ListCreateAPIView):
-    logger.debug("IN AUTH CREATE VIEW")
     permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer

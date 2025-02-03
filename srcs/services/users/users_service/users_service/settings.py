@@ -41,13 +41,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'users_app',
-    'microservice_client',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("users_app.authentication.CustomJWTAuth",),
 }
+
 def get_sjwt_key(key):
     with open(key, "r") as file:
         return file.read()
@@ -121,11 +121,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-MICROSERVICE_CLIENT = {
-    "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
-    "SERVICE_NAME" : "users",
-    "SERVICE_PASSWORD" : os.getenv("USERS_PASSWORD")
-}
+# MICROSERVICE_CLIENT = {
+#     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
+#     "SERVICE_NAME" : "users",
+#     "SERVICE_PASSWORD" : os.getenv("USERS_PASSWORD")
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
