@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework import response, status
 from rest_framework.response import Response
-from microservice_client.client import send_microservice_request
 from .serializers import UserAvatarSerializer
 import os
 from django.conf import settings

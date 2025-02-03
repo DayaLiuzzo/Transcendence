@@ -1,3 +1,9 @@
+###
+
+GET https://localhost:4430/api/users/test
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4NjMyMjMwLCJpYXQiOjE3Mzg1ODkwMzB9.Fj_obG17QaVTf9_akLqAuvaODNrIA6KlrHxrNxns2nIgDE3SENVo1o9snoLQ5bceLky_f7sw2gK_rQU37JiadMBUTMbuWSesE70vRIPskfwiKg39hc4tcUUgqj8K5a7b3BFgecAtb5j3H4WnlzjrndCjw3ZGyJ22PnF6C9IdeigugnTRL6zm4vfsCjNeJVGaNxLy5XC4qFXt5OsBSReeRfbA9g4IfRiJMV99wrnk0Foel1qkuZlC4CY_rr8Xk2p3uvnYZR-dyaBsQRdQaRHNQc3bGUSqjTY9Eumv0uLOsXYQmCGi99yo6u5C-lswN422hYq1HMtg0mAR02VBdt0tmA
+###
 
 #add user to db
 POST https://localhost:4430/api/auth/signup/

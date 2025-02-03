@@ -132,6 +132,21 @@ class AvatarView(APIView):
                 'error': 'No avatar file provided.'
             }, status=status.HTTP_400_BAD_REQUEST)
 
+class TestServiceCommunicationView(APIView):
+    permission_classes = [IsAuth]
+    def get(self, request, *args, **kwargs):
+        try:
+            sender = MicroServiceClient()
+            sender.send_requests(
+                urls=[
+                    f"http://game:8443/api/game/test/",
+                ],
+                method="get",
+                expected_status=[200,201],
+            )
+        except Exception as e:
+            return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class ListFriendsView(generics.ListAPIView):
     serializer_class = FriendsSerializer
