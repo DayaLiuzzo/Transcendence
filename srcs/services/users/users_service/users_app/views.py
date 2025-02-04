@@ -24,6 +24,7 @@ from .serializers import FriendsSerializer
 from users_app.permissions import IsAuth
 from users_app.permissions import IsRooms
 from users_app.permissions import IsUsers
+from users_app.permissions import IsAvatar
 from users_app.permissions import IsGame
 from users_app.permissions import IsOwner
 from users_app.permissions import IsOwnerAndAuthenticated
@@ -98,41 +99,27 @@ class RemoveFriendView(APIView):
 
 
 class AvatarView(APIView):
-    permission_classes = [IsOwner]
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        avatar_url = user.avatar.url if user.avatar else None
+    permission_classes=[IsAvatar]
+    lookup_field = "username"
+    def get(self, request, username):
+        user = UserProfile.objects.get(username=username)
+        avatar_url = user.avatar if user.avatar else None
         return Response({
             "message": "Avatar retrieved successfully.",
             "avatar_url": avatar_url,
-            "is_default": user.avatar.name == user.avatar.field.default
         }, status=status.HTTP_200_OK)
     
-    def patch(self, request, *args, **kwargs):
-        """Update the user's avatar image"""
-        user_profile = request.user
-        avatar = request.FILES.get('avatar')
-
-        if avatar:
-            # Validate the uploaded file (optional)
-            if avatar.size > 5 * 1024 * 1024:  # Limiting size to 5MB
-                raise ValidationError("The file is too large. The maximum size is 5MB.")
-
-            # Get the path to the old avatar to delete it
-            old_avatar = user_profile.avatar.name
-            logger.debug(f"{old_avatar}")
-            if old_avatar and old_avatar != 'default.png':
-                old_avatar_path = os.path.join(settings.MEDIA_ROOT, old_avatar)
-                if os.path.exists(old_avatar_path):
-                    os.remove(old_avatar_path)  # Delete the old avatar if it exists
-
-            # Save the new avatar
-            user_profile.avatar = avatar
+    def patch(self, request, username):
+        user_profile = UserProfile.objects.get(username=username)
+        avatar_new_path = request.data.get('avatar')
+        if avatar_new_path:
+        
+            user_profile.avatar = avatar_new_path
             user_profile.save()
 
             return Response({
                 'message': 'Avatar updated successfully!',
-                'avatar_url': user_profile.avatar.url
+                'avatar_url': user_profile.avatar
             }, status=status.HTTP_200_OK)
         else:
             return Response({

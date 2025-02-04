@@ -6,6 +6,8 @@ import os
 from django.conf import settings
 from avatar_app.permissions import UserIsAuthenticated
 from pathlib import Path 
+from service_connector.service_connector import MicroserviceClient
+
 
 
 class AvatarView(APIView):
@@ -20,13 +22,9 @@ class AvatarView(APIView):
             data = serializer.save()
             clear_avatar(request.user_username)
             avatar_path = save_image(request.user_username, data)
-            # status_code = send_microservice_request(
-            #     url='http://users:8443/api/users/{request.user_username}/update_pic/',
-            #     method='patch',
-            #     body={'avatar_path':f'{avatar_path}'},
-            # )
-            # if status_code != 200:
-            #     return Response({'error': "image_upload_error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/'
+            client = MicroserviceClient()
+            response2 = client.send_internal_request(user_avatar_url, 'patch', data=avatar_path)
             return Response({"message": f"POST {avatar_path} WORKEEED"})
         return Response(serializer.errors, status=400)
            
