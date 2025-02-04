@@ -7,13 +7,7 @@ from django.utils.timezone import now
 
 import pyotp
 
-class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.CharField(max_length=200)
 
-    def __str__(self):
-        return self.title
-    
 class CustomUser(AbstractUser):
     last_log = models.DateTimeField(default=now)
     two_factor_enabled = models.BooleanField(default=False)

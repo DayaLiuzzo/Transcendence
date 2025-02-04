@@ -44,6 +44,7 @@ def route_to_service(request, service_name, extra_path=''):
         "game": "http://game:8443",
         "auth": "http://auth:8443",
         "rooms": "http://rooms:8443",
+        "avatar": "http://avatar:8443",
     }
     # logger.debug(f"------------------ON EST LA TU CONNAIS--------------")
 
