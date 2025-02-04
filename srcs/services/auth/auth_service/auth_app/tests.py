@@ -99,7 +99,6 @@ class AuthenticationTestCase(APITestCase):
         # Assert that the response is 400 (Bad Request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
 class DeleteUserViewTest(APITestCase):
     def setUp(self):
         microservices = [

@@ -1,0 +1,23 @@
+import requests
+import logging
+from django.conf import settings
+from service_connector.exceptions import MicroserviceError
+from service_connector.models import Token
+
+class MicroserviceClient:
+    def __init__(self):
+        self.service_name = settings.SERVICE_CONNECTOR_SETTINGS['SERVICE_NAME']
+        self.service_password = settings.SERVICE_CONNECTOR_SETTINGS['SERVICE_PASSWORD']
+        self.token_url = settings.SERVICE_CONNECTOR_SETTINGS['INTERNAL_TOKEN_ENDPOINT']
+
+    def get_new_service_token(self):
+        body = {
+            'service_name': self.service_name,
+            'password': self.service_password,
+        }
+        response = requests.post(self.token_url, data=body)
+        if response.status_code != 200:
+            raise MicroserviceError(response.status_code, "Failed fetching token from auth", response.text)
+        token = response.json().get('token')
+        return token
+

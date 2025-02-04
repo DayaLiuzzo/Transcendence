@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'users_app',
+    'service_connector',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -121,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-MICROSERVICE_CLIENT = {
+SERVICE_CONNECTOR_SETTINGS = {
     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
     "SERVICE_NAME" : "users",
     "SERVICE_PASSWORD" : os.getenv("USERS_PASSWORD")
