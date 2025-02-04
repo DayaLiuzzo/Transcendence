@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UsersAppConfig(AppConfig):
+class RoomsAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'users_app'
+    name = 'service_connector'

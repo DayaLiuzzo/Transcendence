@@ -2,6 +2,7 @@ import logging
 import os
 from rest_framework.exceptions import APIException
 
+from service_connector.service_connector import MicroserviceClient
 
 from rest_framework import generics
 from rest_framework import status
@@ -146,18 +147,30 @@ class ServiceCommunicationError(APIException):
         self.default_code = "service_error"
 
 
+# class TestServiceCommunicationView(APIView):
+#     permission_classes = [IsAuth]
+#     def get(self, request, *args, **kwargs):
+#         body = {
+#             'service_name': settings.MICROSERVICE_CLIENT["SERVICE_NAME"],
+#             'password': settings.MICROSERVICE_CLIENT["SERVICE_PASSWORD"],
+#         }
+#         response=requests.post(settings.MICROSERVICE_CLIENT["INTERNAL_TOKEN_ENDPOINT"], data = body)
+#         if response.status_code != 200:
+#             raise ServiceCommunicationError(response.status_code, "Invalid response status", response.json().get('detail', response.text))
+        
+#         token = response.json().get('token')
+#         headers = {
+#             "Authorization": f"Bearer {token}"
+#         }
+#         logger.debug(token)
+#         response2= requests.get('http://game:8443/api/game/test/', headers=headers)
+#         return Response(response2.json(), status=response2.status_code)
+
 class TestServiceCommunicationView(APIView):
     permission_classes = [IsAuth]
     def get(self, request, *args, **kwargs):
-        body = {
-            'service_name': settings.MICROSERVICE_CLIENT["SERVICE_NAME"],
-            'password': settings.MICROSERVICE_CLIENT["SERVICE_PASSWORD"],
-        }
-        response=requests.post(settings.MICROSERVICE_CLIENT["INTERNAL_TOKEN_ENDPOINT"], data = body)
-        if response.status_code != 200:
-            raise ServiceCommunicationError(response.status_code, "Invalid response status", response.json().get('detail', response.text))
-        
-        token = response.json().get('token')
+        client = MicroserviceClient()
+        token = client.get_new_service_token()
         headers = {
             "Authorization": f"Bearer {token}"
         }
