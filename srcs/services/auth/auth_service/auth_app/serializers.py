@@ -107,7 +107,7 @@ class TwoFactorSetupSerializer(serializers.Serializer):
         otp_secret = instance.otp_secret
         otp_uri = pyotp.totp.TOTP(otp_secret).provisioning_uri(
             name=f"{instance.username}",
-            issuer_name="Auth_app"
+            issuer_name="auth_app"
         )
         return {
             "message": "2FA enabled. Use this secret to configure your authenticator app.",

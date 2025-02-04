@@ -14,6 +14,10 @@ class IsOwnerAndAuthenticated(BasePermission):
         return obj == request.user
 
 
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.username == request.user.username 
+
 
 def IsService(request, micro_service):
         auth_header = request.headers.get('Authorization')
