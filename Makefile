@@ -92,11 +92,12 @@ clean_migration:
 	rm -f srcs/services/auth/auth_service/auth_app/migrations/000*
 	rm -f srcs/services/friends/friends_service/friends_app/migrations/000*
 	rm -f srcs/services/game/game_service/game_app/migrations/000*
+		rm -f srcs/services/game/game_service/service_connector/migrations/000*
 	rm -f srcs/services/rooms/rooms_service/rooms_app/migrations/000*
 	rm -f srcs/services/users/users_service/users_app/migrations/000*
-	rm -f srcs/services/users/users_service/microservice_client/migrations/000*	
+	rm -f srcs/services/users/users_service/service_connector/migrations/000*	
 	rm -f srcs/services/avatar/avatar_service/avatar_app/migrations/000*
-	rm -f srcs/services/avatar/avatar_service/microservice_client/migrations/000*	
+	rm -f srcs/services/avatar/avatar_service/service_connector/migrations/000*	
 	rm -rf srcs/services/avatar_media/users_avatars/*
 	@echo "Cleanup completed."
 
