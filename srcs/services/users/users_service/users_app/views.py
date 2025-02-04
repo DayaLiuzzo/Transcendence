@@ -170,7 +170,7 @@ class TestServiceCommunicationView(APIView):
     permission_classes = [IsAuth]
     def get(self, request, *args, **kwargs):
         client = MicroserviceClient()
-        token = client.get_new_service_token()
+        token = client.get_service_token()
         headers = {
             "Authorization": f"Bearer {token}"
         }

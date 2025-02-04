@@ -10,6 +10,7 @@ class MicroserviceClient:
         self.service_password = settings.SERVICE_CONNECTOR_SETTINGS['SERVICE_PASSWORD']
         self.token_url = settings.SERVICE_CONNECTOR_SETTINGS['INTERNAL_TOKEN_ENDPOINT']
 
+
     def get_new_service_token(self):
         body = {
             'service_name': self.service_name,
@@ -19,5 +20,12 @@ class MicroserviceClient:
         if response.status_code != 200:
             raise MicroserviceError(response.status_code, "Failed fetching token from auth", response.text)
         token = response.json().get('token')
+        return token
+    
+    def get_service_token(self):
+        try:
+            token = Token.objects.get(service_name=self.service_name)
+        except Token.DoesNotExist:
+            token = self.get_new_service_token()
         return token
 
