@@ -170,12 +170,7 @@ class TestServiceCommunicationView(APIView):
     permission_classes = [IsAuth]
     def get(self, request, *args, **kwargs):
         client = MicroserviceClient()
-        token = client.get_service_token()
-        headers = {
-            "Authorization": f"Bearer {token}"
-        }
-        logger.debug(token)
-        response2= requests.get('http://game:8443/api/game/test/', headers=headers)
+        response2 = client.send_internal_request('http://game:8443/api/game/test/', 'get')
         return Response(response2.json(), status=response2.status_code)
 
 
