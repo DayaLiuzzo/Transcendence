@@ -153,7 +153,7 @@ class TestServiceCommunicationView(APIView):
             'service_name': settings.MICROSERVICE_CLIENT["SERVICE_NAME"],
             'password': settings.MICROSERVICE_CLIENT["SERVICE_PASSWORD"],
         }
-        response=requests.post(os.getenv("INTERNAL_TOKEN_ENDPOINT"), data = body)
+        response=requests.post(settings.MICROSERVICE_CLIENT["INTERNAL_TOKEN_ENDPOINT"], data = body)
         if response.status_code != 200:
             raise ServiceCommunicationError(response.status_code, "Invalid response status", response.json().get('detail', response.text))
         
@@ -163,7 +163,9 @@ class TestServiceCommunicationView(APIView):
         }
         logger.debug(token)
         response2= requests.get('http://game:8443/api/game/test/', headers=headers)
-        return Response(response2.status_code)
+        return Response(response2.json(), status=response2.status_code)
+
+
 
 class ListFriendsView(generics.ListAPIView):
     serializer_class = FriendsSerializer
