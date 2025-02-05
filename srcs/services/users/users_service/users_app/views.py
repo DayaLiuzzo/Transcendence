@@ -97,21 +97,11 @@ class RemoveFriendView(APIView):
         return Response({"error": f"{friendusername} is not in your friend list."},
                         status=HTTP_400_BAD_REQUEST)
 
-
-class AvatarView(APIView):
+class AvatarUpdateView(APIView):
     permission_classes=[IsAvatar]
-    lookup_field = "username"
-    def get(self, request, username):
-        user = UserProfile.objects.get(username=username)
-        avatar_url = user.avatar if user.avatar else None
-        return Response({
-            "message": "Avatar retrieved successfully.",
-            "avatar_url": avatar_url,
-        }, status=status.HTTP_200_OK)
-    
     def patch(self, request, username):
         user_profile = UserProfile.objects.get(username=username)
-        avatar_new_path = request.data.get('avatar')
+        avatar_new_path = request.data.get("avatar")
         if avatar_new_path:
         
             user_profile.avatar = avatar_new_path
@@ -127,6 +117,18 @@ class AvatarView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class AvatarView(APIView):
+    permission_classes=[IsOwner]
+    lookup_field = "username"
+    def get(self, request, username):
+        user = UserProfile.objects.get(username=username)
+        avatar_url = user.avatar if user.avatar else None
+        return Response({
+            "message": "Avatar retrieved successfully.",
+            "avatar_url": avatar_url,
+        }, status=status.HTTP_200_OK)
+    
+
 class ServiceCommunicationError(APIException):
     def __init__(self, status_code, detail="Service communication error", response_message=""):
         self.status_code = status_code
@@ -134,33 +136,12 @@ class ServiceCommunicationError(APIException):
         self.default_code = "service_error"
 
 
-# class TestServiceCommunicationView(APIView):
-#     permission_classes = [IsAuth]
-#     def get(self, request, *args, **kwargs):
-#         body = {
-#             'service_name': settings.MICROSERVICE_CLIENT["SERVICE_NAME"],
-#             'password': settings.MICROSERVICE_CLIENT["SERVICE_PASSWORD"],
-#         }
-#         response=requests.post(settings.MICROSERVICE_CLIENT["INTERNAL_TOKEN_ENDPOINT"], data = body)
-#         if response.status_code != 200:
-#             raise ServiceCommunicationError(response.status_code, "Invalid response status", response.json().get('detail', response.text))
-        
-#         token = response.json().get('token')
-#         headers = {
-#             "Authorization": f"Bearer {token}"
-#         }
-#         logger.debug(token)
-#         response2= requests.get('http://game:8443/api/game/test/', headers=headers)
-#         return Response(response2.json(), status=response2.status_code)
-
 class TestServiceCommunicationView(APIView):
     permission_classes = [IsAuth]
     def get(self, request, *args, **kwargs):
         client = MicroserviceClient()
         response2 = client.send_internal_request('http://game:8443/api/game/test/', 'get')
         return Response(response2.json(), status=response2.status_code)
-
-
 
 class ListFriendsView(generics.ListAPIView):
     serializer_class = FriendsSerializer

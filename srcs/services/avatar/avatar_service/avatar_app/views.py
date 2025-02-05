@@ -9,6 +9,13 @@ from pathlib import Path
 from service_connector.service_connector import MicroserviceClient
 
 
+class TestView(APIView):
+    permission_classes = [UserIsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        client = MicroserviceClient()
+        response = client.send_internal_request('http://users:8443/api/users/test/', 'patch')
+        return Response(response, response.status_code)
+    
 
 class AvatarView(APIView):
     permission_classes = [UserIsAuthenticated]
@@ -22,10 +29,10 @@ class AvatarView(APIView):
             data = serializer.save()
             clear_avatar(request.user_username)
             avatar_path = save_image(request.user_username, data)
-            user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/'
+            user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/'
             client = MicroserviceClient()
-            response2 = client.send_internal_request(user_avatar_url, 'patch', data=avatar_path)
-            return Response({"message": f"POST {avatar_path} WORKEEED"})
+            response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path})
+            return Response({'status': "avatar updated successfully"}, response2.status_code)
         return Response(serializer.errors, status=400)
            
 

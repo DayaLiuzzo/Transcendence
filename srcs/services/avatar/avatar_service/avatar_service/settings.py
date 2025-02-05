@@ -91,8 +91,8 @@ WSGI_APPLICATION = 'avatar_service.wsgi.application'
 
 SERVICE_CONNECTOR_SETTINGS = {
     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
-    "SERVICE_NAME" : "users",
-    "SERVICE_PASSWORD" : os.getenv("USERS_PASSWORD")
+    "SERVICE_NAME" : "avatar",
+    "SERVICE_PASSWORD" : os.getenv("AVATAR_PASSWORD")
 }
 
 # Database
