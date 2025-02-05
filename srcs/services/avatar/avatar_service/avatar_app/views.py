@@ -7,15 +7,20 @@ from django.conf import settings
 from avatar_app.permissions import UserIsAuthenticated
 from pathlib import Path 
 from service_connector.service_connector import MicroserviceClient
+from service_connector.exceptions import MicroserviceError
+import logging
 
+logging.basicConfig(filename='app.log', level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
-class TestView(APIView):
-    permission_classes = [UserIsAuthenticated]
-    def post(self, request, *args, **kwargs):
-        client = MicroserviceClient()
-        response = client.send_internal_request('http://users:8443/api/users/test/', 'patch')
-        return Response(response, response.status_code)
-    
+logging.debug('This is a debug message')
+logging.info('This is an info message')
+logging.warning('This is a warning message')
+logging.error('This is an error message')
+logging.critical('This is a critical message')
+
+logger = logging.getLogger(__name__)
+  
 
 class AvatarView(APIView):
     permission_classes = [UserIsAuthenticated]
@@ -29,21 +34,41 @@ class AvatarView(APIView):
             data = serializer.save()
             clear_avatar(request.user_username)
             avatar_path = save_image(request.user_username, data)
-            user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/'
-            client = MicroserviceClient()
-            response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path})
-            return Response({'status': "avatar updated successfully"}, response2.status_code)
+            try:
+                user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/'
+                client = MicroserviceClient()
+                response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path})
+                if response2.status_code != 200:
+                    raise MicroserviceError(response2.status_code, response2.text)
+                return Response({'status': "avatar updated successfully"}, response2.status_code)
+            except MicroserviceError as e:
+                return Response(e.message, e.response_text, e.status_code)
         return Response(serializer.errors, status=400)
            
-
     def patch(self, request, *args, **kwargs):
-        user = request.user
-        return Response({"message": f"Service {user.username}is Authenticated for PATCH"})
+        old_username = request.data.get('old_username')
+        new_username = request.data.get('new_username')
+        if rename_image(old_username, new_username) == True:
+            return Response({"message": "Avatar updated successfully!"}, status=status.HTTP_200_OK)
+        return Response({"message": f"Avatar not modified {old_username}, {new_username}"}) 
     
     
     def delete(self, request, *args, **kwargs):
         user = request.user
         return Response({"message": f"Service {user.username}is Authenticated for DELETE"})
+
+
+def rename_image(old_username: str, new_username: str):
+    extensions = ['.png', '.jpg', '.jpeg']
+    avatar_dir = Path(settings.MEDIA_ROOT) / 'users_avatar'
+    for ext in extensions:
+        old_avatar_path = avatar_dir / f"{old_username}{ext}"
+        if old_avatar_path.exists():
+            old_avatar_path = str(old_avatar_path)
+            new_avatar_path = new_username.join(old_avatar_path.rsplit(old_username, 1))
+            logger.info(f"Renamed {old_avatar_path} to {new_avatar_path}")
+            return True
+    return False
 
 def save_image(username: str, validated_data):
     dir_path = os.path.join(settings.MEDIA_ROOT, 'users_avatar')

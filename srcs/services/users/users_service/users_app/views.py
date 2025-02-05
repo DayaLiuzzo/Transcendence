@@ -103,10 +103,8 @@ class AvatarUpdateView(APIView):
         user_profile = UserProfile.objects.get(username=username)
         avatar_new_path = request.data.get("avatar")
         if avatar_new_path:
-        
             user_profile.avatar = avatar_new_path
             user_profile.save()
-
             return Response({
                 'message': 'Avatar updated successfully!',
                 'avatar_url': user_profile.avatar
@@ -129,11 +127,6 @@ class AvatarView(APIView):
         }, status=status.HTTP_200_OK)
     
 
-class ServiceCommunicationError(APIException):
-    def __init__(self, status_code, detail="Service communication error", response_message=""):
-        self.status_code = status_code
-        self.detail = f"{detail} (Status Code: {status_code}) - {response_message or 'No error message provided'}"
-        self.default_code = "service_error"
 
 
 class TestServiceCommunicationView(APIView):

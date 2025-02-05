@@ -27,15 +27,19 @@ POST https://localhost:4430/api/auth/service-token/
 Content-Type: application/json
 
 {
-  "service_name": "avatar",
+  "service_name": "auth",
   "password": "private"
 }
 
 ###
-GET https://localhost:4430/api/users/test2_user/avatar/updat
-Content-Type: multipart/form-data
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdmF0YXIiLCJleHAiOjE3Mzg4MTA5MTgsImlhdCI6MTczODc2NzcxOH0.xFHyzu7rLKXQFv3p0njf2HWGqUUuWqAML0I7vKoB9gMsw4HghjUTCveYSRlAqtzojjfgEjFURL0mvFlM5hZOLiUk-oW4a_ewBJSzQc9pS72QsJlm8wBbKg5S8WiXOoPRV5M_LAGBEipLiiYn2aXT1Te0TM-ltIyFGBk96Z14yaQDDUPE5PNV0sxeSDONnbxAWVOCFN4k9dqcipoFjrYmqvlS-mlsh0YZl9ODs0UAKU04OPckrhlvOF0UDYQsB0R-KDLzU2FufdcS0gZdZ3durvGLFsNCkQUtPnePlsF1eWxk9NnDE5h8nHUx4Ux1Nca4UCqCXE1Z3tk9KPsuDLYpOw
+PATCH https://localhost:4430/api/avatar/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4ODIwMDA2LCJpYXQiOjE3Mzg3NzY4MDZ9.tDkqg88fLNjm1qdPQJJPU4yJJmLptgnzhQH4ozT45EBflcyURrok4CIMKY2JzTC0A0cnG7iBDyMIx4AHbLbfYxFFlp39oLXzXISLtPpMlYEahzVm6sCyV6PwW9kNBKxBRCwC2KcTj3_XYdfm8g4ynx02Rbv5Ou-KKjhQLG-FLlv6LYBCy9aMYqeDLWnsasiSRGIeitVzICSfiKGObowRMaceoDgSyJBLA2jZzzxg-qtLOjaOf4TBIwzn7DBVwQoWXGfvzPx3Ixz-cpOyRDaMfjQSU1LiQ7jcwL4a5fN3DCLdlPKc1BwFbmDN1Rb0j1wLTgxYruP-4Euuw-VH4H5EjQ
+Content-Type: application/json
 
+{
+  "old_username" : "test2_user",
+  "new_username" : "test3_user"
+}
 
 ###
 patch https://localhost:4430/api/users/test2_user/avatar/
