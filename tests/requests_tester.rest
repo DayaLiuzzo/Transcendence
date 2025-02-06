@@ -8,9 +8,9 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "test2_user",
+  "username": "test4_user",
   "password": "pass123456",
-  "email": "test2_user@gmail.com"
+  "email": "test4_user@gmail.com"
 }
 ###
 #get user token
@@ -58,7 +58,7 @@ default.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ####
 GET https://localhost:4430/api/users/test2_user/friends/
-Authorization: Bearer eyJhbGciOiJSUzP1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4MDM3MzczLCJpYXQiOjE3Mzc5OTQxNzN9.d3051RYzd7AApiRDWzFfpKZql4FBDBFTqQmWfrE7r1UfOInDqppe4qDxreU2b-nO5veIho2jb-VP6YmxxLUrxLW8ULPNWYIl379NCRuJfcxnSHkEOqipPXLS1UU-EO1tZ3MK_8rPvGX3J_tdwXnCjNQtQqKf2S-L0apCifEvoeS_YpwPNXsgqEni0-XXT9BzLLNr-ddp8kxAWrDm_jW1_m1s6B7iS2y6SV-Pt41AEbYh5XOIA3t1ZMLdLMi2GeX6sbQffDb4fp5GLPlOwb-0v-6iVrS4Tci4POIp-a40RnlMTe_yH18IZlt7EpslnEScmbBp_zjReo6HO6AL4YVS_A
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODU0NTcwLCJpYXQiOjE3Mzg4NDkxNzAsImp0aSI6ImUwMDJlOTMzNDY4NTQ1N2Y4NjY4NGI3NWJlMGJkZTA0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0Ml91c2VyIn0.S9NX-bztyd10k_w_ZzrdSO5EcEZKjjE4SCj19Keag3xy_KoE1SryMVMPR0s0jNbSt3XerroV6ZKhH1ufo4FoumZrDcm_kjHZ__BPl_lIQ-wLckkvLcNv5DNXQA8s4yVwgTumgol8wjh5oNF3ooNi9ZBpP10UIT0aNa1f3TbCLcxjm7UY7PROTtkvxPNMeVMg-pX4uuEAf2aEBLS2amHn4ufyqnjANMSP0UAdjttV3hbPQpLq5qSQnE1Y9-H50monkfKkYVsfafIC_nTJDekeDWwWRj5sjeyceUipNAdr3LwL-TKA7UIFTAsUExfOFgCP5lBYFSXhkJ6Q_RWsrgWQ4w
 
 {
 
