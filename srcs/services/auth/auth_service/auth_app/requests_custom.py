@@ -30,7 +30,11 @@ def send_delete_requests(urls:list, body={}, headers={}) -> bool :
             return False
     return True
 
-
+def send_update_requests(urls:list, body={}, headers={}) -> bool:
+    for url in urls:
+        if send_request(url=url, method='patch', body=body, headers=headers) != 200:
+            return False
+    return True
 
 def send_create_requests(urls:list, body={}, headers={}) -> bool:
     successefull_elements = []
