@@ -1,11 +1,12 @@
 ###
-PATCH  https://localhost:4430/api/users/update/test3_user/
+PATCH  https://localhost:4430/api/auth/update/connasse/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4ODk1MjI5LCJpYXQiOjE3Mzg4NTIwMjl9.H96hPPiG2DrbqNKRpTduAcifdsY5OWjGIh1aE4OPRkhjwvfJ_gwi06xW784velw5ZzqrJhzdUeyxGlSazM_XAyyRUgPtvVy7-NpLM7pdT2mv1ZAUeSb5hRo70Np2Vv-kq8p4SCPqqRibrzqwHcDEelZiwS4SI62rGTao7JeYXYY17_2v6l6PQ0x-e056g_y6V3RjoPF1RVRmrLwwf0himgTza6WLgTURM85XiPnriVmCL-V3jPGIMamqKN0O3znuvvtkEC9zFygzwFpjsSYgvoKO-ZcEMcP3J8za8Jes7lvKxyz8TuoPp65c29SXW0XPIPlTyGhi28NPdrbAO48XVw
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODcxNTAxLCJpYXQiOjE3Mzg4NjYxMDEsImp0aSI6IjFhM2UxY2I4NjUzZjQ2YWM5ZDU1NjE4NjE3MTEzMmYxIiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJjb25uYXNzZSJ9.1BxPXB6YWG8BwNHq-_fHSev2QSuYFox8w4Vcim7P6JWjDRglElf7mLU5XYJqPyp7HJeoQ1DeRQO3csH8lMPPH6qVYYF_7ZsAoG2nZK7HV9liwnwctDPBp8Sszgpnvt8SfosFQmZGQ1R4OFEbTWuAqBL8O3U7fF1qKHdTsJuSXZjer3k3k0-zyM_lCW5sH2Dx3Gly39IocKKs2Qxl5PCFapKlqpMamg2HROWUGmcTDzPj5wsEhagx6FIioz5pxkIrptWewPPhTSytdLS26hV_O8DJz7qJdUtexvXgc3VvmGUWIiFp8BIQM1dzw_2Z4CgsLN1H0ANtaOWf5gORP2j45w
 
 {
-  "username": "test3_user",
-  "new_username": "connard"
+  "old_username": "connasse",
+  "username": "connasse",
+  "new_username": "andouille"
 }
 
 ###
@@ -17,9 +18,9 @@ POST https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "test4_user",
+  "username": "test_user",
   "password": "pass123456",
-  "email": "test4_user@gmail.com"
+  "email": "test_user@gmail.com"
 }
 ###
 #get user token
@@ -27,7 +28,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "test4_user",
+  "username": "andouille",
   "password": "pass123456"
 }
 ###
@@ -66,8 +67,8 @@ default.jpg
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ####
-GET https://localhost:4430/api/users/test4_user/friends/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODU4MTY3LCJpYXQiOjE3Mzg4NTI3NjcsImp0aSI6IjZjYTFhNGM1NzM0NTQwOTJiNDZjYzU2ZDYzN2QxNWNmIiwidXNlcl9pZCI6MywidXNlcm5hbWUiOiJ0ZXN0NF91c2VyIn0.lr1fCTfuJyP25ejN-Ce8CKCnpeU7mXUo29BLnxIH70j2nyzosp_Y4Pd3d7ctuGnMWNbaqESr6lI3-mPuOf_arKCg_u662_B3F7-LCcyppM_QCe_hYVGufyQ2-Sjq0NsYlIQMJlTD0FGEy7mFMZPhvPzm7TM8q4mLhyx3pC5lGfTCO_mdpXHLynJ2Zn2HEPepxcTijIzupufzTKeXzNpsDS0MmDZRjlY-gpLdtP2KLo2K9j6RIaCyI6xlPW18TUt45m3OAenpxXpSbte8pHfSlFgBX6gDmPCLo1Sj2qVATkFb_F-6e2mzte9y21EFaoGwpKTlBP3ii6o3h7NNZJg_LQ
+GET https://localhost:4430/api/users/connard/avatar/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODcwNzA1LCJpYXQiOjE3Mzg4NjUzMDUsImp0aSI6ImE5MWRjZmQ0MDlmZDQ4Y2I4NTRiOTkzYzFlYTc5MzI5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJjb25uYXJkIn0.wCIWQvjgFjcH0p9Zh2us0WhIt5xP5_tE43r7Y6WgMUg3eCHRuCjErqCOPNGR0LTJ-Caru7xRlw_squ5vIjN_Xfm-v4aOFMqIJZJmtuLEva-7MCMhiocb1LFPhUxZ7vUrWo2ZzK4fReEGysnnjaouQiZ2gSE7E-MBZUO23JPscT3bHxziKHlaHw9rWb0NzjD_XO32t13Zc39SarfcaIQ27SC4gyMABaP8S9hnXqr1Oe1rTaCZuOx2vFhjznHUZj7oRGc1BnbI9Dd7kRhIYSafJbxAdOX2CnrU3pAMXaBdEwDv9xgiwml7pcN5e0o5CNhsHOykZjXKi3UCFJuhkW21_Q
 
 {
 
@@ -112,7 +113,7 @@ Content-Type: application/json
 
 
 POST https://localhost:4430/api/auth/2fa/setup/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MTc4MTIwLCJpYXQiOjE3MzgxNzI3MjAsImp0aSI6IjM5NDM3YTlmN2EwYzRkYjRhNjE4OWI2ZTQ5OTg2MWRkIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0Ml91c2VyIn0.bpEYaPrEVAYpCqu5cZ_GN5aeTdpyHXeh8Os9YPTOgPsgl4yYYKRIz1ljvRj7SfRx7zJ6tlM6J1ACaalEYRWcNp-fF7KBzdN0hkkiAHp-fZRWfhYy1BTc-UVF5Y_FyGnRQ19SF1tczV6seTcSb5T9Q2yAtmOIcJEDTYEtCWIf1hqzia-cCmGEQTei2KGM4LZUjXm0WRhnzUxvcOZQAUXv9fzAZcJKTBaSPD5fu1ZO6xzCmexlDwuv-fTvnSu-nsSWWo11oa6xqng5hCW7852J6CEsH2W8eVeoGXgAEnIzJuIb8IqrbA7WpL0vB9XlUtYbn53af6ivmDx1pvdsSkOfKg
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODcxNjM3LCJpYXQiOjE3Mzg4NjYyMzcsImp0aSI6IjgyMmU1YWNjYTQyNDQ5MjE5ZDg4NWUyNzdmOWU0Zjg3IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJhbmRvdWlsbGUifQ.NvysV6VlaCWyDcUcP5AnvyuBYJEWLRuAUwbtVYCAdJZWfnsbzE9_tgmcNbtK-vBCDpL2LexKi9xdT_2Pv5ytYJf11g3Kpj6jDoDPkUrnVyxNm7JjYSo-UuihA19fgyZEvLR-RRcWfsZnOzrxY7BVfnxwtAED0I3oqHhLzDo-Sr9KkVESySBae8C_3Ony8qU4qwFcSp2o5OfdlTP0WTwRQE7ayt4-tZ9jRTh5DL9ajzdUIIifQbDkM0xyvSgvULxFp4r_0GkWx2t5bBbgLhXtF73It-SF_Vu4Jc5a7SG7LyrC1t0EjHzeOsLct3l05eRd0nnb9JsaZb-xrXc6-7uJjA
 Content-Type: application/json
 
 {

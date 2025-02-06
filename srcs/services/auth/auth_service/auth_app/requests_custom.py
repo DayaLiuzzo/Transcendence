@@ -32,7 +32,7 @@ def send_delete_requests(urls:list, body={}, headers={}) -> bool :
 
 def send_update_requests(urls:list, body={}, headers={}) -> bool:
     for url in urls:
-        if send_request(url=url, method='patch', body=body, headers=headers) != 200:
+        if send_request(url=url, method='patch', body=body, headers=headers) not in [200, 304]:
             return False
     return True
 

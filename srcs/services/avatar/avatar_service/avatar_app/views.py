@@ -50,7 +50,7 @@ class AvatarView(APIView):
         new_username = request.data.get('new_username')
         if rename_image(old_username, new_username) == True:
             return Response({"message": "Avatar updated successfully!"}, status=status.HTTP_200_OK)
-        return Response({"message": f"Avatar not modified {old_username}, {new_username}"}) 
+        return Response({"message": f"Avatar not modified {old_username}, {new_username}"}, status=status.HTTP_304_NOT_MODIFIED) 
     
     
     def delete(self, request, *args, **kwargs):
