@@ -85,9 +85,13 @@ class UpdateUserView(generics.UpdateAPIView):
             if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
                 raise ValidationError("Error updating user")
             user.username = new_username
+            if user.two_factor_enabled:
+                user.otp_secret = pyotp.random_base32()
             user.save()
         except Exception as e:
             raise ValidationError(f"Error updating user bis: {str(e)}")
+        if user.two_factor_enabled:
+            return Response({"message": "Success", "otp": user.otp_secret }, status=status.HTTP_200_OK)
         return Response({"message": 'Succsesssss'}, status=status.HTTP_200_OK)
 
 
@@ -140,6 +144,7 @@ class TwoFactorSetupView(APIView):
         serializer = TwoFactorSetupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if serializer.validated_data.get('enable'):
+            user.otp_secret = pyotp.random_base32()
             user.two_factor_enabled = True
             user.save()
             return Response(TwoFactorSetupSerializer(user).data, status=status.HTTP_200_OK)
