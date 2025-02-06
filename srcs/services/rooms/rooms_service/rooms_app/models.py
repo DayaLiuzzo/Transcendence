@@ -34,7 +34,7 @@ class Room(models.Model):
 
 class User(models.Model):
     username = models.CharField(max_length=255, unique=True)
-    isconnected = models.BooleanField(default=0)   
+    # isconnected = models.BooleanField(default=0)   
     room = models.ForeignKey('Room', on_delete=models.SET_NULL, null=True, blank=True)  # Relation avec Room
 
     def __str__(self):

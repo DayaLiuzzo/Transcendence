@@ -46,7 +46,7 @@ POST https://localhost:4430/api/game/create_game/id_hihi/
 ###
 #join game (for room service)
 POST https://localhost:4430/api/game/join_game/id_hihi/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODY3MjA2LCJpYXQiOjE3Mzg4NjE4MDYsImp0aSI6ImFmMWZjYjM2NDI0YTQyNzZhYWQ2NDdmOWY0NjkzYTc2IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.U-kRmVaHLIIS3iKRKtta6wJMUrOf1GPxEUiBMRpOI2cXa45BtjM3B-l46Qm8kPN8Kg00__nXK_9V9v2V7ssmxNYsL0EvAZkYmXwVi9fCkAky_3df9FgdI7AjyRSvnBcl8mKQInzx4bQZ01BAHW0iW5oiR22-_miySdYtMhc1IPRN3edkbEMO0ZrpbiJOVtiifvkZ3iZhM5BYdg0egd1GWOyVKfgce4IhRmIo-vhgQexJWwKgyr7ZjuWMaELuplDvVWvgVX1jLXucX0gpPrjHrwFWG28xEME2xHnF3rjimP0OtxasvcSwgsL9aCVSKstkeM4XHOx6kfYUFU0VaEnW6Q
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODgwNzgwLCJpYXQiOjE3Mzg4NzUzODAsImp0aSI6IjZkNDc1ZjgwOTQyNDQyZDdhNmUwODNmMTQzZWU1NjQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0NF91c2VyIn0.MvPR_Tk0hi58wQNb0QCoiEe5mAnrPsYqa2qK5G-EXPeD0suZmzHTLb1iZmLRfgqubWZfnl45k_vPOT81celAXzF0OqkvmudxIEhN04GtlE9Mf4GP4Wn9QQLi7KxR9L6wrzaGoquWo3X8EBjSEcRYW3OVKSjuqKs2FcESl9XibFyqyjx6H_6NQElnl61eHbwF_KUko08UxbuAHXpphDklQErbAEA4IN4UZ0XhRa4E851HG-pT_TrFtRXIQFWjDPPA8QBfZFORFrQsIKuEU-zELmD61LaGvGy7gm32-1Y8-xrPJS4wJ6seAqOYWEHIEMxg9i6F5m-a9j_rfnA7e--AXQ
 
 # *************************** READ *************************** #
 

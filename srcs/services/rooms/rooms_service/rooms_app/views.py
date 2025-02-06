@@ -105,7 +105,7 @@ class CreateRoomView(APIView):
 
             # Mise à jour de l'utilisateur
             user.room = new_room
-            user.isconnected = True
+            # user.isconnected = True
             user.save()
             return Response({"message": "New room created", "room_id": new_room.room_id}, status=status.HTTP_201_CREATED)
         
@@ -123,22 +123,19 @@ class JoinRoomView(APIView):
     def post(self, request, *args, **kwargs):
         waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).first()
 
+        # Vérifier si l'utilisateur est déjà dans une room
+        user = request.user
+        if user.room:
+            return Response({
+                "message": "You are already in a room.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
         if waiting_room:
-            return self.join_room(request, waiting_room)
+            return self.join_room(request, waiting_room, user)
+        return self.create_room(request, user)
 
-        # Si aucune room n'est disponible, créer une nouvelle room
-        return self.create_room(request)
-
-    def join_room(self, request, waiting_room):
+    def join_room(self, request, waiting_room, user):
         try:
-            user = request.user
-
-            # Vérifier si l'utilisateur est déjà dans une room
-            if user.room:
-                return Response({
-                    "message": "You are already in a room.",
-                }, status=status.HTTP_400_BAD_REQUEST)
-
             # Vérifier si la room est pleine
             if waiting_room.players_count >= 2:
                 return Response({
@@ -170,7 +167,7 @@ class JoinRoomView(APIView):
 
             # Mise à jour de l'utilisateur
             user.room = waiting_room
-            user.isconnected = True
+            # user.isconnected = True
             user.save()
 
             return Response({
@@ -187,11 +184,15 @@ class JoinRoomView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    def create_room(self, request):
+    def create_room(self, request, user):
         # Créer une nouvelle room directement dans cette méthode
         room_id = f"room_{str(uuid.uuid4())[:8]}"
         try:
             new_room = Room.objects.create(room_id=room_id, status='waiting', players_count=1)
+            new_room.player1 = user
+            new_room.save()
+            user.room = new_room
+            user.save()
             return Response({
                 "message": "New room created",
                 "room_id": new_room.room_id
@@ -207,6 +208,7 @@ class JoinRoomView(APIView):
                 "message": "Error while creating room",
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 # *************************** READ *************************** #
 
@@ -282,12 +284,12 @@ class DeleteRoomView(generics.DestroyAPIView):
             # Avant de supprimer la room, dissocier les utilisateurs de cette room
             if instance.player1:
                 instance.player1.room = None
-                instance.player1.isconnected = False
+                # instance.player1.isconnected = False
                 instance.player1.save()
             
             if instance.player2:
                 instance.player2.room = None
-                instance.player2.isconnected = False
+                # instance.player2.isconnected = False
                 instance.player2.save()
 
             instance.delete()
