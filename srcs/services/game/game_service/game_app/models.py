@@ -8,7 +8,7 @@ from django.db import models
 
 class Paddle(models.Model):
     game = models.ForeignKey('Game', on_delete=models.CASCADE,  related_name='paddles_instance')
-    player = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)  # Ajouter null=True et blank=True
+    player = models.ForeignKey('UserProfile', on_delete=models.CASCADE, null=True, blank=True)  # Ajouter null=True et blank=True
     side = models.CharField(max_length=10, choices=[('left', 'Left'), ('right', 'Right')])
     x_position = models.FloatField()
     y_position = models.FloatField(default=0.0)
@@ -68,8 +68,8 @@ class Game(models.Model):
     
     room_id = models.CharField(max_length=100, unique=True)
     status = models.CharField(max_length=10, choices=GAME_STATUS_CHOICES, default='waiting')
-    player1 = models.ForeignKey('User', related_name='game_player1', null=True, blank=True, on_delete=models.SET_NULL)
-    player2 = models.ForeignKey('User', related_name='game_player2', null=True, blank=True, on_delete=models.SET_NULL)
+    player1 = models.ForeignKey('UserProfile', related_name='game_player1', null=True, blank=True, on_delete=models.SET_NULL)
+    player2 = models.ForeignKey('UserProfile', related_name='game_player2', null=True, blank=True, on_delete=models.SET_NULL)
     
     paddles = models.ManyToManyField(Paddle, related_name='games')
     ball = models.OneToOneField(Ball, null=True, blank=True, on_delete=models.CASCADE, related_name='game_instance')
@@ -84,7 +84,7 @@ class Game(models.Model):
 ################################################################
 
 
-class User(models.Model):
+class UserProfile(models.Model):
     username = models.CharField(max_length=255, unique=True)
 
     def __str__(self):

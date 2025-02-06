@@ -1,26 +1,30 @@
 import logging
-from django.http import JsonResponse
 
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework import status 
 from rest_framework.decorators import api_view
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.test import APIRequestFactory
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
 
+from .authentication import CustomJWTAuth
 from .models import Game
-from .models import User
+from .models import UserProfile
 from .models import Ball
 from .models import Paddle
 from .serializers import GameSerializer
-from .serializers import UserSerializer
+from .serializers import UserProfileSerializer
 from .serializers import BallSerializer
 from .serializers import PaddleSerializer
-from game_app.permissions import IsAuth
-from game_app.permissions import IsRooms
-from game_app.permissions import IsUsers
-from game_app.permissions import IsGame
-from game_app.permissions import IsOwnerAndAuthenticated
+from .permissions import IsAuth
+from .permissions import IsRooms
+from .permissions import IsUsers
+from .permissions import IsGame
+from .permissions import IsOwnerAndAuthenticated
 
 
 logger = logging.getLogger('game_app')
@@ -42,17 +46,24 @@ def game_service_running(request):
 
 # ************************** CREATE ************************** #
 
-class CreateUserView(generics.CreateAPIView):
+class CreateUserProfileView(generics.CreateAPIView):
+    logger.debug(f"******************* 0 JPP********************")
     permission_classes =[IsAuth]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+    logger.debug(f"******************* 1 JPP********************")
+    queryset = UserProfile.objects.all()
+    
+    logger.debug(f"******************* 2 JPP********************")
+    serializer_class = UserProfileSerializer
+    
+    logger.debug(f"******************* 3 JPP********************")
 
 # *************************** READ *************************** #
 
-class RetrieveUserView(generics.RetrieveAPIView):
+class RetrieveUserProfileView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated,IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = 'username'
 
     def get_object(self):
@@ -62,10 +73,10 @@ class RetrieveUserView(generics.RetrieveAPIView):
 
 # ************************** DELETE ************************** #
 
-class DeleteUserView(generics.DestroyAPIView):
+class DeleteUserProfileView(generics.DestroyAPIView):
     permission_classes = [IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = "username"
 
     def get_object(self):
@@ -87,21 +98,6 @@ class DeleteUserView(generics.DestroyAPIView):
 
         instance.delete()
 
-# class ProtectedServiceView(APIView):
-#     authentication_classes = []
-#     permission_classes = [IsAuth]
-#     def get(self, request):
-#         user = request.user
-#         logger.debug(f"Authenticated user in view: {user}")
-#         return Response({"message": "Service is Authenticated"})
-    
-# class ProtectedUserView(APIView):
-#     permission_classes = [IsOwnerAndAuthenticated]
-#     def get(self, request):
-#         user = request.user
-#         logger.debug(f"Authenticated user in view: {user}")
-#         return Response({"message": "User is Owner and Authenticated!"})
-
 ################################################################
 #                                                              #
 #                          Game views                          #
@@ -120,33 +116,38 @@ class CreateGame(APIView):
         game = Game(room_id=room_id)
         game.save(force_insert=True)
 
-       # Créer la ball associée à la game
         ball = Ball(game=game)
         ball.save(force_insert=True)
 
-        # Créer les paddles pour chaque joueur (sans utilisateur assigné pour l'instant)
         left_paddle = Paddle(game=game, side='left', x_position=-2.0)
         right_paddle = Paddle(game=game, side='right', x_position=2.0)
         left_paddle.save()
         right_paddle.save()
 
-        # Associer la ball et les paddles à la game
         game.ball = ball
         game.paddles.set([left_paddle, right_paddle])
         game.save()
 
         game_serializer = GameSerializer(game)
 
-        return Response({'message': f'La room {room_id} a été créée avec succès.', 'game': game_serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({'message': f'La room {room_id} a été créée avec succes.', 'game': game_serializer.data}, status=status.HTTP_201_CREATED)
 
 #add les permissions : users qui joinent
 class JoinGame(APIView):
     def post(self, request, room_id, *args, **kwargs):
         game = get_object_or_404(Game, room_id=room_id)
 
+        logger.debug(f"****************WESHH***********")
 
-        # Vérifier s'il y a une place pour l'utilisateur
         user = request.user
+        if game.player1 == user:
+            return Response({
+                'message': f'{user.username} a est deja dans la room {room_id} en tant que joueur 1.'
+            }, status=status.HTTP_200_OK)#changer code erreur
+        if game.player2 == user:
+            return Response({
+                'message': f'{user.username} a est deja dans la room {room_id} en tant que joueur 2.'
+            }, status=status.HTTP_200_OK)
 
         if game.player1 is None:
             # Si la place de player1 est vide, l'assigner à player1
@@ -180,21 +181,18 @@ class JoinGame(APIView):
 # *************************** READ *************************** #
 
 class GameListAPIView(generics.ListAPIView):
-    queryset = Game.objects.all()  # Récupère toutes les parties
-    serializer_class = GameSerializer  # Utilise le serializer des parties
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
 
 #a proteger
 class GameStateAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        ball = Ball.objects.first()  # Exemple, tu peux ajouter des filtres ici
-        paddles = Paddle.objects.all()
+    def get(self, request, room_id, *args, **kwargs):
+        game = get_object_or_404(Game, room_id=room_id)
         
-        ball_serializer = BallSerializer(ball)
-        paddles_serializer = PaddleSerializer(paddles, many=True)
+        game_serializer = GameSerializer(game)
         
         return Response({
-            'ball': ball_serializer.data,
-            'paddles': paddles_serializer.data
+            'game': game_serializer.data,
         })
     
 # ************************** DELETE ************************** #
@@ -213,5 +211,5 @@ class DeleteGame(APIView):
         game.delete()
 
         return Response({
-            'message': f'La partie avec l\'ID {room_id} a été supprimée avec succès.'
+            'message': f'La partie {room_id} a ete supprimee avec succes.'
         }, status=status.HTTP_200_OK)

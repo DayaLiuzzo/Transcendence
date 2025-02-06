@@ -40,6 +40,28 @@ Content-Type: application/json
   "username": "test_user",
   "password": "pass123456"
 }
+
+###
+#get user token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "rinma",
+  "password": "pass123456"
+}
+
+###
+#get user token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "lol",
+  "password": "pass123456"
+}
+
+
 ###
 #get service token
 POST https://localhost:4430/api/auth/service-token/

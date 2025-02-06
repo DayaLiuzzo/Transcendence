@@ -13,6 +13,7 @@ class IsOwnerAndAuthenticated(BasePermission):
             return False
         return obj == request.user
 
+
 def IsService(request, micro_service):
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):

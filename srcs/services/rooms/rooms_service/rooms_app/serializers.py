@@ -3,6 +3,13 @@ from rest_framework import serializers
 from .models import User
 from .models import Room
 
+
+################################################################
+#                                                              #
+#                             Room                             #
+#                                                              #
+################################################################
+
 class RoomSerializer(serializers.ModelSerializer):
     player1_username = serializers.CharField(source='player1.username', read_only=True)  # Affiche le nom de player1
     player2_username = serializers.CharField(source='player2.username', read_only=True)  # Affiche le nom de player2
@@ -14,7 +21,13 @@ class RoomSerializer(serializers.ModelSerializer):
     @property
     def is_full(self, obj):
         return obj.players_count >= 2
-    
+
+################################################################
+#                                                              #
+#                             User                             #
+#                                                              #
+################################################################
+
 class UserSerializer(serializers.ModelSerializer):
     is_authenticated = serializers.SerializerMethodField()
     room_id = serializers.CharField(source='room.room_id', read_only=True)

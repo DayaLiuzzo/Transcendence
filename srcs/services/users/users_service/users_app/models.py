@@ -15,3 +15,4 @@ class UserProfile(models.Model):
     @property
     def is_authenticated(self):
         return True
+
