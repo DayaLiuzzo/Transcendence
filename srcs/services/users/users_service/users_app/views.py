@@ -50,7 +50,6 @@ class CreateUserProfileView(generics.CreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-
 class DeleteUserProfileView(generics.DestroyAPIView):
     permission_classes = [IsAuth]
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
@@ -62,6 +61,21 @@ class RetrieveUserProfile(generics.RetrieveAPIView):
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
     serializer_class = UserProfileSerializer
     lookup_field = "username"
+
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuth]
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    def patch (self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        old_username = user_profile.username
+        new_username = request.data.get("new_username")
+        if user_profile.avatar != user_profile.avatar_default_path:
+            avatar_url = user_profile.avatar
+            new_avatar_url = avatar_url.replace(old_username, new_username)
+            user_profile.avatar = new_avatar_url
+        user_profile.username = new_username
+        user_profile.save()
+        return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=HTTP_200_OK)
 
 class AddFriendView(APIView):
     permission_classes = [IsOwner]
