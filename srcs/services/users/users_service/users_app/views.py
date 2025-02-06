@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_200_OK
 from rest_framework.status import HTTP_400_BAD_REQUEST
-
+from rest_framework.status import HTTP_409_CONFLICT
 
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -67,8 +67,6 @@ class AddFriendView(APIView):
     permission_classes = [IsOwner]
     lookup_field = "username"
     def patch(self, request, username, friendusername):
-        logger.debug(f"Username from URL: {username}")
-        logger.debug(f"Friend's Username from URL: {friendusername}")
         user_profile = get_object_or_404(UserProfile, username=username)
         friend_profile = get_object_or_404(UserProfile, username=friendusername)
         if user_profile == friend_profile:
@@ -76,8 +74,8 @@ class AddFriendView(APIView):
                             status=HTTP_400_BAD_REQUEST,)
         if user_profile.is_friend(friend_profile):
             return Response({"message": f"{friendusername} is already in your friend list dummy."},
-                            status=HTTP_200_OK, )
-        user_profile.add_friend(friend_profile)
+                            status=HTTP_409_CONFLICT, )
+        user_profile.friends.add(friend_profile)
         return Response({"message": f"{friendusername} has been added to your friend list"},
                         status=HTTP_200_OK, )
 
