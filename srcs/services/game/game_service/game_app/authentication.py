@@ -27,12 +27,11 @@ class CustomJWTAuth(BaseAuthentication):
         token_type, token = self._extract_token(auth_header)
         payload = self._decode_token(token)
         user = self._get_user_from_payload(payload)
+        if user == None:
+            return (None, None)
         return (user, token)
     
     def _extract_token(self, auth_header):
-        """
-        Extract and validate the token from the Authorization header.
-        """
         try:
             token_type, token = auth_header.split()
             if token_type != 'Bearer':
@@ -42,9 +41,6 @@ class CustomJWTAuth(BaseAuthentication):
             raise AuthenticationFailed("Invalid Authorization header format. Expected 'Bearer <token>'.")
     
     def _decode_token(self, token):
-        """
-        Decode the JWT token and validate its claims.
-        """
         try:
             return jwt.decode(
                 token,
@@ -57,13 +53,9 @@ class CustomJWTAuth(BaseAuthentication):
             raise AuthenticationFailed("Invalid token.")
     
     def _get_user_from_payload(self, payload):
-        """
-        Retrieve the user from the decoded token payload.
-        """
         username = payload.get('username')
         if not username:
             return None
-        
         try:
             user = UserProfile.objects.get(username=username)
         except UserProfile.DoesNotExist:

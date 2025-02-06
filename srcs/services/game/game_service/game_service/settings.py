@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'game_app',
     'channels',
-    'microservice_client',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -91,6 +90,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'game_service.wsgi.application'
 
+SERVICE_CONNECTOR_SETTINGS = {
+    "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
+    "SERVICE_NAME" : "users",
+    "SERVICE_PASSWORD" : os.getenv("USERS_PASSWORD")
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -124,11 +129,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-MICROSERVICE_CLIENT = {
-    "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
-    "SERVICE_NAME" : "game",
-    "SERVICE_PASSWORD" : os.getenv("GAME_PASSWORD")
-}
+# MICROSERVICE_CLIENT = {
+#     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
+#     "SERVICE_NAME" : "game",
+#     "SERVICE_PASSWORD" : os.getenv("GAME_PASSWORD")
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
