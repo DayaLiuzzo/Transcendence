@@ -17,7 +17,7 @@ urlpatterns = [
         path('<str:username>/friends/remove/<str:friendusername>/', views.RemoveFriendView.as_view(), name='remove_friend'),
         path('<str:username>/friends/', views.ListFriendsView.as_view(), name='list_friend'),
         path('<str:username>/avatar/', views.AvatarView.as_view(), name='avatar'),
-
+        path('<str:username>/avatar/update/', views.AvatarUpdateView.as_view(), name='avatar-udate'),
     ]))
 
 ]

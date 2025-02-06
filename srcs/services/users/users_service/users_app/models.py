@@ -6,7 +6,7 @@ class UserProfile(models.Model):
     username = models.CharField(max_length=100, unique=True)
     biography = models.TextField()
     friends = models.ManyToManyField("self", blank=True, symmetrical=False)
-    avatar = models.ImageField(default='/media/default_avatars/default_00.jpg', blank=True, null=True)
+    avatar = models.URLField(default='/media/default_avatars/default_00.jpg')
     
     @property
     def is_authenticated(self):

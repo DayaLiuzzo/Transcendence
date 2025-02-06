@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'avatar_app',
+    'service_connector',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -88,6 +89,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'avatar_service.wsgi.application'
 
+SERVICE_CONNECTOR_SETTINGS = {
+    "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
+    "SERVICE_NAME" : "avatar",
+    "SERVICE_PASSWORD" : os.getenv("AVATAR_PASSWORD")
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -152,4 +158,31 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = '/media' 
+MEDIA_ROOT = '/media'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'avatar_app': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
