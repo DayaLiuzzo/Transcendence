@@ -9,6 +9,7 @@ urlpatterns = [
         path('create/', views.CreateUserProfileView.as_view(), name='create_user_profile'),
         path('get/', views.get_example, name='get_example'),
         path('delete/<str:username>/', views.DeleteUserProfileView.as_view(), name='delete_user_profile'),
+        path('update/<str:username>/', views.UpdateUserProfileView.as_view(), name='update_user_profile'),
         path('test', views.TestServiceCommunicationView.as_view(), name='test'),  
         path('protected/service/', views.ProtectedServiceView.as_view(), name='protected_view'),
         path('protected/user/', views.ProtectedUserView.as_view(), name='protected_view'),
