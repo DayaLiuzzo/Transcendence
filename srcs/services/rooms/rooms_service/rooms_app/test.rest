@@ -2,6 +2,33 @@
 #check if room service is working
 GET https://localhost:4430/api/rooms/test/
 
+
+################################################################
+#                                                              #
+#       Tests Users (endpoint called by the auth service       #
+#                                                              #
+################################################################
+
+# ************************** CREATE ************************** #
+
+###
+#create user
+POST https://localhost:4430/api/rooms/create/
+
+# *************************** READ *************************** #
+
+###
+#get a list of users
+GET https://localhost:4430/api/rooms/list/
+
+# **************************** PUT *************************** #
+
+# ************************** DELETE ************************** #
+
+###
+#delete user
+DELETE  https://localhost:4430/api/rooms/delete/
+
 ################################################################
 #                                                              #
 #                          Room tests                          #
@@ -57,39 +84,4 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 #delete rooms
 DELETE https://localhost:4430/api/rooms/delete_room/room_e3aaed1d/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
-
-################################################################
-#                                                              #
-#                   Room service User tests                    #
-#                   (mauvais tests : a MAJ)                    #
-#                                                              #
-################################################################
-
-# ************************** CREATE ************************** #
-
-###
-#create user
-POST https://localhost:4430/api/rooms/create/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
-
-# *************************** READ *************************** #
-
-###
-#get a list of users
-GET https://localhost:4430/api/rooms/list/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
-
-# **************************** PUT *************************** #
-
-###
-#update user
-PUT https://localhost:4430/api/rooms/update/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
-
-# ************************** DELETE ************************** #
-
-###
-#delete user
-DELETE  https://localhost:4430/api/rooms/delete/
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg

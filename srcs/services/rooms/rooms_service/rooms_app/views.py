@@ -1,13 +1,14 @@
+import logging
 import uuid
 
 from django.db import IntegrityError
-from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 from rest_framework.views import APIView
@@ -17,14 +18,71 @@ from .models import Room
 from .models import User
 from .serializers import RoomSerializer
 from .serializers import UserSerializer
-from rooms_app.permissions import IsAuth
-from rooms_app.permissions import IsRooms
-from rooms_app.permissions import IsUsers
-from rooms_app.permissions import IsGame
-from rooms_app.permissions import IsOwnerAndAuthenticated
+from .permissions import IsAuth
+from .permissions import IsRooms
+from .permissions import IsUsers
+from .permissions import IsGame
+from .permissions import IsOwnerAndAuthenticated
 
+logger = logging.getLogger('rooms_app')
+
+@api_view(['GET'])
 def rooms_service_running(request):
     return JsonResponse({"message": "Rooms service is running"})
+
+################################################################
+#                                                              #
+#                          User views                          #
+#                                                              #
+################################################################
+
+# ************************** CREATE ************************** #
+
+class CreateUserView(generics.CreateAPIView):
+    permission_classes =[IsAuth]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+# *************************** READ *************************** #
+
+class RetrieveUserView(generics.RetrieveAPIView):
+    permission_classes = [IsOwnerAndAuthenticated,IsAuth]
+    queryset = User.objects.all().exclude(username="deleted_account")
+    serializer_class = UserSerializer
+    lookup_field = 'username'
+
+    def get_object(self):
+        return self.request.user
+
+
+# **************************** PUT *************************** #
+
+# ************************** DELETE ************************** #
+
+class DeleteUserView(generics.DestroyAPIView):
+    permission_classes = [IsAuth]
+    queryset = User.objects.all().exclude(username="deleted_account")
+    serializer_class = UserSerializer
+    lookup_field = "username"
+
+    def get_object(self):
+        return self.request.user
+
+    def perform_destroy(self, instance):
+        # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
+        if instance.room:
+            room = instance.room
+            if room.player1 == instance:
+                room.player1 = None
+            elif room.player2 == instance:
+                room.player2 = None
+            
+            room.players_count -= 1
+            if room.players_count < 2:
+                room.status = 'waiting'
+            room.save()
+
+        instance.delete()
 
 ################################################################
 #                                                              #
@@ -233,69 +291,3 @@ class DeleteRoomView(generics.DestroyAPIView):
                 instance.player2.save()
 
             instance.delete()
-
-################################################################
-#                                                              #
-#                          User views                          #
-#                                                              #
-################################################################
-
-# ************************** CREATE ************************** #
-
-class CreateUserView(generics.CreateAPIView):
-    permission_classes =[IsAuth]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-# *************************** READ *************************** #
-
-class RetrieveUserView(generics.RetrieveAPIView):
-    permission_classes = [IsOwnerAndAuthenticated,IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
-    lookup_field = 'username'
-
-    def get_object(self):
-        return self.request.user
-
-# class ListUserView(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [IsAuthenticated] #a changer
-
-# **************************** PUT *************************** #
-
-# class UpdateUserView(generics.UpdateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [IsAuthenticated] 
-
-#     def get_object(self):
-#         return self.request.user
-
-# ************************** DELETE ************************** #
-
-class DeleteUserView(generics.DestroyAPIView):
-    permission_classes = [IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
-    lookup_field = "username"
-
-    def get_object(self):
-        return self.request.user
-
-    def perform_destroy(self, instance):
-        # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
-        if instance.room:
-            room = instance.room
-            if room.player1 == instance:
-                room.player1 = None
-            elif room.player2 == instance:
-                room.player2 = None
-            
-            room.players_count -= 1
-            if room.players_count < 2:
-                room.status = 'waiting'
-            room.save()
-
-        instance.delete()

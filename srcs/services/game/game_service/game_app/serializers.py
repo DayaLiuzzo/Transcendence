@@ -1,9 +1,10 @@
+
 from rest_framework import serializers
 
 from .models import Ball
 from .models import Game
 from .models import Paddle
-from .models import User
+from .models import UserProfile
 
 
 ################################################################
@@ -12,16 +13,12 @@ from .models import User
 #                                                              #
 ################################################################
 
-class UserSerializer(serializers.ModelSerializer):
-    is_authenticated = serializers.SerializerMethodField()
-    # room_id = serializers.CharField(source='room.room_id', read_only=True)
-    
-    class Meta:
-        model = User
-        fields = ['username', 'is_authenticated']
+class UserProfileSerializer(serializers.ModelSerializer):
 
-    def get_is_authenticated(self, obj):
-        return obj.is_authenticated
+    class Meta:
+        model = UserProfile
+        fields = ['username']
+
 
 ################################################################
 #                                                              #
@@ -53,9 +50,11 @@ class BallSerializer(serializers.ModelSerializer):
 ################################################################
 
 class GameSerializer(serializers.ModelSerializer):
+    player1 = UserProfileSerializer()
+    player2 = UserProfileSerializer()
     paddles = PaddleSerializer(many=True)
     ball = BallSerializer()
-
+    
     class Meta:
         model = Game
-        fields = ['room_id', 'status', 'paddles', 'ball']
+        fields = ['room_id', 'status', 'player1', 'player2', 'paddles', 'ball']

@@ -19,8 +19,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-
-
 class CustomJWTAuth(BaseAuthentication):
     def authenticate(self, request):
         auth_header = request.headers.get('Authorization')

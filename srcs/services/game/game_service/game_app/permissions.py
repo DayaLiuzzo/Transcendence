@@ -1,11 +1,11 @@
 from rest_framework import permissions
 from rest_framework.permissions import BasePermission
 from rest_framework.exceptions import AuthenticationFailed
+from jwt import InvalidTokenError
 from django.conf import settings
 import logging 
 
 import jwt
-
 
 class IsOwnerAndAuthenticated(BasePermission):
     def has_object_permission(self, request, view, obj):

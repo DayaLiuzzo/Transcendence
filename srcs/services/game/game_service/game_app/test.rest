@@ -5,7 +5,7 @@ GET https://localhost:4430/api/game/test/
 
 ################################################################
 #                                                              #
-#                   Game service User tests                    #
+#       Tests Users (endpoint called by the auth service       #
 #                                                              #
 ################################################################
 
@@ -14,14 +14,12 @@ GET https://localhost:4430/api/game/test/
 ###
 #create user
 POST https://localhost:4430/api/game/create/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
 
 # *************************** READ *************************** #
 
 ###
 #get a list of users
 GET https://localhost:4430/api/game/list/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
 
 # **************************** PUT *************************** #
 
@@ -30,11 +28,10 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 #delete user
 DELETE  https://localhost:4430/api/game/delete/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MjY2NDY3LCJpYXQiOjE3MzgyNjEwNjcsImp0aSI6IjBmZjc1ZDk0MjZlZDRmODY4ZmFkODc1ZmRhZThkZWM0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.Oyb1IThKj1aryROZKn6KNYv4dq3h0b0ZVmQcWF8XBHSfCkvU5UY4jpaI4jQSLVrFe0BgGRe44Qfzs8r0zsrK-2rFEEN5hmcu3yCcNRvi-KTPlA99WZQ6iqK5AWWuQ1lCfwYq8zMWCmi9XuANEAwgSVPwBez3P7GvgDfqAikzyb0RH5Py6QDb1tV97vMIzdren9blRmDBvozN6Wk3cuSMcCa_xW0RtrIwCpJzTbGwM5oTJgafRZ5xakM_gpA5z2lzonNg7zxVEVFEUpPr3BEppMFLjajT38dwR5rbbsA4buJAMnNKYlaad7WHZ_wDlqeUjUJae31ymkcByDj6TKZSgg
 
 ################################################################
 #                                                              #
-#                 Game service tests                 #
+#                          Game tests                          #
 #                                                              #
 ################################################################
 
@@ -44,6 +41,12 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 #create game (for room service)
 POST https://localhost:4430/api/game/create_game/id_hihi/
+# Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODY0Mzk1LCJpYXQiOjE3Mzg4NTg5OTUsImp0aSI6ImE2OTdhMTk4M2I2OTQyZDc5Y2VmOTYwNTNhNDk1N2FkIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.a32f7IY-x3JvyUT3IDHDOevlSjML_sdaQcJztGrk4rKCgle5VmeFKEwol1uO__FeNE1hgMzF9CridmSdjJbUiJYHrNF4dsa3QEpisOt6BGM1bDu316v6RyUyfaTtA2k_o8VeG9GcAI6B2OkxswtmRePW5vENCLycVTPTM5CL76oekS8OVxrV8B7rcwytOYr0tXXFd-lbYFUtBWrNHmdRxCfs9iElPhqzg9OJg0A_nnKPXKwwwxb3uKAqT3VC5bgFZxgpMEa9Gj5ZwKfrNF7fEieQU3S3RN8VHXHKn2FrO6fsQa8AmXLSg3FR7IDsUpK0XOY7zclN76zjKx3wPsWOoA
+
+###
+#join game (for room service)
+POST https://localhost:4430/api/game/join_game/id_hihi/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODY3MjA2LCJpYXQiOjE3Mzg4NjE4MDYsImp0aSI6ImFmMWZjYjM2NDI0YTQyNzZhYWQ2NDdmOWY0NjkzYTc2IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.U-kRmVaHLIIS3iKRKtta6wJMUrOf1GPxEUiBMRpOI2cXa45BtjM3B-l46Qm8kPN8Kg00__nXK_9V9v2V7ssmxNYsL0EvAZkYmXwVi9fCkAky_3df9FgdI7AjyRSvnBcl8mKQInzx4bQZ01BAHW0iW5oiR22-_miySdYtMhc1IPRN3edkbEMO0ZrpbiJOVtiifvkZ3iZhM5BYdg0egd1GWOyVKfgce4IhRmIo-vhgQexJWwKgyr7ZjuWMaELuplDvVWvgVX1jLXucX0gpPrjHrwFWG28xEME2xHnF3rjimP0OtxasvcSwgsL9aCVSKstkeM4XHOx6kfYUFU0VaEnW6Q
 
 # *************************** READ *************************** #
 
@@ -53,7 +56,7 @@ GET https://localhost:4430/api/game/list_all_games/
 
 ###
 #get the gamestate
-GET https://localhost:4430/api/game/gamestate/
+GET https://localhost:4430/api/game/gamestate/id_hihi/
 
 # **************************** PUT *************************** #
 
