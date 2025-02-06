@@ -35,31 +35,8 @@ logging.basicConfig(
 # Crée un logger spécifique au module courant
 logger = logging.getLogger(__name__)
 
-logger.debug("------------------CALL-----------")
-
-
-@api_view(['GET'])
-def welcome(request):
-    return Response({"message": "Hello World"}, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def get_example(request):
-    return Response({"message": "This is a GET endpoint"}, status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-def post_example(request):
-    data = request.data
-    return Response({"received_data": data}, status=status.HTTP_200_OK)
-
-class ProtectedUserView(APIView):
-    permission_classes = [IsOwner]
-    def get(self, request):
-        user = request.user
-        print("Authenticated user in view:", user)  # Debugging: Log the authenticated user
-        return Response({"message": "This is a protected view!"})
 
 class SignUpView(generics.ListCreateAPIView):
-    logger.debug("IN AUTH CREATE VIEW")
     permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -110,22 +87,6 @@ class ServiceJWTObtainPair(APIView):
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class CustomTokenObtainPairView(TokenObtainPairView):
-#     def post(self, request, *args, **kwargs):
-#         username = request.data.get('username')
-#         password = request.data.get('password')
-#         if not username or not password:
-#             return Response({"error": "Please provide both username and password"}, status=status.HTTP_400_BAD_REQUEST)
-#         user = authenticate(request, username=username, password=password)
-#         if user is None:
-#             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-#         token = CustomTokenObtainPairSerializer.get_token(user)
-#         access_token = str(token.access_token)
-#         refresh_token = str(token)
-#         return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
-
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):

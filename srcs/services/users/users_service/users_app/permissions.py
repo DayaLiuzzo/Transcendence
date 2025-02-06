@@ -14,6 +14,10 @@ class IsOwnerAndAuthenticated(BasePermission):
         return obj == request.user
 
 
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.username == request.user.username 
+
 
 def IsService(request, micro_service):
         auth_header = request.headers.get('Authorization')
@@ -49,4 +53,8 @@ class IsGame(permissions.BasePermission):
 class IsRooms(permissions.BasePermission):
     def has_permission(self, request, view):
         return IsService(request, 'rooms')
-       
+    
+class IsAvatar(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return IsService(request, 'avatar')
+     
