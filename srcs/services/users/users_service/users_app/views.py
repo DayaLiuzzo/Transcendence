@@ -57,7 +57,7 @@ class DeleteUserProfileView(generics.DestroyAPIView):
     lookup_field = "username"
 
 class RetrieveUserProfile(generics.RetrieveAPIView):
-    permission_classes = [IsOwnerAndAuthenticated,IsAuth]
+    permission_classes = [IsOwnerAndAuthenticated]
     queryset = UserProfile.objects.all().exclude(username="deleted_account")
     serializer_class = UserProfileSerializer
     lookup_field = "username"

@@ -74,21 +74,21 @@ class UpdateUserView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
-    def update(self, serializer, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         try:   
             user = self.get_object()
             old_username = user.username
-            new_username = serializer.validated_data.get('username')
+            new_username = request.data.get('new_username')
             req_urls = [ f'http://users:8443/api/users/update/{old_username}/',
-                        f'http://game:8443/api/avatar/',
+                        f'http://avatar:8443/api/avatar/',
                         ]
             if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
                 raise ValidationError("Error updating user")
+            user.username = new_username
+            user.save()
         except Exception as e:
-            raise ValidationError("Error updating user bis")
-        # user = serializer.save()
+            raise ValidationError(f"Error updating user bis: {str(e)}")
         return Response({"message": 'Succsesssss'}, status=status.HTTP_200_OK)
-
 
 
 
