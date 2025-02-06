@@ -69,6 +69,29 @@ class DeleteUserView (generics.DestroyAPIView):
         logger.debug(f'user deleted : {instance.username}')
         instance.delete()
 
+class UpdateUserView(generics.UpdateAPIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+    def update(self, serializer, *args, **kwargs):
+        try:   
+            user = self.get_object()
+            old_username = user.username
+            new_username = serializer.validated_data.get('username')
+            req_urls = [ f'http://users:8443/api/users/update/{old_username}/',
+                        f'http://game:8443/api/avatar/',
+                        ]
+            if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
+                raise ValidationError("Error updating user")
+        except Exception as e:
+            raise ValidationError("Error updating user bis")
+        # user = serializer.save()
+        return Response({"message": 'Succsesssss'}, status=status.HTTP_200_OK)
+
+
+
+
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
     queryset = CustomUser.objects.all()
@@ -116,12 +139,10 @@ class TwoFactorSetupView(APIView):
         user = request.user
         serializer = TwoFactorSetupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         if serializer.validated_data.get('enable'):
             user.two_factor_enabled = True
             user.save()
             return Response(TwoFactorSetupSerializer(user).data, status=status.HTTP_200_OK)
-
         user.two_factor_enabled = False
         user.otp_secret = None
         user.save()
@@ -130,11 +151,9 @@ class TwoFactorSetupView(APIView):
 
 class TwoFactorVerifyView(APIView):
     permission_classes = [IsAuthenticated]
-
     def post(self, request):
         serializer = TwoFactorVerifySerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-
         user = request.user
         user.two_factor_enabled = True
         user.save()
