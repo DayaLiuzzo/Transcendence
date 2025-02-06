@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'isconnected', 'is_authenticated', 'room_id']
+        fields = ['username', 'is_authenticated', 'room_id']
 
     def get_is_authenticated(self, obj):
         return obj.is_authenticated
