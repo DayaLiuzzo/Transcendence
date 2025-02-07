@@ -1,4 +1,3 @@
-
 from django.contrib.auth import authenticate
 
 from rest_framework import generics
@@ -36,13 +35,13 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         otp = request.data.get('otp')
 
         if not username or not password:
-            return Response({"error": "Please provide both username and password"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
         user = authenticate(request, username=username, password=password)
         if user is None:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         if user.two_factor_enabled:
             if not otp:
-                return Response({"error": "OTP is required for 2FA-enabled accounts."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "OTP is required."}, status=status.HTTP_400_BAD_REQUEST)
             totp = pyotp.TOTP(user.otp_secret)
             if not totp.verify(otp):
                 return Response({"error": "Invalid OTP."}, status=status.HTTP_401_UNAUTHORIZED)
