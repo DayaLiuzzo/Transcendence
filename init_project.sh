@@ -7,6 +7,8 @@ SERVICES=(
     "frontend"
     "game"
     "avatar"
+    "rooms"
+    "tournament"
 )
 
 BASE_PATH="./srcs/services"
