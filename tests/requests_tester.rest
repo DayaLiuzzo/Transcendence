@@ -13,6 +13,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 POST https://localhost:4430/api/users/test
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4NzMxNzQyLCJpYXQiOjE3Mzg2ODg1NDJ9.AklLzzHNGshk-iaZrp0qQ4OnSeqCPH7WRccCxs4Fb0Xd2unqfm2tPXu8AfsZbpxe88RYU7ZgFH9cq9U5jOMzhHPKWGW5vHaJVQojK2mtE3rNAETF3Uy08BLK_c7XvcWlCeAfBv8ibOoyTidQXTjtOEZzmbiPfwO6DdinzWDWo47dswsOkZao5j8iGhDvWQaEPGdpspShreLKmgrjd_vJGlJhjIsjeY4vLZRgdcMDZbzj8G7SfKwVVGsiFSUNF6y02rKy2SPsqYeNXq3G-Lmh277nRcAE2_A9Z6l2Zcs_dLtJ5et22IxfkZZXqq5H2M9xjKgr633depPsA3u_a6Ilig
+
 ###add user to db
 
 get https://localhost:4430/api/auth/signup/
@@ -30,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4NzMxNzQyLCJpYXQiOjE3Mzg2ODg1NDJ9.AklLzzHNGshk-iaZrp0qQ4OnSeqCPH7WRccCxs4Fb0Xd2unqfm2tPXu8AfsZbpxe88RYU7ZgFH9cq9U5jOMzhHPKWGW5vHaJVQojK2mtE3rNAETF3Uy08BLK_c7XvcWlCeAfBv8ibOoyTidQXTjtOEZzmbiPfwO6DdinzWDWo47dswsOkZao5j8iGhDvWQaEPGdpspShreLKmgrjd_vJGlJhjIsjeY4vLZRgdcMDZbzj8G7SfKwVVGsiFSUNF6y02rKy2SPsqYeNXq3G-Lmh277nRcAE2_A9Z6l2Zcs_dLtJ5et22IxfkZZXqq5H2M9xjKgr633depPsA3u_a6Ilig
 
 {
-  "username": "user",
+  "username": "test4_user",
   "password": "pass123456"
 }
 ###

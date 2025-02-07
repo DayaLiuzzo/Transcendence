@@ -4,7 +4,7 @@ import logging
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 # Configure logging
-logger = logging.getLogger('game_app')  # Utilisez le logger de votre application spécifique
+logger = logging.getLogger('game_app')
 
 class RoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):

@@ -1,7 +1,68 @@
 ###
 #Check if game service is working
-get https://localhost:4430/api/game/
+GET https://localhost:4430/api/game/test/
+
+
+################################################################
+#                                                              #
+#       Tests Users (endpoint called by the auth service       #
+#                                                              #
+################################################################
+
+# ************************** CREATE ************************** #
 
 ###
-#Get a room
-get https://localhost:4430/api/game/random_room/
+#create user
+POST https://localhost:4430/api/game/create/
+
+# *************************** READ *************************** #
+
+###
+#get a list of users
+GET https://localhost:4430/api/game/list/
+
+# **************************** PUT *************************** #
+
+# ************************** DELETE ************************** #
+
+###
+#delete user
+DELETE  https://localhost:4430/api/game/delete/
+
+################################################################
+#                                                              #
+#                          Game tests                          #
+#                                                              #
+################################################################
+
+
+# ************************** CREATE ************************** #
+
+###
+#create game (for room service)
+POST https://localhost:4430/api/game/create_game/id_hihi/
+# Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODY0Mzk1LCJpYXQiOjE3Mzg4NTg5OTUsImp0aSI6ImE2OTdhMTk4M2I2OTQyZDc5Y2VmOTYwNTNhNDk1N2FkIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.a32f7IY-x3JvyUT3IDHDOevlSjML_sdaQcJztGrk4rKCgle5VmeFKEwol1uO__FeNE1hgMzF9CridmSdjJbUiJYHrNF4dsa3QEpisOt6BGM1bDu316v6RyUyfaTtA2k_o8VeG9GcAI6B2OkxswtmRePW5vENCLycVTPTM5CL76oekS8OVxrV8B7rcwytOYr0tXXFd-lbYFUtBWrNHmdRxCfs9iElPhqzg9OJg0A_nnKPXKwwwxb3uKAqT3VC5bgFZxgpMEa9Gj5ZwKfrNF7fEieQU3S3RN8VHXHKn2FrO6fsQa8AmXLSg3FR7IDsUpK0XOY7zclN76zjKx3wPsWOoA
+
+###
+#join game (for room service)
+POST https://localhost:4430/api/game/join_game/id_hihi/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODgwNzgwLCJpYXQiOjE3Mzg4NzUzODAsImp0aSI6IjZkNDc1ZjgwOTQyNDQyZDdhNmUwODNmMTQzZWU1NjQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0NF91c2VyIn0.MvPR_Tk0hi58wQNb0QCoiEe5mAnrPsYqa2qK5G-EXPeD0suZmzHTLb1iZmLRfgqubWZfnl45k_vPOT81celAXzF0OqkvmudxIEhN04GtlE9Mf4GP4Wn9QQLi7KxR9L6wrzaGoquWo3X8EBjSEcRYW3OVKSjuqKs2FcESl9XibFyqyjx6H_6NQElnl61eHbwF_KUko08UxbuAHXpphDklQErbAEA4IN4UZ0XhRa4E851HG-pT_TrFtRXIQFWjDPPA8QBfZFORFrQsIKuEU-zELmD61LaGvGy7gm32-1Y8-xrPJS4wJ6seAqOYWEHIEMxg9i6F5m-a9j_rfnA7e--AXQ
+
+# *************************** READ *************************** #
+
+###
+#get a list of all games
+GET https://localhost:4430/api/game/list_all_games/
+
+###
+#get the gamestate
+GET https://localhost:4430/api/game/gamestate/id_hihi/
+
+# **************************** PUT *************************** #
+
+# ************************** DELETE ************************** #
+
+###
+#delete game
+DELETE https://localhost:4430/api/game/delete_game/id_hihi/
+
