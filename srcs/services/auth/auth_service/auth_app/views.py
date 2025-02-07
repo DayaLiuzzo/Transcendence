@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+import pyotp
 from .models import CustomUser
 from .permissions import IsOwnerAndAuthenticated
 from .permissions import IsOwner
@@ -21,98 +22,13 @@ from .serializers import TwoFactorSetupSerializer
 from .serializers import TwoFactorVerifySerializer
 from .requests_custom import *
 
-import logging 
-import pyotp
 
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    # filename="basic.log",
-    )
-
-# Crée un logger spécifique au module courant
-logger = logging.getLogger(__name__)
-
-
-class SignUpView(generics.ListCreateAPIView):
-    permission_classes = [AllowAny]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    lookup_field = 'username'
-
-    def perform_create(self, serializer):
-        serializer.is_valid(raise_exception=True)
-        username = serializer.validated_data.get('username')
-        req_urls = [ 'http://users:8443/api/users/create/',
-                    'http://game:8443/api/game/create/'
-                    ]
-        if send_create_requests(urls=req_urls, body={'username':username}) == False:
-            raise ValidationError("Error deleting user")
-        user = serializer.save()
-        return user
-
-class DeleteUserView (generics.DestroyAPIView):
-    permission_classes = [IsOwner]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    lookup_field = 'username'
-    logger.debug("IN AUTH DELETE VIEW")
-
-    def perform_destroy(self, instance):
-        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
-                    f'http://game:8443/api/game/delete/{instance.username}/',
-                    ]
-        if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
-            raise ValidationError("Error deleting user")
-        logger.debug(f'user deleted : {instance.username}')
-        instance.delete()
-
-class UpdateUserView(generics.UpdateAPIView):
-    permission_classes = [IsOwnerAndAuthenticated]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    lookup_field = 'username'
-    def update(self, request, *args, **kwargs):
-        try:   
-            user = self.get_object()
-            old_username = user.username
-            new_username = request.data.get('new_username')
-            req_urls = [ f'http://users:8443/api/users/update/{old_username}/',
-                        f'http://avatar:8443/api/avatar/',
-                        ]
-            if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
-                raise ValidationError("Error updating user")
-            user.username = new_username
-            if user.two_factor_enabled:
-                user.otp_secret = pyotp.random_base32()
-            user.save()
-        except Exception as e:
-            raise ValidationError(f"Error updating user bis: {str(e)}")
-        if user.two_factor_enabled:
-            return Response({"message": "Success", "otp": user.otp_secret }, status=status.HTTP_200_OK)
-        return Response({"message": 'Succsesssss'}, status=status.HTTP_200_OK)
-
-
-
-class RetrieveUserView(generics.RetrieveAPIView):
-    permission_classes = [IsOwnerAndAuthenticated]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    lookup_field = 'username'
-
-
-class ServiceJWTObtainPair(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = ServiceTokenSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+# ================================================
+# =============== AUTH VIEWS =====================
+# ================================================
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer  # Your custom serializer for token creation
+    serializer_class = CustomTokenObtainPairSerializer 
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -135,6 +51,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         refresh_token = str(token)
         return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
 
+
+
+# ================================================
+# =============== 2FA VIEWS ======================
+# ================================================
 
 class TwoFactorSetupView(APIView):
     permission_classes = [IsAuthenticated]
@@ -163,3 +84,87 @@ class TwoFactorVerifyView(APIView):
         user.two_factor_enabled = True
         user.save()
         return Response({"message": "2FA setup verified and enabled."}, status=status.HTTP_200_OK)
+
+
+
+# ================================================
+# =============== USER VIEWS =====================
+# ================================================
+
+### Create User
+
+class SignUpView(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+
+    def perform_create(self, serializer):
+        serializer.is_valid(raise_exception=True)
+        username = serializer.validated_data.get('username')
+        req_urls = [ 'http://users:8443/api/users/create/',
+                    'http://game:8443/api/game/create/'
+                    ]
+        if send_create_requests(urls=req_urls, body={'username':username}) == False:
+            raise ValidationError("Error deleting user")
+        user = serializer.save()
+        return user
+
+class DeleteUserView (generics.DestroyAPIView):
+    permission_classes = [IsOwner]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+
+    def perform_destroy(self, instance):
+        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
+                    f'http://game:8443/api/game/delete/{instance.username}/',
+                    ]
+        if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
+            raise ValidationError("Error deleting user")
+        instance.delete()
+
+class UpdateUserView(generics.UpdateAPIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+
+    def update(self, request, *args, **kwargs):
+        try:   
+            user = self.get_object()
+            old_username = user.username
+            new_username = request.data.get('new_username')
+            req_urls = [ f'http://users:8443/api/users/update/{old_username}/',
+                        f'http://avatar:8443/api/avatar/',
+                        ]
+            if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
+                raise ValidationError("Error updating user")
+            user.username = new_username
+            if user.two_factor_enabled:
+                user.otp_secret = pyotp.random_base32()
+            user.save()
+        except Exception as e:
+            raise ValidationError(f"Error updating user bis: {str(e)}")
+        if user.two_factor_enabled:
+            return Response({"message": "Success", "otp": user.otp_secret }, status=status.HTTP_200_OK)
+        return Response({"message": 'Success'}, status=status.HTTP_200_OK)
+
+class RetrieveUserView(generics.RetrieveAPIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+
+
+
+# ================================================
+# =============== SERVICE VIEWS ==================
+# ================================================
+
+class ServiceJWTObtainPair(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ServiceTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

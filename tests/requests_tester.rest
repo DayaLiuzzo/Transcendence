@@ -10,27 +10,28 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 }
 
 ###
-GET https://localhost:4430/api/users/test
+POST https://localhost:4430/api/users/test
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4NzMxNzQyLCJpYXQiOjE3Mzg2ODg1NDJ9.AklLzzHNGshk-iaZrp0qQ4OnSeqCPH7WRccCxs4Fb0Xd2unqfm2tPXu8AfsZbpxe88RYU7ZgFH9cq9U5jOMzhHPKWGW5vHaJVQojK2mtE3rNAETF3Uy08BLK_c7XvcWlCeAfBv8ibOoyTidQXTjtOEZzmbiPfwO6DdinzWDWo47dswsOkZao5j8iGhDvWQaEPGdpspShreLKmgrjd_vJGlJhjIsjeY4vLZRgdcMDZbzj8G7SfKwVVGsiFSUNF6y02rKy2SPsqYeNXq3G-Lmh277nRcAE2_A9Z6l2Zcs_dLtJ5et22IxfkZZXqq5H2M9xjKgr633depPsA3u_a6Ilig
 ###add user to db
-POST https://localhost:4430/api/auth/signup/
+
+get https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "user",
-  "password": "pass123456",
-  "email": "user@gmail.com"
+  "username": "user1",
+  "password": "pass12456",
+  "email": "user1@gmail.com"
 }
 ###
 #get user token
 POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4NzMxNzQyLCJpYXQiOjE3Mzg2ODg1NDJ9.AklLzzHNGshk-iaZrp0qQ4OnSeqCPH7WRccCxs4Fb0Xd2unqfm2tPXu8AfsZbpxe88RYU7ZgFH9cq9U5jOMzhHPKWGW5vHaJVQojK2mtE3rNAETF3Uy08BLK_c7XvcWlCeAfBv8ibOoyTidQXTjtOEZzmbiPfwO6DdinzWDWo47dswsOkZao5j8iGhDvWQaEPGdpspShreLKmgrjd_vJGlJhjIsjeY4vLZRgdcMDZbzj8G7SfKwVVGsiFSUNF6y02rKy2SPsqYeNXq3G-Lmh277nRcAE2_A9Z6l2Zcs_dLtJ5et22IxfkZZXqq5H2M9xjKgr633depPsA3u_a6Ilig
 
 {
-  "username": "jinette",
-  "password": "pass123456",
-  "otp": "756409"
+  "username": "user",
+  "password": "pass123456"
 }
 ###
 #get service token
@@ -114,7 +115,7 @@ Content-Type: application/json
 
 
 POST https://localhost:4430/api/auth/2fa/setup/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODc2NTM5LCJpYXQiOjE3Mzg4NzExMzksImp0aSI6ImNjNzJlN2EyZTljYzRmNTNhNjZlN2JmN2Q5OGMyMTEwIiwidXNlcl9pZCI6MywidXNlcm5hbWUiOiJ1c2VyIn0.QYqSGpIwOlV4iKA55pA1MFr50TIs3TlKE-3VqFgZDqnnvebWvQawHssN33JTmg5Q4K8-K8L7C-aG7SMXZUQBHCY8pYSwFM8i1-vXnt5vDMHObqAXQGosWX74xkCNXAyBYpO31vqLJ_UBGNXJLkMotAkxI_REiOOOi11KElQheYskJjjhNn5L58YdayIMAofzoE8PhdrF2eUm_yTpXX6TaPYt3zlDvBIBrkFhR453Lh-H5F3Zm3IFHllLfZm2w6Z_8nLOq4fGCV-6LMwXHJh4TbMjpSgpuR1eV-xPFpzQP8hyCSFh92P9C6EPcm1HACc1cvFN6spN6ggY1VVnRntYLQ
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4OTM4ODAwLCJpYXQiOjE3Mzg5MzM0MDAsImp0aSI6IjIwZjJiYzRiYjNlYzQ4NTdiMzhiNjJkMGVkMjUxZmJlIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ1c2VyIn0.aUyZrmEzmDSRLr17oOZ6zqUPzRWFPDzUDzVqJ1n0G1CMek5v-k2qdROJ4wxtb9v4fg9nt_8-Zb8DqzUumvwDl6uqn67CZXs_27b82oPHCjg30cBimY079Bd7zhXicOnjSvTQQAcVu56F_Qw2VQLQlBxmhg0UTf008e9kzhDJnDZsAnQHNEP3H3cuOUUSDyGTvjwjdQGfGI8VAxSBVoKXARA-IhpIKsQ-imuFJEv65BWaT4bP7QKoBbpVGsImezN9SzsKk-mpP-bzbltyVssSWWZCxTXN0ujDCGNA2F_w3IyNQGBbJ8fYQhLcQo4qHK-gYE8Ffsk0yG2fuinVLrtLzg
 Content-Type: application/json
 
 {
