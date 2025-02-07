@@ -1,26 +1,15 @@
 from rest_framework.views import APIView
-from rest_framework import response, status
+from rest_framework import status
 from rest_framework.response import Response
-from .serializers import UserAvatarSerializer
+
 import os
 from django.conf import settings
-from avatar_app.permissions import UserIsAuthenticated
 from pathlib import Path 
+from avatar_app.permissions import UserIsAuthenticated
+
 from service_connector.service_connector import MicroserviceClient
 from service_connector.exceptions import MicroserviceError
-import logging
-
-logging.basicConfig(filename='app.log', level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
-
-logging.debug('This is a debug message')
-logging.info('This is an info message')
-logging.warning('This is a warning message')
-logging.error('This is an error message')
-logging.critical('This is a critical message')
-
-logger = logging.getLogger(__name__)
-  
+from .serializers import UserAvatarSerializer
 
 class AvatarView(APIView):
     permission_classes = [UserIsAuthenticated]
@@ -66,7 +55,7 @@ def rename_image(old_username: str, new_username: str):
         if old_avatar_path.exists():
             old_avatar_path = str(old_avatar_path)
             new_avatar_path = new_username.join(old_avatar_path.rsplit(old_username, 1))
-            logger.info(f"Renamed {old_avatar_path} to {new_avatar_path}")
+            os.rename(old_avatar_path, new_avatar_path)
             return True
     return False
 
