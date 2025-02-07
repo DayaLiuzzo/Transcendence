@@ -1,12 +1,12 @@
 ###
-PATCH  https://localhost:4430/api/auth/update/user/
+PATCH  https://localhost:4430/api/auth/update/tresi/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODc2NjEwLCJpYXQiOjE3Mzg4NzEyMTAsImp0aSI6IjYyNzk0MjI2MjMwOTQ2MDhiMzJhNzM1MGYwNWU2ZTk0IiwidXNlcl9pZCI6MywidXNlcm5hbWUiOiJ1c2VyIn0.FNNP8Ut87gBIzybeP9VlUt9nAr9fVyU9Vq54Zfg8nB9ozi7PU-IFv54jp37WApFnB3mvo2SvWDZTU8D-zQboowcmcNrP8xpjhlu7YfbFPzmkbwbSW0fHIrFkOfFOf0Xo8RlFxgz4u1klnqJLgyMiC19wnkWZGr7yE34tmfP0TUyAG1gJ9rHQg1gBoZeeY2q55O1jEEmhihuJ3Brdn57Ecrga_J9QpZnyVSQCrykzAuyrQoqSSkjPiC6fZbhGd9hKQjdoOL-8njo67QLYQ_aazczp17YUNPFPMdXQ_lnPF6o4W-ANDoTNRY8As8NTwmQeWuAGKYbCoWulWDVVqzPZxg
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4OTUzMTM4LCJpYXQiOjE3Mzg5NDc3MzgsImp0aSI6IjhjZTFlMGZjZWQ1YjQ2MzliNWJkMDliZmZiNWM2OTQ5IiwidXNlcl9pZCI6MywidXNlcm5hbWUiOiJ0cmVzaSJ9.bGVqjvf9DxVXdGSVgppuULrTUOLDkhsFjoNu99G0f2K4nI_8HW9JgNsFmY198ipUVVezKHGWOlpYdBIqHtGoS_aozXezwyBIrrJ4LPqFhsystr2lxnEinhcAxsTZdgsHbHinoufCpkT_i3TaCfX-LpFwwDsZJNqAC4VUgWg7BdyR2kVY6GmGLoaEKJtbSgf3F1SfHczBvJQ-JuixIoZagigY-qz4xD8WNxPC8f0Tmo4n9RAGPycDfd32-b3tUIqOxKLh6-5xxvQIyxMWIzE3Es-aAd5_GoRponm9jONuSV1-luJv4g_ZVG6EmHwyKIfPUs_DSltD3ePM9vb9oQziRg
 
 {
-  "old_username": "user",
-  "username": "user",
-  "new_username": "jinette"
+  "old_username": "tresi",
+  "username": "tresi",
+  "new_username": "ultraviolence"
 }
 
 ###
@@ -16,23 +16,23 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiO
 
 ###add user to db
 
-get https://localhost:4430/api/auth/signup/
+post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "user1",
+  "username": "tresi",
   "password": "pass12456",
-  "email": "user1@gmail.com"
+  "email": "tresi@gmail.com"
 }
 ###
 #get user token
 POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4NzMxNzQyLCJpYXQiOjE3Mzg2ODg1NDJ9.AklLzzHNGshk-iaZrp0qQ4OnSeqCPH7WRccCxs4Fb0Xd2unqfm2tPXu8AfsZbpxe88RYU7ZgFH9cq9U5jOMzhHPKWGW5vHaJVQojK2mtE3rNAETF3Uy08BLK_c7XvcWlCeAfBv8ibOoyTidQXTjtOEZzmbiPfwO6DdinzWDWo47dswsOkZao5j8iGhDvWQaEPGdpspShreLKmgrjd_vJGlJhjIsjeY4vLZRgdcMDZbzj8G7SfKwVVGsiFSUNF6y02rKy2SPsqYeNXq3G-Lmh277nRcAE2_A9Z6l2Zcs_dLtJ5et22IxfkZZXqq5H2M9xjKgr633depPsA3u_a6Ilig
 
 {
-  "username": "test4_user",
-  "password": "pass123456"
+  "username": "ultraviolence",
+  "password": "pass12456"
+
 }
 ###
 #get service token
@@ -55,8 +55,8 @@ Content-Type: application/json
 }
 
 ###
-patch https://localhost:4430/api/users/test2_user/avatar/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdmF0YXIiLCJleHAiOjE3Mzg3NDY1NTksImlhdCI6MTczODcwMzM1OX0.wOXrCcxhVT8e4gGTx-XdCe3UViNARVfb2oGp3KDwaxGAXxHF0b0_fxfCOAN-WSWh5M-d1BrSfKBd0Z75y2Auhko-CIav6UnPn-9MW_-3KlojpqflSyutv-nKPuba07M7C99i4cjefqA6WU9nbGC3YGviTWNZRSAf4AONTj13-Tx508-ZlBMHrzwZQ2XJrpkqat-PY0YSNEOrwPCfzEN1tGARghElPbMWX-V8uJzUdJx4d6Pb7MsUy2Rm-FSZc8PIG64rMa-WlO2YbdwHLUjYTUs7hRxSmu5C-5AQnYxAHvu_3RkuF9CPTsHaslAGHgn8R4SV0ictHOaxv8fEhKaQmA
+get https://localhost:4430/api/users/ultraviolence/avatar/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4OTUzMjg1LCJpYXQiOjE3Mzg5NDc4ODUsImp0aSI6IjM3NmNiMjc5YmIzZTRhYzRhMTNiY2E3NGQ1OTk0YzkwIiwidXNlcl9pZCI6MywidXNlcm5hbWUiOiJ1bHRyYXZpb2xlbmNlIn0.gUnarFIgLwSd6S6dBsJLJ4crSc4MdoJSjQM0n7H9Gu4H7kCokmOvU2HVL02U5pWek6QT6m2WJH50srmXx05pLBhh1mL_L7eS_JPLzl1FXir3nJf7l7-2GkHZU9eg_rtAqbpZEAGRaueGZSeN_JtlgBRNQR1PA7D0IDGA8y6gh7mlgPtbxv4SzVfAJjomxCeFvGBZx4-96gr-enw9Wx7aQ24Ur9dBj91JFDTbCyDTyvHyiDGyD6SekUNhCCISUVWlLbB3usvpObHVUq6yR4UGIGPMu_N-FtFLEVlXM7XKQh2uoTE4tjrmXfdCLfLSfcvoXnOmmBdNQRcNezSTsa3D1w
 
 ###
 PATCH https://localhost:4430/api/avatar/
@@ -116,7 +116,7 @@ Content-Type: application/json
 
 
 POST https://localhost:4430/api/auth/2fa/setup/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4OTM4ODAwLCJpYXQiOjE3Mzg5MzM0MDAsImp0aSI6IjIwZjJiYzRiYjNlYzQ4NTdiMzhiNjJkMGVkMjUxZmJlIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ1c2VyIn0.aUyZrmEzmDSRLr17oOZ6zqUPzRWFPDzUDzVqJ1n0G1CMek5v-k2qdROJ4wxtb9v4fg9nt_8-Zb8DqzUumvwDl6uqn67CZXs_27b82oPHCjg30cBimY079Bd7zhXicOnjSvTQQAcVu56F_Qw2VQLQlBxmhg0UTf008e9kzhDJnDZsAnQHNEP3H3cuOUUSDyGTvjwjdQGfGI8VAxSBVoKXARA-IhpIKsQ-imuFJEv65BWaT4bP7QKoBbpVGsImezN9SzsKk-mpP-bzbltyVssSWWZCxTXN0ujDCGNA2F_w3IyNQGBbJ8fYQhLcQo4qHK-gYE8Ffsk0yG2fuinVLrtLzg
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4OTQyNTIyLCJpYXQiOjE3Mzg5MzcxMjIsImp0aSI6ImJlMjIwYTU0ZjExNzRmMTU4NjM4N2RmMTAyNGMxZDM1IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ1c2VyMSJ9.l63_XerZIh1VPZR8mYCRhICC0_GgiGVCE-FULYPh1TT3YB-jwDQzfo4IGbNdjoqSGv_5602R73zCEm7Y-z9mH5ZVeTl_ynXEYVNuHQi4DQeuo4pI3_19LRbE3P2sSm9jjRjUUtLnAIAmBmmOdn45WXFt7XfOnpMA9WTXphmnSAaH1XzVgHKLM7ynTXcmI8K7_tzwpAmXSp5lCYDfO59qDG0F_l_4RWEbiH6Ns6JtixHVb8M36i3Jx1PJMGUQ2FkPUPJC7NjE6inZFcMJtkJZ2Iv1fMM9-i7kzex5Q_pDguLbq5FpQAP0E6nXpWP4xlryu7G8MXbWDlH4EFr9AoCUuw
 Content-Type: application/json
 
 {

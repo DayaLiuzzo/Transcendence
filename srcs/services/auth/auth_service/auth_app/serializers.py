@@ -1,7 +1,4 @@
-from datetime import timedelta
-from datetime import datetime
 
-import jwt
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -9,25 +6,15 @@ from django.utils import timezone
 from django.utils.timezone import now
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
-from django.forms import ValidationError
+from datetime import timedelta
+from datetime import datetime
 
-import logging
+import jwt
 import pyotp
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    # filename="basic.log",
-    )
-
-# Crée un logger spécifique au module courant
-logger = logging.getLogger(__name__)
-
 
 from .models import CustomUser
 from .models import Service
-from .models import Token
+
 from auth_service import settings
 
 class CustomUserSerializer(serializers.ModelSerializer):

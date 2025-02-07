@@ -1,15 +1,8 @@
-from django.utils import timezone
 from django.conf import settings
-from datetime import datetime
-from datetime import timedelta
 import requests
 import jwt
 
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import TokenError
-
 from auth_app.models import Token
-from .serializers import createServiceToken
 
 def send_request(url:str, method:str, body={}, headers={}) -> int:
     token = getServiceToken()
