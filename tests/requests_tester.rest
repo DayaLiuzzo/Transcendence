@@ -1,12 +1,12 @@
 ###
-PATCH  https://localhost:4430/api/auth/update/tresi/
+PATCH  https://localhost:4430/api/auth/change-password/tresiii/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MTk4NTMzLCJpYXQiOjE3MzkxOTMxMzMsImp0aSI6IjRkZWUzNzAwNjMzMzQxNmZiNTc4OWFjNDI4NDNlNTc0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0cmVzaSJ9.Z8hp4_WfC5vmVIYh-lUnXxfNcRniqFck1NB0hlGcckCjCUyszTi6nedy31o3yoB7pLtU2tM633rk9a4yoJDYsWWVeByNrtwKcJIf8nxy_uiLPwyvuergTg9cB9tpzSuoyQeTFsndIS_WqB8XbHxa5B3_hvj4264MWh1jsum0Tw1xK017MIF8Ls2pOWtNicQLiMnJNXkM76gUzcCk0dMeNiy04Bhx2Vh-rV7zGyga0rhyVjqu4wqcB1i1rzjUzdGVf72qCofrhg2z12NPisZnZoTGVizdnEiAaLM1JJt7O81BSTQ-3yHoIVg4XgYf05TWROFBQmg1ljYWbV_itRdRhA
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MjAzNjIwLCJpYXQiOjE3MzkxOTgyMjAsImp0aSI6ImMzZmEwNDg2ZGFlNjRiMWI5M2RmOTliYzc0ZDc1NzEzIiwidXNlcl9pZCI6MywidXNlcm5hbWUiOiJ0cmVzaWlpIn0.Gde_9LPhji0TGqcX5p61TA62KvFb9m_kXqV7HYwK8Z-y_XxsY94hHxn9JFIAVY6l2vXECjoRmc1Mu6CFxWAl4JezRLK1BYXkfKi3phd6psZsk3utXxQCLGbIwsy0-TT3TqNPQoVdFtWloFrJh2ua-D2ZsfRRgosaU8vI29He6C1UfFmdMNwvNxpzTs00MStdyMrHs-VJBTFxfZy32Kb5MRyoroLvoU7IPomSWa7ZLV9Cqzi-OVMsC2JydNy_JNX7xhqC6QmDV7bLmXEAMSfyMrGX9xApZ90JGGyG4WkTogcII_9sedDJQsNQIEPnzyA-HZHDmMns_KW-V-kYGOzGFg
 
 {
-  "old_username": "tresi",
-  "username": "tresi",
-  "new_username": "ultraviolence"
+  "password": "Pass12456!",
+  "new_password": "Pass12456!",
+  "new_passwor2": ""
 }
 
 ###
@@ -20,9 +20,9 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "tresi",
-  "password": "pass12456",
-  "email": "tresi@gmail.com"
+  "username": "tresiii",
+  "passwod": "Pass12456!",
+  "email": "tresiii@gmail.com"
 }
 ###
 #get user token
@@ -30,8 +30,8 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "tresi",
-  "password": "pass12456"
+  "username": "tresiii",
+  "password": "Pass12456!"
 
 }
 ###

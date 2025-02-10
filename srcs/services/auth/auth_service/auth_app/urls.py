@@ -20,5 +20,5 @@ urlpatterns = [
         path('<str:username>/', views.RetrieveUserView.as_view(), name='user_auth'),
         path('2fa/setup/', TwoFactorSetupView.as_view(), name='two_factor_setup'),
         path('2fa/verify/', TwoFactorVerifyView.as_view(), name='two_factor_verify'),
-
+        path('change-password/<str:username>/', views.ChangePasswordView.as_view(), name='change_password'),     
 ]

@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import make_password
 
 from rest_framework import generics
 from rest_framework import status
@@ -19,6 +20,7 @@ from .serializers import CustomTokenObtainPairSerializer
 from .serializers import ServiceTokenSerializer
 from .serializers import TwoFactorSetupSerializer
 from .serializers import TwoFactorVerifySerializer
+from .serializers import ChangePasswordSerializer
 from .requests_custom import *
 
 
@@ -164,6 +166,11 @@ class RetrieveUserView(generics.RetrieveAPIView):
     lookup_field = 'username'
 
 
+class ChangePasswordView(generics.UpdateAPIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    queryset = CustomUser.objects.all()
+    serializer_class = ChangePasswordSerializer
+    lookup_field = 'username'
 
 # ================================================
 # =============== SERVICE VIEWS ==================
