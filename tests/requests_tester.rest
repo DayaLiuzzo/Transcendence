@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
   "username": "tresiii",
-  "passwod": "Pass12456!",
+  "password": "Pass12456!",
   "email": "tresiii@gmail.com"
 }
 ###
@@ -55,8 +55,8 @@ Content-Type: application/json
 }
 
 ###
-get https://localhost:4430/api/auth/ultraviolence/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MTk4NTgzLCJpYXQiOjE3MzkxOTMxODMsImp0aSI6IjAxMDdlNmZiMDBkZDRjYjliNjU1YzYxMzcyYjU0ZWQ4IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ1bHRyYXZpb2xlbmNlIn0.p1A1R2wtcGOz870UAuconkScfNoEshgTszCbyQb7m5350UXHL8hCSvaSTRR5Rnm-JLnrwJroXssloJoWOFlJ5hFPyDUYTd1blS68sdoSPsB6_Xdu13n_IC3afYTexUq4Ju4LAYHsEFxn7etMz5kmj_e2SAOPbK4HURBmqmrAf3fOTQ39FaEqyMc528c3_yr5e75QvGDd9GLvUfPj_QYO-I0D7lFg0SaY7txSr2aHgqk9VO59eNPHrqM_QHqfrUb5SVRMmvPMWYP8XyPQqnZcSgZ6rXpv8FuEhEhGbcrFfssAmo9enScC9j0nKPbvKTNCSVnXfRHbEbHlxloDKCiMUA
+GET https://localhost:4430/api/users/tresiii/avatar/update/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MjA2MTIwLCJpYXQiOjE3MzkyMDA3MjAsImp0aSI6ImRlOTk1NmYyNTA0MDQ5ZDE4MjRiYmYyMDMyOWVhOTg4IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0cmVzaWlpIn0.J-XEh1Tbt22OooD32Qpnnk3Qp7YqaK4Ss4VC2NfXst_vE16i_wK64YgtVzz0QkQmcxguiyoaXUGObi4m_AAFqGO1hrrabC56drUHDdRTh1SeO5IjehV58kmopwMWkzZDeDgRFXnt70zw9zg3b80kBwg1OEMu7W1j-ZvJG6KLxlwxQ1YY0aWsTQ0UwsTfRdOLzMTpBJLWE9KgaK93xBt1v3CzKWoLcIEl7Bu-nIJBI1zqHCeWNtJ-BZFFGNGNq19SZfkz6BcKZ7pDz8JvkeV0tXxvXXfGzPMuCs9CDiHe5uh8qZowkqbMgh_YdlGSRjJloV0rVVHiiN2mMHaI2bJ9gQ
 
 ###
 PATCH https://localhost:4430/api/avatar/
