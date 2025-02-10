@@ -148,11 +148,14 @@ class UpdateUserView(generics.UpdateAPIView):
             if user.two_factor_enabled:
                 user.otp_secret = pyotp.random_base32()
             user.save()
+            token = CustomTokenObtainPairSerializer.get_token(user)
+            access_token = str(token.access_token)
+            refresh_token = str(token)
         except Exception as e:
-            raise ValidationError(f"Error updating user bis: {str(e)}")
+            raise ValidationError(f"Error updating user : {str(e)}")
         if user.two_factor_enabled:
-            return Response({"message": "Success", "otp": user.otp_secret }, status=status.HTTP_200_OK)
-        return Response({"message": 'Success'}, status=status.HTTP_200_OK)
+            return Response({"message": "Success", "otp": user.otp_secret, "access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
+        return Response({"message": 'Success', "access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
 
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
