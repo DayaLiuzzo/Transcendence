@@ -7,12 +7,16 @@
 
 // Fonction pour charger les modules de vues (home, jeu, 404)
 
+import Navbar from "./components/navbar.js";
+
 function loadView(view)
 {
     const app = document.getElementById('app');
 
     const currentURL = view
     window.history.pushState("", document.title, currentURL.split('#')[0]);
+
+   // document.getElementById("navbar").innerHTML = Navbar();
 
     switch (view) {
       case '/home':
