@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y openssl
 
 RUN mkdir -p /service_code
 RUN mkdir -p /init
-RUN mkdir -p /certs
 RUN mkdir -p /var/www/media
 
 COPY init/* /init 

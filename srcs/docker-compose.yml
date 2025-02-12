@@ -16,7 +16,7 @@ services:
       - auth
       - users
       - game
-      # - rooms
+      - rooms
 
 
   auth:
@@ -86,17 +86,33 @@ services:
       - "8443"
     restart: on-failure
 
-  # rooms:
-  #   build: services/rooms
-  #   container_name: rooms
-  #   volumes:
-  #     - rooms_service_data:/service_code
-  #   expose:
-  #     - "8443"  # Exposing the auth service on port 8000
-  #   restart: on-failure
-  #   depends_on:
-  #     - db_rooms
-  #   env_file: .env
+  rooms:
+    image: rooms
+    build: services/rooms
+    container_name: rooms
+    volumes:
+      - rooms_service_data:/service_code
+      - auth_keys:/keys
+    expose:
+      - "8443"
+    restart: on-failure
+    depends_on:
+      - db_rooms
+    env_file: .env
+
+  tournament:
+    image: tournament
+    build: services/tournament
+    container_name: tournament
+    volumes:
+      - tournament_service_data:/service_code
+      - auth_keys:/keys
+    expose:
+      - "8443"
+    restart: on-failure
+    depends_on:
+      - db_tournament
+    env_file: .env
 
   db_auth:
     image: db_auth
@@ -124,14 +140,23 @@ services:
     expose:
       - '5432'
 
-  # db_rooms:
-  #   image: db_rooms
-  #   container_name: db_rooms
-  #   build: services/db_rooms
-  #   restart: on-failure
-  #   env_file: .env
-  #   expose:
-  #     - '5432'
+  db_rooms:
+    image: db_rooms
+    container_name: db_rooms
+    build: services/db_rooms
+    restart: on-failure
+    env_file: .env
+    expose:
+      - '5432'
+
+  db_tournament:
+    image: db_tournament
+    container_name: db_tournament
+    build: services/db_tournament
+    restart: on-failure
+    env_file: .env
+    expose:
+      - '5432'
 
   db_users:
     image: db_users
@@ -209,3 +234,10 @@ volumes:
       o: 'bind'
       device: $PWD/srcs/services/avatar_media
   
+  tournament_service_data:
+    name: tournament_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $PWD/srcs/services/tournament/tournament_service

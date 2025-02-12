@@ -41,17 +41,27 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'rooms_app',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rooms_app.authentication.CustomJWTAuth",),
 }
+
+def get_sjwt_key(key):
+    with open(key, "r") as file:
+        return file.read()
+    
+SIMPLE_JWT = {
+            "ALGORITHM": "RS256",
+            "VERIFYING_KEY": get_sjwt_key('/keys/sjwt_public.pem'),
+            "AUTH_HEADER_TYPES": ("Bearer",),
+        }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

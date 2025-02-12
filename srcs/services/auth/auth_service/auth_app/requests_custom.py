@@ -1,15 +1,8 @@
-from django.utils import timezone
 from django.conf import settings
-from datetime import datetime
-from datetime import timedelta
 import requests
 import jwt
 
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.exceptions import TokenError
-
 from auth_app.models import Token
-from .serializers import createServiceToken
 
 def send_request(url:str, method:str, body={}, headers={}) -> int:
     token = getServiceToken()
@@ -30,21 +23,28 @@ def send_delete_requests(urls:list, body={}, headers={}) -> bool :
             return False
     return True
 
-
-
-def send_create_requests(urls:list, body={}, headers={}) -> bool:
-    successefull_elements = []
+def send_update_requests(urls:list, body={}, headers={}) -> bool:
     for url in urls:
-        if send_request(url=url, method='post', body=body, headers=headers) != 201:
-            break
-        else:
-            successefull_elements.append(url)
-    if len(urls) != len(successefull_elements):
-        return False
-        for url in successefull_elements:
-            rollback_url = url.replace('create', 'delete') + body['username'] + '/' 
-            send_request(url=rollback_url, method='delete', headers=headers)
+        if send_request(url=url, method='patch', body=body, headers=headers) not in [200, 304]:
+            return False
     return True
+
+def send_create_requests(urls: list, body={}, headers={}) -> bool:
+    successful_requests = []
+    for url in urls:
+        status_code = send_request(url=url, method='post', body=body, headers=headers)
+        
+        if status_code != 201:
+            rollback_successful_requests(successful_requests, body, headers)
+            return False
+        else:
+            successful_requests.append(url)
+    return True
+
+def rollback_successful_requests(urls: list, body: dict, headers: dict):
+    for url in urls:
+        rollback_url = url.replace('create', 'delete') + body['username'] + '/'
+        send_request(url=rollback_url, method='delete', headers=headers)
 
 def getServiceToken():
     auth_token = Token.objects.get(service_name='auth')

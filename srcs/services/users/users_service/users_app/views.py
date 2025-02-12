@@ -1,67 +1,62 @@
-import logging
-import os
-from rest_framework.exceptions import APIException
-
-from service_connector.service_connector import MicroserviceClient
-
 from rest_framework import generics
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_200_OK
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.status import HTTP_409_CONFLICT
 
-from django.core.exceptions import ValidationError
-from django.conf import settings
+
 from django.shortcuts import get_object_or_404
-import requests
 
 from .models import UserProfile
 from .serializers import UserProfileSerializer
 from .serializers import FriendsSerializer
 from users_app.permissions import IsAuth
-from users_app.permissions import IsRooms
-from users_app.permissions import IsUsers
 from users_app.permissions import IsAvatar
-from users_app.permissions import IsGame
 from users_app.permissions import IsOwner
 from users_app.permissions import IsOwnerAndAuthenticated
 
 
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    # filename="basic.log",
-    )
-
-# Crée un logger spécifique au module courant
-logger = logging.getLogger(__name__)
-
-@api_view(['GET'])
-def get_example(request):
-    return Response({"message": "This is a GET endpoint"}, status=status.HTTP_200_OK)
+#================================================
+#================= User Profile =================
+#================================================
 
 class CreateUserProfileView(generics.CreateAPIView):
     permission_classes =[IsAuth]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-
 class DeleteUserProfileView(generics.DestroyAPIView):
     permission_classes = [IsAuth]
-    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
 class RetrieveUserProfile(generics.RetrieveAPIView):
-    permission_classes = [IsOwnerAndAuthenticated,IsAuth]
-    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    permission_classes = [IsOwnerAndAuthenticated]
+    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     lookup_field = "username"
+
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuth]
+    queryset = UserProfile.objects.all()
+    def patch (self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        old_username = user_profile.username
+        new_username = request.data.get("new_username")
+        if user_profile.avatar != user_profile.avatar_default_path:
+            avatar_url = user_profile.avatar
+            new_avatar_url = avatar_url.replace(old_username, new_username)
+            user_profile.avatar = new_avatar_url
+        user_profile.username = new_username
+        user_profile.save()
+        return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=HTTP_200_OK)
+
+#================================================
+#================= User Friends =================
+#================================================
 
 class AddFriendView(APIView):
     permission_classes = [IsOwner]
@@ -95,6 +90,19 @@ class RemoveFriendView(APIView):
         return Response({"error": f"{friendusername} is not in your friend list."},
                         status=HTTP_400_BAD_REQUEST)
 
+class ListFriendsView(generics.ListAPIView):
+    serializer_class = FriendsSerializer
+    permission_classes = [IsOwner]
+    lookup_field = "username"
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        user_profile = get_object_or_404(UserProfile, username=username)
+        return user_profile.get_friends()
+    
+#================================================
+#================= User Avatar ==================
+#================================================
+
 class AvatarUpdateView(APIView):
     permission_classes=[IsAvatar]
     def patch(self, request, username):
@@ -112,49 +120,18 @@ class AvatarUpdateView(APIView):
                 'error': 'No avatar file provided.'
             }, status=status.HTTP_400_BAD_REQUEST)
 
-
 class AvatarView(APIView):
     permission_classes=[IsOwner]
     lookup_field = "username"
     def get(self, request, username):
-        user = UserProfile.objects.get(username=username)
-        avatar_url = user.avatar if user.avatar else None
-        return Response({
-            "message": "Avatar retrieved successfully.",
-            "avatar_url": avatar_url,
-        }, status=status.HTTP_200_OK)
-    
-
-
-
-class TestServiceCommunicationView(APIView):
-    permission_classes = [IsAuth]
-    def get(self, request, *args, **kwargs):
-        client = MicroserviceClient()
-        response2 = client.send_internal_request('http://game:8443/api/game/test/', 'get')
-        return Response(response2.json(), status=response2.status_code)
-
-class ListFriendsView(generics.ListAPIView):
-    serializer_class = FriendsSerializer
-    permission_classes = [IsOwner]
-    lookup_field = "username"
-    def get_queryset(self):
-        username = self.kwargs.get('username')
-        user_profile = get_object_or_404(UserProfile, username=username)
-        return user_profile.get_friends()
-    
-
-class ProtectedServiceView(APIView):
-    # authentication_classes = []
-    permission_classes = [IsAuth]
-    def get(self, request):
-        user = request.user
-        logger.debug(f"Authenticated user in view: {user}")
-        return Response({"message": "Service is Authenticated"})
-    
-class ProtectedUserView(APIView):
-    permission_classes = [IsOwnerAndAuthenticated]
-    def get(self, request):
-        user = request.user
-        logger.debug(f"Authenticated user in view: {user}")
-        return Response({"message": "User is Owner and Authenticated!"})
+        try:
+            user = UserProfile.objects.get(username=username)
+            avatar_url = user.avatar if user.avatar else None
+            return Response({
+                "message": "Avatar retrieved successfully.",
+                "avatar_url": avatar_url,
+            }, status=status.HTTP_200_OK)
+        except UserProfile.DoesNotExist:
+            return Response({
+                "error": "User not found."
+            }, status=status.HTTP_404_NOT_FOUND)

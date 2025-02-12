@@ -4,6 +4,7 @@ export default function() {
       <p>Cette section peut contenir un jeu ou une interface de jeu.</p>
       <a href='/play-alone'><button onclick>Play alone</button><\a>
       <a href='/play-tournament'><button onclick>Play in tournament</button><\a>
+      <a href='/play-remote'><button onclick>Play remote</button><\a>
       <a href='/game-custom'><button onclick>Custom game</button><\a>
     `;
   }

@@ -1,33 +1,20 @@
-from datetime import timedelta
-from datetime import datetime
 
-import jwt
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
 from django.utils.timezone import now
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
-from django.forms import ValidationError
+from datetime import timedelta
+from datetime import datetime
 
-import logging
+import jwt
 import pyotp
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    # filename="basic.log",
-    )
-
-# Crée un logger spécifique au module courant
-logger = logging.getLogger(__name__)
-
 
 from .models import CustomUser
 from .models import Service
-from .models import Token
+
 from auth_service import settings
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -46,9 +33,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return value
     
     def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("Password must be at least 8 characters long.")
-        return value
+        return custom_password_validator(value)
         
     def create(self, validated_data):
         # Hash the password and create the user
@@ -128,3 +113,57 @@ class TwoFactorVerifySerializer(serializers.Serializer):
             raise serializers.ValidationError({"otp": "Invalid OTP. Please try again."})
 
         return attrs
+    
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=128, required=True, write_only=True)
+    new_password = serializers.CharField(max_length=128, required=True, write_only=True)
+    new_password2 = serializers.CharField(max_length=128, required=True, write_only=True)
+
+    def validate_password(self, value):
+        user = self.context['request'].user
+        if not check_password(value, user.password):
+            raise serializers.ValidationError("Invalid password.")
+        return value
+
+    def validate(self, data):
+        new1 = data.get('new_password')
+        new2 = data.get('new_password2')
+        if data['password'] == new1:
+            raise serializers.ValidationError("New password cannot be the same as the old password.")
+        if new1 != new2:
+            raise serializers.ValidationError("Passwords do not match.")
+        custom_password_validator(new1)
+        return data
+    def update(self, instance, validated_data):
+        password = validated_data['new_password']
+        instance.set_password(password)
+        instance.save()
+        return instance
+
+    
+
+
+def custom_password_validator(value):
+
+    if not value:
+        raise serializers.ValidationError("Password cannot be empty.")
+    if len(value) < 8:
+        raise serializers.ValidationError("Password must be at least 8 characters long.")
+    if len(value) > 128:
+        raise serializers.ValidationError("Password max len is 128")
+    if not any(char.isdigit() for char in value):
+        raise serializers.ValidationError("Password must contain at least one digit.")
+    if not any(char.isalpha() for char in value):
+        raise serializers.ValidationError("Password must contain at least one letter.")
+    if not any(char.isupper() for char in value):
+        raise serializers.ValidationError("Password must contain at least one uppercase letter.")
+    if not any(char.islower() for char in value):
+        raise serializers.ValidationError("Password must contain at least one lowercase letter.")
+    if not any(char in ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '='] for char in value):
+        raise serializers.ValidationError("Password must contain at least one special character.")
+    if any(char in [' ', '\t', '\n'] for char in value):
+        raise serializers.ValidationError("Password cannot contain whitespace.")
+    if any(char in ["'", '"', '`', '~', '\\', '/', '|', '.', ':', ';'] for char in value):
+        raise serializers.ValidationError("Password cannot contain special characters.")
+    return value
+    

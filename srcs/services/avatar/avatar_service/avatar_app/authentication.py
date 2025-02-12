@@ -1,20 +1,7 @@
-import logging
-
 import jwt
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
-
-
-logging.basicConfig(
-    level=logging.FATAL,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    # filename="basic.log",
-    )
-
-# Crée un logger spécifique au module courant
-logger = logging.getLogger(__name__)
 
 
 class CustomJWTAuth(BaseAuthentication):
@@ -22,7 +9,7 @@ class CustomJWTAuth(BaseAuthentication):
         auth_header = request.headers.get('Authorization')
         if not auth_header:
             return None
-        token_type, token = self._extract_token(auth_header)
+        token = self._extract_token(auth_header)
         payload = self._decode_token(token)
         request.decoded_token = payload
         self._set_username_from_payload(payload, request)
@@ -33,7 +20,7 @@ class CustomJWTAuth(BaseAuthentication):
             token_type, token = auth_header.split()
             if token_type != 'Bearer':
                 raise AuthenticationFailed("Invalid token type. Expected 'Bearer'.")
-            return token_type, token
+            return token
         except ValueError:
             raise AuthenticationFailed("Invalid Authorization header format. Expected 'Bearer <token>'.")
     
