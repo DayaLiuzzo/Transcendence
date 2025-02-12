@@ -8,8 +8,9 @@ urlpatterns = [
         path('test/', views.game_service_running, name='game_home'),#homepage
 
         path('create/', views.CreateUserProfileView.as_view(), name='create_user'),
-        path('delete/', views.DeleteUserProfileView.as_view(), name='delete_user'), 
-        
+        path('update/<str:username>/', views.UpdateUserProfileView.as_view(), name='update_user'),
+        path('delete/', views.DeleteUserProfileView.as_view(), name='delete_user'), #a changer, doit inclure le username
+
         path('join_game/<str:room_id>/', views.JoinGame.as_view(), name='join_game'),
         path('create_game/<str:room_id>/', views.CreateGame.as_view(), name='create_game'),
         path('delete_game/<str:room_id>/', views.DeleteGame.as_view(), name='delete_game'),  # Ajouter cette ligne

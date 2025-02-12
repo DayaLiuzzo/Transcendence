@@ -69,7 +69,21 @@ class RetrieveUserProfileView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-# **************************** PUT *************************** #
+# **************************** PATCH *************************** #
+
+
+#quand je recois une requete jai pas besoin du service connnctor donc je vais mettre juste isauth ici, (mais is_nomduservice pour les autres reqûetes)
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuth]
+    queryset = UserProfile.objects.all()
+    def patch (self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        old_username = user_profile.username
+        new_username = request.data.get("new_username") #attention a bien utiliser get, sinon on peut faire segfault
+        user_profile.username = new_username
+        user_profile.save()
+        return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=status.HTTP_200_OK)
+
 
 # ************************** DELETE ************************** #
 
