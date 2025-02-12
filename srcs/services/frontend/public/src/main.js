@@ -7,7 +7,7 @@
 
 // Fonction pour charger les modules de vues (home, jeu, 404)
 
-import Navbar from "./components/navbar.js";
+//import Navbar from "./components/navbar.js";
 
 function loadView(view)
 {
@@ -31,11 +31,11 @@ function loadView(view)
       case '/about':
         import('./views/about.js').then(module => { app.innerHTML = module.default();});
         break;
-      case '/log-in':
-        import('./views/log-in.js').then(module => { app.innerHTML = module.default();});
+      case '/login':
+        import('./views/login.js').then(module => { app.innerHTML = module.default();});
         break;
-      case '/sign-up':
-        import('./views/sign-up.js').then(module => { app.innerHTML = module.default();});
+      case '/signup':
+        import('./views/signup.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/delete-user':
         import('./views/delete-user.js').then(module => { app.innerHTML = module.default();});
