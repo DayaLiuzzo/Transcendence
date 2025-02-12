@@ -1,3 +1,9 @@
+/**EN COURS DE TAFF POUR DIVISER LES DEUX PAGES
+ * ->>>>
+ * SE REFERER A LA PAGE LOGIN POUR LE MOMENT POUR EXEMPLE CALL CORRECT + FAIRE LES TESTS
+ * <<<<<-
+ */
+
 export default function() {
     return `
       <h1>Sign up</h1>
