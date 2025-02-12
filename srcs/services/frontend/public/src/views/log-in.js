@@ -1,14 +1,26 @@
 const API_URL = "https://localhost:4430/api/auth/";
 const app = document.getElementById("app");
 
-function isAuthentificated() {
+function isAuthenticated() {
     return localStorage.getItem("jwt") !== null;
+}
+
+function showError(message) {
+    alert(message);
+}
+// Je me demande si on peut pas juste reutiliser les erreurs envoyees avec les methodes implementees plutot que
+// parser a nouveau ici ???
+function validateInputs({ username, email, password }, isSignup = false) {
+    if (!username || username.length < 3) return "Username must be at least 3 characters long.";
+    if (isSignup && (!email || !email.includes("@"))) return "Invalid email address.";
+    if (!password || password.length < 6) return "Password must be at least 6 characters long.";
+    return null;
 }
 
 function renderAuth() {
     app.innerHTML = `
         <div class="container">
-            <h2>LOOOOOGIN</h2>
+            <h2>Login</h2>
             <form id="login-form">
                 <input type="text" id="login-username" placeholder="Username" required>
                 <input type="password" id="login-password" placeholder="Password" required>
@@ -31,41 +43,65 @@ function renderAuth() {
 
 async function login(event) {
     event.preventDefault();
+
     const username = document.getElementById("login-username").value;
     const password = document.getElementById("login-password").value;
 
-    const response = await fetch(API_URL + "token/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-    });
+    const validationError = validateInputs({ username, password });
+    if (validationError) {
+        showError(validationError);
+        return;
+    }
 
-    if (response.ok) {
+    try {
+        const response = await fetch(API_URL + "token/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        });
+
         const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Login failed. Please check your credentials.");
+        }
+
         localStorage.setItem("jwt", data.access_token);
         renderGame();
-    } else {
-        alert("LOGIN FAILED");
-        console.log(response);
+    } catch (error) {
+        showError(error.message);
     }
 }
 
 async function signup(event) {
     event.preventDefault();
+
     const username = document.getElementById("signup-username").value;
     const email = document.getElementById("signup-email").value;
     const password = document.getElementById("signup-password").value;
 
-    const response = await fetch(API_URL + "signup/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-    });
+    const validationError = validateInputs({ username, email, password }, true);
+    if (validationError) {
+        showError(validationError);
+        return;
+    }
 
-    if (response.ok) {
+    try {
+        const response = await fetch(API_URL + "signup/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Sign-up failed. Please try again.");
+        }
+
         alert("Sign-up successful! You can now log in.");
-    } else {
-        alert("Sign-up failed! Try again.");
+    } catch (error) {
+        showError(error.message);
     }
 }
 
@@ -83,7 +119,8 @@ function renderGame() {
     });
 }
 
-if (isAuthentificated()) {
+
+if (isAuthenticated()) {
     renderGame();
 } else {
     renderAuth();
