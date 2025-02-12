@@ -1,20 +1,8 @@
-import logging
-
 import jwt
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
 from .models import UserProfile
-
-logging.basicConfig(
-    level=logging.FATAL,
-    format="%(asctime)s %(levelname)s %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    # filename="basic.log",
-    )
-
-# Crée un logger spécifique au module courant
-logger = logging.getLogger(__name__)
 
 
 class CustomJWTAuth(BaseAuthentication):
