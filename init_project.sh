@@ -1,12 +1,7 @@
 #!/bin/bash
 
 SERVICES=(
-    "auth"
-    "users"
-    "api_gateway"
     "frontend"
-    "game"
-    "avatar"
 )
 
 BASE_PATH="./srcs/services"

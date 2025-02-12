@@ -1,0 +1,29 @@
+###add user to db
+POST https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "test4_user",
+  "password": "pass123456",
+  "email": "test4_user@gmail.com"
+}
+
+###
+#get user token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "test4_user",
+  "password": "pass123456"
+}
+
+###
+#play game
+POST https://localhost:4430/api/rooms/join_room/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODg2NjI4LCJpYXQiOjE3Mzg4ODEyMjgsImp0aSI6ImIwYThkYTNjMjUyODQ3NjA4MzEzNjgwY2VjMmM1NjI5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0NF91c2VyIn0.RrQnEWu8H6Y84hjyci_9TNPZUIk7Uplpaq2TAZkVtiyAvxLuMNajnzRTdUx-gt3rPUIav6L_ApKW6me4nMYEMflosW-neXj3ZkTRpuSrMEqgtS3mqVUnPkNS_uXprPiKmNXWKMoleEiD4WXS6AU5B92fOtqlIAOIxjABaOFbbuVBdzKZBNerxYoDjXk_drNRe6u91patHG6gEHMGGaxwe2W4xj2eE440UdVwwVZG5JC03UIVCBBmnCHT9zQiT0LiulHBW3-Y6VCJlji_B-Il2G5CTVpf1nxqrMWu1R0FJklvp1qpuWeeid32hiOaNnmePJTErVZHiyuVrZUkFoXUAw
+
+###
+#list all rooms
+GET https://localhost:4430/api/rooms/list_all_rooms/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODg2NjI4LCJpYXQiOjE3Mzg4ODEyMjgsImp0aSI6ImIwYThkYTNjMjUyODQ3NjA4MzEzNjgwY2VjMmM1NjI5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0NF91c2VyIn0.RrQnEWu8H6Y84hjyci_9TNPZUIk7Uplpaq2TAZkVtiyAvxLuMNajnzRTdUx-gt3rPUIav6L_ApKW6me4nMYEMflosW-neXj3ZkTRpuSrMEqgtS3mqVUnPkNS_uXprPiKmNXWKMoleEiD4WXS6AU5B92fOtqlIAOIxjABaOFbbuVBdzKZBNerxYoDjXk_drNRe6u91patHG6gEHMGGaxwe2W4xj2eE440UdVwwVZG5JC03UIVCBBmnCHT9zQiT0LiulHBW3-Y6VCJlji_B-Il2G5CTVpf1nxqrMWu1R0FJklvp1qpuWeeid32hiOaNnmePJTErVZHiyuVrZUkFoXUAw

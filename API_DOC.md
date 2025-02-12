@@ -19,9 +19,11 @@ Authorization: Bearer your_jwt_token_here
 
 <ol>
   <li>/api/auth/signup/</li>
-  <li>/api/auth/login/</li>
   <li>/api/auth/delete/< str:username>/ </li>
   <li>/api/auth/< str:username>/</li>
+  <li>/api/auth/2fa/setup/</li>
+  <li>/api/auth/update/user/<str:username>/</li>
+  <li>/api/auth/service-token/</li>
 </ol>
 
 <h3>GAME</h3>
@@ -29,6 +31,22 @@ Authorization: Bearer your_jwt_token_here
 <ol>
   <li>/api/game/</li>
   <li>/api/game/< str:roomname></li>
+</ol>
+
+<h3>ROOMS</h3>
+
+<ol>
+  <li>/api/rooms/test/</li>
+  <li>/api/rooms/create_room/</li>
+  <li>/api/rooms/join_room/</li>
+  <li>/api/rooms/list_all_rooms/</li>
+  <li>/api/rooms/list_available_rooms/</li>
+  <li>/api/rooms/list_locked_rooms/</li>
+  <li>/api/rooms/count_all_rooms/</li>
+  <li>/api/rooms/count_available_rooms/</li>
+  <li>/api/rooms/count_locked_rooms/</li>
+  <li>/api/rooms/delete_room/< str:room_name>/</li>
+  <li>/api/rooms/create/</li>
 </ol>
 
 <h3>USERS</h3>
@@ -64,9 +82,10 @@ Description: Registers a new user in the authentication service and its associat
         "password": "password123"
     }
 
+
 **Login**
 
-Endpoint: /api/auth/login/  
+Endpoint: /api/auth/token/  
 Method: **POST**  
 Description: Authenticates the user and returns a pair of tokens (access token and refresh token).  
 
@@ -75,6 +94,13 @@ Description: Authenticates the user and returns a pair of tokens (access token a
     {
         "username": "existing_user",
         "password": "password123"
+    }
+
+***Response:***
+
+    {
+        "access_token": "your_access_token_here",
+        "refresh_token": "your_refresh_token_here"
     }
 
 **User**
@@ -113,6 +139,82 @@ Description: Deletes a user from the authentication service and its associated d
 
     DELETE https://localhost:4430/api/auth/delete/john_doe/
 
+**Setup Two-Factor Authentication**
+
+Endpoint: /api/auth/2fa/setup/  
+Method: **POST**  
+Description: Enables or disables two-factor authentication for the user.  
+
+***Request Headers:***
+
+    Content-Type: application/json
+    Authorization: Bearer your_jwt_token_here
+
+***Request Body:***
+
+    {
+        "enable": true
+    }
+
+***Response:***
+
+    {
+        "message": "2FA enabled. Use this secret to configure your authenticator app.",
+        "otp_secret": "your_otp_secret_here",
+        "qr_code_url": "your_qr_code_url_here"
+    }
+
+**Update User**
+
+Endpoint: /api/auth/update/user/<str:username>/  
+Method: **PATCH**  
+Description: Updates the username of an existing user. If two-factor authentication (2FA) is enabled, the OTP secret is regenerated.
+
+***Request Headers:***
+
+    Content-Type: application/json
+    Authorization: Bearer your_jwt_token_here
+
+***Request Body:***
+
+    {
+        "new_username": "new_username_here"
+    }
+
+***Response:***
+
+    {
+        "message": "Success",
+        "otp": "new_otp_secret_if_2fa_enabled"  // Only included if 2FA is enabled
+    }
+
+***Example Request:***
+
+    PATCH /api/auth/update/user/existing_username/
+    Content-Type: application/json
+    Authorization: Bearer your_jwt_token_here
+
+    {
+        "new_username": "new_username_here"
+    }
+
+**Service Token**
+
+Endpoint: /api/auth/service-token/  
+Method: **POST**  
+Description: Generates a service token for a given service.
+
+***Request Headers:***
+
+    Content-Type: application/json
+
+***Request Body:***
+
+    {
+        "service_name": "service_name_here",
+        "service_secret": "service_secret_here"
+    }
+
 <h3>GAME</h3>
 
 **Service running**
@@ -120,6 +222,63 @@ Description: Deletes a user from the authentication service and its associated d
 Endpoint: /api/game/  
 Method: **GET**  
 Description: Checks if the game service is working completely.  
+
+<h3>ROOMS</h3>
+
+**Service running**
+
+Endpoint: /api/rooms/test/
+Method: **GET**  
+Description: Checks if the rooms service is working completely.  
+
+
+**Create room**
+
+Endpoint: /api/rooms/create_room/
+Method: **POST**  
+Description: Create a room  
+
+**Join room**
+
+Endpoint: /api/rooms/join_room/
+Method: **POST**  
+Description: Join any available room 
+
+**Listing rooms**
+
+Endpoints: 
+- /api/rooms/list_all_rooms/
+- /api/rooms/list_available_rooms/
+- /api/rooms/list_locked_rooms/
+
+Method: **GET**  
+Description: Respectively, list all rooms, available rooms and locked rooms
+
+**Counting rooms**
+
+Endpoints: 
+- /api/rooms/count_all_rooms/
+- /api/rooms/count_available_rooms/
+- /api/rooms/count_locked_rooms/
+
+Method: **GET**  
+Description: Respectively, count all rooms, available rooms and locked rooms
+
+**Delete room**
+
+Endpoints: 
+- /api/rooms/delete_room/< str:room_name>/
+
+Method: **DELETE**  
+Description: Delete a given room
+
+**Creating a user in the room service**
+
+Endpoints: 
+- /api/rooms/create/
+
+Method: **POST**  
+Description: Called by the auth service when a new user is created to create this user in the room service
 
 <h3>USERS</h3>
 
