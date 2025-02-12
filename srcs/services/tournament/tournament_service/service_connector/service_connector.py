@@ -4,14 +4,13 @@ from django.conf import settings
 from service_connector.exceptions import MicroserviceError
 from service_connector.models import Token
 
-#ne pas modifier lol
 class MicroserviceClient:
     def __init__(self):
         self.service_name = settings.SERVICE_CONNECTOR_SETTINGS['SERVICE_NAME']
         self.service_password = settings.SERVICE_CONNECTOR_SETTINGS['SERVICE_PASSWORD']
         self.token_url = settings.SERVICE_CONNECTOR_SETTINGS['INTERNAL_TOKEN_ENDPOINT']
 
-    def send_internal_request(self, url:str, method:str, body={}, headers={}):
+    def send_internal_request(self, url:str, method:str, data={}, headers={}):
         token = self.get_service_token()
         headers = {
             "Authorization": f"Bearer {token}"
@@ -23,7 +22,7 @@ class MicroserviceClient:
         'update':requests.put,
         'patch':requests.patch,
         }
-        response = req_methods[method](url, json=body ,headers=headers)
+        response = req_methods[method](url, json=data ,headers=headers)
         return response
 
     def get_new_service_token(self):

@@ -20,9 +20,9 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "tresiii",
+  "username": "dd",
   "password": "Pass12456!",
-  "email": "tresiii@gmail.com"
+  "email": "d@gmail.com"
 }
 ###
 #get user token
@@ -30,7 +30,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "tresiii",
+  "username": "dd",
   "password": "Pass12456!"
 
 }
@@ -45,18 +45,19 @@ Content-Type: application/json
 }
 
 ###
-PATCH https://localhost:4430/api/avatar/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4ODIwMDA2LCJpYXQiOjE3Mzg3NzY4MDZ9.tDkqg88fLNjm1qdPQJJPU4yJJmLptgnzhQH4ozT45EBflcyURrok4CIMKY2JzTC0A0cnG7iBDyMIx4AHbLbfYxFFlp39oLXzXISLtPpMlYEahzVm6sCyV6PwW9kNBKxBRCwC2KcTj3_XYdfm8g4ynx02Rbv5Ou-KKjhQLG-FLlv6LYBCy9aMYqeDLWnsasiSRGIeitVzICSfiKGObowRMaceoDgSyJBLA2jZzzxg-qtLOjaOf4TBIwzn7DBVwQoWXGfvzPx3Ixz-cpOyRDaMfjQSU1LiQ7jcwL4a5fN3DCLdlPKc1BwFbmDN1Rb0j1wLTgxYruP-4Euuw-VH4H5EjQ
+PATCH https://localhost:4430/api/auth/update/dd/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5Mzk0NzQxLCJpYXQiOjE3MzkzODkzNDEsImp0aSI6IjhkMmM1MjM5MmU2YTQwZTZhYmQzODA2MzA4MGM4ODNmIiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJkZCJ9.o4iZRk8hv_bOuav_A7hcmvDn3nE5a0-wWyO5WhLpM53FkFi4mINOQhL7_ClII5KA07knl9ADLHPYNkrKZWxfr9pX6u1p0Wxrf_FyRxshY1INXQDfUv4YHyA0lejzjrqh8iHMjM3YZMgIDQn7600cjMd68oV57COpVwBq1XWiKiRhs2kIObeg_u1IfHxZaIcwZJhT02u02sX3ENDU1wrHUfT51EtYiMpZTXMlMu7liYJBXJn8-nGOCe7v1DTc_h_uo88d27knFMTJ0f0eGHDnF3xVAYxKkIudVighiK4lmvwP23yKgB2WgHcGAxLzRZnM2IGMyW-6YIgVra0N-SJR4A
 
 {
-  "old_username" : "test2_user",
-  "new_username" : "test3_user"
+  "username": "dd",
+  "old_username": "dd",
+  "new_username": "hm"
 }
 
 ###
 GET https://localhost:4430/api/users/tresiii/avatar/update/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MjA2MTIwLCJpYXQiOjE3MzkyMDA3MjAsImp0aSI6ImRlOTk1NmYyNTA0MDQ5ZDE4MjRiYmYyMDMyOWVhOTg4IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0cmVzaWlpIn0.J-XEh1Tbt22OooD32Qpnnk3Qp7YqaK4Ss4VC2NfXst_vE16i_wK64YgtVzz0QkQmcxguiyoaXUGObi4m_AAFqGO1hrrabC56drUHDdRTh1SeO5IjehV58kmopwMWkzZDeDgRFXnt70zw9zg3b80kBwg1OEMu7W1j-ZvJG6KLxlwxQ1YY0aWsTQ0UwsTfRdOLzMTpBJLWE9KgaK93xBt1v3CzKWoLcIEl7Bu-nIJBI1zqHCeWNtJ-BZFFGNGNq19SZfkz6BcKZ7pDz8JvkeV0tXxvXXfGzPMuCs9CDiHe5uh8qZowkqbMgh_YdlGSRjJloV0rVVHiiN2mMHaI2bJ9gQ
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5Mzg0NjU1LCJpYXQiOjE3MzkzNzkyNTUsImp0aSI6ImExMjA3NTFlZmExNTQ1ZDBhMzUwNWMyOTBhYWIyNzNmIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0cmVzaWlpIn0.DDLN3INEECHH9QO7EKuP4JrtrvC_XUay9y49OyJwbG0blkkJG1SZ-mUg19DVUABkrRy-J82AhxAk7LPAPKUYlgA8fxKafFR62fvXGW4akLIudgQvGNHuWEyPn4HbZZg72WOK4R3CrRFPoTlQ4Ok_SIwFEZZATeRruQ8anwEnLNu8asVpCfefR62j7C96LB9qEcXPL62Biva75IlOJRltBoR9e0SXEyIKp-lZJE8Xp_VK0KVzZLCWa5IyBaWHQ1usjGg52DO7lTMwhGv1M4AJOOD-DWXEAWMeZJ8oYXtR_RKv6RpqanuRxqt0ia0t9wbsvaSm2LMiiZMPJCxwzTKETA
 
 ###
 PATCH https://localhost:4430/api/avatar/

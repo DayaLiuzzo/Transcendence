@@ -92,8 +92,8 @@ WSGI_APPLICATION = 'game_service.wsgi.application'
 
 SERVICE_CONNECTOR_SETTINGS = {
     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
-    "SERVICE_NAME" : "users",
-    "SERVICE_PASSWORD" : os.getenv("USERS_PASSWORD")
+    "SERVICE_NAME" : "game",
+    "SERVICE_PASSWORD" : os.getenv("GAME_PASSWORD")
 }
 
 
@@ -128,12 +128,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-# MICROSERVICE_CLIENT = {
-#     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
-#     "SERVICE_NAME" : "game",
-#     "SERVICE_PASSWORD" : os.getenv("GAME_PASSWORD")
-# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
