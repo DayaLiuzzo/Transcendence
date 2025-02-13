@@ -1,22 +1,22 @@
-/*******************************************************************/
-/*************** Style general de la page de la page ***************/
-/*******************************************************************/
+/*
+* STYLES FILE GLOBAL PARAMS POUR L'ENSEMBLE DU SITE
+*/
 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f4f434;
     position: relative;
   }
-  
+
   nav {
     background-color: #333;
     color: white;
     padding: 10px;
     position: relative; /* Nécessaire pour positionner le drapeau par rapport à la nav */
   }
-  
+
   nav ul {
     list-style-type: none;
     margin: 0;
@@ -24,21 +24,21 @@ body {
     display: flex;
     justify-content: right;
   }
-  
+
   nav ul li {
     margin: 0 15px;
   }
-  
+
   nav ul li a {
     color: white;
     text-decoration: none;
     font-size: 18px;
   }
-  
+
   nav ul li a:hover {
     text-decoration: underline;
   }
-  
+
 .flag, .accessibility {
   height: 50%; /* La hauteur du drapeau correspond à celle de la navigation */
   max-height: 50px; /* Limite la taille maximale du drapeau */
@@ -48,7 +48,7 @@ body {
   padding: 20px;
   text-align: center;
 }
-  
+
 h1 {
   font-size: 2rem;
   color: #333;
@@ -71,7 +71,7 @@ button:hover {
 /*******************************************************************/
 /********************** Style des formulaires **********************/
 /*******************************************************************/
-  
+
 /* Style de base pour tous les formulaires */
 .form-container {
   width: 300px;
@@ -123,7 +123,7 @@ button:hover {
 /*******************************************************************/
 /********************** Style de la page home **********************/
 /*******************************************************************/
-  
+
   .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -151,7 +151,7 @@ button:hover {
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
   }
-  
+
   .item {
     width: 100%;
     height: 400px;

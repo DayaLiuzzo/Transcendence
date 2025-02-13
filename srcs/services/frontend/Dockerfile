@@ -14,7 +14,7 @@ COPY ./certs/* /certs
 # 	-subj "/C=FR/ST=Paris/L=Paris/O=42_Paris/CN=["${DOMAIN}"](http://"${HOST}".42.fr/)/UID="${HOST}
 
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
-COPY ./spa/ /usr/share/nginx/html/
+COPY ./public/ /usr/share/nginx/html/
 
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
