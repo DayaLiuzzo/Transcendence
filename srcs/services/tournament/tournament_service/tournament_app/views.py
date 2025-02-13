@@ -314,21 +314,21 @@ class DeleteUserView(generics.DestroyAPIView):
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
-    def get_object(self):
-        return self.request.user
+    # def get_object(self):
+    #     return self.request.user
 
-    def perform_destroy(self, instance):
-        # Si l'utilisateur est dans une tournament, dissocier la tournament et l'utilisateur
-        if instance.tournament:
-            tournament = instance.tournament
-            if tournament.player1 == instance:
-                tournament.player1 = None
-            elif tournament.player2 == instance:
-                tournament.player2 = None
+    # def perform_destroy(self, instance):
+    #     # Si l'utilisateur est dans une tournament, dissocier la tournament et l'utilisateur
+    #     if instance.tournament:
+    #         tournament = instance.tournament
+    #         if tournament.player1 == instance:
+    #             tournament.player1 = None
+    #         elif tournament.player2 == instance:
+    #             tournament.player2 = None
             
-            tournament.players_count -= 1
-            if tournament.players_count < 2:
-                tournament.status = 'waiting'
-            tournament.save()
+    #         tournament.players_count -= 1
+    #         if tournament.players_count < 2:
+    #             tournament.status = 'waiting'
+    #         tournament.save()
 
-        instance.delete()
+    #     instance.delete()

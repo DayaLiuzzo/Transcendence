@@ -93,24 +93,24 @@ class DeleteUserProfileView(generics.DestroyAPIView):
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
-    def get_object(self):
-        return self.request.user
+    # def get_object(self):
+    #     return self.request.user
 
-    def perform_destroy(self, instance):
-        # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
-        # if instance.room:
-        #     room = instance.room
-        #     if room.player1 == instance:
-        #         room.player1 = None
-        #     elif room.player2 == instance:
-        #         room.player2 = None
+    # def perform_destroy(self, instance):
+    #     # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
+    #     # if instance.room:
+    #     #     room = instance.room
+    #     #     if room.player1 == instance:
+    #     #         room.player1 = None
+    #     #     elif room.player2 == instance:
+    #     #         room.player2 = None
             
-        #     room.players_count -= 1
-        #     if room.players_count < 2:
-        #         room.status = 'waiting'
-        #     room.save()
+    #     #     room.players_count -= 1
+    #     #     if room.players_count < 2:
+    #     #         room.status = 'waiting'
+    #     #     room.save()
 
-        instance.delete()
+    #     instance.delete()
 
 ################################################################
 #                                                              #

@@ -27,6 +27,6 @@ urlpatterns = [
         path('create/', views.CreateUserView.as_view(), name='create_user'),
         path('update/<str:username>/', views.UpdateUserProfileView.as_view(), name='update_user'),
         # path('list/', views.ListUserView.as_view(), name='list_user'),
-        path('delete/', views.DeleteUserView.as_view(), name='delete_user'), #a update pour inclure le username
+        path('delete/<str:username>/', views.DeleteUserView.as_view(), name='delete_user'), #a update pour inclure le username
     ]))
 ]
