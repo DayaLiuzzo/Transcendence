@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 
-class User(models.Model):
+class UserProfile(models.Model):
     username = models.CharField(max_length=255, unique=True)
     # isconnected = models.BooleanField(default=0)   
     # tournament = models.ForeignKey('Room', on_delete=models.SET_NULL, null=True, blank=True)  # Relation avec Room
@@ -23,7 +23,7 @@ class Tournament(models.Model):
     tournament_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)  # ID unique généré
     name = models.CharField(max_length=255, unique=True)
     status = models.CharField(max_length=10, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
-    users = models.ManyToManyField(User)  # Many-to-Many relation with User
+    users = models.ManyToManyField(UserProfile)  # Many-to-Many relation with UserProfile
     max_users = models.IntegerField(default=10)  # Maximum d'utilisateurs dans un tournoi
     played_matches = models.IntegerField(default=0)
     remaining_matches = models.IntegerField(default=0)
@@ -79,7 +79,7 @@ class Tournament(models.Model):
 class Pool(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="pools")
     name = models.CharField(max_length=255)  # Par exemple: Poule A, Poule B
-    users = models.ManyToManyField(User)  # Liste des joueurs dans la poule
+    users = models.ManyToManyField(UserProfile)  # Liste des joueurs dans la poule
     rank = models.IntegerField(default=1)  # Position dans l'ordre des poules (utile pour l'affichage)
 
     def __str__(self):
@@ -134,10 +134,10 @@ class Match(models.Model):
     ]
 
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='matches')
-    player_1 = models.ForeignKey('User', on_delete=models.CASCADE, related_name='player_1_matches')
-    player_2 = models.ForeignKey('User', on_delete=models.CASCADE, related_name='player_2_matches')
-    winner = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='won_matches')
-    loser = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='lost_matches')
+    player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_1_matches')
+    player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_2_matches')
+    winner = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='won_matches')
+    loser = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='lost_matches')
     score_player_1 = models.IntegerField(default=0)  # Ajout du score pour player 1
     score_player_2 = models.IntegerField(default=0)  # Ajout du score pour player 2
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='waiting')
@@ -166,9 +166,9 @@ class Match(models.Model):
         self.tournament.update_match_stats()
 
 class PlayerHistory(models.Model):
-    player = models.ForeignKey('User', on_delete=models.CASCADE)
+    player = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    opponent = models.ForeignKey('User', on_delete=models.CASCADE, related_name='opponent_history')
+    opponent = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='opponent_history')
     result = models.CharField(max_length=10, choices=[('win', 'Win'), ('loss', 'Loss')])
 
     def __str__(self):

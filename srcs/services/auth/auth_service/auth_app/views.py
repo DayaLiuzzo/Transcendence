@@ -144,8 +144,8 @@ class UpdateUserView(generics.UpdateAPIView):
             req_urls = [ f'http://users:8443/api/users/update/{old_username}/',
                         f'http://avatar:8443/api/avatar/',
                         f'http://game:8443/api/game/update/{old_username}/',
-                        # f'http://rooms:8443/api/rooms/update/{old_username}/',
-                        # f'http://tournament:8443/api/tournament/update/{old_username}/',                     
+                        f'http://rooms:8443/api/rooms/update/{old_username}/',
+                        f'http://tournament:8443/api/tournament/update/{old_username}/',                     
                         ]
             if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
                 raise ValidationError("Error updating user")

@@ -20,7 +20,7 @@ urlpatterns = [
 
         path('create/', views.CreateUserView.as_view(), name='create_user'),
         # path('list/', views.ListUserView.as_view(), name='list_user'),
-        # path('update/', views.UpdateUserView.as_view(), name='update_user'),
-        path('delete/', views.DeleteUserView.as_view(), name='delete_user'),
+        path('update/<str:username>/', views.UpdateUserProfileView.as_view(), name='update_user'),
+        path('delete/', views.DeleteUserView.as_view(), name='delete_user'), #username a rajouter dans l'url
     ]))
 ]
