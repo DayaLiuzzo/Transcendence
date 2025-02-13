@@ -1,0 +1,68 @@
+--SCHEMA DE L'ARCHITECTURE DU FRONT--
+
+/frontend
+|
+│── /conf
+|	│── nginx.conf  <-- tu connais, normalement desormais compatible avec tout le monde
+|
+│── /src
+|	│── /components <-- je decoupe ici les composants d'UI reutilisables dans le site (boutons, formulaires etc)
+|	|	│── button.js
+|	│── /views <-- ici on a les differentes views cad l'affichage de chaque page et comportements js qui lui sont propres
+|	│   ├── login.js     <-- Ici : Gestion de l'affichage et des événements pour la page login
+|	│   ├── signup.js    <-- Ici: Gestion de l'affichage et des événements propres à la page signup
+|	│── /data <--- ton dossier ! ici tu peux creer tes fichiers de gestions API + gestion erreurs / plus largement gestion de data cote client
+|	|	├── auth.js      <-- Ici : gestion des appels API, des retours et des erreurs
+|	|	│── game.js		<-- La par ex: gestion appels API du jeu etc etc
+|	│── main.js        <-- C'est la que le router selon la view va renvoyer vers le js a injecter (spa)
+|
+│──/public  <-- c'est le dossier accessible publiquement avec les assets (typo, sons, images...) + feuilles de styles CSS + notre index html
+|	│── /styles
+|	│── /assets
+|	│── index.html  <--- entry point du site en SPA !
+|
+│── Dockerfile  <-- vais rien t'apprendre mdr
+
+Grace a ce genre d'architecture de code
+on compartimente bien les fonctionnalites:
+-> dans data/ on gère les appels API, la gestion des donnees client en general genre sessions etc...
+-> dans views/ on va gèrer l'affichage et interactions propres a la view de chaque page
+-> dans components/ on va pouvoir decouper des elements UI qu'on reutilise a plusieurs endroits
+
++ normalement ca va permettre une meilleure gestion des erreurs
++ faciliter "l'extension" du code car pas besoin de casser toutes les routes etc des qu'on modif l'API
++ plus simple a tester
++ on se marche moins dessus dans les fichiers donc moins de risques de conflits durant nos merge... 🤠
+
+--EN GROS:--
+Tu pourras creer tous tes fichiers dans data/
+Dans ce dossier tu vas pouvoir regrouper tous tes fichiers de call api gestion des fonctionnalites et sessions etc
+Tu pourras y definir des export functions que je recupererai de mon cote en import pour chaque view
+Il faudra ensuite tester dans le navigateur en utilisant par exemple ton fichier requests_tester.rest ...
+Bien verifier les retours d'erreurs et affiner en fonction...
+Bien afficher les bons retours d'appels api
+Voir pour les gestions de sessions
+
+--DECOUPE DU TAFF FRONT--
+Daya:
+-Gérer les appels API (fetch)
+-Afficher les retours corrects
+-Gérer les erreurs des appels / echecs etc
+-Mettre en place l’authentification et la gestion de sessions
+--> Plus globalement mettre en place les fonctionnalites "core" des pages, s'assurer de bien tester tout ca
+
+Moi:
+-integration design (donc styles et core js / html)
+-definir et creer les composants UI reutilisables
+-core js pour chaque view
+-mettre en place les liens entre les views
+-maybe reclean le router ?
+-3d game
+
+Marine:
+-gestion des appels api du jeu cote server dans data/game.js
+
+
+--AVANT MERGE:--
+Bien tester les fonctionnalites dans le navigateur ofc
+Pense a bien me check les changements de noms des fonctions export que tu crees pour que je les modif dans mes imports dans les views

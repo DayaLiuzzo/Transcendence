@@ -1,0 +1,93 @@
+/*
+* STYLES POUR LES FENETRES DE L'OS EMULATOR
+* -> DRAGGABLE
+* -> RESIZABLE
+* -> CLOSE / MINIMIZE / MAXIMIZE
+*/
+
+/*PAS SUR DE GARDER SI DESIGN PLUS SIMPLE POUR NE PLUS PERDRE DE TEMPS*
+*/
+/* DRAGGABLE */
+.window {
+	position: absolute;
+	z-index: 100;
+	background-color: #fff;
+	border: 1px solid #000;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	cursor: move;
+	overflow: hidden;
+}
+
+/* RESIZABLE */
+.window .resizer {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background-color: #000;
+}
+
+.window .resizer.bottom-right {
+	bottom: 0;
+	right: 0;
+	cursor: se-resize;
+}
+
+.window .resizer.bottom-left {
+	bottom: 0;
+	left: 0;
+	cursor: sw-resize;
+}
+
+.window .resizer.top-right {
+	top: 0;
+	right: 0;
+	cursor: ne-resize;
+}
+
+.window .resizer.top-left {
+	top: 0;
+	left: 0;
+	cursor: nw-resize;
+}
+
+/* CLOSE / MINIMIZE / MAXIMIZE */
+
+.window .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	background-color: #f00;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 20px;
+	cursor: pointer;
+}
+
+.window .minimize {
+	position: absolute;
+	top: 0;
+	right: 20px;
+	width: 20px;
+	height: 20px;
+	background-color: #ff0;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 20px;
+	cursor: pointer;
+}
+
+.window .maximize {
+	position: absolute;
+	top: 0;
+	right: 40px;
+	width: 20px;
+	height: 20px;
+	background-color: #0f0;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 20px;
+	cursor: pointer;
+}
