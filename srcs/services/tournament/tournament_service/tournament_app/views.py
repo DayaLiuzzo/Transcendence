@@ -15,11 +15,11 @@ from rest_framework.views import APIView
 
 from .authentication import CustomJWTAuth
 from .models import Tournament
-from .models import User
+from .models import UserProfile
 from .models import Pool
 from .models import Match
 from .serializers import TournamentSerializer
-from .serializers import UserSerializer
+from .serializers import UserProfileSerializer
 from tournament_app.permissions import IsAuth
 from tournament_app.permissions import IsTournament
 from tournament_app.permissions import IsUsers
@@ -61,9 +61,9 @@ class CreateTournamentView(generics.CreateAPIView):
             users = []
             for username in usernames:
                 try:
-                    existing_user = User.objects.get(username=username)
+                    existing_user = UserProfile.objects.get(username=username)
                     users.append(existing_user)
-                except User.DoesNotExist:
+                except UserProfile.DoesNotExist:
                     raise ValidationError(f"User with username '{username}' does not exist.")
 
             # Créer le tournoi avec le statut "waiting"
@@ -111,7 +111,7 @@ class EndMatchView(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # Identifier le gagnant et le perdant
-            winner = User.objects.get(username=winner_username)
+            winner = UserProfile.objects.get(username=winner_username)
             if winner not in [match.player_1, match.player_2]:
                 return Response({
                     "message": "Winner must be one of the match participants."
@@ -142,7 +142,7 @@ class EndMatchView(APIView):
             return Response({
                 "message": "Match not found."
             }, status=status.HTTP_404_NOT_FOUND)
-        except User.DoesNotExist:
+        except UserProfile.DoesNotExist:
             return Response({
                 "message": "Winner user not found."
             }, status=status.HTTP_404_NOT_FOUND)
@@ -271,41 +271,47 @@ class DeleteTournamentView(APIView):
 
 class CreateUserView(generics.CreateAPIView):
     permission_classes =[IsAuth]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
 # *************************** READ *************************** #
 
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated,IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = 'username'
 
     def get_object(self):
         return self.request.user
 
 # class ListUserView(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+#     queryset = UserProfile.objects.all()
+#     serializer_class = UserProfileSerializer
 #     permission_classes = [IsAuthenticated] #a changer
 
-# **************************** PUT *************************** #
+# **************************** PATCH *************************** #
 
-# class UpdateUserView(generics.UpdateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [IsAuthenticated] 
 
-#     def get_object(self):
-#         return self.request.user
+#quand je recois une requete jai pas besoin du service connnctor donc je vais mettre juste isauth ici, (mais is_nomduservice pour les autres reqûetes)
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuth]
+    queryset = UserProfile.objects.all()
+    def patch (self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        old_username = user_profile.username
+        new_username = request.data.get("new_username") #attention a bien utiliser get, sinon on peut faire segfault
+        user_profile.username = new_username
+        user_profile.save()
+        return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=status.HTTP_200_OK)
+
 
 # ************************** DELETE ************************** #
 
 class DeleteUserView(generics.DestroyAPIView):
     permission_classes = [IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = "username"
 
     def get_object(self):

@@ -45,14 +45,14 @@ Content-Type: application/json
 }
 
 ###
-PATCH https://localhost:4430/api/auth/update/dd/
+PATCH https://localhost:4430/api/auth/update/hm/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5Mzk0NzQxLCJpYXQiOjE3MzkzODkzNDEsImp0aSI6IjhkMmM1MjM5MmU2YTQwZTZhYmQzODA2MzA4MGM4ODNmIiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJkZCJ9.o4iZRk8hv_bOuav_A7hcmvDn3nE5a0-wWyO5WhLpM53FkFi4mINOQhL7_ClII5KA07knl9ADLHPYNkrKZWxfr9pX6u1p0Wxrf_FyRxshY1INXQDfUv4YHyA0lejzjrqh8iHMjM3YZMgIDQn7600cjMd68oV57COpVwBq1XWiKiRhs2kIObeg_u1IfHxZaIcwZJhT02u02sX3ENDU1wrHUfT51EtYiMpZTXMlMu7liYJBXJn8-nGOCe7v1DTc_h_uo88d27knFMTJ0f0eGHDnF3xVAYxKkIudVighiK4lmvwP23yKgB2WgHcGAxLzRZnM2IGMyW-6YIgVra0N-SJR4A
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NDEwNjAwLCJpYXQiOjE3Mzk0MDUyMDAsImp0aSI6Ijc3MjU4ZjIzOGM2YzQxMjdiMzkwNmI3ZWI3YmVmMThiIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJobSJ9.PjaD2KfmebXZFMBg7sWkCS45HMEg0hETm4qKFukPkSpb9l-02CmKGpTN_pKVEWzzOVmrLjh9ApvSjCH1LU7EveighoMnxCXZaGn35W0NSD-t20tOqhaTV7kE9S3DI-se_w7ZqPq6ggO7tiikscmEell2QpuB2OUvxuF16EMnWDjr3yfcl8bSE1zSAQ5gF8Gt64UHoHIg_e1G5tAII-wv_wWvT--NohTXO3RMS_i_3oB6Yt8rTHD6MtSpaSZm3A074Kts2s-TwJq4Hf7fC2DWR7buzZF9R1mIaqsXjM8T-e_jTakms_UqJsgg4hcGuVnaXntUwEG8muurHEJf7Rswfg
 
 {
-  "username": "dd",
-  "old_username": "dd",
-  "new_username": "hm"
+  "username": "hm",
+  "old_username": "hm",
+  "new_username": "ok"
 }
 
 ###

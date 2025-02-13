@@ -15,9 +15,9 @@ from rest_framework.views import APIView
 
 from .authentication import CustomJWTAuth
 from .models import Room
-from .models import User
+from .models import UserProfile
 from .serializers import RoomSerializer
-from .serializers import UserSerializer
+from .serializers import UserProfileSerializer
 from .permissions import IsAuth
 from .permissions import IsRooms
 from .permissions import IsUsers
@@ -40,29 +40,41 @@ def rooms_service_running(request):
 
 class CreateUserView(generics.CreateAPIView):
     permission_classes =[IsAuth]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
 # *************************** READ *************************** #
 
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated,IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = 'username'
 
     def get_object(self):
         return self.request.user
 
+# **************************** PATCH *************************** #
 
-# **************************** PUT *************************** #
+#quand je recois une requete jai pas besoin du service connnctor donc je vais mettre juste isauth ici, (mais is_nomduservice pour les autres reqûetes)
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuth]
+    queryset = UserProfile.objects.all()
+    def patch (self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        old_username = user_profile.username
+        new_username = request.data.get("new_username") #attention a bien utiliser get, sinon on peut faire segfault
+        user_profile.username = new_username
+        user_profile.save()
+        return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=status.HTTP_200_OK)
+
 
 # ************************** DELETE ************************** #
 
 class DeleteUserView(generics.DestroyAPIView):
     permission_classes = [IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = "username"
 
     def get_object(self):
