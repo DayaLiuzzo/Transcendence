@@ -77,24 +77,24 @@ class DeleteUserView(generics.DestroyAPIView):
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
-    def get_object(self):
-        return self.request.user
+    # def get_object(self):
+    #     return self.request.user
 
-    def perform_destroy(self, instance):
-        # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
-        if instance.room:
-            room = instance.room
-            if room.player1 == instance:
-                room.player1 = None
-            elif room.player2 == instance:
-                room.player2 = None
+    # def perform_destroy(self, instance):
+    #     # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
+    #     if instance.room:
+    #         room = instance.room
+    #         if room.player1 == instance:
+    #             room.player1 = None
+    #         elif room.player2 == instance:
+    #             room.player2 = None
             
-            room.players_count -= 1
-            if room.players_count < 2:
-                room.status = 'waiting'
-            room.save()
+    #         room.players_count -= 1
+    #         if room.players_count < 2:
+    #             room.status = 'waiting'
+    #         room.save()
 
-        instance.delete()
+    #     instance.delete()
 
 ################################################################
 #                                                              #
@@ -311,28 +311,28 @@ class DeleteRoomView(generics.DestroyAPIView):
 
 # ************************** connexion avec game ************************** #
 
-    #requete interne : on sait pas si elle va reussir car c'est le user qui peut envoyer nimorte quoi on fait un try
-    def post(self, request, *args, **kwargs):
-        serializer = UserAvatarSerializer(data=request.data)
-        if serializer.is_valid():
-            data = serializer.save()
-            clear_avatar(request.user_username)
-            avatar_path = save_image(request.user_username, data)
-            try:
-                user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/' #def l'url (comme dans auth)
-                client = MicroserviceClient() #c'est le sender qui est egale a une instance de microservice client, voir constructeur qui init des trucs. Checker que mes settings soient bien mis avvec service connector settings (et penser a modif le avatar password et service name)
-                response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path}) 
-                if response2.status_code != 200: #a changer si besoin en fonction
-                    raise MicroserviceError(response2.status_code, response2.text)
-                return Response({'status': "avatar updated successfully"}, response2.status_code)
-            except MicroserviceError as e:
-                return Response(e.message, e.response_text, e.status_code)
-        return Response(serializer.errors, status=400)
+    # #requete interne : on sait pas si elle va reussir car c'est le user qui peut envoyer nimorte quoi on fait un try
+    # def post(self, request, *args, **kwargs):
+    #     serializer = UserAvatarSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         data = serializer.save()
+    #         clear_avatar(request.user_username)
+    #         avatar_path = save_image(request.user_username, data)
+    #         try:
+    #             user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/' #def l'url (comme dans auth)
+    #             client = MicroserviceClient() #c'est le sender qui est egale a une instance de microservice client, voir constructeur qui init des trucs. Checker que mes settings soient bien mis avvec service connector settings (et penser a modif le avatar password et service name)
+    #             response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path}) 
+    #             if response2.status_code != 200: #a changer si besoin en fonction
+    #                 raise MicroserviceError(response2.status_code, response2.text)
+    #             return Response({'status': "avatar updated successfully"}, response2.status_code)
+    #         except MicroserviceError as e:
+    #             return Response(e.message, e.response_text, e.status_code)
+    #     return Response(serializer.errors, status=400)
            
-    def patch(self, request, *args, **kwargs):
-        old_username = request.data.get('old_username')
-        new_username = request.data.get('new_username')
-        if rename_image(old_username, new_username) == True:
-            return Response({"message": "Avatar updated successfully!"}, status=status.HTTP_200_OK)
-        return Response({"message": f"Avatar not modified {old_username}, {new_username}"}, status=status.HTTP_304_NOT_MODIFIED) 
+    # def patch(self, request, *args, **kwargs):
+    #     old_username = request.data.get('old_username')
+    #     new_username = request.data.get('new_username')
+    #     if rename_image(old_username, new_username) == True:
+    #         return Response({"message": "Avatar updated successfully!"}, status=status.HTTP_200_OK)
+    #     return Response({"message": f"Avatar not modified {old_username}, {new_username}"}, status=status.HTTP_304_NOT_MODIFIED) 
     
