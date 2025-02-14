@@ -1,6 +1,6 @@
 import BaseView from "./views/BaseView.js";
 import Home from "./views/home.js";
-
+import LogIn from "./views/LogIn.js";
 
 
 const routes = [
@@ -8,7 +8,7 @@ const routes = [
     { path: '/home', view: Home },
     // { path: '/play', view: 'play' },
     // { path: '/about', view: 'about' },
-    // { path: '/log-in', view: 'log-in' },
+    { path: '/log-in', view: LogIn },
     // { path: '/signup', view: 'signup' },
     // { path: '/delete-user', view: 'delete-user' },
     // { path: '/edit-profile', view: 'edit-profile' },
