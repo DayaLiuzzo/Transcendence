@@ -1,8 +1,8 @@
 export default function() {
     return `
-      <h1>Casse toi clochard</h1>
-      <p>C'est ici qu'on va avoir notre form</p>
-      
+      <h1>Delete profile</h1>
+      <p>C'est ici qu'on va avoir le formulaire de suppression</p>
+
       <div id="delete-account-form" class="form-container">
       <h2>Delete Account</h2>
       <form>
@@ -16,4 +16,3 @@ export default function() {
     <img src="../media/afida.jpeg" alt="Profile picture" class="profile-img">
     `;
   }
-  
