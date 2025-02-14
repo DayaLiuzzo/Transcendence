@@ -17,8 +17,8 @@ function validateInputs({ username, email, password }, isSignup = false) {
     return null;
 }
 
-function renderAuth() {
-    app.innerHTML = `
+export default function renderAuth() {
+    return `
         <div class="container">
             <h2>Login</h2>
             <form id="login-form">
