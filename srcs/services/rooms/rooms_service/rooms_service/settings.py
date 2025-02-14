@@ -89,8 +89,8 @@ WSGI_APPLICATION = 'rooms_service.wsgi.application'
 
 SERVICE_CONNECTOR_SETTINGS = {
     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
-    "SERVICE_NAME" : "users",
-    "SERVICE_PASSWORD" : os.getenv("USERS_PASSWORD")
+    "SERVICE_NAME" : "rooms",
+    "SERVICE_PASSWORD" : os.getenv("ROOMS_PASSWORD")
 }
 
 # Database

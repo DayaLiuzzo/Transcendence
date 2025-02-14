@@ -15,9 +15,9 @@ from rest_framework.views import APIView
 
 from .authentication import CustomJWTAuth
 from .models import Room
-from .models import User
+from .models import UserProfile
 from .serializers import RoomSerializer
-from .serializers import UserSerializer
+from .serializers import UserProfileSerializer
 from .permissions import IsAuth
 from .permissions import IsRooms
 from .permissions import IsUsers
@@ -40,49 +40,61 @@ def rooms_service_running(request):
 
 class CreateUserView(generics.CreateAPIView):
     permission_classes =[IsAuth]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
 # *************************** READ *************************** #
 
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated,IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = 'username'
 
     def get_object(self):
         return self.request.user
 
+# **************************** PATCH *************************** #
 
-# **************************** PUT *************************** #
+#quand je recois une requete jai pas besoin du service connnctor donc je vais mettre juste isauth ici, (mais is_nomduservice pour les autres reqûetes)
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuth]
+    queryset = UserProfile.objects.all()
+    def patch (self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        old_username = user_profile.username
+        new_username = request.data.get("new_username") #attention a bien utiliser get, sinon on peut faire segfault
+        user_profile.username = new_username
+        user_profile.save()
+        return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=status.HTTP_200_OK)
+
 
 # ************************** DELETE ************************** #
 
 class DeleteUserView(generics.DestroyAPIView):
     permission_classes = [IsAuth]
-    queryset = User.objects.all().exclude(username="deleted_account")
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all().exclude(username="deleted_account")
+    serializer_class = UserProfileSerializer
     lookup_field = "username"
 
-    def get_object(self):
-        return self.request.user
+    # def get_object(self):
+    #     return self.request.user
 
-    def perform_destroy(self, instance):
-        # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
-        if instance.room:
-            room = instance.room
-            if room.player1 == instance:
-                room.player1 = None
-            elif room.player2 == instance:
-                room.player2 = None
+    # def perform_destroy(self, instance):
+    #     # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
+    #     if instance.room:
+    #         room = instance.room
+    #         if room.player1 == instance:
+    #             room.player1 = None
+    #         elif room.player2 == instance:
+    #             room.player2 = None
             
-            room.players_count -= 1
-            if room.players_count < 2:
-                room.status = 'waiting'
-            room.save()
+    #         room.players_count -= 1
+    #         if room.players_count < 2:
+    #             room.status = 'waiting'
+    #         room.save()
 
-        instance.delete()
+    #     instance.delete()
 
 ################################################################
 #                                                              #
@@ -116,6 +128,7 @@ class CreateRoomView(APIView):
             )
         except Exception as e:
             return Response({"message": "Error while creating room", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        #call join game
 
 class JoinRoomView(APIView):
     permission_classes = [IsAuthenticated]
@@ -183,6 +196,7 @@ class JoinRoomView(APIView):
                 {"message": "Error while joining the room", "error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        #call join game
 
     def create_room(self, request, user):
         # Créer une nouvelle room directement dans cette méthode
@@ -208,7 +222,8 @@ class JoinRoomView(APIView):
                 "message": "Error while creating room",
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        #call create game
+        #call join game
 
 # *************************** READ *************************** #
 
@@ -293,3 +308,31 @@ class DeleteRoomView(generics.DestroyAPIView):
                 instance.player2.save()
 
             instance.delete()
+
+# ************************** connexion avec game ************************** #
+
+    # #requete interne : on sait pas si elle va reussir car c'est le user qui peut envoyer nimorte quoi on fait un try
+    # def post(self, request, *args, **kwargs):
+    #     serializer = UserAvatarSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         data = serializer.save()
+    #         clear_avatar(request.user_username)
+    #         avatar_path = save_image(request.user_username, data)
+    #         try:
+    #             user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/' #def l'url (comme dans auth)
+    #             client = MicroserviceClient() #c'est le sender qui est egale a une instance de microservice client, voir constructeur qui init des trucs. Checker que mes settings soient bien mis avvec service connector settings (et penser a modif le avatar password et service name)
+    #             response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path}) 
+    #             if response2.status_code != 200: #a changer si besoin en fonction
+    #                 raise MicroserviceError(response2.status_code, response2.text)
+    #             return Response({'status': "avatar updated successfully"}, response2.status_code)
+    #         except MicroserviceError as e:
+    #             return Response(e.message, e.response_text, e.status_code)
+    #     return Response(serializer.errors, status=400)
+           
+    # def patch(self, request, *args, **kwargs):
+    #     old_username = request.data.get('old_username')
+    #     new_username = request.data.get('new_username')
+    #     if rename_image(old_username, new_username) == True:
+    #         return Response({"message": "Avatar updated successfully!"}, status=status.HTTP_200_OK)
+    #     return Response({"message": f"Avatar not modified {old_username}, {new_username}"}, status=status.HTTP_304_NOT_MODIFIED) 
+    

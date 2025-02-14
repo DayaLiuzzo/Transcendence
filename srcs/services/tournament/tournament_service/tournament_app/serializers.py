@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from .models import Tournament
-from .models import User
+from .models import UserProfile
 from .models import Pool    
 from .models import Match
 
-class UserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     is_authenticated = serializers.SerializerMethodField()
     
     class Meta:
-        model = User
+        model = UserProfile
         fields = ['username', 'is_authenticated']
 
     def get_is_authenticated(self, obj):
@@ -20,7 +20,7 @@ class MatchSerializer(serializers.ModelSerializer):
         fields = ['id', 'player_1', 'player_2', 'winner', 'loser', 'status', 'score_player_1', 'score_player_2']
 
 class PoolSerializer(serializers.ModelSerializer):
-    users = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all(), many=True)
+    users = serializers.SlugRelatedField(slug_field='username', queryset=UserProfile.objects.all(), many=True)
     matches = MatchSerializer(source='match_set', many=True, read_only=True)
 
     class Meta:
@@ -29,7 +29,7 @@ class PoolSerializer(serializers.ModelSerializer):
 
 class TournamentSerializer(serializers.ModelSerializer):
     players_count = serializers.ReadOnlyField()
-    users = UserSerializer(many=True, read_only=True)
+    users = UserProfileSerializer(many=True, read_only=True)
     pools = PoolSerializer(many=True, read_only=True)
 
     class Meta:
@@ -41,8 +41,8 @@ class TournamentSerializer(serializers.ModelSerializer):
         users = []
         for username in value:
             try:
-                user = User.objects.get(username=username)  # Recherche par username
+                user = UserProfile.objects.get(username=username)  # Recherche par username
                 users.append(user)
-            except User.DoesNotExist:
+            except UserProfile.DoesNotExist:
                 raise serializers.ValidationError(f"User with username '{username}' does not exist.")
         return users

@@ -1,1 +1,7 @@
 /srcs/.env
+/srcs/services/frontend/public/node_modules/
+ca.crt
+ca.key
+srcs/services/frontend/certs/
+srcs/services/frontend/public/package-lock.json
+srcs/services/frontend/public/package.json

@@ -7,13 +7,13 @@
 
 // Fonction pour charger les modules de vues (home, jeu, 404)
 
-// import Navbar from "./components/navbar.js";
+//import Navbar from "./components/navbar.js";
 
 function loadView(view)
 {
     const app = document.getElementById('app');
 
-    const currentURL = view
+    const currentURL = view;
     window.history.pushState("", document.title, currentURL.split('#')[0]);
 
    // document.getElementById("navbar").innerHTML = Navbar();
@@ -34,8 +34,8 @@ function loadView(view)
       case '/log-in':
         import('./views/log-in.js').then(module => { app.innerHTML = module.default();});
         break;
-      case '/sign-up':
-        import('./views/sign-up.js').then(module => { app.innerHTML = module.default();});
+      case '/signup':
+        import('./views/signup.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/delete-user':
         import('./views/delete-user.js').then(module => { app.innerHTML = module.default();});
