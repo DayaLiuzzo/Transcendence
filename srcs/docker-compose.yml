@@ -122,6 +122,7 @@ services:
     env_file: .env
     expose:
       - '5432'
+
   db_avatar:
     image: db_avatar
     container_name: db_avatar

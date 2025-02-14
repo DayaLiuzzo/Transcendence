@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import UserProfile
 from .models import Room
 
 
@@ -28,12 +28,12 @@ class RoomSerializer(serializers.ModelSerializer):
 #                                                              #
 ################################################################
 
-class UserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     is_authenticated = serializers.SerializerMethodField()
     room_id = serializers.CharField(source='room.room_id', read_only=True)
     
     class Meta:
-        model = User
+        model = UserProfile
         fields = ['username', 'is_authenticated', 'room_id']
 
     def get_is_authenticated(self, obj):

@@ -145,8 +145,7 @@ clean_certs:
 	rm -rf srcs/services/users/certs
 	rm -rf srcs/services/frontend/certs
 	rm -rf srcs/services/avatar/certs
-
-
+	docker builder prune -af
 
 clean: down clean_images clean_migration clean_cache clean_volumes clean_containers clean_network clean_certs
 
