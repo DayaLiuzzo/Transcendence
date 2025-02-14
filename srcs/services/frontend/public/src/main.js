@@ -13,7 +13,7 @@ function loadView(view)
 {
     const app = document.getElementById('app');
 
-    const currentURL = view
+    const currentURL = view;
     window.history.pushState("", document.title, currentURL.split('#')[0]);
 
    // document.getElementById("navbar").innerHTML = Navbar();
@@ -31,8 +31,8 @@ function loadView(view)
       case '/about':
         import('./views/about.js').then(module => { app.innerHTML = module.default();});
         break;
-      case '/login':
-        import('./views/login.js').then(module => { app.innerHTML = module.default();});
+      case '/log-in':
+        import('./views/log-in.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/signup':
         import('./views/signup.js').then(module => { app.innerHTML = module.default();});

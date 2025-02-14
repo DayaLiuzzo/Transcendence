@@ -7,11 +7,7 @@ export default function() {
     <p>C'est la vue principale de notre SPA.</p>
 
     <div class="grid-container">
-      <div class="profile">
-        <h2>Meuriah Carreyyy</h2>
-        <img src="../assets/images/mariah-carey-noel.jpeg" alt="Profile picture" class="profile-img">
-        <div><a href="/edit-profile">Edit profile</a></div>
-        <div><a href="/delete-user">Delete user</a></div>
+
       </div>
 
       <div class="item">
@@ -23,11 +19,6 @@ export default function() {
         <div><a href="/play">Play pong</a></div>
       </div>
 
-      <div class="item">
-        <h2>Custom game</h2>
-        <p>Ici on mettra une overview des settings du jeu !</p>
-        <img src="../assets/images/shrek_yassify.jpg" alt="Profile picture" class="profile-img">
-        <div><a href="/game-custom">Edit game settings</a></div>
 
       </div>
           </div>
@@ -51,7 +42,7 @@ export default function() {
     <div class="item">
       <h2>Custom game</h2>
       <p>Ici on mettra une overview des settings du jeu !</p>
-      <img src="../assets/images/shrek_yassify.jpg" alt="Profile picture" class="profile-img">
+   alt="Profile picture" class="profile-img">
     </div>
 
   </div>

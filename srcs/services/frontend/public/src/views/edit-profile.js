@@ -2,7 +2,7 @@ export default function() {
     return `
     <div id="edit-profile-form" class="form-container">
       <h2>Editer votre profil</h2>
-      <form>
+      <form id="editprofile">
         <label for="edit-username">Nom d'utilisateur:</label>
         <input type="text" id="edit-username" name="username" placeholder="Nom d'utilisateur actuel" required>
 
@@ -20,4 +20,3 @@ export default function() {
     </div>
     `;
   }
-  
