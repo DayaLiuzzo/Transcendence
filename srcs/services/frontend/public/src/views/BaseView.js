@@ -1,6 +1,7 @@
 export default class BaseView{
     constructor(params = {}){
         this.params = params;
+        this.API_URL = 'https://localhost:4430/api/auth/';
         this.app = document.getElementById('app');
         if (!this.app) {
             console.error("Error: Element with id 'app' not found in document");
