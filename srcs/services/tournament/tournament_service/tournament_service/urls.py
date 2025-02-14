@@ -10,6 +10,8 @@ urlpatterns = [
         
         path('create_tournament/', views.CreateTournamentView.as_view(), name='create-tournament'),
         path('delete/<uuid:tournament_id>/', views.DeleteTournamentView().as_view(), name='delete-tournament'),
+
+
         path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament_stats'),
 
         path('list/', views.ListAllTournamentView.as_view(), name='list_all_tournament'),
@@ -23,8 +25,8 @@ urlpatterns = [
         path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament-ranking'),
 
         path('create/', views.CreateUserView.as_view(), name='create_user'),
+        path('update/<str:username>/', views.UpdateUserProfileView.as_view(), name='update_user'),
         # path('list/', views.ListUserView.as_view(), name='list_user'),
-        # path('update/', views.UpdateUserView.as_view(), name='update_user'),
-        path('delete/', views.DeleteUserView.as_view(), name='delete_user'),
+        path('delete/<str:username>/', views.DeleteUserView.as_view(), name='delete_user'), #a update pour inclure le username
     ]))
 ]

@@ -17,6 +17,7 @@ class AvatarView(APIView):
         links = ['/media/default_avatars/default_00.jpg',]
         return Response(links, status=200)
     
+    #requete interne : on sait pas si elle va reussir car c'est le user qui peut envoyer nimorte quoi on fait un try
     def post(self, request, *args, **kwargs):
         serializer = UserAvatarSerializer(data=request.data)
         if serializer.is_valid():
@@ -24,10 +25,10 @@ class AvatarView(APIView):
             clear_avatar(request.user_username)
             avatar_path = save_image(request.user_username, data)
             try:
-                user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/'
-                client = MicroserviceClient()
-                response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path})
-                if response2.status_code != 200:
+                user_avatar_url = f'http://users:8443/api/users/{request.user_username}/avatar/update/' #def l'url (comme dans auth)
+                client = MicroserviceClient() #c'est le sender qui est egale a une instance de microservice client, voir constructeur qui init des trucs. Checker que mes settings soient bien mis avvec service connector settings (et penser a modif le avatar password et service name)
+                response2 = client.send_internal_request(user_avatar_url, 'patch', body={'avatar': avatar_path}) 
+                if response2.status_code != 200: #a changer si besoin en fonction
                     raise MicroserviceError(response2.status_code, response2.text)
                 return Response({'status': "avatar updated successfully"}, response2.status_code)
             except MicroserviceError as e:

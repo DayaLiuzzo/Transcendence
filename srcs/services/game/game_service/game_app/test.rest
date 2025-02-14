@@ -9,25 +9,32 @@ GET https://localhost:4430/api/game/test/
 #                                                              #
 ################################################################
 
-# ************************** CREATE ************************** #
+###add user to db
+
+post https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "dd",
+  "password": "Pass12456!",
+  "email": "d@gmail.com"
+}
 
 ###
-#create user
-POST https://localhost:4430/api/game/create/
+#get user token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
 
-# *************************** READ *************************** #
+{
+  "username": "dd",
+  "password": "Pass12456!"
 
-###
-#get a list of users
-GET https://localhost:4430/api/game/list/
-
-# **************************** PUT *************************** #
-
-# ************************** DELETE ************************** #
+}
 
 ###
 #delete user
-DELETE  https://localhost:4430/api/game/delete/
+DELETE  https://localhost:4430/api/auth/delete/dd/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NDczOTI1LCJpYXQiOjE3Mzk0Njg1MjUsImp0aSI6ImFmMmFjYTkyN2U5MjRiMzU4YWVlYmFjZWEwOWUxNThhIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJkZCJ9.TKODLnEGYcqvz0DB1qjp0opLhj3zoXTUwqbx5nHxYfrfyms4HqdpypUlYd-kiRwBb3l9lgGS3JEu--uM-yH1iGqWqt0bhCukMwV4mgn3c6xoMIYcECo4COBw41O3X8FkcAqpI799recCi6h-Z5XF20sihGh-h8ss2fBZtl5LOBHc5-3f5yZKISoZ2VAnBUdOSvg0J0NzEfz_p3-df_qcHf4TGJR5P3fnatlGsN-ERtAVW5vKHo3gqDIIqxtzcLEUgvH8MGaeynEbIckqF8JzqkPe_cU3g3Ch2rw10ZZi4UnuJRw-XDg114SyQF0Xs9OsHoDXkK_5w_K-Vrx4jqgxNw
 
 ################################################################
 #                                                              #
