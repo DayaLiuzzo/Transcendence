@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'tournament_app',
+    'service_connector',
     'rest_framework_simplejwt.token_blacklist'
 ]
 
@@ -87,6 +88,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tournament_service.wsgi.application'
 
+SERVICE_CONNECTOR_SETTINGS = {
+    "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
+    "SERVICE_NAME" : "tournament",
+    "SERVICE_PASSWORD" : os.getenv("TOURNAMENT_PASSWORD")
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

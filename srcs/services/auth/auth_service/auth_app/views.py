@@ -121,7 +121,10 @@ class DeleteUserView (generics.DestroyAPIView):
     lookup_field = 'username'
 
     def perform_destroy(self, instance):
-        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/'
+        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
+                    f'http://game:8443/api/game/delete/{instance.username}/',
+                    f'http://rooms:8443/api/rooms/delete/{instance.username}/',
+                    f'http://tournament:8443/api/tournament/delete/{instance.username}/'
                     ]
         if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
             raise ValidationError("Error deleting user")
@@ -140,6 +143,9 @@ class UpdateUserView(generics.UpdateAPIView):
             new_username = request.data.get('new_username')
             req_urls = [ f'http://users:8443/api/users/update/{old_username}/',
                         f'http://avatar:8443/api/avatar/',
+                        f'http://game:8443/api/game/update/{old_username}/',
+                        f'http://rooms:8443/api/rooms/update/{old_username}/',
+                        f'http://tournament:8443/api/tournament/update/{old_username}/',                     
                         ]
             if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
                 raise ValidationError("Error updating user")

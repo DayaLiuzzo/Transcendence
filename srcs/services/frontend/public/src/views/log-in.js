@@ -42,6 +42,7 @@ export default function renderAuth() {
 }
 
 async function login(event) {
+
     event.preventDefault();
 
     const username = document.getElementById("login-username").value;

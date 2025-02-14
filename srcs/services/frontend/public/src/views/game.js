@@ -8,6 +8,7 @@ export default function() {
       <p>Ici on va jouuuuer</p>
       <img src="../media/pong_1.gif" alt="Profile picture" class="profile-img">
     `;
+  }
 else
   return `
   <h1>Wait room</h1>
@@ -15,5 +16,5 @@ else
     <div class="loader"></div>
   </div>
   `;
+}
 
-  }

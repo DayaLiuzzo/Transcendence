@@ -69,7 +69,21 @@ class RetrieveUserProfileView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-# **************************** PUT *************************** #
+# **************************** PATCH *************************** #
+
+
+#quand je recois une requete jai pas besoin du service connnctor donc je vais mettre juste isauth ici, (mais is_nomduservice pour les autres reqûetes)
+class UpdateUserProfileView(APIView):
+    permission_classes = [IsAuth]
+    queryset = UserProfile.objects.all()
+    def patch (self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        old_username = user_profile.username
+        new_username = request.data.get("new_username") #attention a bien utiliser get, sinon on peut faire segfault
+        user_profile.username = new_username
+        user_profile.save()
+        return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=status.HTTP_200_OK)
+
 
 # ************************** DELETE ************************** #
 
@@ -79,24 +93,24 @@ class DeleteUserProfileView(generics.DestroyAPIView):
     serializer_class = UserProfileSerializer
     lookup_field = "username"
 
-    def get_object(self):
-        return self.request.user
+    # def get_object(self):
+    #     return self.request.user
 
-    def perform_destroy(self, instance):
-        # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
-        # if instance.room:
-        #     room = instance.room
-        #     if room.player1 == instance:
-        #         room.player1 = None
-        #     elif room.player2 == instance:
-        #         room.player2 = None
+    # def perform_destroy(self, instance):
+    #     # Si l'utilisateur est dans une room, dissocier la room et l'utilisateur
+    #     # if instance.room:
+    #     #     room = instance.room
+    #     #     if room.player1 == instance:
+    #     #         room.player1 = None
+    #     #     elif room.player2 == instance:
+    #     #         room.player2 = None
             
-        #     room.players_count -= 1
-        #     if room.players_count < 2:
-        #         room.status = 'waiting'
-        #     room.save()
+    #     #     room.players_count -= 1
+    #     #     if room.players_count < 2:
+    #     #         room.status = 'waiting'
+    #     #     room.save()
 
-        instance.delete()
+    #     instance.delete()
 
 ################################################################
 #                                                              #
