@@ -8,7 +8,7 @@ services:
     ports:
       - "4430:4430"
     restart: on-failure
-    volumes: 
+    volumes:
       - avatar_media:/var/www/media
     env_file: .env
     depends_on:
@@ -24,7 +24,7 @@ services:
     image: auth
     container_name: auth
     expose:
-      - "8443" 
+      - "8443"
     restart: on-failure
     volumes:
       - auth_keys:/keys
@@ -186,7 +186,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/api_gateway/api_gateway_service
-  
+
   friends_service_data:
     name: friends_service_data
     driver: local
@@ -194,7 +194,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/friends/friends_service
- 
+
   users_service_data:
     name: users_service_data
     driver: local
@@ -218,7 +218,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/rooms/rooms_service
-  
+
   avatar_service_data:
     name: avatar_service_data
     driver: local
@@ -226,7 +226,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/avatar/avatar_service
-  
+
   avatar_media:
     name: avatar_media
     driver: local
@@ -234,7 +234,7 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/avatar_media
-  
+
   tournament_service_data:
     name: tournament_service_data
     driver: local
