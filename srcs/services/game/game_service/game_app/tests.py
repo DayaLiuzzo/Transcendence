@@ -60,11 +60,12 @@ class GameViewsTest(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('error', response.data)
 
-    @patch('game_app.authentication.CustomJWTAuth.authenticate')
-    def test_join_game_success_player1(self, mock_authenticate):
-        """Test qu'un utilisateur peut rejoindre un jeu en tant que joueur 1."""
+    # @patch('game_app.authentication.CustomJWTAuth.authenticate')
+    # def test_join_game_success_player1(self, mock_authenticate):
+    #     """Test qu'un utilisateur peut rejoindre un jeu en tant que joueur 1."""
 
-    # def test_join_game_success_player2(self):
+    # @patch('game_app.authentication.CustomJWTAuth.authenticate')
+    # def test_join_game_success_player2(self, mock_authenticate):
     #     """Test qu'un utilisateur peut rejoindre un jeu en tant que joueur 2."""
 
     # def test_join_game_room_full(self):
