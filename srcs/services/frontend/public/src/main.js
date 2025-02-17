@@ -61,6 +61,9 @@ function loadView(view)
       case '/game-multi':
         import('./views/game-multi.js').then(module => { app.innerHTML = module.default();});
         break;
+      case '/test_daya':
+        import('./views/test_daya.js').then(module => { app.innerHTML = module.default();});
+        break;
       default:
         import('./views/404.js').then(module => { app.innerHTML = module.default();});
         break;

@@ -10,6 +10,7 @@ services:
     restart: on-failure
     volumes:
       - avatar_media:/var/www/media
+      - frontend_service_data:/usr/share/nginx/html
     env_file: .env
     depends_on:
       - api_gateway
@@ -17,7 +18,6 @@ services:
       - users
       - game
       - rooms
-
 
   auth:
     build: services/auth
@@ -178,6 +178,14 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/auth/auth_service
+  
+  frontend_service_data:
+    name: frontend_service_data
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $PWD/srcs/services/frontend/public
 
   api_gateway_service_data:
     name: api_gateway_service_data
