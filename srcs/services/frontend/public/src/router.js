@@ -1,30 +1,20 @@
-import BaseView from "./views/BaseView.js";
 import Home from "./views/home.js";
 import LogIn from "./views/LogIn.js";
-
+import NotFound from "./views/NotFound.js";
+import SignUp from "./views/SignUp.js";
 
 const routes = [
     { path: '/', view: Home },
     { path: '/home', view: Home },
-    // { path: '/play', view: 'play' },
-    // { path: '/about', view: 'about' },
     { path: '/log-in', view: LogIn },
-    // { path: '/signup', view: 'signup' },
-    // { path: '/delete-user', view: 'delete-user' },
-    // { path: '/edit-profile', view: 'edit-profile' },
-    // { path: '/game-custom', view: 'game-custom' },
-    // { path: '/play-tournament', view: 'play-tournament' },
-    // { path: '/game', view: 'game' },
-    // { path: '/play-alone', view: 'play-alone' },
-    // { path: '/game-ai', view: 'game-ai' },
-    // { path: '/game-multi', view: 'game-multi' },
-    // { path: '/test_daya', view: 'test_daya' }
+    { path: '/sign-up', view: SignUp },
 ];
 
 
 class Router{
     constructor(routes){
         this.routes = routes;
+        this.init();
     }
 
     getRoutes(){
@@ -37,38 +27,37 @@ class Router{
 
     async loadView(path){
         const route = this.getRoute(path);
+        const ViewClass = route ? route.view : NotFound;
         if (!route) {
-            console.error("Error: Route not found");
-            return;
+            console.warn(`Route for ${path} not found! Showing NotFound view.`);
         }
-        const ViewClass = route.view;
         const view = new ViewClass();
         await view.mount();
-        view.attachEvents();
         }
+    
+    async navigateTo(path){
+        history.pushState({}, "", path);
+        await this.loadView(path);
+    }
+
+    init() {
+        // Handle browser back/forward
+        window.addEventListener("popstate", () => {
+            this.loadView(window.location.pathname);
+        });
+        
+        // Handle all link clicks (Global Event Delegation)
+        document.body.addEventListener("click", (event) => {
+            if (event.target.matches("a")) {
+                event.preventDefault();
+                this.navigateTo(event.target.getAttribute("href"));
+            }
+        });
+    }
 }
 
-const router = new Router(routes);
-
-
-document.querySelectorAll('a').forEach(link =>
-    {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          const viewPath = link.getAttribute('href');
-          router.loadView(viewPath);
-        });
-    });
-    
-    window.addEventListener('DOMContentLoaded', () =>
-    {
-      const viewPath = window.location.pathname;
-      router.loadView(viewPath);
-    });
-    
-    window.addEventListener('popstate', () =>
-    {
-      const viewPath = window.location.pathname;
-      router.loadView(viewPath);
-    })
-    
+// // Handle initial page load
+window.addEventListener("DOMContentLoaded", () => {
+    const router = new Router(routes);
+    router.loadView(window.location.pathname);
+});

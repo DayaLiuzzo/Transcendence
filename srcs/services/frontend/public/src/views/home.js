@@ -21,8 +21,6 @@ export default class Home extends BaseView{
               <p>
                 Ici on mettra une overview du jeu !
               </p>
-              <img src="../assets/images/pong.jpg" alt="Profile picture" class="profile-img">
-              <div><a href="/play">Play pong</a></div>
             </div>
       
       
@@ -48,7 +46,6 @@ export default class Home extends BaseView{
           <div class="item">
             <h2>Custom game</h2>
             <p>Ici on mettra une overview des settings du jeu !</p>
-         alt="Profile picture" class="profile-img">
           </div>
       
         </div>
