@@ -10,10 +10,13 @@ export default class SignUp extends BaseView{
         alert(message);
     }
 
-    validateInputs({ username, email, password }){
-        if (!username || username.length < 3) return "Username must be at least 3 characters long.";
-        if ((!email || !email.includes("@"))) return "Invalid email address.";
-        if (!password || password.length < 6) return "Password must be at least 6 characters long.";
+    validateInputs(formData){
+        if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
+        if ((!formData.email || !formData.email.includes("@"))) return "Invalid email address.";
+        if (formData.username.length > 128) return "Username must be at most 128 characters long.";
+        if (!formData.password || !formData.password2 || formData.password.length < 6) return "Password must be at least 6 characters long.";
+        if (formData.password !== formData.password2) return "Passwords do not match.";
+
         return null;
     }
 
@@ -21,15 +24,28 @@ export default class SignUp extends BaseView{
         return localStorage.getItem("jwt") !== null;
     }
     
-    async signup(event) {
-        event.preventDefault();
-        
-        const username = document.getElementById("signup-username").value;
-        const email = document.getElementById("signup-email").value;
-        const password = document.getElementById("signup-password").value;
-        const password2 = document.getElementById("signup-password2").value;
 
-        console.log(username, email, password, password2);
+    async sendSignUpRequest(formData){
+        try {
+            const response = await fetch(this.)
+        }
+        
+    }
+    async signup(formData) {
+        console.log(formData.username, formData.email, formData.password, formData.password2);
+        const errorMessage = this.validateInputs(formData);
+        if (errorMessage) return this.showError(errorMessage);
+        const signUpResponse = await this.sendSignUpRequest(formData);
+        if (signUpResponse.error) return this.showError(signUpResponse.error);
+    }
+
+    getFormData(){
+        return {
+            username: document.getElementById("signup-username").value,
+            email: document.getElementById("signup-email").value,
+            password: document.getElementById("signup-password").value,
+            password2: document.getElementById("signup-password2").value,
+        };
     }
 
     async render(){
@@ -41,15 +57,19 @@ export default class SignUp extends BaseView{
             <input type="text" id="signup-username" placeholder="Username" required>
             <input type="email" id="signup-email" placeholder="Email" required> 
             <input type="password" id="signup-password" placeholder="Password" required>
-            <input type="password2" id="signup-password2" placeholder="Password2" required>
+            <input type="password" id="signup-password2" placeholder="Password2" required>
                 <button type="submit">signup</button>
             </form>
         </div>
     `;
     }
 
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (signup)');
-        document.getElementById("signup-form").addEventListener("submit", this.signup);
+        document.getElementById("signup-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = this.getFormData();
+            this.signup(formData);
+        });
     }
 }

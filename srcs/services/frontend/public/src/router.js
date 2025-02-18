@@ -2,12 +2,14 @@ import Home from "./views/home.js";
 import LogIn from "./views/LogIn.js";
 import NotFound from "./views/NotFound.js";
 import SignUp from "./views/SignUp.js";
+import Game from "./views/Game.js";
 
 const routes = [
     { path: '/', view: Home },
     { path: '/home', view: Home },
     { path: '/log-in', view: LogIn },
     { path: '/sign-up', view: SignUp },
+    { path: '/game', view: Game },
 ];
 
 
