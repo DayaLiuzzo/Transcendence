@@ -3,6 +3,7 @@ import LogIn from "./views/LogIn.js";
 import NotFound from "./views/NotFound.js";
 import SignUp from "./views/SignUp.js";
 import Game from "./views/Game.js";
+import PlayMenu from "./views/PlayMenu.js";
 
 
 const routes = [
@@ -10,7 +11,8 @@ const routes = [
     { path: '/home', view: Home, css: "styles/home.css" },
     { path: '/log-in', view: LogIn, css: "styles/log-in.css" },
     { path: '/sign-up', view: SignUp, css: "styles/sign-up.css" },
-    { path: '/game', view: Game, css: "styles/game.css" },
+    // { path: '/game', view: Game, css: "styles/game.css" },
+    { path: '/play-menu', view: PlayMenu},
 ];
 
 

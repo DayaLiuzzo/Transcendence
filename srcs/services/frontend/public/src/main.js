@@ -1,4 +1,9 @@
 /*
+** MESSAGE DE RINMA A RINMA : n'utilise pas cette page mais le router.js
+*/
+
+
+/*
 ** MAIN PAGE, ENTRYPOINT POUR LE FRONTEND
 ** FICHIER JS QUI INITIALISE LE TOUT ET CHARGE LES MODULES DE VUES
 ** -> ROUTER FRONTEND
@@ -26,7 +31,7 @@ function loadView(view)
         import('./views/home.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/play':
-        import('./views/play.js').then(module => { app.innerHTML = module.default();});
+        import('./views/PlayMenu.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/about':
         import('./views/about.js').then(module => { app.innerHTML = module.default();});
@@ -42,24 +47,6 @@ function loadView(view)
         break;
       case '/edit-profile':
         import('./views/edit-profile.js').then(module => { app.innerHTML = module.default();});
-        break;
-      case '/game-custom':
-        import('./views/game-custom.js').then(module => { app.innerHTML = module.default();});
-        break;
-      case '/play-tournament':
-        import('./views/play-tournament.js').then(module => { app.innerHTML = module.default();});
-        break;
-      case '/game':
-        import('./views/game.js').then(module => { app.innerHTML = module.default();});
-        break;
-      case '/play-alone':
-        import('./views/play-alone.js').then(module => { app.innerHTML = module.default();});
-        break;
-      case '/game-ai':
-        import('./views/game-ai.js').then(module => { app.innerHTML = module.default();});
-        break;
-      case '/game-multi':
-        import('./views/game-multi.js').then(module => { app.innerHTML = module.default();});
         break;
       case '/test_daya':
         import('./views/test_daya.js').then(module => { app.innerHTML = module.default();});
