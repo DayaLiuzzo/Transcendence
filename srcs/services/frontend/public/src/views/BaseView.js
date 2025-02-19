@@ -1,5 +1,9 @@
+// tester si remplacer localhost:4430 par '' fonctionne au sein des fetch;
+
+
 export default class BaseView{
-    constructor(params = {}){
+    constructor(router, params = {}){
+        this.router = router
         this.params = params;
         this.API_URL = 'https://localhost:4430/api/auth/';
         this.API_URL_SIGNUP = 'https://localhost:4430/api/auth/signup/';
@@ -21,6 +25,10 @@ export default class BaseView{
             console.error("Error in mount():", error);
         }
     }
+    async navigateTo(path){
+        this.router.navigateTo(path);
+    }
+    
     attachEvents(){
         console.log('Events attached');
     }

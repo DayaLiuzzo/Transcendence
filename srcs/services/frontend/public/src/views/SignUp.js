@@ -2,8 +2,8 @@ import BaseView from './BaseView.js';
 
 
 export default class SignUp extends BaseView{
-    constructor(params){
-        super(params);
+    constructor(router, params){
+        super(router, params);
     }
 
     showError(message){
@@ -42,7 +42,7 @@ export default class SignUp extends BaseView{
                 const errorResponse = await response.json();
                 throw new Error(errorResponse.message || "Signup Failed");
             }
-
+            this.router.navigateTo("/log-in");
             return await response.json();
         } catch(error){
             console.error("API request error:", error);

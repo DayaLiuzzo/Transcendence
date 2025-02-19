@@ -33,7 +33,7 @@ class Router{
         if (!route) {
             console.warn(`Route for ${path} not found! Showing NotFound view.`);
         }
-        const view = new ViewClass();
+        const view = new ViewClass(this);
         await view.mount();
         }
     

@@ -20,7 +20,7 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "dd",
+  "username": "bidon",
   "password": "Pass12456!",
   "email": "d@gmail.com"
 }
@@ -30,7 +30,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "dd",
+  "username": "bidon",
   "password": "Pass12456!"
 
 }
@@ -71,12 +71,10 @@ default.jpg
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ####
-GET https://localhost:4430/api/users/connard/avatar/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODcwNzA1LCJpYXQiOjE3Mzg4NjUzMDUsImp0aSI6ImE5MWRjZmQ0MDlmZDQ4Y2I4NTRiOTkzYzFlYTc5MzI5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJjb25uYXJkIn0.wCIWQvjgFjcH0p9Zh2us0WhIt5xP5_tE43r7Y6WgMUg3eCHRuCjErqCOPNGR0LTJ-Caru7xRlw_squ5vIjN_Xfm-v4aOFMqIJZJmtuLEva-7MCMhiocb1LFPhUxZ7vUrWo2ZzK4fReEGysnnjaouQiZ2gSE7E-MBZUO23JPscT3bHxziKHlaHw9rWb0NzjD_XO32t13Zc39SarfcaIQ27SC4gyMABaP8S9hnXqr1Oe1rTaCZuOx2vFhjznHUZj7oRGc1BnbI9Dd7kRhIYSafJbxAdOX2CnrU3pAMXaBdEwDv9xgiwml7pcN5e0o5CNhsHOykZjXKi3UCFJuhkW21_Q
+GET https://localhost:4430/api/users/bidonaaa/friends/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5OTc4NDI4LCJpYXQiOjE3Mzk5NzMwMjgsImp0aSI6ImQ2MzhiNWJiZGZiNDQ3N2M4NmJkOGQ3NjZmYTBmNmY0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.a5QjISKPUWzIHHb9CyBS5B0b-9OTO8jlV08pxmaU3gu0BApEuDgTfkuXH8imTPz2l3SrKaDw5JBVfN99ktoYqyAzeyn_AtJ2UXBV_TXeU_xCQaEL1-3TbeFYHTdJ9vRplBf9OPGzZ-pd9vNOMiQVfAAiPOhlaJKyAmryfncrjrfcLUNHTNYwEUkXuE0KaQJqdV2Zw0XDTyujCBKVk1shLhVLTzJlJxlt1PBnsvK25olYcUkmyYKjmyf4oSUGDD12uwQrDpVauoEYJLWrAc_ATe0P_AX4xZquFZopXgOYf84EdD352He28qskQ_9-BMp2Fy0IjIBF8TwPggerbP2vhQ
 
-{
 
-}
 ###
 #check if invalid token can access protected view
 GET https://localhost:4430/api/users/protected/service/
