@@ -3,18 +3,24 @@
 */
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f434;
-    position: relative;
-  }
+    font-family: "Courier New", monospace;
+    margin-left: 2%;
+    margin-right: 2%;
+    padding: 20px;
+    background-color: #ffff;
+    color: #000;
+    font-size: 15px;
+    line-height: 1.5;
+    transition: background-color 0.5s ease-in-out, color 2.5s ease-in-out;
+    overflow-x: hidden;
+    white-space: pre-line;
+}
 
   nav {
-    background-color: #333;
+    background-color: #857c7c;
     color: white;
     padding: 10px;
-    position: relative; /* Nécessaire pour positionner le drapeau par rapport à la nav */
+    position: relative;
   }
 
   nav ul {
@@ -30,19 +36,15 @@ body {
   }
 
   nav ul li a {
-    color: white;
+    color: #0000FF;
     text-decoration: none;
     font-size: 18px;
+    text-decoration: underline;
   }
 
   nav ul li a:hover {
     text-decoration: underline;
   }
-
-.flag, .accessibility {
-  height: 50%; /* La hauteur du drapeau correspond à celle de la navigation */
-  max-height: 50px; /* Limite la taille maximale du drapeau */
-}
 
 #app {
   padding: 20px;
@@ -68,11 +70,6 @@ button:hover {
   background-color: #4cae4c;
 }
 
-/*******************************************************************/
-/********************** Style des formulaires **********************/
-/*******************************************************************/
-
-/* Style de base pour tous les formulaires */
 .form-container {
   width: 300px;
   margin: 20px auto;
@@ -120,9 +117,6 @@ button:hover {
   background-color: #555;
 }
 
-/*******************************************************************/
-/********************** Style de la page home **********************/
-/*******************************************************************/
 
   .grid-container {
     display: grid;
@@ -169,34 +163,3 @@ button:hover {
     object-fit: cover; /*Assure que l'image remplit la div sans distorsion*/
   }
 
-/*******************************************************************/
-/********************** Style de la page home **********************/
-/*******************************************************************/
-
-/* Style de la barre de chargement */
-#loader-container {
-  width: 100%;
-  height: 5px;
-  background-color: #f3f3f3;
-  margin: 50px 0;
-  position: relative;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.loader {
-  width: 30%;
-  height: 100%;
-  background-color: #4caf50;
-  position: absolute;
-  animation: move 1.5s infinite linear;
-}
-
-@keyframes move {
-  0% {
-    left: -30%;
-  }
-  100% {
-    left: 100%;
-  }
-}
