@@ -1,0 +1,4 @@
+Remplacer depends on dans le docker compose par un outil qui permet de tracker l etat du container de DB.
+Repenser eventuellement la syntace des api endpoitns, vu qu ils  agit d apiil ne st peut etre pas necessaire de reecrire leur nom ex:
+users:8443/api/users/update  --> users:8443/update (comme ils ne sont sense etre accessibles que via le docker network)
+
