@@ -10,6 +10,9 @@ export default class BaseView{
         this.API_URL_SIGNUP = 'https://localhost:4430/api/auth/signup/';
         this.API_URL_ROOMS = 'https://localhost:4430/api/rooms/';
         this.API_URL_LOGIN = 'https://localhost:4430/api/auth/token/';
+        this.API_URL_GAME = 'https://localhost:4430/api/game/';
+        this.API_URL_TOURNAMENT = 'https://localhost:4430/api/tournament/';
+
         this.app = document.getElementById('app');
         if (!this.app) {
             console.error("Error: Element with id 'app' not found in document");

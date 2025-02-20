@@ -9,25 +9,33 @@ GET https://localhost:4430/api/rooms/test/
 #                                                              #
 ################################################################
 
-# ************************** CREATE ************************** #
+###add user to db
+
+post https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "dd",
+  "password": "Pass12456!",
+  "email": "d@gmail.com"
+}
 
 ###
-#create user
-POST https://localhost:4430/api/rooms/create/
+#get user token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
 
-# *************************** READ *************************** #
+{
+  "username": "dd",
+  "password": "Pass12456!"
 
-###
-#get a list of users
-GET https://localhost:4430/api/rooms/list/
-
-# **************************** PUT *************************** #
-
-# ************************** DELETE ************************** #
+}
 
 ###
 #delete user
-DELETE  https://localhost:4430/api/rooms/delete/
+DELETE  https://localhost:4430/api/auth/delete/dd/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5ODk2ODY1LCJpYXQiOjE3Mzk4OTE0NjUsImp0aSI6Ijg3MTdiZGRjNDZjYzRiYjA4NzAzMDQ3M2I2OTA5OTc5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJkZCJ9.l9YjzJpii_4irGBvX8w3q_XkM9CiKELKvem_h6YzPpsD9txXTDrxo1TX-MV2aRLobWq5EPjyoIUupWkK88EpSxrKqu5hqXIBOrXVFR4B-jvMdUnCxp3B4NGFdrgo342RyT2YOLgleMSeCoNiF2EsGuwZGEWD1oUJ-DjqEi06RcgwwaytKTcqBfUEqm44kevAeLYnmUPHSgQQggHuPw3gfXXYshZT5baXYtklfsvnfq07R4y37FCbIkzA2MiMSx7jAXieELg4Ye-7qlfA0sf7No3iTs9F4PGiR0fZrHOcjom-ImY68vWiVVeYNTyvXwPRAZphQFVgoozOJLxTkvuXog
+
 
 ################################################################
 #                                                              #
@@ -40,7 +48,7 @@ DELETE  https://localhost:4430/api/rooms/delete/
 ### attention : un user peut creer plein de room: voir si on change ou non
 #create room
 POST https://localhost:4430/api/rooms/create_room/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODgwNzgwLCJpYXQiOjE3Mzg4NzUzODAsImp0aSI6IjZkNDc1ZjgwOTQyNDQyZDdhNmUwODNmMTQzZWU1NjQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0NF91c2VyIn0.MvPR_Tk0hi58wQNb0QCoiEe5mAnrPsYqa2qK5G-EXPeD0suZmzHTLb1iZmLRfgqubWZfnl45k_vPOT81celAXzF0OqkvmudxIEhN04GtlE9Mf4GP4Wn9QQLi7KxR9L6wrzaGoquWo3X8EBjSEcRYW3OVKSjuqKs2FcESl9XibFyqyjx6H_6NQElnl61eHbwF_KUko08UxbuAHXpphDklQErbAEA4IN4UZ0XhRa4E851HG-pT_TrFtRXIQFWjDPPA8QBfZFORFrQsIKuEU-zELmD61LaGvGy7gm32-1Y8-xrPJS4wJ6seAqOYWEHIEMxg9i6F5m-a9j_rfnA7e--AXQ
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5ODk2ODkwLCJpYXQiOjE3Mzk4OTE0OTAsImp0aSI6IjAzN2UwZGYxZTU3NDRlNzc5MzMwNzg4MWEwNGEzMmY2IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJkZCJ9.glV42X8poo_MPp2Y6zCQbFA91jJuZ25mRaIRbhuz7XN0lFrq-KX1wF06YZLcBGD8ZFZzO8SDpATMxj2-GgdbejPYy6WA5DxHmD1iaC4yT9TwBLb22UnQe94k75Jr8vrg3BcnKz--TICStffQMT08kpPWRkJRWzJcPT7QoRdPo6qfqp-2jPebsSdevKauKjGp7eeAt1TWl5UmVl5I-gdgB1dPULnAYOdc911zDB4aTSPDPHBUWPlWJIXE1NLcI-AYN5sUPm73GNxdKVQiXbOYS8Sdcq9qnc1UaMITyO1XytbOohopHP7WkwKDp0e1ekNQ9KAR6r7yr9Xb6vJOCJzaQg
 
 ###
 #join room
