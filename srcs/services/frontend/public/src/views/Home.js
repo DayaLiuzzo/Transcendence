@@ -1,11 +1,9 @@
 import BaseView from './BaseView.js';
-<<<<<<< HEAD:srcs/services/frontend/public/src/views/home.js
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { AsciiEffect } from "three/examples/jsm/effects/AsciiEffect.js";
 let connected = 1;
-=======
->>>>>>> main:srcs/services/frontend/public/src/views/Home.js
+
 
 export default class Home extends BaseView{
     constructor(router, params){
@@ -52,7 +50,6 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
     }
     async attachEvents(){
         console.log('Events attached (Home)');
-<<<<<<< HEAD:srcs/services/frontend/public/src/views/home.js
         const text = document.getElementById("test-text");
         const originalText = text.textContent;
 
@@ -156,7 +153,3 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
 
 };
 
-=======
-    }
-}
->>>>>>> main:srcs/services/frontend/public/src/views/Home.js
