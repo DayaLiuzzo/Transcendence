@@ -22,8 +22,8 @@ body {
     margin: 0 auto;
     padding-bottom: 10px;
     text-align: right;
-    right: 50px;
-    position: fixed;
+    right: 0px;
+    position: absolute;
     width: 100%;
   }
 
@@ -33,10 +33,10 @@ body {
     width: 80%;
     height: 2px;
     background: black;
-    position: relative;
+    position: absolute;
     left: 50%;
     bottom: 0;
-    transform: translateX(-50%); /* Centers the line */
+    transform: translateX(-50%);
   }
 
   nav ul {
@@ -44,11 +44,12 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: right;
+    justify-content: left;
   }
 
   nav ul li {
-    margin: 0 15px;
+    margin: 0 10px;
+    display: inline;
   }
 
   nav ul li a {
@@ -58,46 +59,3 @@ body {
     text-decoration: underline;
   }
 
-  nav ul li a:hover {
-    text-decoration: underline;
-  }
-
-#app {
-  padding: 20px;
-  text-align: center;
-}
-
-h1 {
-  font-size: 2rem;
-  color: #333;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: white;
-  border: none;
-  color: white;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: white;
-}
-
-.form-container {
-  width: 300px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.form-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}

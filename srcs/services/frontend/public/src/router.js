@@ -3,7 +3,7 @@ import LogIn from "./views/LogIn.js";
 import NotFound from "./views/NotFound.js";
 import SignUp from "./views/SignUp.js";
 import Game from "./views/Game.js";
-
+import * as THREE from "three";
 
 const routes = [
     { path: '/', view: Home, css: "styles/home.css" },
