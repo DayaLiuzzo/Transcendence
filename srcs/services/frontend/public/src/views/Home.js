@@ -1,12 +1,11 @@
 import BaseView from './BaseView.js';
-let connected = 1;
 
 export default class Home extends BaseView{
-    constructor(params){
-        super(params);
+    constructor(router, params){
+        super(router,params);
     }
     async render(){
-      if (connected)
+      if (this.isAuthenticated())
         {
           return `
           <h1>Bienvenue sur la page d'accueil</h1>

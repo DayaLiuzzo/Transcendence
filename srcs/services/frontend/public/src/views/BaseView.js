@@ -14,9 +14,11 @@ export default class BaseView{
             console.error("Error: Element with id 'app' not found in document");
         }
     }
+
     async render(){
         return `<div>Base View</div>`;
     }
+
     async mount(){
         try {
             this.app.innerHTML = await this.render();
@@ -26,10 +28,27 @@ export default class BaseView{
             console.error("Error in mount():", error);
         }
     }
+
     async navigateTo(path){
         this.router.navigateTo(path);
     }
+
+    getUserSession(){
+        return JSON.parse(sessionStorage.getItem("userSession"));
+    }
+
+    isAuthenticated() {
+       const userSession = this.getUserSession();
+       if(userSession){
+            console.log("Username:", userSession.username);
+            console.log("Access token:", userSession.access_token);
+            console.log("Refresh token:", userSession.refresh_token);
+           return true;
+       }
+       return false;
+    }
     
+
     async sendPostRequest(url, formData){
         try {
             const response = await fetch(url, {

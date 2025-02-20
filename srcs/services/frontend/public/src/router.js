@@ -1,4 +1,4 @@
-import Home from "./views/home.js";
+import Home from "./views/Home.js";
 import LogIn from "./views/LogIn.js";
 import NotFound from "./views/NotFound.js";
 import SignUp from "./views/SignUp.js";
