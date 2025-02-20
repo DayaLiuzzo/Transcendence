@@ -2,18 +2,19 @@ import BaseView from './BaseView.js';
 
 
 export default class LogIn extends BaseView{
-    constructor(params){
-        super(params);
+    constructor(router, params){
+        super(router, params);
     }
 
     showError(message){
         alert(message);
     }
 
-    validateInputs({ username, email, password }, isSignup = false){
-        if (!username || username.length < 3) return "Username must be at least 3 characters long.";
-        if (isSignup && (!email || !email.includes("@"))) return "Invalid email address.";
-        if (!password || password.length < 6) return "Password must be at least 6 characters long.";
+    validateInputs(formData){
+        if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
+        if (formData.username.length > 128) return "Username must be at most 128 characters long.";
+        if (!formData.password || formData.password.length < 6) return "Password must be at least 6 characters long.";
+
         return null;
     }
 
@@ -21,9 +22,22 @@ export default class LogIn extends BaseView{
         return localStorage.getItem("jwt") !== null;
     }
 
-    
-    async login(event) {
-        event.preventDefault();
+    getFormData(){
+        return {
+            username: document.getElementById("login-username").value,
+            password: document.getElementById("login-password").value,
+            // two_factor: document.getElementById("login-two-factor").value,
+        };
+    }
+
+    async login(formData) {
+        console.log(formData)
+        const errorMessage = this.validateInputs(formData);
+        if (errorMessage) return this.showError(errorMessage)
+        const loginResponse = await this.sendPostRequest(this.API_URL_LOGIN, formData);
+        if (!loginResponse.success) return this.showError(JSON.stringify(loginResponse.error, null, 2));
+        console.log(loginResponse.data);
+        this.navigateTo("/home");
     }
 
     async render(){
@@ -42,6 +56,10 @@ export default class LogIn extends BaseView{
 
     async attachEvents(){
         console.log('Events attached (LogIn)');
-        document.getElementById("login-form").addEventListener("submit", this.login);
+        document.getElementById("login-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = this.getFormData();
+            this.login(formData);
+        });
     }
 }

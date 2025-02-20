@@ -2,21 +2,26 @@ import BaseView from './BaseView.js';
 
 
 export default class SignUp extends BaseView{
-    constructor(params){
-        super(params);
+    constructor(router, params){
+        super(router, params);
     }
 
     showError(message){
         alert(message);
     }
 
+    containsSpecialCharacter(password) {
+        const regex = /[@#$%^&*!]/; // Check for specific special characters
+        return regex.test(password);
+    }
+    
     validateInputs(formData){
         if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
         if ((!formData.email || !formData.email.includes("@"))) return "Invalid email address.";
         if (formData.username.length > 128) return "Username must be at most 128 characters long.";
         if (!formData.password || !formData.password2 || formData.password.length < 6) return "Password must be at least 6 characters long.";
         if (formData.password !== formData.password2) return "Passwords do not match.";
-
+        if (!this.containsSpecialCharacter(formData.password)) return "Password mustcontain special characters.";
         return null;
     }
 
@@ -25,39 +30,14 @@ export default class SignUp extends BaseView{
     }
     
 
-    async sendSignUpRequest(formData){
-        try {
-            const response = await fetch(this.API_URL_SIGNUP, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password,
-                }),
-            })
-            if (!response.ok){
-                const errorResponse = await response.json();
-                throw new Error(errorResponse.message || "Signup Failed");
-            }
-
-            return await response.json();
-        } catch(error){
-            console.error("API request error:", error);
-            return {error: error.message};
-        }
-        
-    }
     async signup(formData) {
         console.log(formData.username, formData.email, formData.password, formData.password2);
         const errorMessage = this.validateInputs(formData);
         if (errorMessage) return this.showError(errorMessage);
-        const signUpResponse = await this.sendSignUpRequest(formData);
-        if (signUpResponse.error) return this.showError(signUpResponse.error);
-        console.log(signUpResponse);
-        console.log("signup successful");
+        const signUpResponse = await this.sendPostRequest(this.API_URL_SIGNUP, formData);
+        if (!signUpResponse.success) return this.showError(JSON.stringify(signUpResponse.error, null, 2));
+        console.log(signUpResponse.data);
+        this.navigateTo("/log-in");
     }
 
     getFormData(){
