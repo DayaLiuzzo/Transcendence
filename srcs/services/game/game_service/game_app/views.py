@@ -31,7 +31,7 @@ logger = logging.getLogger('game_app')
 
 @api_view(['GET'])
 def game_service_running(request):
-    return JsonResponse({"message": "Game service is running"})
+    return Response({"message": "Game service is running"})
 
 # @api_view(['GET'])
 # def gameroom(request, room_name):
@@ -47,7 +47,7 @@ def game_service_running(request):
 # ************************** CREATE ************************** #
 
 class CreateUserProfileView(generics.CreateAPIView):
-    logger.debug(f"******************* 0 JPP********************")
+    logger.debug(f"************reverse******* 0 JPP********************")
     permission_classes =[IsAuth]
 
     logger.debug(f"******************* 1 JPP********************")

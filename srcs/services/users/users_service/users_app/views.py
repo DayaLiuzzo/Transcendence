@@ -17,6 +17,11 @@ from users_app.permissions import IsAvatar
 from users_app.permissions import IsOwner
 from users_app.permissions import IsOwnerAndAuthenticated
 
+class testView(APIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    def get(self, request):
+        return Response({"message": request.user.username}, status=HTTP_200_OK)
+
 
 #================================================
 #================= User Profile =================

@@ -1,16 +1,27 @@
-import Home from "./views/home.js";
+import Home from "./views/Home.js";
 import LogIn from "./views/LogIn.js";
 import NotFound from "./views/NotFound.js";
 import SignUp from "./views/SignUp.js";
 import Game from "./views/Game.js";
-import * as THREE from "three";
+import * as THREE from "three";import PlayMenu from "./views/PlayMenu.js";
+import PlayLocal from "./views/PlayLocal.js";
+import PlayRemote from "./views/PlayRemote.js";
+import PlayTournament from "./views/PlayTournament.js";
+import PlayWithFriends from "./views/PlayWithFriends.js";
 
 const routes = [
     { path: '/', view: Home, css: "styles/home.css" },
     { path: '/home', view: Home, css: "styles/home.css" },
     { path: '/log-in', view: LogIn, css: "styles/log-in.css" },
     { path: '/sign-up', view: SignUp, css: "styles/sign-up.css" },
-    { path: '/game', view: Game, css: "styles/game.css" },
+    // { path: '/game', view: Game, css: "styles/game.css" },
+    { path: '/play-menu', view: PlayMenu, css: "styles/core.css"},
+    { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
+    { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
+    { path: '/play-tournament', view: PlayTournament, css: "styles/core.css"},
+    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"}
+
+
 ];
 
 

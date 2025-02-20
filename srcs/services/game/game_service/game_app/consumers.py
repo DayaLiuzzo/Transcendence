@@ -6,7 +6,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 # Configure logging
 logger = logging.getLogger('game_app')
 
-class RoomConsumer(AsyncWebsocketConsumer):
+class GameConsumer(AsyncWebsocketConsumer):
+    
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'room%s' % self.room_name
