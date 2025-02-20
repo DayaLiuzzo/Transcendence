@@ -12,7 +12,7 @@ const routes = [
     { path: '/log-in', view: LogIn, css: "styles/log-in.css" },
     { path: '/sign-up', view: SignUp, css: "styles/sign-up.css" },
     // { path: '/game', view: Game, css: "styles/game.css" },
-    { path: '/play-menu', view: PlayMenu},
+    { path: '/play-menu', view: PlayMenu, css: "styles/core.css"}
 ];
 
 
