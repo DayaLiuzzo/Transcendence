@@ -29,18 +29,15 @@ export default class LogIn extends BaseView{
             // two_factor: document.getElementById("login-two-factor").value,
         };
     }
-    async sendLoginRequest(formData){
-    
-    
-    
-    }
+
     async login(formData) {
         console.log(formData)
         const errorMessage = this.validateInputs(formData);
         if (errorMessage) return this.showError(errorMessage)
-        // const loginResponse = await this.sendLoginRequest(formData);
-        // if (loginResponse.error) return this.showError(loginResponse.error);
-        // console.log(loginResponse);
+        const loginResponse = await this.sendPostRequest(this.API_URL_LOGIN, formData);
+        if (!loginResponse.success) return this.showError(JSON.stringify(loginResponse.error, null, 2));
+        console.log(loginResponse.data);
+        this.navigateTo("/home");
     }
 
     async render(){
