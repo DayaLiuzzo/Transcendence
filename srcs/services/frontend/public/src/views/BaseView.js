@@ -21,6 +21,11 @@ export default class BaseView{
             console.error("Error in mount():", error);
         }
     }
+    
+    async navigateTo(path){
+        this.router.navigateTo(path);
+    }
+
     attachEvents(){
         console.log('Events attached');
     }

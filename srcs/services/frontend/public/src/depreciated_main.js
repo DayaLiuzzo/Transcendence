@@ -33,6 +33,9 @@ function loadView(view)
       case '/play':
         import('./views/PlayMenu.js').then(module => { app.innerHTML = module.default();});
         break;
+      case '/play-localy':
+        import('./views/PlayLocal.js').then(module => { app.innerHTML = module.default();});
+        break;
       case '/about':
         import('./views/about.js').then(module => { app.innerHTML = module.default();});
         break;
