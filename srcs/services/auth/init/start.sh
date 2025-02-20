@@ -1,6 +1,5 @@
 #!/bin/bash
 
-/bin/bash
 
 openssl genpkey -algorithm RSA -out /private_key/sjwt_private.pem -pkeyopt rsa_keygen_bits:2048
 openssl rsa -pubout -in /private_key/sjwt_private.pem -out /keys/sjwt_public.pem

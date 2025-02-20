@@ -1,4 +1,4 @@
-/bin/bash
+#!/bin/bash
 
 pip install --upgrade pip --no-input
 pip install -r /init/requirements.txt --no-input

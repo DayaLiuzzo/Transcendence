@@ -30,39 +30,14 @@ export default class SignUp extends BaseView{
     }
     
 
-    async sendSignUpRequest(formData){
-        try {
-            const response = await fetch(this.API_URL_SIGNUP, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password,
-                }),
-            })
-            if (!response.ok){
-                const errorResponse = await response.json();
-                throw new Error(errorResponse.message || "Signup Failed");
-            }
-            this.router.navigateTo("/log-in");
-            return await response.json();
-        } catch(error){
-            console.error("API request error:", error);
-            return {error: error.message};
-        }
-        
-    }
     async signup(formData) {
         console.log(formData.username, formData.email, formData.password, formData.password2);
         const errorMessage = this.validateInputs(formData);
         if (errorMessage) return this.showError(errorMessage);
-        const signUpResponse = await this.sendSignUpRequest(formData);
-        if (signUpResponse.error) return this.showError(signUpResponse.error);
-        console.log(signUpResponse);
-        console.log("signup successful");
+        const signUpResponse = await this.sendPostRequest(this.API_URL_SIGNUP, formData);
+        if (!signUpResponse.success) return this.showError(JSON.stringify(signUpResponse.error, null, 2));
+        console.log(signUpResponse.data);
+        this.navigateTo("/log-in");
     }
 
     getFormData(){
