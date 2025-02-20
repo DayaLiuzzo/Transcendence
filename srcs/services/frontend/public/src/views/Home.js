@@ -58,8 +58,7 @@ export default class Home extends BaseView{
               `;
         }
     }
-    attachEvents(){
+    async attachEvents(){
         console.log('Events attached (Home)');
-
     }
 }
