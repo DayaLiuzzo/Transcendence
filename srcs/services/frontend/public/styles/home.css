@@ -27,7 +27,7 @@
     100% {
       opacity: 0.8;
       letter-spacing: 3px;
-      text-shadow: 0 0 1px #fff;
+      text-shadow: 0 0 1px darkgray;
     }
   }
 
@@ -44,18 +44,18 @@
     overflow-x: hidden;
     transition: background-color 0.5s ease-in-out, color 0.5 ease-in-out;
   }
-
+/*
   #test-text {
     font-size
   : 50px;
     text-transform: uppercase;
     animation: text-slide-infinite 5s
       infinite linear forwards;
-  }
+  } */
 
 
 #follow-scroll-elements {
-  font: 1.5em 'Times New Roman', sans-serif;
+  font: 1.5em 'Times New Roman';
   font-style: italic;
   position: fixed;
   top: 0;
@@ -63,4 +63,10 @@
   width: 100%;
   color: rgb(94, 94, 94);
   font-size: 1.5em;
+}
+
+
+.test-text span {
+  display: inline-block;
+  transition: transform 0.2s ease;
 }

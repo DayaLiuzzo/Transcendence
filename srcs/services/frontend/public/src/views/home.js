@@ -28,9 +28,7 @@ export default class Home extends BaseView{
           <p>(I follow)</p>
 
           </div>
-          <div id="test-text">
-            <p>Test</p>
-          </div>
+          <p id="test-text">Test</p>
               `;
             }
         else {
@@ -49,9 +47,7 @@ export default class Home extends BaseView{
           <div id="follow-scroll-elements">
           <p>(I follow)</p>
           </div>
-          <div id="test-text">
-          <p>Test</p>
-          </div>
+          <p id="test-text">Test</p>
           <div class="item">
             <h2>Custom game</h2>
             <p>Ici on mettra une overview des settings du jeu !</p>
@@ -61,6 +57,34 @@ export default class Home extends BaseView{
     }
     attachEvents(){
         console.log('Events attached (Home)');
+        const text = document.getElementById("test-text");
 
-    }
+        const originalText = text.textContent;
+        console.log(originalText);
+        text.addEventListener("mouseover", ()=> {
+          text.querySelectorAll("span").forEach(letter => {
+            const randomX = (Math.random() - 0.5) * 20;
+            const randomY = (Math.random() - 0.5) * 20;
+            letter.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${(Math.random() - 0.5) * 20}deg)`;
+          });
+  };
 }
+};
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   const text = document.getElementById("test-text");
+//   console.log(text);
+//   const originalText = text.textContent;
+
+//   text.innerHTML = originalText.split("").map(char => `<span>${char}</span>`).join("");
+
+//
+//   });
+
+//   text.addEventListener("mouseleave", () => {
+//       text.querySelectorAll("span").forEach(letter => {
+//           letter.style.transform = "translate(0,0) rotate(0)";
+//       });
+//   });
+// });
+
