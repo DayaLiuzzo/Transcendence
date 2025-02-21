@@ -9,6 +9,7 @@ import PlayRemote from "./views/PlayRemote.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
 import EditProfile from "./views/EditProfile.js";
+import Profile from "./views/Profile.js";
 
 const routes = [
     { path: '/', view: Home, css: "styles/home.css" },
@@ -16,6 +17,7 @@ const routes = [
     { path: '/log-in', view: LogIn, css: "styles/log-in.css", requiresGuest: true },
     { path: '/sign-up', view: SignUp, css: "styles/sign-up.css", requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
+    { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css"},
     { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
@@ -40,6 +42,14 @@ class Router{
         return this.routes.find(route => route.path === path);
     }
 
+    getUsername(){
+        const userSession = this.getUserSession();
+        if(userSession){
+            return userSession.username;
+        }
+        return null;
+    }
+    
     getAccessToken(){
         const userSession = this.getUserSession();
         if(userSession){
@@ -55,15 +65,12 @@ class Router{
     isAuthenticated() {
        const userSession = this.getUserSession();
        if(userSession){
-    //         console.log("Username:", userSession.username);
-    //         console.log("Access token:", userSession.access_token);
-    //         console.log("Refresh token:", userSession.refresh_token);
-           console.log("Authenticated");
             return true;
        }
-       console.log("Not authenticated");
        return false;
     }
+
+
 
     updateBodyClass(path) {
         const className = path === "/" ? "home" : path.replace("/", "");
@@ -90,6 +97,7 @@ class Router{
         if (!route) {
             console.warn(`Route for ${path} not found! Showing NotFound view.`);
         }
+        history.pushState({}, "", path);
         const view = new ViewClass(this);
         await view.mount();
 
@@ -100,38 +108,52 @@ class Router{
     async navigateTo(path){
         const route = this.getRoute(path);
         const isLoggedIn = this.isAuthenticated();
-        if (route.requiresAuth && !isLoggedIn) {
-            this.navigateTo("/log-in");
+        if (route && route.requiresAuth && !isLoggedIn) {
+            await this.loadView("/log-in");
             return;
         }
-        if (route.requiresGuest && isLoggedIn) {
-            this.navigateTo("/home");
+        if (route && route.requiresGuest && isLoggedIn) {
+            await this.loadView("/home");
             return;
         }
-        history.pushState({}, "", path);
         await this.loadView(path);
     }
 
     async initialLoad(path){
         const route = this.getRoute(path);
         const isLoggedIn = this.isAuthenticated();
-        if (route.requiresAuth && !isLoggedIn) {
-            this.navigateTo("/log-in");
+        if (route && route.requiresAuth && !isLoggedIn) {
+            await this.loadView("/log-in");
             return;
         }
-        if (route.requiresGuest && isLoggedIn) {
-            this.navigateTo("/home");
+        if (route && route.requiresGuest && isLoggedIn) {
+            await this.loadView("/home");
             return;
         }
-        history.replaceState({}, "", path);
         await this.loadView(path);
     }
 
     init() {
         // Handle browser back/forward
-        window.addEventListener("popstate", () => {
-            this.loadView(window.location.pathname);
-        });
+        // window.addEventListener("popstate", async () => {
+        //     console.log("Popstate");
+        //     const path = window.location.pathname;
+        //     const route = this.getRoute(path);
+        //     const isLoggedIn = this.isAuthenticated();
+    
+        //     // Check if the user is trying to access a protected route without being logged in
+        //     if (route && route.requiresAuth && !isLoggedIn) {
+        //         history.replaceState({}, "", "/log-in");
+        //         await this.loadView("/log-in");
+        //     }
+        //     else if (route && route.requiresGuest && isLoggedIn) {
+        //         history.replaceState({}, "", "/home");
+        //         await this.loadView("/home");
+        //     }
+        //     else {
+        //         await this.loadView(path);  // Here, history pushState should already be handled inside loadView
+        //     }
+        // });
 
         // Handle all link clicks (Global Event Delegation)
         document.body.addEventListener("click", (event) => {

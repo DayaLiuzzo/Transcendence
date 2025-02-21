@@ -27,12 +27,10 @@ export default class LogIn extends BaseView{
     }
 
     async login(formData) {
-        console.log(formData)
         const errorMessage = this.validateInputs(formData);
         if (errorMessage) return this.showError(errorMessage)
         const loginResponse = await this.sendPostRequest(this.API_URL_LOGIN, formData);
         if (!loginResponse.success) return this.showError(JSON.stringify(loginResponse.error, null, 2));
-        console.log(loginResponse.data);
         const userSession = {
             username: formData.username,
             access_token: loginResponse.data.access_token,

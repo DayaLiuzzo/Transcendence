@@ -5,6 +5,7 @@ export default class BaseView{
     constructor(router, params = {}){
         this.router = router
         this.params = params;
+        this.API_URL_USERS = 'https://localhost:4430/api/users/';
         this.API_URL_TEST = 'https://localhost:4430/api/users/test/';
         this.API_URL = 'https://localhost:4430/api/auth/';
         this.API_URL_SIGNUP = 'https://localhost:4430/api/auth/signup/';
@@ -39,28 +40,21 @@ export default class BaseView{
     }
     
     getAccessToken(){
-        // const userSession = this.getUserSession();
-        // if(userSession){
-        //     return userSession.access_token;
-        // }
-        // return null;
+
         return this.router.getAccessToken();
     }
 
     getUserSession(){
-        // return JSON.parse(sessionStorage.getItem("userSession"));
+     
         return this.router.getUserSession();
     }
 
+    getUsername(){
+        return this.router.getUsername();
+    }
+
     isAuthenticated() {
-    //    const userSession = this.getUserSession();
-    //    if(userSession){
-    // //         console.log("Username:", userSession.username);
-    // //         console.log("Access token:", userSession.access_token);
-    // //         console.log("Refresh token:", userSession.refresh_token);
-    //        return true;
-    //    }
-    //    return false;
+
         return this.router.isAuthenticated();
     }
     
@@ -71,6 +65,7 @@ export default class BaseView{
             <a href="/home">Home</a>
             <a href="/game">Game</a>
             <a href="/logout">Logout</a>
+            <a href="/profile">Profile</a>
             ` : `
             <a href="/home">Home</a>
             <a href="/log-in">Log in</a>
@@ -159,7 +154,7 @@ export default class BaseView{
         }
     }
 
-    attachEvents(){
+    async attachEvents(){
         console.log('Events attached');
     }
 }
