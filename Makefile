@@ -18,7 +18,7 @@ ROOMS_SERVICE			:=	rooms
 DB_ROOMS_SERVICE		:=	db_rooms
 
 TOURNAMENT_SERVICE		:=	tournament
-DB_TOURNAMENT_SERVICE	:=	tournament
+DB_TOURNAMENT_SERVICE	:=	db_tournament
 
 all: check_certs up 
 
