@@ -1,6 +1,6 @@
 import BaseView from './BaseView.js';
 
-let connected = 1;
+//let connected = 1;
 
 
 export default class Home extends BaseView{
