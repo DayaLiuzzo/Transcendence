@@ -37,6 +37,8 @@ restart:
 down:
 	docker compose -f srcs/docker-compose.yml down
 
+.PHONY: all up stop start restart down
+
 ########################################################################
 ######### Execute individual dockers with interactive terminal #########
 ########################################################################
@@ -83,7 +85,7 @@ enter_$(DB_TOURNAMENT_SERVICE):
 enter_$(DB_USERS_SERVICE):
 	docker exec -it $(DB_USERS_SERVICE) bash
 
-.PHONY: \
+.PHONY:	\
 	enter_$(FRONTEND_SERVICE)		\
 	enter_$(AUTH_SERVICE)			\
 	enter_$(USERS_SERVICE)			\
@@ -106,21 +108,64 @@ enter_$(DB_USERS_SERVICE):
 logs:
 	docker compose -f srcs/docker-compose.yml logs
 
-logs_frontend:
-	docker logs frontend
+logs_$(FRONTEND_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(FRONTEND_SERVICE)
 
-logs_user-management:
-	docker logs user-management
+logs_$(AUTH_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(AUTH_SERVICE)
 
-logs_game:
-	docker logs game
+logs_$(USERS_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(USERS_SERVICE)
 
-logs_auth:
-	docker logs auth
+logs_$(GAME_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(GAME_SERVICE)
 
+logs_$(AVATAR_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(AVATAR_SERVICE)
 
-logs_rooms:
-	docker logs rooms
+logs_$(API_GATEWAY_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(API_GATEWAY_SERVICE)
+
+logs_$(ROOMS_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(ROOMS_SERVICE)
+
+logs_$(TOURNAMENT_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(TOURNAMENT_SERVICE) 
+
+logs_$(DB_AUTH_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(DB_AUTH_SERVICE)
+
+logs_$(DB_AVATAR_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(DB_AVATAR_SERVICE)
+
+logs_$(DB_GAME_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(DB_GAME_SERVICE)
+
+logs_$(DB_ROOMS_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(DB_AUTH_SERVICE)
+
+logs_$(DB_TOURNAMENT_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(DB_TOURNAMENT_SERVICE)
+
+logs_$(DB_USERS_SERVICE):
+	docker compose -f srcs/docker-compose.yml logs $(DB_USERS_SERVICE)
+
+.PHONY:	\
+	logs							\
+	logs_$(FRONTEND_SERVICE)		\
+	logs_$(AUTH_SERVICE)			\
+	logs_$(USERS_SERVICE)			\
+	logs_$(GAME_SERVICE)			\
+	logs_$(AVATAR_SERVICE)			\
+	logs_$(API_GATEWAY_SERVICE)		\
+	logs_$(ROOMS_SERVICE)			\
+	logs_$(TOURNAMENT_SERVICE) 		\
+	logs_$(DB_AUTH_SERVICE)			\
+	logs_$(DB_AVATAR_SERVICE)		\
+	logs_$(DB_GAME_SERVICE)			\
+	logs_$(DB_ROOMS_SERVICE)		\
+	logs_$(DB_TOURNAMENT_SERVICE)	\
+	logs_$(DB_USERS_SERVICE)		\
 
 ########################################################################
 ######################## Get status and all logs #######################
@@ -222,4 +267,4 @@ re: clean all
 ################################ .PHONY ################################
 ########################################################################
 
-.PHONY: all up stop start restart down clean re logs logs_frontend logs_user-management logs_game logs_auth logs_friends logs_rooms status 
+.PHONY: clean re status 
