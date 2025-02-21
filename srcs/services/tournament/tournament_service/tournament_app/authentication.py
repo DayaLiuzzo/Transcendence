@@ -65,7 +65,6 @@ class CustomJWTAuth(BaseAuthentication):
         username = payload.get('username')
         if not username:
             return None
-        
         try:
             user = UserProfile.objects.get(username=username)
         except UserProfile.DoesNotExist:

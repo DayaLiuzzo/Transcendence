@@ -1,3 +1,4 @@
+import uuid
 from rest_framework import serializers
 from .models import Tournament
 from .models import UserProfile
@@ -29,12 +30,12 @@ class PoolSerializer(serializers.ModelSerializer):
 
 class TournamentSerializer(serializers.ModelSerializer):
     players_count = serializers.ReadOnlyField()
-    users = UserProfileSerializer(many=True, read_only=True)
-    pools = PoolSerializer(many=True, read_only=True)
+    # users = UserProfileSerializer(many=True, read_only=False)
+    # pools = PoolSerializer(many=True, read_only=True)
 
     class Meta:
         model = Tournament
-        fields = ['tournament_id', 'name', 'status', 'players_count', 'users', 'max_users']
+        fields = ['tournament_id', 'name', 'status', 'users', 'max_users', 'players_count']
 
     def validate_users(self, value):
         """Valider que les usernames existent dans la base de données."""

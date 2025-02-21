@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -37,45 +35,63 @@ def tournament_service_running(request):
 ################################################################
 
 # ************************** CREATE ************************** #
-class CreateTournamentView(generics.CreateAPIView):
+class CreateTournamentView(generics.APIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
 
-    def perform_create(self, serializer):
-        try:
-            tournament_id = uuid.uuid4()
-            # Récupérer les usernames envoyés dans le body
-            usernames = self.request.data.get('users', [])
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        tournament = Tournament.objects.filter(users__username=user.username)
+        if tournament:
+            return JsonResponse({
+                "message": 'You are already in a tournament'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-            # Inclure l'utilisateur qui crée le tournoi (l'ID de l'utilisateur actuel)
-            user = self.request.user
-            if user.username not in usernames:
-                usernames.append(user.username)
+        tournament_name = request.data.get('name')
+        serializer = TournamentSerializer(name=tournament_name)
+        serializer.is_valid(raise_exception=True)
+        test = serializer.save()
+        test.users.add(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-            # Vérifier que le nombre d'utilisateurs ne dépasse pas 10
-            if len(usernames) > 10:
-                raise ValidationError("A tournament cannot have more than 10 users.")
 
-            # Vérifier que les utilisateurs existent
-            users = []
-            for username in usernames:
-                try:
-                    existing_user = UserProfile.objects.get(username=username)
-                    users.append(existing_user)
-                except UserProfile.DoesNotExist:
-                    raise ValidationError(f"User with username '{username}' does not exist.")
 
-            # Créer le tournoi avec le statut "waiting"
-            tournament = serializer.save(status='waiting', tournament_id=tournament_id)  # Ajout du tournoi_id
+
+    # def perform_create(self, serializer):
+    #     try:
+    #         tournament_id = uuid.uuid4()
+    #         # Récupérer les usernames envoyés dans le body
+    #         usernames = self.request.data.get('users', [])
+
+    #         # Inclure l'utilisateur qui crée le tournoi (l'ID de l'utilisateur actuel)
+    #         user = self.request.user
+    #         if user.username not in usernames:
+    #             usernames.append(user.username)
+
+    #         # Vérifier que le nombre d'utilisateurs ne dépasse pas 10
+    #         if len(usernames) > 10:
+    #             raise ValidationError("A tournament cannot have more than 10 users.")
+
+    #         # Vérifier que les utilisateurs existent
+    #         users = []
+    #         for username in usernames:
+    #             try:
+    #                 existing_user = UserProfile.objects.get(username=username)
+    #                 users.append(existing_user)
+    #             except UserProfile.DoesNotExist:
+    #                 raise ValidationError(f"User with username '{username}' does not exist.")
+
+    #         # Créer le tournoi avec le statut "waiting"
+    #         tournament = serializer.save(status='waiting', tournament_id=tournament_id)  # Ajout du tournoi_id
             
-            tournament.users.set(users)
-            tournament.save()
+    #         tournament.users.set(users)
+    #         tournament.save()
 
-            tournament.create_pools()
+    #         tournament.create_pools()
 
-        except Exception as e:
-            raise ValidationError({"message": "Error while creating tournament", "error": str(e)})
+    #     except Exception as e:
+    #         raise ValidationError({"message": "Error while creating tournament", "error": str(e)})
 class EndMatchView(APIView):
     permission_classes = [IsAuthenticated]
 

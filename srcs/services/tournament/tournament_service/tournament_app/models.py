@@ -21,36 +21,36 @@ class Tournament(models.Model):
     ]
 
     tournament_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)  # ID unique généré
-    name = models.CharField(max_length=255, unique=True)
-    status = models.CharField(max_length=10, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
-    users = models.ManyToManyField(UserProfile)  # Many-to-Many relation with UserProfile
+    name = models.CharField(max_length=64, unique=True)
+    status = models.CharField(max_length=16, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
+    users = models.ManyToManyField(UserProfile, blank=True)  # Many-to-Many relation with UserProfile
     max_users = models.IntegerField(default=10)  # Maximum d'utilisateurs dans un tournoi
-    played_matches = models.IntegerField(default=0)
-    remaining_matches = models.IntegerField(default=0)
-    ongoing_matches = models.IntegerField(default=0)
-    total_matches = models.IntegerField(default=0)  # Ajouter un champ pour le total des matchs
+    # played_matches = models.IntegerField(default=0)
+    # remaining_matches = models.IntegerField(default=0)
+    # ongoing_matches = models.IntegerField(default=0)
+    # total_matches = models.IntegerField(default=0)  # Ajouter un champ pour le total des matchs
 
     @property
     def players_count(self):
         return self.users.count()  # C'est ok ici car 'users' est une relation ManyToMany
 
     def __str__(self):
-        return f"Tournament {self.id} {self.name} ({self.status})"
+        return f"Tournament {self.tournament_id} {self.name} ({self.status})"
 
-    def save(self, *args, **kwargs):
-        # Calculer les matchs totaux si nécessaire
-        if self.users.count() > 0 and self.total_matches == 0:
-            self.total_matches = (self.users.count() * (self.users.count() - 1)) // 2  # Matches à poules, chaque joueur contre chaque autre joueur
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Calculer les matchs totaux si nécessaire
+    #     if self.users.count() > 0 and self.total_matches == 0:
+    #         self.total_matches = (self.users.count() * (self.users.count() - 1)) // 2  # Matches à poules, chaque joueur contre chaque autre joueur
+    #     super().save(*args, **kwargs)
 
-    def update_match_stats(self):
-        self.played_matches = self.matches.filter(status='finished').count()
-        self.remaining_matches = self.total_matches - self.played_matches
-        self.ongoing_matches = self.matches.filter(status='playing').count()
+    # def update_match_stats(self):
+    #     self.played_matches = self.matches.filter(status='finished').count()
+    #     self.remaining_matches = self.total_matches - self.played_matches
+    #     self.ongoing_matches = self.matches.filter(status='playing').count()
 
-        if self.played_matches == self.total_matches:
-            self.status = 'finished'
-        self.save()
+    #     if self.played_matches == self.total_matches:
+    #         self.status = 'finished'
+    #     self.save()
 
     def is_full(self):
         return self.users.count() >= self.max_users
