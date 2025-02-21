@@ -5,6 +5,7 @@ export default class BaseView{
     constructor(router, params = {}){
         this.router = router
         this.params = params;
+        this.API_URL_USERS = 'https://localhost:4430/api/users/';
         this.API_URL_TEST = 'https://localhost:4430/api/users/test/';
         this.API_URL = 'https://localhost:4430/api/auth/';
         this.API_URL_SIGNUP = 'https://localhost:4430/api/auth/signup/';
@@ -28,7 +29,7 @@ export default class BaseView{
             this.app.innerHTML = await this.render();
             this.updateNavbar();
             await this.attachEvents();
-        } 
+        }
         catch (error) {
             console.error("Error in mount():", error);
         }
@@ -37,30 +38,26 @@ export default class BaseView{
     async navigateTo(path){
         this.router.navigateTo(path);
     }
-    
+
     getAccessToken(){
-        const userSession = this.getUserSession();
-        if(userSession){
-            return userSession.access_token;
-        }
-        return null;
+
+        return this.router.getAccessToken();
     }
 
     getUserSession(){
-        return JSON.parse(sessionStorage.getItem("userSession"));
+     
+        return this.router.getUserSession();
+    }
+
+    getUsername(){
+        return this.router.getUsername();
     }
 
     isAuthenticated() {
-       const userSession = this.getUserSession();
-       if(userSession){
-    //         console.log("Username:", userSession.username);
-    //         console.log("Access token:", userSession.access_token);
-    //         console.log("Refresh token:", userSession.refresh_token);
-           return true;
-       }
-       return false;
+
+        return this.router.isAuthenticated();
     }
-    
+
     updateNavbar(){
         const navbar = document.getElementById("navbar");
         if (navbar) {
@@ -68,10 +65,12 @@ export default class BaseView{
             <a href="/home">Home</a>
             <a href="/play-menu">Play Pong</a>
             <a href="/logout">Logout</a>
+            <a href="/profile">Profile</a>
             ` : `
             <a href="/home">Home</a>
             <a href="/log-in">Log in</a>
             <a href="/sign-up">Sign up</a>
+            <a href="/play-menu">Game</a>
             `;
         }
     }
@@ -95,7 +94,7 @@ export default class BaseView{
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
-        } 
+        }
         catch (error) {
             console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
@@ -122,7 +121,7 @@ export default class BaseView{
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
-        } 
+        }
         catch (error) {
             console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
@@ -149,14 +148,14 @@ export default class BaseView{
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
-        } 
+        }
         catch (error) {
             console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
 
-    attachEvents(){
+    async attachEvents(){
         console.log('Events attached');
     }
 }
