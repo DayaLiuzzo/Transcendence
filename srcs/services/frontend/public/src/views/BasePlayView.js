@@ -10,12 +10,7 @@ export default class BasePlayView extends BaseView{
     }
 
     async handleJoinRoom() {
-        const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
-        if (result.success) {
-            document.getElementById("response-result").innerText = "Success: " + JSON.stringify(result.data, null, 2);
-        } else {
-            document.getElementById("response-result").innerText = "Error: " + JSON.stringify(result.error, null, 2);
-        }
+        throw new Error("handleJoinRoom() doit être implémentée dans une classe dérivée.");
     }
 
     async test(){

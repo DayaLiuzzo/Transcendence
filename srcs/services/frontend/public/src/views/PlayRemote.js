@@ -8,6 +8,15 @@ export default class PlayRemote extends BasePlayView{
     showError(message){
         alert(message);
     }
+    
+    async handleJoinRoom() {
+        const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
+        if (result.success) {
+            document.getElementById("response-result").innerText = "You are affected in " + result.data.room_id;
+        } else {
+            document.getElementById("response-result").innerText = "Unaible finding a room, try again";
+        }
+    }
 
     async render(){
         return `
