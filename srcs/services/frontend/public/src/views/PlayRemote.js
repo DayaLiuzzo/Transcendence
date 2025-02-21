@@ -1,21 +1,12 @@
-import BaseView from './BaseView.js';
+import BasePlayView from './BasePlayView.js';
 
-export default class PlayRemote extends BaseView{
+export default class PlayRemote extends BasePlayView{
     constructor(params){
         super(params);
     }
 
     showError(message){
         alert(message);
-    }
-
-    async handleJoinRoom() {
-        const result = await this.sendPostRequest(this.API_URL + 'join_room/', {}); // Envoie une requête POST vide
-        if (result.success) {
-            document.getElementById("response-result").innerText = "Success: " + JSON.stringify(result.data, null, 2);
-        } else {
-            document.getElementById("response-result").innerText = "Error: " + JSON.stringify(result.error, null, 2);
-        }
     }
 
     async render(){
@@ -33,14 +24,4 @@ export default class PlayRemote extends BaseView{
         </div>
     `;
     }
-
-    async mount() {
-        try {
-            this.app.innerHTML = await this.render();
-            await this.handleJoinRoom();
-        } catch (error) {
-            console.error("Error in mount():", error);
-        }
-    }
-
 }
