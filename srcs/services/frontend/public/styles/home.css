@@ -44,7 +44,6 @@
     transition: background-color 0.5s ease-in-out, color 0.5 ease-in-out;
   }
 
-
 #follow-scroll-elements {
   font: 1.5em 'Times New Roman';
   font-style: italic;
@@ -55,7 +54,6 @@
   color: rgb(94, 94, 94);
   font-size: 1.5em;
 }
-
 
 #test-text span {
   display: inline-block;
@@ -93,21 +91,3 @@
   white-space: pre;
   text-align: right;
 }
-
-/* p {
-  font-size: 1.5em;
-  line-height: 1.5;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-}
-
-canvas.webgl {
-  display: none;
-}
-
-.ascii-effect {
-  position: fixed;
-  width: 50%;
-  height: 50%;
-} */

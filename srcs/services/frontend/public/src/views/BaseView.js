@@ -28,7 +28,7 @@ export default class BaseView{
             this.app.innerHTML = await this.render();
             this.updateNavbar();
             await this.attachEvents();
-        } 
+        }
         catch (error) {
             console.error("Error in mount():", error);
         }
@@ -37,7 +37,7 @@ export default class BaseView{
     async navigateTo(path){
         this.router.navigateTo(path);
     }
-    
+
     getAccessToken(){
         const userSession = this.getUserSession();
         if(userSession){
@@ -60,18 +60,19 @@ export default class BaseView{
        }
        return false;
     }
-    
+
     updateNavbar(){
         const navbar = document.getElementById("navbar");
         if (navbar) {
             navbar.innerHTML = this.isAuthenticated() ? `
             <a href="/home">Home</a>
-            <a href="/game">Game</a>
+            <a href="/play-menu">Game</a>
             <a href="/logout">Logout</a>
             ` : `
             <a href="/home">Home</a>
             <a href="/log-in">Log in</a>
             <a href="/sign-up">Sign up</a>
+            <a href="/play-menu">Game</a>
             `;
         }
     }
@@ -95,7 +96,7 @@ export default class BaseView{
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
-        } 
+        }
         catch (error) {
             console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
@@ -122,7 +123,7 @@ export default class BaseView{
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
-        } 
+        }
         catch (error) {
             console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
@@ -149,7 +150,7 @@ export default class BaseView{
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
-        } 
+        }
         catch (error) {
             console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};

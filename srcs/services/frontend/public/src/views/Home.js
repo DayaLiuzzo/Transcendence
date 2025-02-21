@@ -1,7 +1,5 @@
 import BaseView from './BaseView.js';
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { AsciiEffect } from "three/examples/jsm/effects/AsciiEffect.js";
+
 let connected = 1;
 
 
@@ -36,7 +34,7 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
           <a href="/game">Play me rn</a>
           </div>
           <div id="follow-scroll-elements">
-          <p>(I follow)</p>
+          <p>(drag me please ➔)</p>
           </div>
           <p id="test-text">
 
@@ -99,10 +97,10 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
             renderer.setSize(sizes.width, sizes.height);
             renderer.setPixelRatio(window.devicePixelRatio);
             // ascii effect a appliquer sur le mesh
-            const asciiChar = " :%~";
-            const effect = new AsciiEffect(renderer, asciiChar, {
+            const asciiChar = " .";
+            const effect = new THREE.AsciiEffect(renderer, asciiChar, {
               invert: false,
-              resolution: 0.2,
+              resolution: 0.25,
               scale: 1,
           });
           effect.setSize(sizes.width, sizes.height);
@@ -121,9 +119,9 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
             scene.add(camera);
 
             // controls for the camera
-           const controls = new OrbitControls(camera, effect.domElement);
+           const controls = new THREE.OrbitControls(camera, effect.domElement);
            controls.enableDamping = true;
-           controls.enableZoom = false;
+           controls.enableZoom = true;
 
           const clock = new THREE.Clock();
             const tick = () => {
@@ -150,6 +148,6 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
           };
 
 
-
 };
+
 

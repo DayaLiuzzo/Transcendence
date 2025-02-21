@@ -3,11 +3,12 @@ import LogIn from "./views/LogIn.js";
 import NotFound from "./views/NotFound.js";
 import SignUp from "./views/SignUp.js";
 import Game from "./views/Game.js";
-import * as THREE from "three";import PlayMenu from "./views/PlayMenu.js";
+import PlayMenu from "./views/PlayMenu.js";
 import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
+
 
 const routes = [
     { path: '/', view: Home, css: "styles/home.css" },
