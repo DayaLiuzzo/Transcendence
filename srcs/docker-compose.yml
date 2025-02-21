@@ -105,8 +105,13 @@ services:
     build: services/tournament
     container_name: tournament
     volumes:
-      - tournament_service_data:/service_code
+      #- tournament_service_data:/service_code
       - auth_keys:/keys
+    develop:
+      watch:
+        - action: sync
+          path: services/tournament/tournament_service
+          target: /service_code
     expose:
       - "8443"
     restart: on-failure
@@ -243,10 +248,10 @@ volumes:
       o: 'bind'
       device: $PWD/srcs/services/avatar_media
 
-  tournament_service_data:
-    name: tournament_service_data
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: $PWD/srcs/services/tournament/tournament_service
+        #  tournament_service_data:
+        #    name: tournament_service_data
+        #    driver: local
+        #    driver_opts:
+        #      type: 'none'
+        #      o: 'bind'
+        #      device: $PWD/srcs/services/tournament/tournament_service

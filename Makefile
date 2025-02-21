@@ -23,7 +23,7 @@ DB_TOURNAMENT_SERVICE	:=	tournament
 all: check_certs up 
 
 up:
-	docker compose -f srcs/docker-compose.yml up --build -d --remove-orphans
+	docker compose -f srcs/docker-compose.yml up --build --watch --remove-orphans
 
 stop:
 	docker compose -f srcs/docker-compose.yml stop 
