@@ -17,4 +17,3 @@ for (let word of words) {
 }
 
 
-console.log(words_occurences)
