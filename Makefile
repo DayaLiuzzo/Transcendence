@@ -35,7 +35,7 @@ restart:
 	docker compose -f srcs/docker-compose.yml restart
 
 down:
-	docker compose -f srcs/docker-compose.yml down
+	docker compose -f srcs/docker-compose.yml down --volumes
 
 .PHONY: all up stop start restart down
 
@@ -171,7 +171,10 @@ logs_$(DB_USERS_SERVICE):
 ######################## Get status and all logs #######################
 ########################################################################
 
-status	: logs ; docker ps -a
+status: logs
+	docker ps -a
+
+.PHONY: status
 
 #########################################################################
 ############################ CERTS ###################################
@@ -183,6 +186,8 @@ check_certs:
 	else \
 		echo "Certs already up"; \
 	fi
+
+.PHONY: check_certs
 
 #########################################################################
 ############################ CLEANING ###################################
@@ -258,13 +263,19 @@ clean: down clean_images clean_migration clean_cache clean_volumes clean_contain
 
 re: clean all
 
+.PHONY:	\
+	clean_cache			\
+	clean_migration		\
+	clean_images		\
+	clean_volumes		\
+	clean_containers	\
+	clean_network		\
+	clean_certs			\
+	clean				\
+	re					\
+
 ########################################################################
 ########################## Manage directories ##########################
 ########################################################################
 
 
-########################################################################
-################################ .PHONY ################################
-########################################################################
-
-.PHONY: clean re status 
