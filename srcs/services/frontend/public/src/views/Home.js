@@ -35,7 +35,7 @@ export default class Home extends BaseView{
         else {
           return `
           <h1>Bienvenue sur la page d'accueil</h1>
-          <p>C'est la vue principale de notre SPA.</p>
+          <p>C'est la vue principale Deconnectee de notre SPA.</p>
           <div class="profile">
           <div><a href="/edit-profile">Log-in</a></div>
           <div><a href="/edit-profile">Sign up</a></div>

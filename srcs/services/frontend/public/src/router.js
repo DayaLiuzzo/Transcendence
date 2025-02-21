@@ -8,19 +8,20 @@ import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
+import EditProfile from "./views/EditProfile.js";
 
 const routes = [
     { path: '/', view: Home, css: "styles/home.css" },
     { path: '/home', view: Home, css: "styles/home.css" },
-    { path: '/log-in', view: LogIn, css: "styles/log-in.css" },
-    { path: '/sign-up', view: SignUp, css: "styles/sign-up.css" },
+    { path: '/log-in', view: LogIn, css: "styles/log-in.css", requiresGuest: true },
+    { path: '/sign-up', view: SignUp, css: "styles/sign-up.css", requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css"},
     { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css"},
-    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"}
-    
+    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"},
+    { path: '/edit-profile', view: EditProfile, css: "styles/core.css", requiresAuth: true }
 
 ];
 
@@ -37,6 +38,31 @@ class Router{
 
     getRoute(path){
         return this.routes.find(route => route.path === path);
+    }
+
+    getAccessToken(){
+        const userSession = this.getUserSession();
+        if(userSession){
+            return userSession.access_token;
+        }
+        return null;
+    }
+
+    getUserSession(){
+        return JSON.parse(sessionStorage.getItem("userSession"));
+    }
+
+    isAuthenticated() {
+       const userSession = this.getUserSession();
+       if(userSession){
+    //         console.log("Username:", userSession.username);
+    //         console.log("Access token:", userSession.access_token);
+    //         console.log("Refresh token:", userSession.refresh_token);
+           console.log("Authenticated");
+            return true;
+       }
+       console.log("Not authenticated");
+       return false;
     }
 
     updateBodyClass(path) {
@@ -72,7 +98,32 @@ class Router{
         }
 
     async navigateTo(path){
+        const route = this.getRoute(path);
+        const isLoggedIn = this.isAuthenticated();
+        if (route.requiresAuth && !isLoggedIn) {
+            this.navigateTo("/log-in");
+            return;
+        }
+        if (route.requiresGuest && isLoggedIn) {
+            this.navigateTo("/home");
+            return;
+        }
         history.pushState({}, "", path);
+        await this.loadView(path);
+    }
+
+    async initialLoad(path){
+        const route = this.getRoute(path);
+        const isLoggedIn = this.isAuthenticated();
+        if (route.requiresAuth && !isLoggedIn) {
+            this.navigateTo("/log-in");
+            return;
+        }
+        if (route.requiresGuest && isLoggedIn) {
+            this.navigateTo("/home");
+            return;
+        }
+        history.replaceState({}, "", path);
         await this.loadView(path);
     }
 
@@ -95,5 +146,5 @@ class Router{
 // // Handle initial page load
 window.addEventListener("DOMContentLoaded", () => {
     const router = new Router(routes);
-    router.loadView(window.location.pathname);
+    router.initialLoad(window.location.pathname);
 });

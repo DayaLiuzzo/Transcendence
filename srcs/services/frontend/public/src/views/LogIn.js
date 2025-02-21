@@ -18,10 +18,6 @@ export default class LogIn extends BaseView{
         return null;
     }
 
-    isAuthenticated() {
-        return localStorage.getItem("jwt") !== null;
-    }
-
     getFormData(){
         return {
             username: document.getElementById("login-username").value,

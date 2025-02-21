@@ -39,26 +39,29 @@ export default class BaseView{
     }
     
     getAccessToken(){
-        const userSession = this.getUserSession();
-        if(userSession){
-            return userSession.access_token;
-        }
-        return null;
+        // const userSession = this.getUserSession();
+        // if(userSession){
+        //     return userSession.access_token;
+        // }
+        // return null;
+        return this.router.getAccessToken();
     }
 
     getUserSession(){
-        return JSON.parse(sessionStorage.getItem("userSession"));
+        // return JSON.parse(sessionStorage.getItem("userSession"));
+        return this.router.getUserSession();
     }
 
     isAuthenticated() {
-       const userSession = this.getUserSession();
-       if(userSession){
-    //         console.log("Username:", userSession.username);
-    //         console.log("Access token:", userSession.access_token);
-    //         console.log("Refresh token:", userSession.refresh_token);
-           return true;
-       }
-       return false;
+    //    const userSession = this.getUserSession();
+    //    if(userSession){
+    // //         console.log("Username:", userSession.username);
+    // //         console.log("Access token:", userSession.access_token);
+    // //         console.log("Refresh token:", userSession.refresh_token);
+    //        return true;
+    //    }
+    //    return false;
+        return this.router.isAuthenticated();
     }
     
     updateNavbar(){
