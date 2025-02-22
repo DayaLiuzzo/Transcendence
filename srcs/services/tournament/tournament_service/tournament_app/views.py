@@ -124,6 +124,37 @@ class JoinTournamentView(APIView):
                     'message': 'Tournament not found'
                 }, status=status.HTTP_404_NOT_FOUND)
 
+
+class LaunchTournamentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, tournament_id):
+        try:
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            user = request.user
+
+            if user != tournament.owner:
+                return Response({
+                        'message': 'Tournament cannot be launched, you are not the owner'
+                    }, status=status.HTTP_403_FORBIDDEN)
+
+            if tournament.players_count < 2:
+                return Response({
+                        'message': 'Cannot start tournament alone'
+                    }, status=status.HTTP_403_FORBIDDEN)
+
+            # TODO: send requests to rooms service
+
+            tournament.status = 'playing'
+            return Response({
+                    'message': 'Tournament started'
+                }, status=status.HTTP_200_OK)
+
+        except Tournament.DoesNotExist:
+            return Response({
+                    'message': 'Tournament not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+
 class EndMatchView(APIView):
     permission_classes = [IsAuthenticated]
 
