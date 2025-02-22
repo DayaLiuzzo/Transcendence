@@ -123,7 +123,7 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
             // controls for the camera
            const controls = new THREE.OrbitControls(camera, effect.domElement);
            controls.enableDamping = true;
-           controls.enableZoom = true;
+           controls.enableZoom = false;
 
             window.threeInstance = {
               scene,
