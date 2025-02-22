@@ -2,7 +2,7 @@ import BaseView from './BaseView.js';
 import { cleanUpThree } from '../three/utils.js';
 
 
-let connected = 1;
+//let connected = 1;
 
 
 export default class Home extends BaseView{
