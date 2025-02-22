@@ -116,8 +116,7 @@ class CreateRoomView(APIView):
             new_room.save()
 
             # Mise à jour de l'utilisateur
-            user.room = new_room
-            # user.isconnected = True
+            user.rooms.add(new_room)
             user.save()
             return Response({"message": "New room created", "room_id": new_room.room_id}, status=status.HTTP_201_CREATED)
         
@@ -134,40 +133,33 @@ class JoinRoomView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).first()
 
-        # Vérifier si l'utilisateur est déjà dans une room
         user = request.user
-        if user.room:
-            return Response({
-                "message": "You are already in a room.",
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
+
+        waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).exclude(player1=user).exclude(player2=user).first()
+
         if waiting_room:
             return self.join_room(request, waiting_room, user)
+        
         return self.create_room(request, user)
 
     def join_room(self, request, waiting_room, user):
         try:
-            # Vérifier si la room est pleine
             if waiting_room.players_count >= 2:
                 return Response({
                     "message": "The room is already full.",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            # Vérifier si la room est dans un statut incorrect
             if waiting_room.status != 'waiting':
                 return Response({
                     "message": "This room is not available for joining.",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            # Vérifier si player1 et player2 sont déjà occupés
             if waiting_room.player1 and waiting_room.player2:
                 return Response({
                     "message": "This room already has two players.",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            # Associer l'utilisateur à la room en tant que player1 ou player2
             if not waiting_room.player1:
                 waiting_room.player1 = user
             elif not waiting_room.player2:
@@ -178,9 +170,7 @@ class JoinRoomView(APIView):
                 waiting_room.status = 'playing'
             waiting_room.save()
 
-            # Mise à jour de l'utilisateur
-            user.room = waiting_room
-            # user.isconnected = True
+            user.rooms.add(waiting_room)
             user.save()
 
             return Response({
@@ -188,7 +178,7 @@ class JoinRoomView(APIView):
                 "room_id": waiting_room.room_id,
                 "players_count": waiting_room.players_count,
                 "status": waiting_room.status,
-                "remaining_spots": 2 - waiting_room.players_count  # Nombre de places restantes
+                "remaining_spots": 2 - waiting_room.players_count
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -205,17 +195,18 @@ class JoinRoomView(APIView):
             new_room = Room.objects.create(room_id=room_id, status='waiting', players_count=1)
             new_room.player1 = user
             new_room.save()
-            user.room = new_room
+            
+            user.rooms.add(new_room)
             user.save()
+
             return Response({
                 "message": "New room created",
                 "room_id": new_room.room_id
             }, status=status.HTTP_201_CREATED)
 
         except IntegrityError as e:
-            return Response(
-                {"message": "Room ID conflict, try again.", "error": str(e)},
-                status=status.HTTP_400_BAD_REQUEST
+            return Response({"message": "Room ID conflict, try again.", "error": str(e)
+            }, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             return Response({
@@ -224,6 +215,73 @@ class JoinRoomView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         #call create game
         #call join game
+
+class QuitRoomView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+
+        room_id = request.data.get("room_id")
+        if not room_id:
+            return Response({
+                "message": "Room ID is required.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        room = get_object_or_404(Room, room_id=room_id)
+
+        if room not in user.rooms.all():
+            return Response({
+                "message": "You are not in this room.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if room.player1 == user:
+            room.player1 = None
+        elif room.player2 == user:
+            room.player2 = None
+        # else:
+        #     return Response({
+        #         "message": "User is not in the room.",
+        #     }, status=status.HTTP_400_BAD_REQUEST)
+
+        room.players_count -= 1
+
+        if room.players_count < 2:
+            room.status = 'waiting'
+
+        room.save()
+
+        # Dissocier l'utilisateur de la room
+        user.rooms.remove(room)
+        user.save()
+
+        return Response({
+            "message": f"You have successfully left the room {room.room_id}.",
+            "room_id": room.room_id,
+            "players_count": room.players_count,
+            "status": room.status,
+        }, status=status.HTTP_200_OK)
+
+class QuitAllRoomsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        rooms_to_leave = user.rooms.all()
+
+        if not rooms_to_leave:
+            return Response({"message": "You are not in any room."}, status=status.HTTP_400_BAD_REQUEST)
+
+        for room in rooms_to_leave:
+            room.players_count -= 1
+            if room.players_count < 2:
+                room.status = 'waiting'
+            room.save()
+
+            user.rooms.remove(room)
+
+        user.save()
+        return Response({"message": "You have successfully left all rooms."}, status=status.HTTP_200_OK)
 
 # *************************** READ *************************** #
 

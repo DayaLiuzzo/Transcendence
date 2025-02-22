@@ -28,14 +28,13 @@ class Room(models.Model):
 
 ################################################################
 #                                                              #
-#                             UserProfile                             #
+#                          UserProfile                         #
 #                                                              #
 ################################################################
 
 class UserProfile(models.Model):
     username = models.CharField(max_length=255, unique=True)
-    # isconnected = models.BooleanField(default=0)   
-    room = models.ForeignKey('Room', on_delete=models.SET_NULL, null=True, blank=True)  # Relation avec Room
+    rooms = models.ManyToManyField('Room', blank=True)
 
     def __str__(self):
         return self.username
