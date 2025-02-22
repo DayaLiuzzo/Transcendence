@@ -35,24 +35,24 @@ def tournament_service_running(request):
 ################################################################
 
 # ************************** CREATE ************************** #
-class CreateTournamentView(generics.APIView):
+class CreateTournamentView(APIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        tournament = Tournament.objects.filter(users__username=user.username)
-        if tournament:
-            return JsonResponse({
-                "message": 'You are already in a tournament'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        tournament_name = request.data.get('name')
-        serializer = TournamentSerializer(name=tournament_name)
+        fields = ['name', 'max_users']
+        data = {}
+        for field in fields:
+            value = request.data.get(field)
+            if value:
+                data[field] = value
+        serializer = TournamentSerializer(data=data)
         serializer.is_valid(raise_exception=True)
-        test = serializer.save()
-        test.users.add(user)
+        tournament = serializer.save()
+        tournament.users.add(user)
+        tournament.owner = user
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

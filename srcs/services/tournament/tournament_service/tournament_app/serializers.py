@@ -6,14 +6,9 @@ from .models import Pool
 from .models import Match
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    is_authenticated = serializers.SerializerMethodField()
-    
     class Meta:
         model = UserProfile
         fields = ['username', 'is_authenticated']
-
-    def get_is_authenticated(self, obj):
-        return obj.is_authenticated  # Vérifier l'état d'authentification de l'utilisateur
 
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,10 +27,15 @@ class TournamentSerializer(serializers.ModelSerializer):
     players_count = serializers.ReadOnlyField()
     # users = UserProfileSerializer(many=True, read_only=False)
     # pools = PoolSerializer(many=True, read_only=True)
+    owner = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),
+        allow_null=True,
+        required=False
+    )
 
     class Meta:
         model = Tournament
-        fields = ['tournament_id', 'name', 'status', 'users', 'max_users', 'players_count']
+        fields = ['tournament_id', 'name', 'status', 'owner', 'users', 'max_users', 'players_count']
 
     def validate_users(self, value):
         """Valider que les usernames existent dans la base de données."""
