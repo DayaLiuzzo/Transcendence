@@ -110,6 +110,9 @@ services:
       - auth_keys:/keys
     develop:
       watch:
+        - action: sync+restart
+          path: services/tournament/tournament_service/tournament_app/models.py
+          target: /service_code/tournament_app/models.py
         - action: sync
           path: services/tournament/tournament_service
           target: /service_code
@@ -117,7 +120,11 @@ services:
       - "8443"
     restart: on-failure
     depends_on:
-      - db_tournament
+      db_tournament:
+        condition: service_healthy
+        restart: true
+      auth:
+        condition: service_started
     env_file: .env
 
   db_auth:
@@ -164,6 +171,11 @@ services:
     env_file: .env
     expose:
       - '5432'
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 1m30s
+      start_period: 30s
+      start_interval: 5s
 
   db_users:
     image: db_users
