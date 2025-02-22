@@ -8,6 +8,7 @@ import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
+
 import EditProfile from "./views/EditProfile.js";
 import Profile from "./views/Profile.js";
 
@@ -22,8 +23,8 @@ const routes = [
     { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css"},
-    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"},
-    { path: '/edit-profile', view: EditProfile, css: "styles/core.css", requiresAuth: true }
+    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"}
+
 
 ];
 
@@ -49,7 +50,7 @@ class Router{
         }
         return null;
     }
-    
+
     getAccessToken(){
         const userSession = this.getUserSession();
         if(userSession){
@@ -148,7 +149,7 @@ class Router{
         //     const path = window.location.pathname;
         //     const route = this.getRoute(path);
         //     const isLoggedIn = this.isAuthenticated();
-    
+
         //     // Check if the user is trying to access a protected route without being logged in
         //     if (route && route.requiresAuth && !isLoggedIn) {
         //         history.replaceState({}, "", "/log-in");
