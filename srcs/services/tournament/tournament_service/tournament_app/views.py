@@ -329,16 +329,28 @@ class DeleteTournamentView(APIView):
         try:
             # Récupérer le tournoi à partir de l'ID (ou de son nom)
             tournament = Tournament.objects.get(tournament_id=tournament_id)
-            
+            user = request.user
             # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
-            if tournament.users.filter(id=request.user.id).exists() or request.user.is_staff:
+            # if user.is_staff or (user == tournament.owner and tournament.status != 'playing'):
+            if user == tournament.owner and tournament.status != 'playing':
                 tournament.delete()
-                return Response({"message": "Tournament deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+                return Response({
+                    "message": "Tournament deleted successfully"
+                    }, status=status.HTTP_200_OK)
             else:
-                return Response({"message": "You do not have permission to delete this tournament."}, status=status.HTTP_403_FORBIDDEN)
+                if tournament.status == 'playing':
+                    return Response({
+                        "message": "Tournament has not finished yet"
+                        }, status=status.HTTP_403_FORBIDDEN)
+                else:
+                    return Response({
+                        "message": "You are not the owner of this tournament"
+                        }, status=status.HTTP_403_FORBIDDEN)
         
         except Tournament.DoesNotExist:
-            return Response({"message": "Tournament not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({
+                "message": "Tournament not found"
+                }, status=status.HTTP_404_NOT_FOUND)
 
 ################################################################
 #                                                              #
