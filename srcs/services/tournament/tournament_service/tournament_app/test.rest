@@ -59,11 +59,14 @@ GET https://localhost:4430/api/tournament/test/
 
 #create tournament
 POST https://localhost:4430/api/tournament/create_tournament/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjQ3MzY4LCJpYXQiOjE3NDAyNDE5NjgsImp0aSI6IjRlYTczN2VlMjZmYTRmMzM5ZTFjMmJmMzQyMTljMmFjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.YShB7JRJDsPctDwvxqKvjzVSp2jZwzwhnLDsNGwN3XR65M_VicYd7X7XGo-YOwGKULhxSGlPHgHhJG-U9aPIImfS0ggH_HZQptSutL-lrhtYubO2WWTZog50pQ1YjKrE6evAiXit-TU1Lh42Qz47VdfQAA14Q-PNC2B_u05dxi5KvfsdStJVYRWemCZSH_ygPAMmRu20bJSmQ7FKG1u6OgzFxr5dfDlerXZwqfrZ08zws2n4f9MFNphLzVUg2O6tLFmelAkBuvyYZPTmt8zPdiji4DzfAB4J6Q7nRtIWsGiEtwjBT2TEjS7c0u-lSiwfJ3f6NDjo8PGSbxSEbhd1fQ
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjU4MTI5LCJpYXQiOjE3NDAyNTI3MjksImp0aSI6IjEzZWJmZGEwZmNiMzQ0N2Y5MDc2OWY4MGJhZjVjMGI5IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJ0a3QifQ.bDqSrIz3FUniuhXzEqfIYbJQd1Zw3ayyBCEheKko_05TykyaZTNVgS1bHpUs5DBvcpB8BqNj3nEyyg8O13tKqSLS09_5QosIa2rOmVEl0X4jwRvjWyOy92rTIcvjj3xyzPUdjQ6zJY_2M6d-iauxv3ZhpwNOZYFlXXIXV7h4FC9RsRlv4x3m9kbOy6o1prCTwK47MeMOkH3gvarXOiba4eW4HWNE1WnrewUTxceRtSRDxYYWnfItx2C8Mo9dlvE4ptt2s6zEKezAasmBOFTy4yIHWzhBVx1F8XnZZ6uHxRas03uOUOlSzISVcUJVeJaKgnGEMnQZ2Hnlnysp5k4u2Q
 Content-Type: application/json
 
 {
-    "name": "chokbaar de bz",
+    "name": "chokbaaaaaar de bz",
+    "status": "playing",
+    "users_count": 32,
+    "owner": 1,
     "max_users": 16
 }
 ###
@@ -85,8 +88,8 @@ Content-Type: application/json
 # *************************** DELETE *************************** #
 
 #delete tournament
-DELETE https://localhost:4430/api/tournament/delete/18646961-83ff-4409-9772-d1f9fd592b71/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjQ3ODU1LCJpYXQiOjE3NDAyNDI0NTUsImp0aSI6ImJiNTcyZGU0OTA4ZjQ1ZTNiNjg3NGNlYjFkYzVjMzJjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.k8ZTeOU7etubPdhH_bConbVmcgFwIlrWXem_mHXH06xtsnTI0Hiw9kx-btEWmckJMC_PE1V8HGc7eqIkYAMDC2J9Ic9UsxEbMLAwoVP6soWFV0iddo2sfnzojgfnP-fBs-5W61YkrIrhNuwyWVPLIAtTsseMqmRp-g1wZ1eX5xX0QHp6k1vR-JOqgVsG8AJOJxZB0nwvryaXNYOoyPaQzSDQ7lOrA3rLi6Y7Lf4mlPgk4ROOGuTlm8RVmaGQdo70mjYtljx8wO_GpWyRXhVgio8ShimNq8vEsUbyO88_NKweQjqu1U3n3o7yyJ_zik3mO-cMYC5IL5EsqgjQX_3Nbw
+DELETE https://localhost:4430/api/tournament/delete/5f7d5291-312b-4cf9-9231-e57ad13ea093/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjU0OTIyLCJpYXQiOjE3NDAyNDk1MjIsImp0aSI6IjdhNDhjNzZhZTE2MTRiM2NhMmZkZTY0NjE3ZWU3YTI1IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.PjlxWf4s3NJWpN1ftkQ2jcikfRgS9sLgjV6Bsw2bv6xmMqw368qiThjdgrIxRh-0YBmf28bKITZLfTbeqYk6IEQQfcGOxWCQ3cEJu_nVM3XzTR1gU6lSVLI_fvpP7K-5hJRCF0m1XFpt_DvkrtznXgTGU2ai0VmMT-iUvljzGsBvN8pMQWB_R9r9n2R4Ys9vk27Z0vWs5pZDsT9GCaet6gSB37vOlBM_fycu-LVQgT69gLMAo9vFndsz_4ANmjuRcv0pNSjzMGB-sQmjy8bnStbIT2yehuB3_Az9EpYklEP4B75CeUyUzK3pRH3UorN7SS2MnYDPrtFUkZOhXOBVKg
 ###
 
 # *************************** READ *************************** #
@@ -98,7 +101,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 #list all tournament
 GET https://localhost:4430/api/tournament/list/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjQ2NTQ0LCJpYXQiOjE3NDAyNDExNDQsImp0aSI6ImFkOThkZTY1OGUxZjQ3ZjJhYWFjYWQ0N2M5NzZjMmVlIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.ips6A5TLSraZITpt9_odE4LdSNw3z_4ByRonDPCmyJUvEEGnY4IGQad6twcDaPqyzwI90NChss6jcKqmcylw42grpkNsYa9kX7M0Nmy6G-kI-daeBkRwYvOyVrISUSbHzf4dM33V4ihdGw6m_N-1_rPScczWS1IaY962pN3cvn6vt4kn7j4-zlpE-nwFpCHQw2feanxhMTPN5xjkPG11tTXkzpmfqGpZ9zBO1Iy_5AEfNymeF1luSz_Q21D4dbxFHoYmtwZ7NAwtIb7AkvIyh5I3om8CvNiT1-lEt3a-uveD-dOekggMcMiDUJHHpp_jWQj53t996xrsbd0or-QV_A
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjU4MTY0LCJpYXQiOjE3NDAyNTI3NjQsImp0aSI6ImRiZDE4ZjcxYTMxMDQ3Mjk4Y2IwM2E2ODY1OGUxNmFhIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.CM1EaAnkZKfqTHWFkIrafzLuPfBZzBSeiFdq2_-3HHmBU2_KfmOqldSAQr25P0wXJV3tPR2npGPLhsXC-wXyMbzIVdEysXUZYahGg0cfI52-2uyVaJvZVbKbZfGbSsC-FsLtrToYuO-znUlMJ5H5VTN_Vurkq1Vd0O3KfGabxmaQqQU5TvfJ9TfqYaT3DDn13nD0I5Af__fdB5vbo2jOBvWHELPoj42NjnhAglqLXDGlSNifjPJkZY-4CM1aVml64mcYHiUIDQewiUwrXc9BQo1BCcf6blJoINTP_pVbaE-k9TEGUDMAiOdLFOf-KAJNR1Fh1H5IVZj3kGkozECwuA
 
 ###
 #list tournaments waiting to play

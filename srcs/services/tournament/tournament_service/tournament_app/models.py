@@ -24,7 +24,7 @@ class Tournament(models.Model):
     tournament_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)  # ID unique généré
     name = models.CharField(max_length=64, unique=True)
     status = models.CharField(max_length=16, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
-    users = models.ManyToManyField(UserProfile, blank=True, related_name='users')  # Many-to-Many relation with UserProfile
+    users = models.ManyToManyField(UserProfile, blank=True, related_name='list_users')  # Many-to-Many relation with UserProfile
     max_users = models.IntegerField(default=10, validators=[MinValueValidator(2), MaxValueValidator(32)])  # Maximum d'utilisateurs dans un tournoi
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='owner')
     # played_matches = models.IntegerField(default=0)
@@ -33,7 +33,7 @@ class Tournament(models.Model):
     # total_matches = models.IntegerField(default=0)  # Ajouter un champ pour le total des matchs
 
     @property
-    def players_count(self):
+    def users_count(self):
         return self.users.count()  # C'est ok ici car 'users' est une relation ManyToMany
 
     def __str__(self):

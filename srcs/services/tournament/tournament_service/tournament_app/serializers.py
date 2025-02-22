@@ -24,26 +24,25 @@ class PoolSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'tournament', 'users', 'matches']
 
 class TournamentSerializer(serializers.ModelSerializer):
-    players_count = serializers.ReadOnlyField()
+    users_count = serializers.ReadOnlyField()
     # users = UserProfileSerializer(many=True, read_only=False)
     # pools = PoolSerializer(many=True, read_only=True)
+    users = serializers.PrimaryKeyRelatedField(
+                many=True,
+                queryset=UserProfile.objects.all(),
+                required=False
+            )
     owner = serializers.PrimaryKeyRelatedField(
-        queryset=UserProfile.objects.all(),
-        allow_null=True,
-        required=False
-    )
+                queryset=UserProfile.objects.all(),
+                required=False
+            )
 
     class Meta:
         model = Tournament
-        fields = ['tournament_id', 'name', 'status', 'owner', 'users', 'max_users', 'players_count']
-
-    def validate_users(self, value):
-        """Valider que les usernames existent dans la base de données."""
-        users = []
-        for username in value:
-            try:
-                user = UserProfile.objects.get(username=username)  # Recherche par username
-                users.append(user)
-            except UserProfile.DoesNotExist:
-                raise serializers.ValidationError(f"User with username '{username}' does not exist.")
-        return users
+        fields = ['tournament_id', 'name', 'status', 'owner', 'users', 'max_users', 'users_count']
+        extra_kwargs = {
+                'tournament_id': {'read_only': True},
+                'status': {'read_only': True},
+                'owner': {'read_only': True},
+                'users': {'read_only': True}
+        }

@@ -35,24 +35,32 @@ def tournament_service_running(request):
 ################################################################
 
 # ************************** POST ************************** #
-class CreateTournamentView(APIView):
+class CreateTournamentView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
+    queryset = Tournament.objects.all()
+    serializer_class = TournamentSerializer
 
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        fields = ['name', 'max_users']
-        data = {}
-        for field in fields:
-            value = request.data.get(field)
-            if value:
-                data[field] = value
-        serializer = TournamentSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        tournament = serializer.save()
+    def perform_create(self, serializer):
+        user = self.request.user
+        tournament = serializer.save(owner=user)
         tournament.users.add(user)
-        tournament.owner = user
-        tournament.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #def post(self, request, *args, **kwargs):
+    #    user = request.user
+    #    fields = ['name', 'max_users']
+    #    data = {}
+    #    for field in fields:
+    #        value = request.data.get(field)
+    #        if value:
+    #            data[field] = value
+    #    data['owner'] = user
+    #    data['players']
+    #    serializer = TournamentSerializer(data=data)
+    #    serializer.is_valid(raise_exception=True)
+    #    tournament = serializer.save()
+    #    tournament.users.add(user)
+    #    tournament.owner = user
+    #    tournament.save()
+    #    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 
