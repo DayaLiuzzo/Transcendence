@@ -22,6 +22,7 @@ export default class Profile extends BaseView{
             <div id="username-field"></div>
             <div id="biography-field"></div>
             <button id="edit-profile">Edit Profile</button>
+            <button id="logout">Logout</button>
 
         </div>
     `;
@@ -35,6 +36,12 @@ export default class Profile extends BaseView{
                 this.navigateTo('/edit-profile');
             });
         }
+        const logout = document.getElementById("logout");
+        if (logout) {
+            logout.addEventListener("click", async () => {
+                this.logout();
+            });
+        }
     }
 
     async mount(){
@@ -42,7 +49,6 @@ export default class Profile extends BaseView{
             this.app.innerHTML = await this.render();
             const username = this.getUsername();
             const userData = await this.sendGetRequest(this.API_URL_USERS + username + '/');
-            console.log(userData.data.biography);
             const biography = userData.data.biography;
             this.updateFieldContent("username-field", this.formatField("username", username));
             this.updateFieldContent("biography-field", this.formatField("biography", biography));

@@ -58,6 +58,14 @@ class Router{
         return null;
     }
 
+    getRefreshToken(){
+        const userSession = this.getUserSession();
+        if(userSession){
+            return userSession.refresh_token;
+        }
+        return null;
+    }
+
     getUserSession(){
         return JSON.parse(sessionStorage.getItem("userSession"));
     }

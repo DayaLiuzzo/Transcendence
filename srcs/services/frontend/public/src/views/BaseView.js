@@ -43,6 +43,10 @@ export default class BaseView{
 
         return this.router.getAccessToken();
     }
+    getRefreshToken(){
+
+        return this.router.getRefreshToken();
+    }
 
     getUserSession(){
      
@@ -175,6 +179,17 @@ export default class BaseView{
         };
 
         return formats[type] ? formats[type](value) : value;
+    }
+
+    logout() {
+        const refresh_token = this.getRefreshToken();
+        if (refresh_token) {
+            console.log(refresh_token);
+            this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
+            sessionStorage.removeItem("userSession");
+            this.navigateTo("/log-in");
+        }
+        // this.sendPostRequest(this.API_URL + 'logout/', {});
     }
 
     
