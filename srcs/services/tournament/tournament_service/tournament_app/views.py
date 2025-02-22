@@ -34,11 +34,9 @@ def tournament_service_running(request):
 #                                                              #
 ################################################################
 
-# ************************** CREATE ************************** #
+# ************************** POST ************************** #
 class CreateTournamentView(APIView):
     permission_classes = [IsAuthenticated]
-    queryset = Tournament.objects.all()
-    serializer_class = TournamentSerializer
 
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -53,6 +51,7 @@ class CreateTournamentView(APIView):
         tournament = serializer.save()
         tournament.users.add(user)
         tournament.owner = user
+        tournament.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
