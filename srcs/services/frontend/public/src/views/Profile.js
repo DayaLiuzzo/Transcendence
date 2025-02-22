@@ -1,3 +1,4 @@
+import { cleanUpThree } from '../three/utils.js';
 import BaseView from './BaseView.js';
 
 
@@ -11,7 +12,7 @@ export default class Profile extends BaseView{
     }
 
     async Profile(formData) {
-       
+
     }
 
     async render(){
@@ -50,7 +51,7 @@ export default class Profile extends BaseView{
             }
             this.updateNavbar();
             await this.attachEvents();
-        } 
+        }
         catch (error) {
             console.error("Error in mount():", error);
         }
