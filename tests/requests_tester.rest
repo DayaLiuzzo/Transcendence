@@ -20,9 +20,9 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "bidon",
+  "username": "bidoenep",
   "password": "Pass12456!",
-  "email": "d@gmail.com"
+  "email": "depe@gmail.com"
 }
 ###
 #get user token
@@ -30,7 +30,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "bidon",
+  "username": "bidoenep",
   "password": "Pass12456!"
 
 }
@@ -56,8 +56,8 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 }
 
 ###
-GET https://localhost:4430/api/users/bidon/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjM2OTQ1LCJpYXQiOjE3NDAyMzE1NDUsImp0aSI6IjY5NThmMjg0NGQ2ZDQ4MGFiMjZlOTA2YzFkOWZjNmY2IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJiaWRvbiJ9.UPIEd-kUQNIWQ9eKluQM-mRXP8g9le7WlWcJYtZJg31lmgKbK9ByMLTZ5lOWmg69oz1napFByQToce9T2NQXFZFcJS66H0S8vKbH_0iATFLG1dYTMO5wq5nWgiQNafKjgJfMX94eI9-y_cZCR4iQqEgkYQIhvzz7sgHVDurVnmtf-JJ1GzPuOq66DXHFv5kS5o6dLtYe8ey2j6jgq-QemTnyd3z-9SmDI_XmhgTBxcibRr27YRMSBcFhTUSLWI2VRSLqSGBv9CjI6Yzai4gMl7ZUpWcxSYbpqUJZzIkWPkLZt61eKSA5bUqHrIJqCTtcmtSMNdAWgN9y_ooc0w25YA
+GET https://localhost:4430/api/users/bidoenep/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjUwNTkwLCJpYXQiOjE3NDAyNDUxOTAsImp0aSI6ImI4YjRmNmQxODc5YjQ1NDM4NzFhZGIxZGY3NmE4YzdjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvZW5lcCJ9.fY2HydPtWT1smLkY64GtFko41qV8sdTIfbBCBlkp9b0vN-MQZYYAU41B9DEW27-V2imk7UKhcHj57LCUn5NcvIxi3SHVv4UeH0sxr8LMMcIMVbHSnvxcFX8lFlW2WvcHixV4ROeOgh4Oa81x8v4XhSX-FmN4K8QzUmZwHxNEAzGePdgbr5R8-nS_ZXls_7JkZ8ZrMV6qNbkOLaV5s8EgHo2EBXxiLZwifxQlvBz1ZlfWRYnh_NM6AoMZdnLT0xWPHri57wphvpl985mWK2cNKml2Vc2LmI8K503q2h7t3HHJsgkMq8Qp3OJyB5-cgoBpf0av4_jIm16wVdwC3UM0kQ
 
 ###
 PATCH https://localhost:4430/api/avatar/
