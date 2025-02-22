@@ -91,6 +91,39 @@ class CreateTournamentView(APIView):
 
     #     except Exception as e:
     #         raise ValidationError({"message": "Error while creating tournament", "error": str(e)})
+
+class JoinTournamentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, tournament_id):
+        try:
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            user = request.user
+
+            if tournament.users.filter(username=user.username).exists():
+                return Response({
+                    'message': 'You are already in this tournament'
+                    }, status=status.HTTP_403_FORBIDDEN)
+
+            if tournament.players_count >= tournament.max_users:
+                return Response({
+                    'message': 'The tournament is full'
+                    }, status=status.HTTP_403_FORBIDDEN)
+
+            if tournament.status != 'waiting':
+                return Response({
+                    'message': 'The tournament already started'
+                    }, status=status.HTTP_403_FORBIDDEN)
+
+            tournament.users.add(user)
+            serializer = TournamentSerializer(tournament)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Tournament.DoesNotExist:
+            return Response({
+                    'message': 'Tournament not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+
 class EndMatchView(APIView):
     permission_classes = [IsAuthenticated]
 
