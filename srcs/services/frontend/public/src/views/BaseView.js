@@ -157,4 +157,25 @@ export default class BaseView{
     async attachEvents(){
         console.log('Events attached');
     }
+
+    updateFieldContent(fieldId, content){
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.textContent = content;
+        }
+    }
+
+    formatField(type, value){
+        if (!value) return "No information available.";
+
+        const formats ={
+            username: (val) => `Username: ${val}`,
+            biography: (val) => `Biography: ${val}`,
+            email: (val) => `Email: ${val}`,
+        };
+
+        return formats[type] ? formats[type](value) : value;
+    }
+
+    
 }
