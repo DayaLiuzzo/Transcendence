@@ -349,7 +349,7 @@ class DeleteTournamentView(APIView):
                 if tournament.status == 'playing':
                     return Response({
                         "message": "Tournament has not finished yet"
-                        }, status=status.HTTP_403_FORBIDDEN)
+                        }, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     return Response({
                         "message": "You are not the owner of this tournament"
@@ -372,6 +372,7 @@ class CreateUserView(generics.CreateAPIView):
     permission_classes =[IsAuth]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
 
 # *************************** READ *************************** #
 

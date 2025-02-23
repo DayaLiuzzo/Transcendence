@@ -4,8 +4,10 @@ from tournament_app import views
 
 urlpatterns = [
     path('test/', views.tournament_service_running, name='tournament_home'),
+
     path('create_tournament/', views.CreateTournamentView.as_view(), name='create-tournament'),
-    path('delete/<uuid:tournament_id>/', views.DeleteTournamentView().as_view(), name='delete-tournament'),
+    path('delete_tournament/<uuid:tournament_id>/', views.DeleteTournamentView().as_view(), name='delete-tournament'),
+
     path('join/<uuid:tournament_id>/', views.JoinTournamentView().as_view(), name='join-tournament'),
     path('launch/<uuid:tournament_id>/', views.LaunchTournamentView().as_view(), name='launch-tournament'),
 
