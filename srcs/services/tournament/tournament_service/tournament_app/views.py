@@ -187,6 +187,7 @@ class LaunchTournamentView(APIView):
                     'message': 'Tournament not found'
                 }, status=status.HTTP_404_NOT_FOUND)
 
+
 class EndMatchView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -259,6 +260,12 @@ class EndMatchView(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
         
 # *************************** READ *************************** #
+
+class DetailTournamentView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Tournament.objects.all()
+    serializer_class = TournamentSerializer
+    lookup_field = 'tournament_id'
 
 class ListAllTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]

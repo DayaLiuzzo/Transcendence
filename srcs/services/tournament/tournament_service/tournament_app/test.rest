@@ -81,7 +81,6 @@ Content-Type: application/json
 #launch tournament
 POST https://localhost:4430/api/tournament/launch/6893cb56-b650-4d20-a2c1-bb1dc6a1dd16/
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMzIzNjgzLCJpYXQiOjE3NDAzMTgyODMsImp0aSI6ImNjMmU3ZTgxYmVlMzRjYzQ4OTU5NjA0OTExNWI2MGVlIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.C5Gyo91oLrgq3WyW6QWjyUoreMzlMBkZ-h8vNFgFCNnhLmP4Wvizd5uzWCWHyAz8k621d0tRKDHQ0a_2bDZtVpmL6Bm_dORdu_eiG6A5_9lC6yv6TgiMtSiGxise7M9rIZ6dnlXcIgO_n2q62Ml7R0VwSlE5SYyFpdMrsUuMrX9wfzexwfvTk5kGcwrezNCV7OrYAf-WVk-JhNZbZHo2UoeukyyAI-n4jmUrbm2oD8jaEunwcPilYpVNUIJeRHvlIxY79njVTKbuG59Ao-s4B7xi-kmHe7SDd2JE1Fx7NnO0XVjekGSX7EusF2GVVbaym3lze_sB9ju19eOB0khGKw
-Content-Type: application/json
 
 ###
 
@@ -93,6 +92,12 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 
 # *************************** READ *************************** #
+
+#detail tournament
+GET https://localhost:4430/api/tournament/detail/6893cb56-b650-4d20-a2c1-bb1dc6a1dd16/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMzIzNjgzLCJpYXQiOjE3NDAzMTgyODMsImp0aSI6ImNjMmU3ZTgxYmVlMzRjYzQ4OTU5NjA0OTExNWI2MGVlIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.C5Gyo91oLrgq3WyW6QWjyUoreMzlMBkZ-h8vNFgFCNnhLmP4Wvizd5uzWCWHyAz8k621d0tRKDHQ0a_2bDZtVpmL6Bm_dORdu_eiG6A5_9lC6yv6TgiMtSiGxise7M9rIZ6dnlXcIgO_n2q62Ml7R0VwSlE5SYyFpdMrsUuMrX9wfzexwfvTk5kGcwrezNCV7OrYAf-WVk-JhNZbZHo2UoeukyyAI-n4jmUrbm2oD8jaEunwcPilYpVNUIJeRHvlIxY79njVTKbuG59Ao-s4B7xi-kmHe7SDd2JE1Fx7NnO0XVjekGSX7EusF2GVVbaym3lze_sB9ju19eOB0khGKw
+
+###
 
 #get tournament stats
 GET https://localhost:4430/api/tournament/36d92f06-38f8-4b00-97fc-ca93324c0f3a/ranking/

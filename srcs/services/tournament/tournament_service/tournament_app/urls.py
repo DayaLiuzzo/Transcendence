@@ -13,6 +13,8 @@ urlpatterns = [
 
     path('launch/<uuid:tournament_id>/', views.LaunchTournamentView().as_view(), name='launch-tournament'),
 
+    path('detail/<uuid:tournament_id>/', views.DetailTournamentView().as_view(), name='detail-tournament'),
+
     path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament_stats'),
     path('list/', views.ListAllTournamentView.as_view(), name='list_all_tournament'),
     path('list/waiting/', views.ListWaitingTournamentView.as_view(), name='list_waiting_tournament'),
