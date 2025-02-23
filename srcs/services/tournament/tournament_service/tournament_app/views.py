@@ -132,6 +132,24 @@ class JoinTournamentView(APIView):
                     'message': 'Tournament not found'
                 }, status=status.HTTP_404_NOT_FOUND)
 
+class LeaveTournamentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, tournament_id):
+        try:
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            user = request.user
+            if not tournament.users.filter(username=user.username).exists():
+                return Response({
+                    'message': 'You are not in this tournament'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+            tournament.users.remove(user)
+
+        except Tournament.DoesNotExist:
+            return Response({
+                    'message': 'Tournament not found'
+                }, status=status.HTTP_404_NOT_FOUND)
 
 class LaunchTournamentView(APIView):
     permission_classes = [IsAuthenticated]

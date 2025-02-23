@@ -9,6 +9,8 @@ urlpatterns = [
     path('delete_tournament/<uuid:tournament_id>/', views.DeleteTournamentView().as_view(), name='delete-tournament'),
 
     path('join/<uuid:tournament_id>/', views.JoinTournamentView().as_view(), name='join-tournament'),
+    path('leave/<uuid:tournament_id>/', views.LeaveTournamentView().as_view(), name='leave-tournament'),
+
     path('launch/<uuid:tournament_id>/', views.LaunchTournamentView().as_view(), name='launch-tournament'),
 
     path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament_stats'),
