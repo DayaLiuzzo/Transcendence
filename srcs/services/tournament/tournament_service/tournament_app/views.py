@@ -111,17 +111,17 @@ class JoinTournamentView(APIView):
             if tournament.users.filter(username=user.username).exists():
                 return Response({
                     'message': 'You are already in this tournament'
-                    }, status=status.HTTP_403_FORBIDDEN)
+                    }, status=status.HTTP_400_BAD_REQUEST)
 
-            if tournament.players_count >= tournament.max_users:
+            if tournament.is_full():
                 return Response({
                     'message': 'The tournament is full'
-                    }, status=status.HTTP_403_FORBIDDEN)
+                    }, status=status.HTTP_400_BAD_REQUEST)
 
             if tournament.status != 'waiting':
                 return Response({
                     'message': 'The tournament already started'
-                    }, status=status.HTTP_403_FORBIDDEN)
+                    }, status=status.HTTP_400_BAD_REQUEST)
 
             tournament.users.add(user)
             serializer = TournamentSerializer(tournament)
@@ -146,16 +146,22 @@ class LaunchTournamentView(APIView):
                         'message': 'Tournament cannot be launched, you are not the owner'
                     }, status=status.HTTP_403_FORBIDDEN)
 
-            if tournament.players_count < 2:
+            if tournament.users_count < 2:
                 return Response({
-                        'message': 'Cannot start tournament alone'
-                    }, status=status.HTTP_403_FORBIDDEN)
+                        'message': 'Cannot launch tournament alone'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+            if tournament.status != 'waiting':
+                return Response({
+                        'message': 'Tournament already started'
+                    }, status=status.HTTP_400_BAD_REQUEST)
 
             # TODO: send requests to rooms service
 
             tournament.status = 'playing'
+            tournament.save()
             return Response({
-                    'message': 'Tournament started'
+                    'message': 'Tournament launched'
                 }, status=status.HTTP_200_OK)
 
         except Tournament.DoesNotExist:
