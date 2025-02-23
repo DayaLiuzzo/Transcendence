@@ -1,6 +1,4 @@
 import BaseView from './BaseView.js';
-import { cleanUpThree } from '../three/utils.js';
-
 
 //let connected = 1;
 
@@ -125,50 +123,31 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
            controls.enableDamping = true;
            controls.enableZoom = false;
 
-            window.threeInstance = {
-              scene,
-              camera,
-              renderer,
-              effect,
-              controls,
-              animationId: null,
-              canvas,
-              resizeHandler: () => {
-                  sizes.width = window.innerWidth;
-                  sizes.height = window.innerHeight;
+          const clock = new THREE.Clock();
+            const tick = () => {
+                const elapsedTime = clock.getElapsedTime();
+                mesh.rotation.y = elapsedTime * 0.5;
 
-                  camera.aspect = sizes.width / sizes.height;
-                  camera.updateProjectionMatrix();
+                controls.update();
+                effect.render(scene, camera);
+                requestAnimationFrame(tick);
 
-                  renderer.setSize(sizes.width, sizes.height);
-                  effect.setSize(sizes.width, sizes.height);
-              },
-              mouseMoveHandler: (event) => {
-                  cursor.x = event.clientX / window.innerWidth - 0.5;
-                  cursor.y = event.clientY / window.innerHeight - 0.5;
-              }
+            }
+            tick();
+            // on resize le canvas en fonction de la taille de la fenetre pour + responsive
+            window.addEventListener("resize", () => {
+              sizes.width = window.innerWidth;
+              sizes.height = window.innerHeight;
+
+              camera.aspect = sizes.width / sizes.height;
+              camera.updateProjectionMatrix();
+
+              renderer.setSize(sizes.width, sizes.height);
+              effect.setSize(sizes.width, sizes.height);
+            });
           };
 
 
-          window.addEventListener("resize", window.threeInstance.resizeHandler);
-          window.addEventListener("mousemove", window.threeInstance.mouseMoveHandler);
-
-          const clock = new THREE.Clock();
-          const tick = () => {
-            window.threeInstance.animationId =requestAnimationFrame(tick);
-            const elapsedTime = clock.getElapsedTime();
-            mesh.rotation.y = elapsedTime * 0.5;
-
-            controls.update();
-            window.threeInstance.effect.render(scene, camera);
-          }
-          tick();
-
-          //cleanUpThree();
-
-        };
-
 };
-
 
 

@@ -1,7 +1,5 @@
 // tester si remplacer localhost:4430 par '' fonctionne au sein des fetch;
 
-import { cleanUpThree } from "../three/utils.js";
-
 
 export default class BaseView{
     constructor(router, params = {}){
@@ -28,7 +26,6 @@ export default class BaseView{
 
     async mount(){
         try {
-            cleanUpThree();
             this.app.innerHTML = await this.render();
             this.updateNavbar();
             await this.attachEvents();
@@ -52,7 +49,7 @@ export default class BaseView{
     }
 
     getUserSession(){
-
+     
         return this.router.getUserSession();
     }
 

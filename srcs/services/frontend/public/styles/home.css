@@ -31,6 +31,10 @@
     }
   }
 
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     font-family: 'Courier', sans-serif;
     background: #f7f6f6;
@@ -71,28 +75,19 @@
   line-height: 1.5;
 }
 
-.webgl {
-  width: 40%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
 #ascii-container {
   width: 40%;
   display: flex;
   align-items: right;
   justify-content: right;
-
 }
 
 .ascii-effect {
   width: 100%;
-  display: flex;
-  align-items: right;
+  max-width: 600px;
+  height: auto;
   font-size: 8px;
   line-height: 8px;
   white-space: pre;
-  overflow: hidden;
-
+  text-align: right;
 }
