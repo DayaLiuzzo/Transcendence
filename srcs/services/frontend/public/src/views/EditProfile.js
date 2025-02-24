@@ -22,6 +22,15 @@ export default class EditProfile extends BaseView{
         return null;
     }
 
+    validateUsername(formData){
+        if (!formData.username) return "Username cannot be empty.";
+        if (formData.username.length < 4) return "Username must be at least 6 characters long.";
+        if (formData.username === this.getUsername()) return "Username cannot be the same as the current one.";
+        if (this.containsSpecialCharacter(formData.username)) return "Username can't contain special characters.";
+        if (formData.username > 20) return "Username must be less than 20 characters long.";
+        return null;
+    }
+
     async EditProfile(formData) {
        
     }
@@ -43,6 +52,33 @@ export default class EditProfile extends BaseView{
         
     }
 
+    async changeUsername(formData) {
+        const error = this.validateUsername(formData);
+        if (error){
+            this.showError(error);
+            return;
+        }
+        const username = this.getUsername();
+        const body = {
+            old_username: username,
+            username: username,
+            new_username: formData.username,
+        }
+        const response = await this.sendPatchRequest(this.API_URL + "update/" + username + "/", body);
+        if(!response.success)
+        {
+            this.showError(response.error);
+            return;
+        }
+        alert(response.data.message);
+        let userSession = JSON.parse(sessionStorage.getItem("userSession"));
+        userSession.username = formData.username;
+        userSession.access_token = response.data.access_token;
+        userSession.refresh_token = response.data.refresh_token;
+        sessionStorage.setItem("userSession", JSON.stringify(userSession));
+        this.navigateTo("/profile");
+    }
+
     getPasswordFormData(){
         return {
             password: document.getElementById("EditProfile-password").value,
@@ -53,8 +89,7 @@ export default class EditProfile extends BaseView{
 
     getUsernameFormData(){
         return {
-            username: document.getElementById("EditProfile-password").value,
-            new_password: document.getElementById("EditProfile-new_password").value,
+            username: document.getElementById("EditProfile-username").value,
         };
     }
 
@@ -70,16 +105,16 @@ export default class EditProfile extends BaseView{
                 <button type="submit">Change Password</button>
             </form>
             <h3>change username</h3>
+            <div id="username-field"></div>
             <form id="change-username-form">
             <input type="text" id="EditProfile-username" placeholder="Username" required>
-            <input type="text" id="EditProfile-username2" placeholder="Username2" required>
                 <button type="submit">Change Username</button>
             </form>
         </div>
     `;
     }
 
-    attachEvents(){
+    async attachEvents(){
         console.log('Events attached (EditProfile)');
         document.getElementById("change-password-form").addEventListener("submit", (event) => {
             event.preventDefault();
@@ -88,8 +123,22 @@ export default class EditProfile extends BaseView{
         });
         document.getElementById("change-username-form").addEventListener("submit", (event) => {
             event.preventDefault();
-            const formData = this.getFormData();
-            this.EditProfile(formData);
+            const formData = this.getUsernameFormData();
+            this.changeUsername(formData);
         });
+    }
+
+    async mount(){
+        try {
+            this.app.innerHTML = await this.render();
+            const username = this.getUsername();
+            this.updateFieldContent("username-field", this.formatField("username", username));
+            this.updateNavbar();
+            await this.attachEvents();
+        }
+        catch (error) {
+            console.error("Error in mount():", error);
+        }
+        
     }
 }

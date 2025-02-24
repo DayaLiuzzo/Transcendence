@@ -23,9 +23,8 @@ const routes = [
     { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css"},
-    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"}
-
-
+    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"},
+    { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true },
 ];
 
 
