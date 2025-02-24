@@ -50,7 +50,7 @@ export default class Profile extends BaseView{
         if(friendsField){
         const newFriendItem = document.createElement("li");
         newFriendItem.textContent = friendUsername;
-
+        const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
 
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";

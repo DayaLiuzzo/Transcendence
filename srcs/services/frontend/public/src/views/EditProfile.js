@@ -110,6 +110,7 @@ export default class EditProfile extends BaseView{
             <input type="text" id="EditProfile-username" placeholder="Username" required>
                 <button type="submit">Change Username</button>
             </form>
+            <button id="toggle-2fa-button">Enable 2FA</button>
         </div>
     `;
     }
@@ -126,13 +127,49 @@ export default class EditProfile extends BaseView{
             const formData = this.getUsernameFormData();
             this.changeUsername(formData);
         });
-    }
+        document.getElementById("toggle-2fa-button").addEventListener("click", async () => {
+            if (document.getElementById("toggle-2fa-button").textContent === "Enable 2FA") {
+                const body = {
+                    enable: true
+                }
+                const response = await this.sendPostRequest(this.API_URL + "2fa/setup/", body);
+                if (response.error) {
+                    this.showError(response.error);
+                    return;
+                }
+                let userSession = JSON.parse(sessionStorage.getItem("userSession"));
+                userSession.two_factor_enabled = true;
+                sessionStorage.setItem("userSession", JSON.stringify(userSession));
+                alert(response.data.qr_code_url);
+                document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
+            }
+            else{
+                const body = {
+                    enable: false
+                }
+                const response = await this.sendPostRequest(this.API_URL + "2fa/setup/", body);
+                if (response.error) {
+                    this.showError(response.error);
+                    return;
+                }
+                let userSession = JSON.parse(sessionStorage.getItem("userSession"));
+                userSession.two_factor_enabled = false;
+                sessionStorage.setItem("userSession", JSON.stringify(userSession));
+                alert(response.data.message);
+                document.getElementById("toggle-2fa-button").textContent = "Enable 2FA";
+
+            }
+        });
+        }
 
     async mount(){
         try {
             this.app.innerHTML = await this.render();
             const username = this.getUsername();
             this.updateFieldContent("username-field", this.formatField("username", username));
+            const userData = await this.sendGetRequest(this.API_URL + username + '/');
+            if(userData.data.two_factor_enabled) document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
+            console.log(userData.data.two_factor_enabled);
             this.updateNavbar();
             await this.attachEvents();
         }
