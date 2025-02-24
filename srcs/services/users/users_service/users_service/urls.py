@@ -6,7 +6,7 @@ from users_app import views
 
 urlpatterns = [
     path('api/users/', include([
-        path('test/', views.testView.as_view(), name='test'),
+        # path('test/', views.testView.as_view(), name='test'),
         path('create/', views.CreateUserProfileView.as_view(), name='create_user_profile'),
         path('delete/<str:username>/', views.DeleteUserProfileView.as_view(), name='delete_user_profile'),
         path('update/<str:username>/', views.UpdateUserProfileView.as_view(), name='update_user_profile'),

@@ -48,6 +48,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             if not totp.verify(otp):
                 return Response({"error": "Invalid OTP."}, status=status.HTTP_401_UNAUTHORIZED)
         token = CustomTokenObtainPairSerializer.get_token(user)
+        # exp = token.access_token.get('exp')
         access_token = str(token.access_token)
         refresh_token = str(token)
         return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)

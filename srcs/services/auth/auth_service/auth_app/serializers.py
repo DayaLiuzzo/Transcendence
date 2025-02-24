@@ -48,8 +48,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['username'] = user.username
-        token.set_exp(lifetime=timedelta(minutes=5))
-        token.payload['exp'] = (datetime.utcnow() + timedelta(days=1)).timestamp()
+        token.payload['exp'] = datetime.utcnow() + timedelta(hours=12)
         user.last_log = now()
         user.save()
         return token

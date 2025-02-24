@@ -20,9 +20,9 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "bidon",
+  "username": "bidoenep",
   "password": "Pass12456!",
-  "email": "d@gmail.com"
+  "email": "depe@gmail.com"
 }
 ###
 #get user token
@@ -30,7 +30,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "bidon",
+  "username": "bidoenep",
   "password": "Pass12456!"
 
 }
@@ -56,8 +56,8 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 }
 
 ###
-GET https://localhost:4430/api/users/tresiii/avatar/update/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5Mzg0NjU1LCJpYXQiOjE3MzkzNzkyNTUsImp0aSI6ImExMjA3NTFlZmExNTQ1ZDBhMzUwNWMyOTBhYWIyNzNmIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0cmVzaWlpIn0.DDLN3INEECHH9QO7EKuP4JrtrvC_XUay9y49OyJwbG0blkkJG1SZ-mUg19DVUABkrRy-J82AhxAk7LPAPKUYlgA8fxKafFR62fvXGW4akLIudgQvGNHuWEyPn4HbZZg72WOK4R3CrRFPoTlQ4Ok_SIwFEZZATeRruQ8anwEnLNu8asVpCfefR62j7C96LB9qEcXPL62Biva75IlOJRltBoR9e0SXEyIKp-lZJE8Xp_VK0KVzZLCWa5IyBaWHQ1usjGg52DO7lTMwhGv1M4AJOOD-DWXEAWMeZJ8oYXtR_RKv6RpqanuRxqt0ia0t9wbsvaSm2LMiiZMPJCxwzTKETA
+GET https://localhost:4430/api/users/bidoenep/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjUwNTkwLCJpYXQiOjE3NDAyNDUxOTAsImp0aSI6ImI4YjRmNmQxODc5YjQ1NDM4NzFhZGIxZGY3NmE4YzdjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvZW5lcCJ9.fY2HydPtWT1smLkY64GtFko41qV8sdTIfbBCBlkp9b0vN-MQZYYAU41B9DEW27-V2imk7UKhcHj57LCUn5NcvIxi3SHVv4UeH0sxr8LMMcIMVbHSnvxcFX8lFlW2WvcHixV4ROeOgh4Oa81x8v4XhSX-FmN4K8QzUmZwHxNEAzGePdgbr5R8-nS_ZXls_7JkZ8ZrMV6qNbkOLaV5s8EgHo2EBXxiLZwifxQlvBz1ZlfWRYnh_NM6AoMZdnLT0xWPHri57wphvpl985mWK2cNKml2Vc2LmI8K503q2h7t3HHJsgkMq8Qp3OJyB5-cgoBpf0av4_jIm16wVdwC3UM0kQ
 
 ###
 PATCH https://localhost:4430/api/avatar/
@@ -108,7 +108,7 @@ POST https://localhost:4430/api/auth/logout/
 Content-Type: application/json
 
 {
-  "refresh": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczODI1NTY2My4yMDk2NTQsImlhdCI6MTczODE2OTI2MywianRpIjoiZDFiZjM0MWZlZjI3NDU0OTg1MDc4M2Q3MzhlNjAxZDgiLCJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3QyX3VzZXIifQ.8PJkFpcL4BOrUi9dDBDJY40dFxXoIgpba_vdRha4ua9oQcm0RJxL9O537nqoesqb-ohEBsJHiCKyn3eQkyQBcVvNBqAYGkglJ7Tv3uz5OjoQ6foIrXy_XM2lGokay43rK-QcabOWri0xRlVgV3VEy99Dy8DtjyNzlLtjCPqLOglpx2QMpj7cj6s0ECY0E4wUb7scrzkRA0M1omDd-E11kEhI0kEE5Kb48k0AaMYwA9QdS6TRs2bh9xNCRjyG-ZRuQ0pnR7prSVPTqHNNx19TFIVmlNvW1gg_8Vds14Gi4VVCOrb1WTGaXd_-Uiy2Vvk5XNKCLHI_qmLlm0hTdzNtFQ"
+  "refresh": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0MDMyMTg5NC4yMzE4MywiaWF0IjoxNzQwMjM1NDk0LCJqdGkiOiI2ZTFkZDc5ZTRkMzI0YzM3YjU5M2FmZmI5ZTVhNDMzZSIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdGkifQ.mApQhZbAXHUF9u2Prlc96hfQncd1g0zeCEpxToHi_b6ia9v9pZdZCV6kpxicJLXoh_umTZ9sohzOoJgWU7w_QMnN3CUK0unIsMfjBnG-9ZFSGpf9gatnUfJ5d8Qicu_9sJz5tYxGZV2xc4CYkT2YUVs5JgDGvqpppZNVVMgdNTKbLnNfz0GGYT4PU_zXfXI9oXrGiSofQ8tu68Tt0xPdyqxHSsd6iMDENTgisyvjhLc8qe7ch4bPlnLrh772MO9YXm6jjIxYftj0WrtxM_WK1TGu8m-oIzQpBI8TKIFUX5Rlh3YpI0PhlA6WNTLpyxhpwawSjDZyFdMgm34rhWXDNQ"
 }
 
 ###

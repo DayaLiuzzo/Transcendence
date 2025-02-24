@@ -1,0 +1,93 @@
+/*
+* STYLES FOR HOME PAGE
+* Objectifs:
+* - minimal brutalist black and white design
+* - responsive dans la mesure du possible
+* - component nav bar en haut de page
+* - component footer en bas de page
+* - font .softGlossary vibe (OpenDyslexic?)
+* - effets mouvements sur les textes (grossissants, tombants, etc)
+* - certains mots typo ultra light fine italic restent fixes et "collent" a la page au scroll
+* - integration de l'asset imac 3d en bonne qualite
+* - mouv scroll pour faire tourner le mac et defiler texte intro
+* - continuer scroll et faire avancer le mac lancer une video intro jeu sur l'ecran du mac?
+* - continuer de scroll et acceder a un bouton "play me rn" qui renvoie vers page login ou jeu si deja connecte
+* -
+*/
+
+  @keyframes text-slide-infinite {
+    0% {
+      opacity: 0;
+      letter-spacing: 150px;
+      text-shadow: 0 0 50px #fff;
+    }
+    50% {
+      letter-spacing: 50px
+    }
+    100% {
+      opacity: 0.8;
+      letter-spacing: 3px;
+      text-shadow: 0 0 1px darkgray;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Courier', sans-serif;
+    background: #f7f6f6;
+    color: #0a0a0a;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.5s ease-in-out, color 0.5 ease-in-out;
+  }
+
+#follow-scroll-elements {
+  font: 1.5em 'Times New Roman';
+  font-style: italic;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: rgb(94, 94, 94);
+  font-size: 1.5em;
+}
+
+#test-text span {
+  display: inline-block;
+  transition: transform 0.9s ease;
+  /* animation: text-slide-infinite 5s linear forwards;*/
+}
+
+.container {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 20px;
+}
+
+.text {
+  width: 60%;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+#ascii-container {
+  width: 40%;
+  display: flex;
+  align-items: right;
+  justify-content: right;
+}
+
+.ascii-effect {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  font-size: 8px;
+  line-height: 8px;
+  white-space: pre;
+  text-align: right;
+}
