@@ -135,6 +135,34 @@ export default class BaseView{
         }
     }
 
+
+    async sendDeleteRequest(url, formData){
+        try {
+            let headers = {
+                'Content-Type': 'application/json',
+            };
+            if(this.getAccessToken()){
+                headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+            }
+
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: headers,
+                body: JSON.stringify(formData),
+            });
+            const responseData = await response.json();
+            if (!response.ok) {
+                console.error("Error in sendDeleteRequest():", url)
+                return { success: false, error: responseData};
+            }
+            return { success: true, data: responseData};
+        }
+        catch (error) {
+            console.error("Network Error at ", url);
+            return { success: false, error: { message: "Network error"}};
+        }
+    }
+
     async sendPostRequest(url, formData){
         try {
             let headers = {
@@ -180,6 +208,7 @@ export default class BaseView{
             username: (val) => `Username: ${val}`,
             biography: (val) => `Biography: ${val}`,
             email: (val) => `Email: ${val}`,
+            friends: (val) => `friends: ${val}`,
         };
 
         return formats[type] ? formats[type](value) : value;
