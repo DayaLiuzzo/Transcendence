@@ -1,8 +1,4 @@
 import BaseView from './BaseView.js';
-import { cleanUpThree } from '../three/utils.js';
-
-
-//let connected = 1;
 
 
 export default class Home extends BaseView{
@@ -20,11 +16,11 @@ export default class Home extends BaseView{
           <div id="follow-scroll-elements">
           <p>(drag me please ➔)</p>
           </div>
-          <p id="test-text">
+          <div id="test-text-container"> <p id="test-text">
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum facilisis, orci eget gravida faucibus, dolor nulla fermentum nunc, vel bibendum justo ligula non massa. Sed at arcu et augue sollicitudin mollis. Nulla gravida, elit id suscipit semper, enim lectus mattis eros, eget tincidunt nulla mauris a erat. Phasellus in mollis ex, ac ultrices lectus. Nunc sed turpis non justo euismod facilisis. Suspendisse interdum mattis nisl ut viverra. Sed placerat diam augue, eget lacinia odio tincidunt sit amet. Nulla dignissim aliquam volutpat. Fusce in arcu placerat, finibus est sed, semper dui. Fusce vitae diam eros.
 
-Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ullamcorper, lacus nec congue volutpat, elit nulla varius nibh, vel accumsan risus leo nec nisl. Quisque mi enim, imperdiet sit amet bibendum id, ornare nec elit. Donec maximus faucibus erat ut congue. Proin ut nisl dignissim, vestibulum arcu porttitor, pulvinar dui. Etiam ut ligula diam. Duis eget aliquam diam. Proin et eros sed nulla aliquet posuere. Curabitur eros massa, vehicula eu velit et, facilisis efficitur nisi. Aenean at fermentum sem. Pellentesque maximus lorem vitae ultricies commodo. Duis consectetur dolor et tortor tincidunt interdum. Vestibulum ullamcorper rutrum mi, ornare porttitor elit tempor sed. Donec quis ornare lorem. </p>
+Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ullamcorper, lacus nec congue volutpat, elit nulla varius nibh, vel accumsan risus leo nec nisl. Quisque mi enim, imperdiet sit amet bibendum id, ornare nec elit. Donec maximus faucibus erat ut congue. Proin ut nisl dignissim, vestibulum arcu porttitor, pulvinar dui. Etiam ut ligula diam. Duis eget aliquam diam. Proin et eros sed nulla aliquet posuere. Curabitur eros massa, vehicula eu velit et, facilisis efficitur nisi. Aenean at fermentum sem. Pellentesque maximus lorem vitae ultricies commodo. Duis consectetur dolor et tortor tincidunt interdum. Vestibulum ullamcorper rutrum mi, ornare porttitor elit tempor sed. Donec quis ornare lorem. </p></div>
 <canvas class="webgl"></canvas>
           </div>
               `;
@@ -38,12 +34,15 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
           <div id="follow-scroll-elements">
           <p>(drag me please ➔)</p>
           </div>
-          <p id="test-text">
+          <div id="test-text-container"><p id="test-text">
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum facilisis, orci eget gravida faucibus, dolor nulla fermentum nunc, vel bibendum justo ligula non massa. Sed at arcu et augue sollicitudin mollis. Nulla gravida, elit id suscipit semper, enim lectus mattis eros, eget tincidunt nulla mauris a erat. Phasellus in mollis ex, ac ultrices lectus. Nunc sed turpis non justo euismod facilisis. Suspendisse interdum mattis nisl ut viverra. Sed placerat diam augue, eget lacinia odio tincidunt sit amet. Nulla dignissim aliquam volutpat. Fusce in arcu placerat, finibus est sed, semper dui. Fusce vitae diam eros.
 
-Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ullamcorper, lacus nec congue volutpat, elit nulla varius nibh, vel accumsan risus leo nec nisl. Quisque mi enim, imperdiet sit amet bibendum id, ornare nec elit. Donec maximus faucibus erat ut congue. Proin ut nisl dignissim, vestibulum arcu porttitor, pulvinar dui. Etiam ut ligula diam. Duis eget aliquam diam. Proin et eros sed nulla aliquet posuere. Curabitur eros massa, vehicula eu velit et, facilisis efficitur nisi. Aenean at fermentum sem. Pellentesque maximus lorem vitae ultricies commodo. Duis consectetur dolor et tortor tincidunt interdum. Vestibulum ullamcorper rutrum mi, ornare porttitor elit tempor sed. Donec quis ornare lorem. </p>
+Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ullamcorper, lacus nec congue volutpat, elit nulla varius nibh, vel accumsan risus leo nec nisl. Quisque mi enim, imperdiet sit amet bibendum id, ornare nec elit. Donec maximus faucibus erat ut congue. Proin ut nisl dignissim, vestibulum arcu porttitor, pulvinar dui. Etiam ut ligula diam. Duis eget aliquam diam. Proin et eros sed nulla aliquet posuere. Curabitur eros massa, vehicula eu velit et, facilisis efficitur nisi. Aenean at fermentum sem. Pellentesque maximus lorem vitae ultricies commodo. Duis consectetur dolor et tortor tincidunt interdum. Vestibulum ullamcorper rutrum mi, ornare porttitor elit tempor sed. Donec quis ornare lorem.</p> </div>
+<div class="ascii-container">
 <canvas class="webgl"></canvas>
+<div id="ascii-output"></div>
+</div>
           </div>
               `;
         }
@@ -51,7 +50,9 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
     async attachEvents(){
         console.log('Events attached (Home)');
         const text = document.getElementById("test-text");
+        console.log(text);
         const originalText = text.textContent;
+        console.log(originalText);
 
         text.innerHTML = originalText.split("").map(char => `<span>${char}</span>`).join("");
 
@@ -88,8 +89,8 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
                 new THREE.MeshLambertMaterial({ color: 0x000000 })
             );
             const sizes = {
-                width: window.innerWidth,
-                height: window.innerHeight,
+                width: scene.innerWidth,
+                height: scene.innerHeight,
             }
             scene.add(mesh);
 
@@ -111,9 +112,8 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
 
           // on cache le rendu de base pour laisser apparaitre le rendu ascii
           effect.domElement.classList.add("ascii-effect");
-          document.body.appendChild(effect.domElement);
+          document.querySelector("#ascii-output").appendChild(effect.domElement);
           canvas.style.display = "none";
-
            // camera perspective etc
            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
            camera.position.z = 3;
@@ -123,7 +123,7 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
             // controls for the camera
            const controls = new THREE.OrbitControls(camera, effect.domElement);
            controls.enableDamping = true;
-           controls.enableZoom = true;
+           controls.enableZoom = false;
 
             window.threeInstance = {
               scene,

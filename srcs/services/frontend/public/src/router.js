@@ -13,17 +13,17 @@ import EditProfile from "./views/EditProfile.js";
 import Profile from "./views/Profile.js";
 
 const routes = [
-    { path: '/', view: Home, css: "styles/home.css" },
-    { path: '/home', view: Home, css: "styles/home.css" },
-    { path: '/log-in', view: LogIn, css: "styles/log-in.css", requiresGuest: true },
-    { path: '/sign-up', view: SignUp, css: "styles/sign-up.css", requiresGuest:true },
+    { path: '/', view: Home},
+    { path: '/home', view: Home},
+    { path: '/log-in', view: LogIn, requiresGuest: true },
+    { path: '/sign-up', view: SignUp, requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
-    { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
-    { path: '/play-menu', view: PlayMenu, css: "styles/core.css"},
-    { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
-    { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
-    { path: '/play-tournament', view: PlayTournament, css: "styles/core.css"},
-    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"}
+    { path: '/profile', view: Profile, requiresAuth: true },
+    { path: '/play-menu', view: PlayMenu},
+    { path: '/play-local', view: PlayLocal},
+    { path: '/play-remote', view: PlayRemote},
+    { path: '/play-tournament', view: PlayTournament},
+    { path: '/play-with-friends', view: PlayWithFriends}
 
 
 ];
@@ -73,24 +73,24 @@ class Router{
 
 
 
-    updateBodyClass(path) {
-        const className = path === "/" ? "home" : path.replace("/", "");
-        document.body.className = className;
-    }
+    // updateBodyClass(path) {
+    //     const className = path === "/" ? "home" : path.replace("/", "");
+    //     document.body.className = className;
+    // }
 
-    updateStylesheet(path) {
-        const route = this.getRoute(path);
-        const cssFile = route ? route.css : "styles/core.css";
+    // updateStylesheet(path) {
+    //     const route = this.getRoute(path);
+    //     const cssFile = route ? route.css : "styles/core.css";
 
-        let stylesheet = document.getElementById("dynamic-style");
-        if (!stylesheet) {
-            stylesheet = document.createElement("link");
-            stylesheet.rel = "stylesheet";
-            stylesheet.id = "dynamic-style";
-            document.head.appendChild(stylesheet);
-        }
-        stylesheet.href = cssFile;
-    }
+    //     let stylesheet = document.getElementById("dynamic-style");
+    //     if (!stylesheet) {
+    //         stylesheet = document.createElement("link");
+    //         stylesheet.rel = "stylesheet";
+    //         stylesheet.id = "dynamic-style";
+    //         document.head.appendChild(stylesheet);
+    //     }
+    //     stylesheet.href = cssFile;
+    // }
 
     async loadView(path){
         const route = this.getRoute(path);
@@ -102,8 +102,8 @@ class Router{
         const view = new ViewClass(this);
         await view.mount();
 
-        this.updateBodyClass(path);
-        this.updateStylesheet(path);
+        // this.updateBodyClass(path);
+        // this.updateStylesheet(path);
         }
 
     async navigateTo(path){
