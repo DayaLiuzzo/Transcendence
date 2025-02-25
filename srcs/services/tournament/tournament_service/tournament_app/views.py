@@ -245,6 +245,11 @@ class DetailTournamentView(generics.RetrieveAPIView):
     serializer_class = TournamentSerializer
     lookup_field = 'tournament_id'
 
+class GetRoomResult(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    lookup_field = 'room_id'
 
 class ListWaitingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -333,32 +338,48 @@ class CountFinishedTournamentView(generics.GenericAPIView):
         
 # *********************** PUT / PATCH ************************ #
 
-class PoolMatchesView(APIView):
-    def get(self, request, tournament_id, pool_name, format=None):
+class SetRoomResult(generics.UpdateAPIView):
+    permission_classes = [IsRoom]
+    queryset = Room.objects.all()
+    serializer_class = Room
+    lookup_field = 'room_id'
+
+    def unlock_match(pool, player):
         try:
-            tournament = Tournament.objects.get(tournament_id=tournament_id)
-            pool = tournament.pools.get(name=pool_name)
-            matches = pool.get_matches()
+            waiting_rooms = Room.objects.filter(
+                        Q(pool=pool)
+                        & (Q(player_1=player) | Q(player_2=player))
+                        & (Q(status='waiting'))
+                    )
+        except Exception:
+            waiting_rooms = None
 
-            match_data = [
-                {
-                    "player_1": match.player_1.username,
-                    "player_2": match.player_2.username,
-                    "status": match.status,
-                    "score_player_1": match.score_player_1,
-                    "score_player_2": match.score_player_2,
-                }
-                for match in matches
-            ]
+        try:
+            standby_rooms = Room.objects.filter(
+                        Q(pool=pool)
+                        & (Q(player_1=player) | Q(player_2=player))
+                        & (Q(status='standby'))
+                    )
+        except Exception:
+            standby_rooms = None
 
-            return Response(match_data, status=status.HTTP_200_OK)
+        if waiting_rooms:
+            pass
+        elif standby_rooms:
+            room = standby_rooms.first()
+            room.status = 'waiting'
+            room.save()
 
-        except Tournament.DoesNotExist:
-            return Response({"error": "Tournament not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Pool.DoesNotExist:
-            return Response({"error": "Pool not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-# *********************** PUT / PATCH ************************ #
+
+    def partial_update(self, serializer):
+        serializer.save()
+        pool = serializer.validated_data.get('pool')
+
+        player = serializer.validated_data.get('player_1')
+        unlock_match(pool, player)
+
+        player = serializer.validated_data.get('player_2')
+        unlock_match(pool, player)
 
 # ************************** DELETE ************************** #
 

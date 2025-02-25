@@ -18,6 +18,9 @@ urlpatterns = [
     #path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament_stats'),
     path('list/', views.ListAllTournamentView.as_view(), name='list_all_tournament'),
 
+    path('room_result/<uuid:room_id>/', views.SetRoomResult.as_view(), name='set_room_result'),
+    path('get_room_result/<uuid:room_id>/', views.GetRoomResult.as_view(), name='get_room_result'),
+    #path('list_my_rooms/', views.GetRoomResult.as_view(), name='get_room_result'),
     #path('list/waiting/', views.ListWaitingTournamentView.as_view(), name='list_waiting_tournament'),
     #path('list/playing/', views.ListPlayingTournamentView.as_view(), name='list_playing_tournament'),
     #path('list/finished/', views.ListFinishedTournamentView.as_view(), name='list_finished_tournament'),
