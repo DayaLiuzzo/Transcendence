@@ -26,15 +26,37 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "Marine",
-  "password": "MDP123!!!!gr"
+  "username": "dd",
+  "password": "Pass12456!"
+
+}
+
+###add user to db
+
+post https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "hh",
+  "password": "Pass12456!",
+  "email": "h@gmail.com"
+}
+
+###
+#get user token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "hh",
+  "password": "Pass12456!"
 
 }
 
 ###
 #delete user
 DELETE  https://localhost:4430/api/auth/delete/dd/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer 
 
 
 ################################################################
@@ -48,48 +70,60 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ### attention : un user peut creer plein de room: voir si on change ou non
 #create room
 POST https://localhost:4430/api/rooms/create_room/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5ODk2ODkwLCJpYXQiOjE3Mzk4OTE0OTAsImp0aSI6IjAzN2UwZGYxZTU3NDRlNzc5MzMwNzg4MWEwNGEzMmY2IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJkZCJ9.glV42X8poo_MPp2Y6zCQbFA91jJuZ25mRaIRbhuz7XN0lFrq-KX1wF06YZLcBGD8ZFZzO8SDpATMxj2-GgdbejPYy6WA5DxHmD1iaC4yT9TwBLb22UnQe94k75Jr8vrg3BcnKz--TICStffQMT08kpPWRkJRWzJcPT7QoRdPo6qfqp-2jPebsSdevKauKjGp7eeAt1TWl5UmVl5I-gdgB1dPULnAYOdc911zDB4aTSPDPHBUWPlWJIXE1NLcI-AYN5sUPm73GNxdKVQiXbOYS8Sdcq9qnc1UaMITyO1XytbOohopHP7WkwKDp0e1ekNQ9KAR6r7yr9Xb6vJOCJzaQg
+Authorization: Bearer 
 
 ###
 #join room
 POST https://localhost:4430/api/rooms/join_room/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTE1NjgzLCJpYXQiOjE3NDA1MTAyODMsImp0aSI6IjZiMjhlYzQ5NGYwNDRiOWRhOTFkZDkzNTY5YmRlNDU2IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJoaCJ9.D8SLmvCei-8uKhlotYttnXtA2rEyzJxa7kOExe5nbRosfRPXuIP8f5ate5QtwFtPWjNuzg7IzgdB_zuHaF05KPsaEEV3jaX4-0plJaKeJxE9yTdRhvmvOzsu1rC7RMGwzT-2XkDEitlHBC-nzTAVfkZU47H1mkbNLzoGZSnWBAq5KdnQyz4x0V_Z748nCc_L9LLm6m-HDSrEHtUSoN-GLPU-mwGH2M6KDe-QfmS8w6LbttpHKQePd-W4EY6beXxCDdFtQ-INwFxRJvVd0JT2KRxiO3Wzj1gZYEf2nKshJi02f3rDt4tBvjCYu8v3FI4Iusmy5pmxo_OHgEA6gwVJ2Q
 
 # *************************** READ *************************** #
+
+
+###
+#get rooms token
+POST https://localhost:4430/api/auth/service-token/
+Content-Type: application/json
+
+{
+  "service_name": "rooms",
+  "password": "private"
+}
+
 
 ###
 #list all rooms
 GET https://localhost:4430/api/rooms/list_all_rooms/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJyb29tcyIsImV4cCI6MTc0MDU1Mjk3OSwiaWF0IjoxNzQwNTA5Nzc5fQ.B98G03XfonDivRyGQXyW7n1GqPgkVHQrRczTFxa-ZazsddMXLFqQH-UBxREv8kk4Em_gJpSDGfGKUDv_9Eo05O2Oj7DaLVnvU3WiKcY_Zt3tnOFAnbZak0uGDKrE_fqMwBT3A_LE0gHuhH6cg1NALo8JUojckmWytAYx86Zoeek3uR6AJtN92_ry-v1zdRbVYv6yNRh8VOTTzaXAeVD0sNfllqnGii0ciQU49KyhZ2As1n-8d6fMuiJVR25lE6ooZp7UC7tOluIjr_ms_u-QpIwlLvRcvmPblAXH6tVT2ASwhvyi0st8u0M6dss0RjSOEtR7-uKl9aMkhWQ1BB9FEA
 
 ###
 #list available rooms
 GET https://localhost:4430/api/rooms/list_available_rooms/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer 
 
 ###
 #list locked rooms
 GET https://localhost:4430/api/rooms/list_locked_rooms/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer 
 
 ###
 #count all rooms
 GET https://localhost:4430/api/rooms/count_all_rooms/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJyb29tcyIsImV4cCI6MTc0MDUzOTg4MSwiaWF0IjoxNzQwNDk2NjgxfQ.s0mW5F3k22d9RGmIKVBzhZ1UOGDoaUjyGgwc0EYvJ1z7dsoCICWH9Hs9SjnFk-Ew_phZdCk0lPkKKHhyTUhwjL8XEjnzVF-Zim2xibVCfoQ2FsYwGizE0C5auyYSm--RvadgKcdB7smbE8eRXwJDFi2NB80dH3xFl1G6P80tcJbdnp3Eyx1r8X1-rU23wQweTS45XbFRxSnACE1UBxGFkS-D-NthpLbi16Iymx1jMUV54xEivIUa30MlVsLY_Rdi8Lc7YiKLaGBlxpQC_K33ULBg-yHWHB_PLi7bk-Vlj-kafyb2MIFcBLHU_IECMsCkip4Z6-FbHinZVEkn2zDgAw
 
 ###
 #count available rooms
 GET https://localhost:4430/api/rooms/count_available_rooms/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer 
 
 ###
 #count locked rooms
 GET https://localhost:4430/api/rooms/count_locked_rooms/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+Authorization: Bearer 
 
 # ************************** DELETE ************************** #
 
 ###
 #delete rooms
-DELETE https://localhost:4430/api/rooms/delete_room/room_e3aaed1d/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTc0MTAzLCJpYXQiOjE3NDAxNjg3MDMsImp0aSI6Ijk5MjEzMzJhZDE4NTQ5NTU4YzYwOWU5NDg3Y2UxZWQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.C4Tjq84Odd7EVQZkm4wJaV65diZaNLKbOMKVQm1ImwKY1mDZwSxrPx2WkdqM27dMHhFy743l5mYSJKE8u5xsdFjnz5lf3QDMIefe3TE11vqG7gRb-JYERjjDaqAQpF6gte-crW-FBRuI2mVTxUKmuZ7h9TJgUi5rdIb8sQ_Nma3FsQsoP4n5y6t7z4XcsI8nar99eXxi5autwlA-eP9u2Ei_Fo9mi2nwEOvNiqEzoIC13qEV-YO3OcLFJjqmZnLc37w36ti2lQ-U-Fm-G8Vk0HkvoFHCwNkoDWrjk8hP6cPkIFhOuqjkJZnX9g2miUNVQyvGgEXxVm-CiDivCC-5YA
+DELETE https://localhost:4430/api/rooms/delete_room/2/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJyb29tcyIsImV4cCI6MTc0MDU0OTE1NywiaWF0IjoxNzQwNTA1OTU3fQ.eBIfj6GRDiNMWqSsjMTHTiKv-NYPGy8FGRcAQdCzwwkVI4Ltj0VvjVK2-6w-8loQqcBg5_kpq2vnNRONeOBaYRPT-DRyu9grJ5cwySzQoh1cd__ggyoFkyAVsCqHCrGbxdqCobF_ATKxUXaY_f_17YvielK9SNbIsxv3c2VJOIcBnphzKAxKIK9NTcB_eWjqZVVuNTT2H4I7QVPmU9lXOKULWrnw4QGzTJGwTz8Tw1m3IN2lqFg63NC0hJ5fHwXjOou2ilkQkTZXReSB3_OUUCd6lOF0mCIIxyGpnzz3M7RyRzR4dIb6zsQ2p40aXX_-fHkfrCdiGgUJ-LHftNygbQ

@@ -23,6 +23,8 @@ from .permissions import IsRooms
 from .permissions import IsUsers
 from .permissions import IsGame
 from .permissions import IsOwnerAndAuthenticated
+from service_connector.service_connector import MicroserviceClient
+from service_connector.exceptions import MicroserviceError
 
 logger = logging.getLogger('rooms_app')
 
@@ -56,14 +58,13 @@ class RetrieveUserView(generics.RetrieveAPIView):
 
 # **************************** PATCH *************************** #
 
-#quand je recois une requete jai pas besoin du service connnctor donc je vais mettre juste isauth ici, (mais is_nomduservice pour les autres reqûetes)
 class UpdateUserProfileView(APIView):
     permission_classes = [IsAuth]
     queryset = UserProfile.objects.all()
     def patch (self, request, username):
         user_profile = get_object_or_404(UserProfile, username=username)
         old_username = user_profile.username
-        new_username = request.data.get("new_username") #attention a bien utiliser get, sinon on peut faire segfault
+        new_username = request.data.get("new_username")
         user_profile.username = new_username
         user_profile.save()
         return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=status.HTTP_200_OK)
@@ -104,6 +105,7 @@ class DeleteUserView(generics.DestroyAPIView):
 
 # ************************** CREATE ************************** #
 
+#peut etre utilisee par tournament maybe ??
 class CreateRoomView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -115,9 +117,10 @@ class CreateRoomView(APIView):
             new_room.player1 = user
             new_room.save()
 
-            # Mise à jour de l'utilisateur
             user.rooms.add(new_room)
             user.save()
+
+            #add service co join game + exception
             return Response({"message": "New room created", "room_id": new_room.room_id}, status=status.HTTP_201_CREATED)
         
         except IntegrityError as e:
@@ -127,8 +130,7 @@ class CreateRoomView(APIView):
             )
         except Exception as e:
             return Response({"message": "Error while creating room", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        #call join game
-
+        
 class JoinRoomView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -140,26 +142,10 @@ class JoinRoomView(APIView):
 
         if waiting_room:
             return self.join_room(request, waiting_room, user)
-        
         return self.create_room(request, user)
 
     def join_room(self, request, waiting_room, user):
         try:
-            if waiting_room.players_count >= 2:
-                return Response({
-                    "message": "The room is already full.",
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            if waiting_room.status != 'waiting':
-                return Response({
-                    "message": "This room is not available for joining.",
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            if waiting_room.player1 and waiting_room.player2:
-                return Response({
-                    "message": "This room already has two players.",
-                }, status=status.HTTP_400_BAD_REQUEST)
-
             if not waiting_room.player1:
                 waiting_room.player1 = user
             elif not waiting_room.player2:
@@ -173,23 +159,24 @@ class JoinRoomView(APIView):
             user.rooms.add(waiting_room)
             user.save()
 
-            return Response({
-                "message": "Room joined successfully",
-                "room_id": waiting_room.room_id,
-                "players_count": waiting_room.players_count,
-                "status": waiting_room.status,
-                "remaining_spots": 2 - waiting_room.players_count
-            }, status=status.HTTP_200_OK)
+            #call join game
+            join_game_url = f'http://game:8443/api/game/join_game/{waiting_room.id}/'
+            client = MicroserviceClient()
+            response2 = client.send_internal_request(join_game_url, 'post', data={'user': user.username})
+            
+            if response2.status_code != 200: #a changer si besoin en fonction
+                raise MicroserviceError(response2.status_code, response2.text)
+            return Response(response2)
 
+        except MicroserviceError as e:
+                return Response(e.message, e.response_text, e.status_code)
         except Exception as e:
             return Response(
                 {"message": "Error while joining the room", "error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        #call join game
 
     def create_room(self, request, user):
-        # Créer une nouvelle room directement dans cette méthode
         room_id = f"room_{str(uuid.uuid4())[:8]}"
         try:
             new_room = Room.objects.create(room_id=room_id, status='waiting', players_count=1)
@@ -199,22 +186,34 @@ class JoinRoomView(APIView):
             user.rooms.add(new_room)
             user.save()
 
-            return Response({
-                "message": "New room created",
-                "room_id": new_room.room_id
-            }, status=status.HTTP_201_CREATED)
+            #call create game
+            create_game_url = f'http://game:8443/api/game/create_game/{new_room.id}/'
+            client = MicroserviceClient()
+            response2 = client.send_internal_request(create_game_url, 'post')
+            if response2.status_code != 201:
+                raise MicroserviceError(response2.status_code, response2.text)
+
+            #call join game
+            join_game_url = f'http://game:8443/api/game/join_game/{new_room.id}/'
+            client = MicroserviceClient()
+            response3 = client.send_internal_request(join_game_url, 'post', data={'user': user.username})
+            if response3.status_code != 200:
+                raise MicroserviceError(response3.status_code, response3.text)
+            
+
+            return Response(response3)
 
         except IntegrityError as e:
             return Response({"message": "Room ID conflict, try again.", "error": str(e)
             }, status=status.HTTP_400_BAD_REQUEST
             )
+        except MicroserviceError as e:
+            return Response(e.message, e.response_text, e.status_code)
         except Exception as e:
             return Response({
-                "message": "Error while creating room",
+                "message": "Error while creating room blup",
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        #call create game
-        #call join game
 
 class QuitRoomView(APIView):
     permission_classes = [IsAuthenticated]
@@ -239,10 +238,7 @@ class QuitRoomView(APIView):
             room.player1 = None
         elif room.player2 == user:
             room.player2 = None
-        # else:
-        #     return Response({
-        #         "message": "User is not in the room.",
-        #     }, status=status.HTTP_400_BAD_REQUEST)
+
 
         room.players_count -= 1
 
@@ -251,7 +247,6 @@ class QuitRoomView(APIView):
 
         room.save()
 
-        # Dissocier l'utilisateur de la room
         user.rooms.remove(room)
         user.save()
 
@@ -287,27 +282,27 @@ class QuitAllRoomsView(APIView):
 
 class ListAllRoomsView(generics.ListAPIView):
     serializer_class = RoomSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRooms]
 
     def get_queryset(self):
         return Room.objects
 
 class ListAvailableRoomsView(generics.ListAPIView):
     serializer_class = RoomSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRooms]
 
     def get_queryset(self):
         return Room.objects.filter(players_count__lt=2)
 
 class ListLockedRoomsView(generics.ListAPIView):
     serializer_class = RoomSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRooms]
 
     def get_queryset(self):
         return Room.objects.filter(players_count=2)
 
 class CountAllRoomsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRooms]
 
     def get(self, request, *args, **kwargs):
         # Compter le nombre de rooms dans la base de données
@@ -319,10 +314,9 @@ class CountAllRoomsView(APIView):
         )
 
 class CountAvailableRoomsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRooms]
 
     def get(self, request, *args, **kwargs):
-        # Compter les rooms avec moins de 2 joueurs
         available_room_count = Room.objects.filter(players_count__lt=2).count()
 
         return Response(
@@ -331,10 +325,9 @@ class CountAvailableRoomsView(APIView):
         )
 
 class CountLockedRoomsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRooms]
 
     def get(self, request, *args, **kwargs):
-        # Compter les rooms avec 2 joueurs ou plus
         locked_room_count = Room.objects.filter(players_count__gte=2).count()
 
         return Response(
@@ -345,8 +338,9 @@ class CountLockedRoomsView(APIView):
 # ************************** DELETE ************************** #
 
 class DeleteRoomView(generics.DestroyAPIView):
+    permission_classes = [IsRooms]
     queryset = Room.objects.all()
-    permission_classes = [IsAuthenticated] 
+    # permission_classes = [IsAuthenticated] 
     lookup_field = 'room_id'
 
     def get_object(self):

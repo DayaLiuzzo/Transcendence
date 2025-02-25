@@ -66,7 +66,6 @@ class RetrieveUserProfileView(generics.RetrieveAPIView):
 # **************************** PATCH *************************** #
 
 
-#quand je recois une requete jai pas besoin du service connnctor donc je vais mettre juste isauth ici, (mais is_nomduservice pour les autres reqûetes)
 class UpdateUserProfileView(APIView):
     permission_classes = [IsAuth]
     queryset = UserProfile.objects.all()
@@ -114,9 +113,9 @@ class DeleteUserProfileView(generics.DestroyAPIView):
 
 # *************************** CREATE ************************* #
 
-#add les permissions : microservice room
-#ajouter le lien avec le service room
+#called by Rooms service when creating a rooms
 class CreateGame(APIView):
+    permission_classes = [IsRooms]
     def post(self, request, room_id, *args, **kwargs):
         if Game.objects.filter(room_id=room_id).exists():
             return Response({'error': f'La room avec l\'ID {room_id} existe déjà.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -138,27 +137,18 @@ class CreateGame(APIView):
 
         game_serializer = GameSerializer(game)
 
-        return Response({'message': f'La room {room_id} a été créée avec succes.', 'game': game_serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_201_CREATED)
 
-#add les permissions : users qui joinent
+#called by Rooms service when adding a user to a game
 class JoinGame(APIView):
+    permission_classes = [IsRooms]
     def post(self, request, room_id, *args, **kwargs):
         game = get_object_or_404(Game, room_id=room_id)
 
-        logger.debug(f"****************WESHH***********")
-
-        user = request.user
-        if game.player1 == user:
-            return Response({
-                'message': f'{user.username} a est deja dans la room {room_id} en tant que joueur 1.'
-            }, status=status.HTTP_200_OK)#changer code erreur
-        if game.player2 == user:
-            return Response({
-                'message': f'{user.username} a est deja dans la room {room_id} en tant que joueur 2.'
-            }, status=status.HTTP_200_OK)
+        user_username = request.data.get("user")  # Assuming you send the username
+        user = get_object_or_404(UserProfile, username=user_username)  # Retrieve user by username
 
         if game.player1 is None:
-            # Si la place de player1 est vide, l'assigner à player1
             game.player1 = user
             left_paddle = game.paddles.filter(side='left').first()
             left_paddle.player = user
@@ -167,33 +157,31 @@ class JoinGame(APIView):
             return Response({
                 'message': f'{user.username} a rejoint la room {room_id} en tant que joueur 1.'
             }, status=status.HTTP_200_OK)
-
         elif game.player2 is None:
-            # Si la place de player2 est vide, l'assigner à player2
             game.player2 = user
-            right_paddle = game.paddles.filter(side='right').first()
-            right_paddle.player = user
-            right_paddle.save()
+            left_paddle = game.paddles.filter(side='right').first()
+            left_paddle.player = user
+            left_paddle.save()
             game.save()
             return Response({
                 'message': f'{user.username} a rejoint la room {room_id} en tant que joueur 2.'
             }, status=status.HTTP_200_OK)
-
         else:
-            # Si les deux places sont occupées
             return Response({
-                'error': 'La room est déjà pleine.'
+                'message': 'Game is full.'
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
 # *************************** READ *************************** #
 
 class GameListAPIView(generics.ListAPIView):
+    permission_classes = [IsGame]
     queryset = Game.objects.all()
     serializer_class = GameSerializer
 
 #a proteger
 class GameStateAPIView(APIView):
+    permission_classes = [IsGame]
     def get(self, request, room_id, *args, **kwargs):
         game = get_object_or_404(Game, room_id=room_id)
         
@@ -206,6 +194,7 @@ class GameStateAPIView(APIView):
 # ************************** DELETE ************************** #
 
 class DeleteGame(APIView):
+    permission_classes = [IsRooms]
     def delete(self, request, room_id, *args, **kwargs):
         game = get_object_or_404(Game, room_id=room_id)
 

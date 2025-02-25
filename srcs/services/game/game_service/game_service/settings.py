@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'game_app',
     'channels',
+    'service_connector',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
