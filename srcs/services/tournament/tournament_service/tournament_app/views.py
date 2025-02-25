@@ -47,61 +47,6 @@ class CreateTournamentView(generics.CreateAPIView):
         user = self.request.user
         tournament = serializer.save(owner=user)
         tournament.users.add(user)
-    #def post(self, request, *args, **kwargs):
-    #    user = request.user
-    #    fields = ['name', 'max_users']
-    #    data = {}
-    #    for field in fields:
-    #        value = request.data.get(field)
-    #        if value:
-    #            data[field] = value
-    #    data['owner'] = user
-    #    data['players']
-    #    serializer = TournamentSerializer(data=data)
-    #    serializer.is_valid(raise_exception=True)
-    #    tournament = serializer.save()
-    #    tournament.users.add(user)
-    #    tournament.owner = user
-    #    tournament.save()
-    #    return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-
-
-    # def perform_create(self, serializer):
-    #     try:
-    #         tournament_id = uuid.uuid4()
-    #         # Récupérer les usernames envoyés dans le body
-    #         usernames = self.request.data.get('users', [])
-
-    #         # Inclure l'utilisateur qui crée le tournoi (l'ID de l'utilisateur actuel)
-    #         user = self.request.user
-    #         if user.username not in usernames:
-    #             usernames.append(user.username)
-
-    #         # Vérifier que le nombre d'utilisateurs ne dépasse pas 10
-    #         if len(usernames) > 10:
-    #             raise ValidationError("A tournament cannot have more than 10 users.")
-
-    #         # Vérifier que les utilisateurs existent
-    #         users = []
-    #         for username in usernames:
-    #             try:
-    #                 existing_user = UserProfile.objects.get(username=username)
-    #                 users.append(existing_user)
-    #             except UserProfile.DoesNotExist:
-    #                 raise ValidationError(f"User with username '{username}' does not exist.")
-
-    #         # Créer le tournoi avec le statut "waiting"
-    #         tournament = serializer.save(status='waiting', tournament_id=tournament_id)  # Ajout du tournoi_id
-            
-    #         tournament.users.set(users)
-    #         tournament.save()
-
-    #         tournament.create_pools()
-
-    #     except Exception as e:
-    #         raise ValidationError({"message": "Error while creating tournament", "error": str(e)})
 
 class JoinTournamentView(APIView):
     permission_classes = [IsAuthenticated]
