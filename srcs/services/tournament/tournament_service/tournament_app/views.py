@@ -16,17 +16,17 @@ from .authentication import CustomJWTAuth
 from .models import Tournament
 from .models import UserProfile
 from .models import Pool
-from .models import Match
+from .models import Room
 from .serializers import TournamentSerializer
 from .serializers import UserProfileSerializer
-from .serializers import MatchSerializer
+from .serializers import RoomSerializer
 from tournament_app.permissions import IsAuth
 from tournament_app.permissions import IsTournament
 from tournament_app.permissions import IsUsers
 from tournament_app.permissions import IsGame
 from tournament_app.permissions import IsOwnerAndAuthenticated
 from tournament_app.permissions import IsRoom
-from .utils import calculate_ranking
+#from .utils import calculate_ranking
 
 def tournament_service_running(request):
     return JsonResponse({"message": "Tournament service is running"})
@@ -152,9 +152,9 @@ class LaunchTournamentView(APIView):
             tournament.save()
 
             pool = Pool.objects.get(users=user)
-            matches_queryset = Match.objects.filter(Q(pool=pool) & (Q(player_1=user) | Q(player_2=user)))
-            matches_serializer = MatchSerializer(matches_queryset, many=True)
-            return Response(matches_serializer.data, status=status.HTTP_200_OK)
+            rooms_queryset = Room.objects.filter(Q(pool=pool) & (Q(player_1=user) | Q(player_2=user)))
+            rooms_serializer = RoomSerializer(rooms_queryset, many=True)
+            return Response(rooms_serializer.data, status=status.HTTP_200_OK)
 
         except Tournament.DoesNotExist:
             return Response({

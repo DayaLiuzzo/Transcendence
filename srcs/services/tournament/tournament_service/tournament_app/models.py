@@ -84,7 +84,7 @@ class Pool(models.Model):
     name = models.CharField(max_length=16)  # Par exemple: Poule A, Poule B
     users = models.ManyToManyField(UserProfile)  # Liste des joueurs dans la poule
     rank = models.IntegerField(default=1)  # Position dans l'ordre des poules (utile pour l'affichage)
-    matches = models.ManyToManyField('Match', blank=True, related_name='matches')
+    matches = models.ManyToManyField('Room', blank=True, related_name='matches')
 
     def __str__(self):
         return f"{self.name} - {self.tournament.name}"
@@ -106,23 +106,23 @@ class Pool(models.Model):
                         players_in_match.append(players[i])
                         players_in_match.append(players[j])
 
-                    match = Match.objects.create(
+                    match = Room.objects.create(
                         pool=self,  # Lier le match à la poule
                         player_1=players[i],
                         player_2=players[j],
                         status=status
                     )
                     self.matches.add(match)
-    
+
     def calculate_ranking(self):
         players = list(self.users.all())
         ranking = []
 
         for player in players:
-            wins = Match.objects.filter(pool=self, winner=player).count()
-            losses = Match.objects.filter(pool=self, loser=player).count()
-            draws = Match.objects.filter(pool=self, winner__isnull=True, player_1=player).count()
-            draws += Match.objects.filter(pool=self, winner__isnull=True, player_2=player).count()
+            wins = Room.objects.filter(pool=self, winner=player).count()
+            losses = Room.objects.filter(pool=self, loser=player).count()
+            draws = Room.objects.filter(pool=self, winner__isnull=True, player_1=player).count()
+            draws += Room.objects.filter(pool=self, winner__isnull=True, player_2=player).count()
             points = wins * 3 + draws  # 3 points pour chaque victoire, 1 pour chaque match nul
             ranking.append({
                 'player': player.username,
@@ -136,11 +136,11 @@ class Pool(models.Model):
         ranking.sort(key=lambda x: (-x['points'], -x['wins']))
         return ranking
 
-    def all_matches_finished(self):
-        matches = Match.objects.filter(pool=self)
+    def all_rooms_finished(self):
+        matches = Room.objects.filter(pool=self)
         return all(match.status == 'finished' for match in matches)
 
-class Match(models.Model):
+class Room(models.Model):
     STATUS_CHOICES = [
         ('waiting', 'Waiting'),
         ('standby', 'Standby'),
@@ -149,7 +149,7 @@ class Match(models.Model):
     ]
 
     pool = models.ForeignKey(Pool, on_delete=models.CASCADE)
-    #match_id = models.UUIDField(unique=True, blank=True, null=True)
+    room_id = models.UUIDField(unique=True, blank=True, null=True)
     player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_1_matches')
     player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_2_matches')
     winner = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='won_matches')
@@ -183,7 +183,7 @@ class Match(models.Model):
 
 class PlayerHistory(models.Model):
     player = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
-    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    match = models.ForeignKey(Room, on_delete=models.CASCADE)
     opponent = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='opponent_history')
     result = models.CharField(max_length=10, choices=[('win', 'Win'), ('loss', 'Loss')])
 
