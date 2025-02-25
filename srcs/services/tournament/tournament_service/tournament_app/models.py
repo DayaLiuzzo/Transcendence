@@ -76,7 +76,7 @@ class Tournament(models.Model):
             pool.save()
             
             # Génère les matchs pour cette poule
-            pool.generate_matches()
+            pool.generate_rooms()
             self.pools.add(pool)
     
 class Pool(models.Model):
@@ -84,35 +84,38 @@ class Pool(models.Model):
     name = models.CharField(max_length=16)  # Par exemple: Poule A, Poule B
     users = models.ManyToManyField(UserProfile)  # Liste des joueurs dans la poule
     rank = models.IntegerField(default=1)  # Position dans l'ordre des poules (utile pour l'affichage)
-    matches = models.ManyToManyField('Room', blank=True, related_name='matches')
+    room = models.ManyToManyField('Room', blank=True, related_name='room')
 
     def __str__(self):
         return f"{self.name} - {self.tournament.name}"
 
-    def get_matches(self):
+    def get_rooms(self):
         """Retourne tous les matchs de la poule."""
-        return self.matches.all()
+        return self.rooms.all()
     
-    def generate_matches(self):
+    def generate_rooms(self):
             """Génère tous les matchs entre les joueurs de la poule."""
-            players = list(self.users.all())
-            players_in_match = []
-            for i in range(len(players)):
-                for j in range(i+1, len(players)):
-                    status = 'waiting'
-                    if players[i] in players_in_match or players[j] in players_in_match:
-                        status = 'standby'
-                    else:
-                        players_in_match.append(players[i])
-                        players_in_match.append(players[j])
+            if self.rooms.empty():
+                players = list(self.users.all())
+                players_in_room = []
+                for i in range(len(players)):
+                    for j in range(i+1, len(players)):
+                        status = 'waiting'
+                        if players[i] in players_in_room or players[j] in players_in_room:
+                            status = 'standby'
+                        else:
+                            players_in_match.append(players[i])
+                            players_in_match.append(players[j])
 
-                    match = Room.objects.create(
-                        pool=self,  # Lier le match à la poule
-                        player_1=players[i],
-                        player_2=players[j],
-                        status=status
-                    )
-                    self.matches.add(match)
+                        match = Room.objects.create(
+                            pool=self,  # Lier le match à la poule
+                            player_1=players[i],
+                            player_2=players[j],
+                            status=status
+                        )
+                        self.rooms.add(match)
+            else:
+
 
     def calculate_ranking(self):
         players = list(self.users.all())
@@ -137,8 +140,8 @@ class Pool(models.Model):
         return ranking
 
     def all_rooms_finished(self):
-        matches = Room.objects.filter(pool=self)
-        return all(match.status == 'finished' for match in matches)
+        room = Room.objects.filter(pool=self)
+        return all(room.status == 'finished' for room in room)
 
 class Room(models.Model):
     STATUS_CHOICES = [
