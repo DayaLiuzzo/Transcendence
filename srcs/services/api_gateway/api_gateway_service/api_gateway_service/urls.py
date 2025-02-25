@@ -41,7 +41,7 @@ def route_to_service(request, service_name, extra_path=''):
                 "Content-Type": request.headers.get("Content-Type", ""),
                 "Authorization": request.headers.get("Authorization", ""),
             }
-            logger.debug(f"headers de la requête: {headers}")
+            # logger.debug(f"headers de la requête: {headers}")
 
             response = requests.request(
                 method=request.method,
