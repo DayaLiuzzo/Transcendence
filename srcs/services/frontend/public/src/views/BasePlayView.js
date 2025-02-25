@@ -18,6 +18,8 @@ export default class BasePlayView extends BaseView{
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
+        //set interval : renvoyer le call api toutes les xtemps 
+        //voir pour set interval websocket
     }
 
     async test(){
