@@ -76,7 +76,12 @@ export default class EditProfile extends BaseView{
         userSession.access_token = response.data.access_token;
         userSession.refresh_token = response.data.refresh_token;
         sessionStorage.setItem("userSession", JSON.stringify(userSession));
-        this.navigateTo("/profile");
+        if(userSession.two_factor_enabled){
+            alert(response.data.otp)
+            this.navigateTo("/profile");            
+        }
+        else
+            this.navigateTo("/profile");
     }
 
     getPasswordFormData(){
@@ -140,7 +145,7 @@ export default class EditProfile extends BaseView{
                 let userSession = JSON.parse(sessionStorage.getItem("userSession"));
                 userSession.two_factor_enabled = true;
                 sessionStorage.setItem("userSession", JSON.stringify(userSession));
-                alert(response.data.qr_code_url);
+                alert(response.data.otp_secret);
                 document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
             }
             else{
