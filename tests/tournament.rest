@@ -1,0 +1,131 @@
+################################################################
+#                                                              #
+#                       Create user                            #
+#                                                              #
+################################################################
+
+#create user1
+post https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "bidon",
+  "password": "Pass12456!",
+  "email": "d@gmail.com"
+}
+###
+
+#create user2
+post https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "tkt",
+  "password": "Pass12456!",
+  "email": "oui@gmail.com"
+}
+###
+
+#create user3
+post https://localhost:4430/api/auth/signup/
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "Pass12456!",
+  "email": "non@gmail.com"
+}
+###
+
+#get user1 token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "bidon",
+  "password": "Pass12456!"
+}
+###
+
+#get user2 token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "tkt",
+  "password": "Pass12456!"
+}
+###
+
+#get user3 token
+POST https://localhost:4430/api/auth/token/
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "Pass12456!"
+}
+###
+
+#check if tournament service is working
+GET https://localhost:4430/api/tournament/test/
+###
+################################################################
+#                                                              #
+#                       Tournament tests                       #
+#                                                              #
+################################################################
+
+# ************************** POST ************************** #
+
+#create tournament
+POST https://localhost:4430/api/tournament/create_tournament/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTA1NTM5LCJpYXQiOjE3NDA1MDAxMzksImp0aSI6IjMwZTQwYzVmZmQxNzQwNWRiNDI2ODZlMWFkZDIwZWZjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.qQ4S29GsId0M_JKQTz4G9oq74RSJ1wdjKI6ziJ5ZGIejn5laHmW7MxPhDDBQT0pQ9QXrUTPMukosvChzjmu-k3u0cFZSPkfI_QptjdFydzqu1b9pynkGMc3cAy5lmCzbPinfGrV9CmQFwGd5RSAfDxUQrZSX-RPtH3GgPj-IVu8DSyeQH52imcLUe2PieRNk5sQBenPNVtb2YwWow-LhGBnzU12HpTJJhhaO97aNsQLDME5AZjxkDjIFtFUfxCNCd204GtFqKQ7AhJONW-QxbikMzSOZg8M9-dto5iZywx2H-FX2SB-07BziD28DxRpJjraYTQAzfstJ910vTwCEAA
+Content-Type: application/json
+
+{
+    "name": "chokbar de bz",
+    "max_users": 16
+}
+###
+
+#join tournament
+POST https://localhost:4430/api/tournament/join/228ad41c-4b50-4396-9fa1-44c3e9f616ae/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTA3MjEwLCJpYXQiOjE3NDA1MDE4MTAsImp0aSI6ImRjZTI1YjRhOTI4MjRjZmRiNWQ0ZjI2ZGNkMzUxOTY3IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.Ms6Jv1M1aIlCimBWmlwTPI_UOZMD2zr2tIG6eCbPsLUOdLoBMNiqXrrhwOwEw1lvqEOHWyOTNSpOowfLmxZJ52p6jrfw4hrxVK5ZPk7ecWFhzsG-gF0_jBUBt1mHdn9VoB3pbsxHG-z0lHCtviwlA2lGvbvJfwjNxA_mWQJPhF2u9QaZzytJpFBgZMrL9ZDRoJdbxUTTSbdzvUSCEljyBDQt4CEHCINA4mw9aTifammjehJ_1Q5Jh90e4564ZZYsn5sSlpcWNp3-Yv2RxrZLvB58mviSJHyrFVOhB-xaSuRX6FEi_hI3TyIDiJFj12q-VhrVXtkq-Hc1qrxgfXKQsw
+Content-Type: application/json
+
+###
+
+#leave tournament
+POST https://localhost:4430/api/tournament/leave/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTA3MjEwLCJpYXQiOjE3NDA1MDE4MTAsImp0aSI6ImRjZTI1YjRhOTI4MjRjZmRiNWQ0ZjI2ZGNkMzUxOTY3IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.Ms6Jv1M1aIlCimBWmlwTPI_UOZMD2zr2tIG6eCbPsLUOdLoBMNiqXrrhwOwEw1lvqEOHWyOTNSpOowfLmxZJ52p6jrfw4hrxVK5ZPk7ecWFhzsG-gF0_jBUBt1mHdn9VoB3pbsxHG-z0lHCtviwlA2lGvbvJfwjNxA_mWQJPhF2u9QaZzytJpFBgZMrL9ZDRoJdbxUTTSbdzvUSCEljyBDQt4CEHCINA4mw9aTifammjehJ_1Q5Jh90e4564ZZYsn5sSlpcWNp3-Yv2RxrZLvB58mviSJHyrFVOhB-xaSuRX6FEi_hI3TyIDiJFj12q-VhrVXtkq-Hc1qrxgfXKQsw
+Content-Type: application/json
+
+###
+
+#launch tournament
+POST https://localhost:4430/api/tournament/launch/5e39a0a3-7506-45e1-8d4e-d56cf9142a2f/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTA1NTM5LCJpYXQiOjE3NDA1MDAxMzksImp0aSI6IjMwZTQwYzVmZmQxNzQwNWRiNDI2ODZlMWFkZDIwZWZjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.qQ4S29GsId0M_JKQTz4G9oq74RSJ1wdjKI6ziJ5ZGIejn5laHmW7MxPhDDBQT0pQ9QXrUTPMukosvChzjmu-k3u0cFZSPkfI_QptjdFydzqu1b9pynkGMc3cAy5lmCzbPinfGrV9CmQFwGd5RSAfDxUQrZSX-RPtH3GgPj-IVu8DSyeQH52imcLUe2PieRNk5sQBenPNVtb2YwWow-LhGBnzU12HpTJJhhaO97aNsQLDME5AZjxkDjIFtFUfxCNCd204GtFqKQ7AhJONW-QxbikMzSOZg8M9-dto5iZywx2H-FX2SB-07BziD28DxRpJjraYTQAzfstJ910vTwCEAA
+
+###
+
+# *************************** DELETE *************************** #
+
+#delete tournament
+DELETE https://localhost:4430/api/tournament/delete_tournament/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTA2OTE2LCJpYXQiOjE3NDA1MDE1MTYsImp0aSI6IjdkZWQxMjkzNGEyOTQzNDViMDk4MzIwOTdlOWQwN2Q2IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJ0a3QifQ.iVPL5L0f86Fj3nNLdi-BC4UbPOJyAAkr3ffZHL4N-ZwMT2GydSX-lLnCaUVeXk1NqjriiIREvyg1_iCyeLG8-FICWfvOhXKxqPR1MEFN2TWtFL42pG7vIMLMTU188XxhofcNrG3mMJ-QHF497JCS8Hg00EBsb-__p6m4syjsZlqSo60VrE1paWuRuN41dsx_eEY2nZChyf6IPhlorQ6WCcyEV1sFqE7bUd7-z5qIyAWKyOtxXaUyQB3OXtxl7C-N0-Jx_eNL7zNktsNQONFf2PuzB40zpgyf_jyQr59PtWgYEg_vcSLiqaJOqYDlixaX0bAYDc29k9kwQhAup2Mu3A
+###
+
+# *************************** READ *************************** #
+
+#detail tournament
+GET https://localhost:4430/api/tournament/detail/5e39a0a3-7506-45e1-8d4e-d56cf9142a2f/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTA1NTM5LCJpYXQiOjE3NDA1MDAxMzksImp0aSI6IjMwZTQwYzVmZmQxNzQwNWRiNDI2ODZlMWFkZDIwZWZjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.qQ4S29GsId0M_JKQTz4G9oq74RSJ1wdjKI6ziJ5ZGIejn5laHmW7MxPhDDBQT0pQ9QXrUTPMukosvChzjmu-k3u0cFZSPkfI_QptjdFydzqu1b9pynkGMc3cAy5lmCzbPinfGrV9CmQFwGd5RSAfDxUQrZSX-RPtH3GgPj-IVu8DSyeQH52imcLUe2PieRNk5sQBenPNVtb2YwWow-LhGBnzU12HpTJJhhaO97aNsQLDME5AZjxkDjIFtFUfxCNCd204GtFqKQ7AhJONW-QxbikMzSOZg8M9-dto5iZywx2H-FX2SB-07BziD28DxRpJjraYTQAzfstJ910vTwCEAA
+
+###
+
+#list all tournament
+GET https://localhost:4430/api/tournament/list/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNTA1NTM5LCJpYXQiOjE3NDA1MDAxMzksImp0aSI6IjMwZTQwYzVmZmQxNzQwNWRiNDI2ODZlMWFkZDIwZWZjIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.qQ4S29GsId0M_JKQTz4G9oq74RSJ1wdjKI6ziJ5ZGIejn5laHmW7MxPhDDBQT0pQ9QXrUTPMukosvChzjmu-k3u0cFZSPkfI_QptjdFydzqu1b9pynkGMc3cAy5lmCzbPinfGrV9CmQFwGd5RSAfDxUQrZSX-RPtH3GgPj-IVu8DSyeQH52imcLUe2PieRNk5sQBenPNVtb2YwWow-LhGBnzU12HpTJJhhaO97aNsQLDME5AZjxkDjIFtFUfxCNCd204GtFqKQ7AhJONW-QxbikMzSOZg8M9-dto5iZywx2H-FX2SB-07BziD28DxRpJjraYTQAzfstJ910vTwCEAA
+
+###
