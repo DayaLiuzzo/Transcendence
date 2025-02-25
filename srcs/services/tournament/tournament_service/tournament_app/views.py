@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from rest_framework import generics
@@ -18,11 +19,13 @@ from .models import Pool
 from .models import Match
 from .serializers import TournamentSerializer
 from .serializers import UserProfileSerializer
+from .serializers import MatchSerializer
 from tournament_app.permissions import IsAuth
 from tournament_app.permissions import IsTournament
 from tournament_app.permissions import IsUsers
 from tournament_app.permissions import IsGame
 from tournament_app.permissions import IsOwnerAndAuthenticated
+from tournament_app.permissions import IsRoom
 from .utils import calculate_ranking
 
 def tournament_service_running(request):
@@ -144,7 +147,19 @@ class LeaveTournamentView(APIView):
                     'message': 'You are not in this tournament'
                     }, status=status.HTTP_400_BAD_REQUEST)
 
+            if tournament.status != 'waiting':
+                return Response({
+                    'message': 'You can only leave the tournament when it did not start'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
             tournament.users.remove(user)
+            if tournament.owner == user:
+                next_owner = tournament.users.first()
+                tournament.owner = next_owner
+
+            return Response({
+                    'message': 'You left the tournament'
+                }, status=status.HTTP_200_OK)
 
         except Tournament.DoesNotExist:
             return Response({
@@ -171,16 +186,20 @@ class LaunchTournamentView(APIView):
 
             if tournament.status != 'waiting':
                 return Response({
-                        'message': 'Tournament already started'
+                        'message': 'Tournament already launched'
                     }, status=status.HTTP_400_BAD_REQUEST)
+
+            tournament.generate_pools()
 
             # TODO: send requests to rooms service
 
             tournament.status = 'playing'
             tournament.save()
-            return Response({
-                    'message': 'Tournament launched'
-                }, status=status.HTTP_200_OK)
+
+            pool = Pool.objects.get(users=user)
+            matches_queryset = Match.objects.filter(Q(pool=pool) & (Q(player_1=user) | Q(player_2=user)))
+            matches_serializer = MatchSerializer(matches_queryset, many=True)
+            return Response(matches_serializer.data, status=status.HTTP_200_OK)
 
         except Tournament.DoesNotExist:
             return Response({
@@ -371,13 +390,13 @@ class DeleteTournamentView(APIView):
             user = request.user
             # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
             # if user.is_staff or (user == tournament.owner and tournament.status != 'playing'):
-            if user == tournament.owner and tournament.status != 'playing':
+            if user == tournament.owner and tournament.status == 'waiting':
                 tournament.delete()
                 return Response({
                     "message": "Tournament deleted successfully"
                     }, status=status.HTTP_200_OK)
             else:
-                if tournament.status == 'playing':
+                if tournament.status != 'waiting':
                     return Response({
                         "message": "Tournament has not finished yet"
                         }, status=status.HTTP_400_BAD_REQUEST)

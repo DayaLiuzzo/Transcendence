@@ -8,12 +8,16 @@ from .models import Match
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['username', 'is_authenticated']
+        fields = ['username']
 
 class MatchSerializer(serializers.ModelSerializer):
+    player_1 = serializers.StringRelatedField()
+    player_2 = serializers.StringRelatedField()
+    winner = serializers.StringRelatedField()
+    loser = serializers.StringRelatedField()
     class Meta:
         model = Match
-        fields = ['id', 'player_1', 'player_2', 'winner', 'loser', 'status', 'score_player_1', 'score_player_2']
+        fields = ['player_1', 'player_2', 'winner', 'loser', 'status', 'score_player_1', 'score_player_2']
 
 class PoolSerializer(serializers.ModelSerializer):
     users = serializers.SlugRelatedField(slug_field='username', queryset=UserProfile.objects.all(), many=True)
@@ -21,21 +25,14 @@ class PoolSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pool
-        fields = ['id', 'name', 'tournament', 'users', 'matches']
+        fields = ['name', 'tournament', 'users', 'matches']
 
 class TournamentSerializer(serializers.ModelSerializer):
     users_count = serializers.ReadOnlyField()
     # users = UserProfileSerializer(many=True, read_only=False)
     # pools = PoolSerializer(many=True, read_only=True)
-    users = serializers.PrimaryKeyRelatedField(
-                many=True,
-                queryset=UserProfile.objects.all(),
-                required=False
-            )
-    owner = serializers.PrimaryKeyRelatedField(
-                queryset=UserProfile.objects.all(),
-                required=False
-            )
+    users = serializers.StringRelatedField(many=True, required=False)
+    owner = serializers.StringRelatedField(required=False)
 
     class Meta:
         model = Tournament
