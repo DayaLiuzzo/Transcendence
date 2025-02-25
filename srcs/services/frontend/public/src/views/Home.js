@@ -79,6 +79,7 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
 
             // Canvas pour le rendu 3D + creation objet box mesh attributs etc
             const canvas = document.querySelector('canvas.webgl');
+            const container = document.querySelector('.ascii-container');
             const scene = new THREE.Scene();
 
             const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -89,11 +90,10 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
                 new THREE.MeshLambertMaterial({ color: 0x000000 })
             );
             const sizes = {
-                width: scene.innerWidth,
-                height: scene.innerHeight,
+                width: container.clientWidth,
+                height: container.clientHeight,
             }
             scene.add(mesh);
-
 
             // set le renderer de la scene 3d
             const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true } );
@@ -133,41 +133,36 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
               controls,
               animationId: null,
               canvas,
-              resizeHandler: () => {
-                  sizes.width = window.innerWidth;
-                  sizes.height = window.innerHeight;
-
-                  camera.aspect = sizes.width / sizes.height;
-                  camera.updateProjectionMatrix();
-
-                  renderer.setSize(sizes.width, sizes.height);
-                  effect.setSize(sizes.width, sizes.height);
-              },
-              mouseMoveHandler: (event) => {
-                  cursor.x = event.clientX / window.innerWidth - 0.5;
-                  cursor.y = event.clientY / window.innerHeight - 0.5;
-              }
+              container
           };
-
-
-          window.addEventListener("resize", window.threeInstance.resizeHandler);
-          window.addEventListener("mousemove", window.threeInstance.mouseMoveHandler);
 
           const clock = new THREE.Clock();
           const tick = () => {
-            window.threeInstance.animationId =requestAnimationFrame(tick);
+            window.threeInstance.animationId = requestAnimationFrame(tick);
             const elapsedTime = clock.getElapsedTime();
             mesh.rotation.y = elapsedTime * 0.5;
 
             controls.update();
             window.threeInstance.effect.render(scene, camera);
           }
+
+          window.addEventListener("resize", () => {
+            const rect = container.getBoundingClientRect();
+            // console.log(rect);
+
+            sizes.width = rect.width
+            sizes.height = rect.height
+
+            camera.aspect = sizes.width / sizes.height;
+            camera.updateProjectionMatrix();
+
+            window.threeInstance.renderer.setSize(sizes.width, sizes.height);
+            window.threeInstance.effect.setSize(sizes.width, sizes.height);
+            window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          });
+
           tick();
-
-          //cleanUpThree();
-
         };
-
 };
 
 
