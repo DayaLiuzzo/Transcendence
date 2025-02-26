@@ -166,7 +166,7 @@ class JoinRoomView(APIView):
             
             if response2.status_code != 200: #a changer si besoin en fonction
                 raise MicroserviceError(response2.status_code, response2.text)
-            return Response(response2)
+            return Response({"message": "User successfuly added to a room", "room_id": waiting_room.room_id}, status=status.HTTP_200_OK)
 
         except MicroserviceError as e:
                 return Response(e.message, e.response_text, e.status_code)
@@ -202,7 +202,7 @@ class JoinRoomView(APIView):
                 raise MicroserviceError(response3.status_code, response3.text)
             
 
-            return Response(response3)
+            return Response({"message": "User successfuly added to a room", "room_id": new_room.room_id}, status=status.HTTP_200_OK)
 
         except IntegrityError as e:
             return Response({"message": "Room ID conflict, try again.", "error": str(e)
