@@ -142,7 +142,7 @@ export default class Profile extends BaseView{
             this.renderFriends(users);
             this.updateFieldContent("username-field", this.formatField("username", username));
             this.updateFieldContent("biography-field", this.formatField("biography", biography));
-            this.updateNavbar();
+            await this.updateNavbar();
             await this.attachEvents();
         }
         catch (error) {

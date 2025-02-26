@@ -116,6 +116,8 @@ export default class EditProfile extends BaseView{
                 <button type="submit">Change Username</button>
             </form>
             <button id="toggle-2fa-button">Enable 2FA</button>
+            <input type="file" id="avatar-upload" accept="image/*" />
+            <button id="upload-avatar-btn">Upload Avatar</button>
         </div>
     `;
     }
@@ -164,10 +166,32 @@ export default class EditProfile extends BaseView{
                 document.getElementById("toggle-2fa-button").textContent = "Enable 2FA";
 
             }
+
+
         });
+        
+        document.getElementById("upload-avatar-btn").addEventListener("click", async () => {
+        const fileInput = document.getElementById("avatar-upload");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Please select an avatar image first!");
+            return;
+        }
+        const formData = new FormData();
+        formData.append("avatar", file);
+        const response = await this.uploadAvatar(this.API_URL_AVATAR, formData);
+        if (!response.success) {
+            this.showError(response.error);
+            console.log("ERROR")
+            return;
+        }
+        console.log(response.data.status)
+        });
+
         }
 
-    async mount(){
+        async mount(){
         try {
             this.app.innerHTML = await this.render();
             const username = this.getUsername();
@@ -175,12 +199,39 @@ export default class EditProfile extends BaseView{
             const userData = await this.sendGetRequest(this.API_URL + username + '/');
             if(userData.data.two_factor_enabled) document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
             console.log(userData.data.two_factor_enabled);
-            this.updateNavbar();
+            await this.updateNavbar();
             await this.attachEvents();
         }
         catch (error) {
             console.error("Error in mount():", error);
         }
-        
+
     }
+
+        async uploadAvatar(url, formData){
+        try {
+            let headers = {
+            };
+            if(this.getAccessToken()){
+                headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: formData,
+            });
+            const responseData = await response.json();
+            if (!response.ok) {
+                console.error("Error in uploadAvatar():", url)
+                return { success: false, error: responseData};
+            }
+            return { success: true, data: responseData};
+        }
+        catch (error) {
+            console.error("Network Error at ", url);
+            return { success: false, error: { message: "Network error"}};
+        }
+    }
+        
 }

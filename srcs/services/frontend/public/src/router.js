@@ -31,6 +31,7 @@ const routes = [
 class Router{
     constructor(routes){
         this.routes = routes;
+        this.currentView = null;
         this.init();
     }
 

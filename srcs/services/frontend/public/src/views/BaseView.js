@@ -7,6 +7,7 @@ export default class BaseView{
     constructor(router, params = {}){
         this.router = router
         this.params = params;
+        this.API_URL_AVATAR = 'https://localhost:4430/api/avatar/';
         this.API_URL_USERS = 'https://localhost:4430/api/users/';
         this.API_URL_TEST = 'https://localhost:4430/api/users/test/';
         this.API_URL = 'https://localhost:4430/api/auth/';
@@ -30,7 +31,7 @@ export default class BaseView{
         try {
             cleanUpThree();
             this.app.innerHTML = await this.render();
-            this.updateNavbar();
+            await this.updateNavbar();
             await this.attachEvents();
         }
         catch (error) {
@@ -65,20 +66,57 @@ export default class BaseView{
         return this.router.isAuthenticated();
     }
 
-    updateNavbar(){
+    async displayAvatar(){
+        const avatarResponse = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + "/avatar/");
+        if (!avatarResponse.success) {
+            this.showError(avatarResponse.error);
+            return;
+        }
+        else{
+            console.log(avatarResponse.data.avatar_url);
+            return avatarResponse.data.avatar_url;
+        }
+    }
+
+    async updateNavbar() {
         const navbar = document.getElementById("navbar");
+    
+        // If navbar exists, update it
         if (navbar) {
-            navbar.innerHTML = this.isAuthenticated() ? `
-            <a href="/home">Home</a>
-            <a href="/play-menu">Game</a>
-            <a href="/logout">Logout</a>
-            <a href="/profile">Profile</a>
-            ` : `
-            <a href="/home">Home</a>
-            <a href="/log-in">Log in</a>
-            <a href="/sign-up">Sign up</a>
-            <a href="/play-menu">Game</a>
-            `;
+            // Clear all existing navbar content first (to avoid duplication)
+            navbar.innerHTML = "";
+    
+            // If the user is authenticated
+            if (this.isAuthenticated()) {
+                // Append the main navbar links
+                navbar.innerHTML += `
+                <a href="/home">Home</a>
+                <a href="/play-menu">Game</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+                `;
+    
+                // If the avatarUrl is provided, append the avatar
+                const avatarUrl =  await this.displayAvatar();
+                if (avatarUrl) {
+                    console.log("Lol");
+                    const avatarImg = document.createElement("img");
+                    avatarImg.src = avatarUrl;
+                    avatarImg.alt = "User Avatar";
+                    avatarImg.className = "navbar-avatar";
+    
+                    // Append the avatar image after the links (or at the end of the navbar)
+                    navbar.appendChild(avatarImg);
+                }
+            } else {
+                // If the user is not authenticated, show other links
+                navbar.innerHTML = `
+                <a href="/home">Home</a>
+                <a href="/log-in">Log in</a>
+                <a href="/sign-up">Sign up</a>
+                <a href="/play-menu">Game</a>
+                `;
+            }
         }
     }
 
