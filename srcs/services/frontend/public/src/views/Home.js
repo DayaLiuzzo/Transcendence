@@ -9,7 +9,7 @@ export default class Home extends BaseView{
     constructor(router, params){
         super(router,params);
     }
-    async render(){
+    render(){
       if (this.isAuthenticated())
         {
           return `

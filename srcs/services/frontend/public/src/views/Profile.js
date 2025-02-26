@@ -15,7 +15,7 @@ export default class Profile extends BaseView{
 
     }
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Profile</h2>
@@ -133,7 +133,7 @@ export default class Profile extends BaseView{
 
     async mount(){
         try {
-            this.app.innerHTML = await this.render();
+            // this.app.innerHTML = this.render();
             const username = this.getUsername();
             const userData = await this.sendGetRequest(this.API_URL_USERS + username + '/');
             const biography = userData.data.biography;
@@ -142,7 +142,6 @@ export default class Profile extends BaseView{
             this.renderFriends(users);
             this.updateFieldContent("username-field", this.formatField("username", username));
             this.updateFieldContent("biography-field", this.formatField("biography", biography));
-            await this.updateNavbar();
             await this.attachEvents();
         }
         catch (error) {

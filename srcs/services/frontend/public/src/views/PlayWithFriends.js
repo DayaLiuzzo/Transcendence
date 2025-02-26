@@ -10,7 +10,7 @@ export default class PlayWithFriends extends BaseView{
     }
 
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Play with friends</h2>

@@ -10,7 +10,7 @@ export default class PlayTournament extends BaseView{
     }
 
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Play Tournament</h2>

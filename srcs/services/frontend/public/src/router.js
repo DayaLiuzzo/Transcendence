@@ -106,9 +106,13 @@ class Router{
         if (!route) {
             console.warn(`Route for ${path} not found! Showing NotFound view.`);
         }
-        history.pushState({}, "", path);
-        const view = new ViewClass(this);
-        await view.mount();
+        if(this.currentView){
+            this.currentView.unmount();
+        }
+        this.currentView = new ViewClass(this);
+        document.getElementById("app").innerHTML = this.currentView.render();
+        await this.currentView.updateNavbar();
+        await this.currentView.mount();
 
         this.updateBodyClass(path);
         this.updateStylesheet(path);
@@ -143,26 +147,6 @@ class Router{
     }
 
     init() {
-        // Handle browser back/forward
-        // window.addEventListener("popstate", async () => {
-        //     console.log("Popstate");
-        //     const path = window.location.pathname;
-        //     const route = this.getRoute(path);
-        //     const isLoggedIn = this.isAuthenticated();
-
-        //     // Check if the user is trying to access a protected route without being logged in
-        //     if (route && route.requiresAuth && !isLoggedIn) {
-        //         history.replaceState({}, "", "/log-in");
-        //         await this.loadView("/log-in");
-        //     }
-        //     else if (route && route.requiresGuest && isLoggedIn) {
-        //         history.replaceState({}, "", "/home");
-        //         await this.loadView("/home");
-        //     }
-        //     else {
-        //         await this.loadView(path);  // Here, history pushState should already be handled inside loadView
-        //     }
-        // });
 
         // Handle all link clicks (Global Event Delegation)
         document.body.addEventListener("click", (event) => {

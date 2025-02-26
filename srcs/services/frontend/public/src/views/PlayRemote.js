@@ -10,7 +10,7 @@ export default class PlayRemote extends BaseView{
     }
 
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Play remote</h2>

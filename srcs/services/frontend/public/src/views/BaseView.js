@@ -22,16 +22,15 @@ export default class BaseView{
             console.error("Error: Element with id 'app' not found in document");
         }
     }
-
-    async render(){
+    //RENDER THE VIEW WITH THE STATIC HTML
+    render(){
         return `<div>Base View</div>`;
     }
 
+    //UPDATE THE HTML CONTENT WITH DYNAMIC DATA AND THEN ATTACH EVENTS
     async mount(){
         try {
             cleanUpThree();
-            this.app.innerHTML = await this.render();
-            await this.updateNavbar();
             await this.attachEvents();
         }
         catch (error) {
@@ -118,6 +117,10 @@ export default class BaseView{
                 `;
             }
         }
+    }
+
+    unmount(){
+        console.log("BaseView unmounted");
     }
 
     async sendGetRequest(url){

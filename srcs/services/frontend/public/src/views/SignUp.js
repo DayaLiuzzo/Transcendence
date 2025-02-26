@@ -47,7 +47,7 @@ export default class SignUp extends BaseView{
         };
     }
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>signup</h2>

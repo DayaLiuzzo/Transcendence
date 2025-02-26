@@ -93,7 +93,7 @@ export default class LogIn extends BaseView{
         
     }
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Login</h2>

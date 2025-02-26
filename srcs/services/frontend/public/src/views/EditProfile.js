@@ -98,7 +98,7 @@ export default class EditProfile extends BaseView{
         };
     }
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>EditProfile</h2>
@@ -193,13 +193,11 @@ export default class EditProfile extends BaseView{
 
         async mount(){
         try {
-            this.app.innerHTML = await this.render();
             const username = this.getUsername();
             this.updateFieldContent("username-field", this.formatField("username", username));
             const userData = await this.sendGetRequest(this.API_URL + username + '/');
             if(userData.data.two_factor_enabled) document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
             console.log(userData.data.two_factor_enabled);
-            await this.updateNavbar();
             await this.attachEvents();
         }
         catch (error) {
