@@ -34,7 +34,7 @@ def tournament_service_running(request):
 
 def ask_room_to_generate(pool):
     rooms = pool.rooms.filter(status='waiting')
-    url = 'http://rooms:8443/api/create_room/'
+    url = 'http://rooms:8443/api/rooms/create_room/'
     method = 'put'
     client = MicroserviceClient()
     for room in rooms:
