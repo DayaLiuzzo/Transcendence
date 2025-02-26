@@ -19,7 +19,7 @@ class MicroserviceClient:
         'get':requests.get,
         'post':requests.post,
         'delete':requests.delete,
-        'update':requests.put,
+        'put':requests.put,
         'patch':requests.patch,
         }
         response = req_methods[method](url, json=data ,headers=headers)
