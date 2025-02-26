@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', "game"]
 # Application definition
 
 INSTALLED_APPS = [
-    'uvicorn',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -89,7 +88,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'game_service.wsgi.application'
 
 SERVICE_CONNECTOR_SETTINGS = {
     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),
