@@ -1,5 +1,7 @@
 // tester si remplacer localhost:4430 par '' fonctionne au sein des fetch;
 
+import { cleanUpThree } from "../three/utils.js";
+
 
 export default class BaseView{
     constructor(router, params = {}){
@@ -26,6 +28,7 @@ export default class BaseView{
 
     async mount(){
         try {
+            cleanUpThree();
             this.app.innerHTML = await this.render();
             this.updateNavbar();
             await this.attachEvents();
@@ -43,9 +46,13 @@ export default class BaseView{
 
         return this.router.getAccessToken();
     }
+    getRefreshToken(){
+
+        return this.router.getRefreshToken();
+    }
 
     getUserSession(){
-     
+
         return this.router.getUserSession();
     }
 
@@ -158,4 +165,36 @@ export default class BaseView{
     async attachEvents(){
         console.log('Events attached');
     }
+
+    updateFieldContent(fieldId, content){
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.textContent = content;
+        }
+    }
+
+    formatField(type, value){
+        if (!value) return "No information available.";
+
+        const formats ={
+            username: (val) => `Username: ${val}`,
+            biography: (val) => `Biography: ${val}`,
+            email: (val) => `Email: ${val}`,
+        };
+
+        return formats[type] ? formats[type](value) : value;
+    }
+
+    logout() {
+        const refresh_token = this.getRefreshToken();
+        if (refresh_token) {
+            console.log(refresh_token);
+            this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
+            sessionStorage.removeItem("userSession");
+            this.navigateTo("/log-in");
+        }
+        // this.sendPostRequest(this.API_URL + 'logout/', {});
+    }
+
+    
 }

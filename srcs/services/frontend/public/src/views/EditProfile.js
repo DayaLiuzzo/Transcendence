@@ -16,12 +16,9 @@ export default class EditProfile extends BaseView{
     }
     
     validateInputs(formData){
-        if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
-        if ((!formData.email || !formData.email.includes("@"))) return "Invalid email address.";
-        if (formData.username.length > 128) return "Username must be at most 128 characters long.";
-        if (!formData.password || !formData.password2 || formData.password.length < 6) return "Password must be at least 6 characters long.";
-        if (formData.password !== formData.password2) return "Passwords do not match.";
-        if (!this.containsSpecialCharacter(formData.password)) return "Password mustcontain special characters.";
+        if (!formData.new_password || !formData.new_password2 || formData.new_password.length < 6) return "Password must be at least 6 characters long.";
+        if (formData.new_password !== formData.new_password2) return "Passwords do not match.";
+        if (!this.containsSpecialCharacter(formData.new_password)) return "Password mustcontain special characters.";
         return null;
     }
 
@@ -29,12 +26,35 @@ export default class EditProfile extends BaseView{
        
     }
 
-    getFormData(){
+    async changePassword(formData) {
+        const error = this.validateInputs(formData);
+        if (error) {
+            this.showError(error);
+            return;
+        }
+        const username = this.getUsername();
+        const response = await this.sendPatchRequest(this.API_URL + "change-password/" + username + "/", formData);
+        if (response.error) {
+            this.showError(response.error);
+            return;
+        }
+        alert("Password changed successfully");
+        this.navigateTo("/profile");
+        
+    }
+
+    getPasswordFormData(){
         return {
-            username: document.getElementById("EditProfile-username").value,
-            email: document.getElementById("EditProfile-email").value,
             password: document.getElementById("EditProfile-password").value,
-            password2: document.getElementById("EditProfile-password2").value,
+            new_password: document.getElementById("EditProfile-new_password").value,
+            new_password2: document.getElementById("EditProfile-new_password2").value,
+        };
+    }
+
+    getUsernameFormData(){
+        return {
+            username: document.getElementById("EditProfile-password").value,
+            new_password: document.getElementById("EditProfile-new_password").value,
         };
     }
 
@@ -42,13 +62,18 @@ export default class EditProfile extends BaseView{
         return `
         <div>
             <h2>EditProfile</h2>
-            <h3> please just be ok</h3>
-            <form id="EditProfile-form">
+            <h3>change password</h3>
+            <form id="change-password-form">
+            <input type="password" id="EditProfile-password" placeholder="Old Password" required>
+            <input type="password" id="EditProfile-new_password" placeholder="new_Password" required>
+            <input type="password" id="EditProfile-new_password2" placeholder="new_Password2" required>
+                <button type="submit">Change Password</button>
+            </form>
+            <h3>change username</h3>
+            <form id="change-username-form">
             <input type="text" id="EditProfile-username" placeholder="Username" required>
-            <input type="email" id="EditProfile-email" placeholder="Email" required> 
-            <input type="password" id="EditProfile-password" placeholder="Password" required>
-            <input type="password" id="EditProfile-password2" placeholder="Password2" required>
-                <button type="submit">EditProfile</button>
+            <input type="text" id="EditProfile-username2" placeholder="Username2" required>
+                <button type="submit">Change Username</button>
             </form>
         </div>
     `;
@@ -56,7 +81,12 @@ export default class EditProfile extends BaseView{
 
     attachEvents(){
         console.log('Events attached (EditProfile)');
-        document.getElementById("EditProfile-form").addEventListener("submit", (event) => {
+        document.getElementById("change-password-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = this.getPasswordFormData();
+            this.changePassword(formData);
+        });
+        document.getElementById("change-username-form").addEventListener("submit", (event) => {
             event.preventDefault();
             const formData = this.getFormData();
             this.EditProfile(formData);

@@ -3,7 +3,7 @@
 pip install --upgrade pip --no-input
 pip install -r /init/requirements.txt --no-input
 pip install channels
-pip install uvicorn
+pip install uvicorn[standard]
 python3 manage.py makemigrations --noinput
 python3 manage.py migrate --noinput
 

@@ -20,11 +20,9 @@ from game_app.routing import websocket_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'game_service.settings')
 
-django_asgi_app = get_asgi_application()
-
 application = ProtocolTypeRouter(
         {
-            "http": django_asgi_app,
+            "http": get_asgi_application(),
             # "websocket": AllowedHostsOriginValidator(
             #     AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
             "websocket": AuthMiddlewareStack(URLRouter(websocket_urlpatterns)
