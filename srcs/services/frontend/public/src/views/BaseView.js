@@ -66,7 +66,7 @@ export default class BaseView{
         if (navbar) {
             navbar.innerHTML = this.isAuthenticated() ? `
             <a href="/home">Home</a>
-            <a href="/play-menu">Game</a>
+            <a href="/play-menu">Play Pong</a>
             <a href="/logout">Logout</a>
             <a href="/profile">Profile</a>
             ` : `

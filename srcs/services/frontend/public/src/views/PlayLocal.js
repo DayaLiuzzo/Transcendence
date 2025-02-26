@@ -1,6 +1,6 @@
-import BaseView from './BaseView.js';
+import BasePlayView from './BasePlayView.js';
 
-export default class PlayLocal extends BaseView{
+export default class PlayLocal extends BasePlayView{
     constructor(params){
         super(params);
     }
@@ -20,9 +20,8 @@ export default class PlayLocal extends BaseView{
                 <li>Integrer les websockets</li>
                 <li>Intgrer la 3d</li>
             </ol>
-           
+            <div id="response-result"></div>      
         </div>
     `;
     }
-
 }

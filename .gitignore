@@ -6,3 +6,5 @@ srcs/services/frontend/certs/
 srcs/services/frontend/public/package-lock.json
 srcs/services/frontend/public/package.json
 *.env
+*.pyc
+*_initial.py
