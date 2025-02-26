@@ -130,6 +130,7 @@ class Router{
             await this.loadView("/home");
             return;
         }
+        history.pushState({ path }, "", path);
         await this.loadView(path);
     }
 
@@ -144,6 +145,7 @@ class Router{
             await this.loadView("/home");
             return;
         }
+        history.replaceState({ path }, "", path);
         await this.loadView(path);
     }
 
@@ -156,10 +158,41 @@ class Router{
                 this.navigateTo(event.target.getAttribute("href"));
             }
         });
+
+
+        window.addEventListener("popstate", async (event) => {
+            if (event.state && event.state.path) {
+                const path = event.state.path;
+                const route = this.getRoute(path);
+        
+                if (route && route.requiresAuth && !this.isAuthenticated()) {
+                    console.warn(`Access denied to ${path}. Redirecting to /log-in.`);
+                    history.replaceState({ path: "/log-in" }, "", "/log-in");
+                    await this.loadView("/log-in");
+                    return;
+                }
+        
+                if (route && route.requiresGuest && this.isAuthenticated()) {
+                    console.warn(`Guests cannot access ${path}. Redirecting to /home.`);
+                    history.replaceState({ path: "/home" }, "", "/home");
+                    await this.loadView("/home");
+                    return;
+                }
+        
+                if (!route) {
+                    console.warn(`Route for ${path} not found! Redirecting to /home.`);
+                    history.replaceState({ path: "/home" }, "", "/home");
+                    await this.loadView("/home");
+                    return;
+                }
+        
+                await this.loadView(path);
+            }
+        });
     }
 }
 
-// // Handle initial page load
+
 window.addEventListener("DOMContentLoaded", () => {
     const router = new Router(routes);
     router.initialLoad(window.location.pathname);

@@ -37,8 +37,8 @@ export default class BaseView{
         }
     }
 
-    showError(errors) {
-        const errorContainer = this.getErrorContainer();
+    showError(errors, formId) {
+        const errorContainer = this.getErrorContainer(formId);
         errorContainer.innerHTML = '';
         if (typeof errors === 'string') {
             const errorMessage = document.createElement("p");
@@ -60,18 +60,17 @@ export default class BaseView{
     
     }
 
-    getErrorContainer() {
-        // let errorContainer = document.getElementById("<your_error_container_name>");
-
-        // if (!errorContainer) {
-        //     // Create the error container if it doesn't exist
-        //     errorContainer = document.createElement("div");
-        //     errorContainer.id = "<your_error_container_name>";  // Set a unique ID
-        //     errorContainer.classList.add("error-container");  // Optional: Add a class for styling
-        //     document.getElementById("<your_form_name>").insertBefore(errorContainer, document.getElementById("<your_form_name>").firstChild); // Insert at the top of the form
-        // }
-
-        // return errorContainer;
+    getErrorContainer(formId) {
+        let errorContainer = document.getElementById(formId+ "-error-container");
+        
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = formId+ "-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); // Insert at the top of the form
+        }
+        
+        return errorContainer;
     }
 
     async navigateTo(path){
@@ -104,11 +103,10 @@ export default class BaseView{
     async displayAvatar(){
         const avatarResponse = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + "/avatar/");
         if (!avatarResponse.success) {
-            this.showError(avatarResponse.error);
+            this.showError(avatarResponse.error, "app");
             return;
         }
         else{
-            console.log(avatarResponse.data.avatar_url);
             return avatarResponse.data.avatar_url;
         }
     }
@@ -284,7 +282,6 @@ export default class BaseView{
     logout() {
         const refresh_token = this.getRefreshToken();
         if (refresh_token) {
-            console.log(refresh_token);
             this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
             sessionStorage.removeItem("userSession");
             this.navigateTo("/log-in");
