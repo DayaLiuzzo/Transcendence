@@ -38,6 +38,43 @@ export default class BaseView{
         }
     }
 
+    showError(errors) {
+        const errorContainer = this.getErrorContainer();
+        errorContainer.innerHTML = '';
+        if (typeof errors === 'string') {
+            const errorMessage = document.createElement("p");
+            errorMessage.textContent = errors;
+            errorContainer.appendChild(errorMessage);
+        } else if (typeof errors === 'object') {
+            for (const field in errors) {
+                if (errors.hasOwnProperty(field)) {
+                    const errorMessages = Array.isArray(errors[field]) ? errors[field] : [errors[field]];
+                    errorMessages.forEach((message) => {
+                        const errorMessage = document.createElement("p");
+                        errorMessage.textContent = `${field.charAt(0).toUpperCase() + field.slice(1)}: ${message}`;
+                        errorContainer.appendChild(errorMessage);
+                    });
+                }
+            }
+        }
+        errorContainer.style.display = "block"; 
+    
+    }
+
+    getErrorContainer() {
+        // let errorContainer = document.getElementById("<your_error_container_name>");
+
+        // if (!errorContainer) {
+        //     // Create the error container if it doesn't exist
+        //     errorContainer = document.createElement("div");
+        //     errorContainer.id = "<your_error_container_name>";  // Set a unique ID
+        //     errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+        //     document.getElementById("<your_form_name>").insertBefore(errorContainer, document.getElementById("<your_form_name>").firstChild); // Insert at the top of the form
+        // }
+
+        // return errorContainer;
+    }
+
     async navigateTo(path){
         this.router.navigateTo(path);
     }
@@ -80,22 +117,16 @@ export default class BaseView{
     async updateNavbar() {
         const navbar = document.getElementById("navbar");
     
-        // If navbar exists, update it
         if (navbar) {
-            // Clear all existing navbar content first (to avoid duplication)
             navbar.innerHTML = "";
-    
-            // If the user is authenticated
             if (this.isAuthenticated()) {
-                // Append the main navbar links
                 navbar.innerHTML += `
                 <a href="/home">Home</a>
                 <a href="/play-menu">Game</a>
                 <a href="/profile">Profile</a>
                 <a href="/logout">Logout</a>
                 `;
-    
-                // If the avatarUrl is provided, append the avatar
+
                 const avatarUrl =  await this.displayAvatar();
                 if (avatarUrl) {
                     console.log("Lol");
@@ -103,12 +134,9 @@ export default class BaseView{
                     avatarImg.src = avatarUrl;
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
-    
-                    // Append the avatar image after the links (or at the end of the navbar)
                     navbar.appendChild(avatarImg);
                 }
             } else {
-                // If the user is not authenticated, show other links
                 navbar.innerHTML = `
                 <a href="/home">Home</a>
                 <a href="/log-in">Log in</a>
