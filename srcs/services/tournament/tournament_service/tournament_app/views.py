@@ -251,6 +251,19 @@ class GetRoomResult(generics.RetrieveAPIView):
     serializer_class = RoomSerializer
     lookup_field = 'room_id'
 
+class ListRooms(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RoomSerializer
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        room_queryset = Room.objects.filter(
+                    (Q(player_1=user) | Q(player_2=user))
+                    & (Q(status='waiting') | Q(status='standby'))
+                )
+        room_serializers = RoomSerializer(room_queryset, many=True)
+        return Response(room_serializers.data, status=status.HTTP_200_OK)
+
 class ListWaitingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.filter(status='waiting')
