@@ -1,8 +1,10 @@
 import BaseView from './BaseView.js';
+import WebSocketService from './WebSocketService.js';
 
 export default class BasePlayView extends BaseView{
     constructor(params){
         super(params);
+        this.socketService = null;
     }
 
     showError(message){
@@ -15,11 +17,20 @@ export default class BasePlayView extends BaseView{
             document.getElementById("room-id").innerText = result.data.room_id;
             document.getElementById("user-1").innerText = this.getUsername();
             document.getElementById("user-2").innerText = "Looking for opponent...";
+            this.openWebSocket(result.data.room_id);
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
         //set interval : renvoyer le call api toutes les xtemps 
         //voir pour set interval websocket
+    }
+
+    // Ouvrir une WebSocket pour cette salle
+    openWebSocket(roomId) {
+        if (!this.socketService) {
+            this.socketService = new WebSocketService(roomId);
+        }
+        this.socketService.connect();
     }
 
     async test(){
@@ -41,5 +52,5 @@ export default class BasePlayView extends BaseView{
         } catch (error) {
             console.error("Error in mount():", error);
         }
-    }   
+    }
 }

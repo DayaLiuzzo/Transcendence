@@ -12,8 +12,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'room%s' % self.room_name
 
-        logger.debug(f"*********************************************")
-        logger.debug(f"Client attempting to connect to room  via WS: {self.room_name}")
+        logger.info(f"*********************************************")
+        logger.info(f"Client attempting to connect to room  via WS: {self.room_name}")
 
         # Ajouter le consommateur au groupe
         await self.channel_layer.group_add(
