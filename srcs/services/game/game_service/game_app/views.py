@@ -47,16 +47,10 @@ def game_service_running(request):
 # ************************** CREATE ************************** #
 
 class CreateUserProfileView(generics.CreateAPIView):
-    logger.debug(f"************reverse******* 0 JPP********************")
     permission_classes =[IsAuth]
-
-    logger.debug(f"******************* 1 JPP********************")
     queryset = UserProfile.objects.all()
-    
-    logger.debug(f"******************* 2 JPP********************")
     serializer_class = UserProfileSerializer
     
-    logger.debug(f"******************* 3 JPP********************")
 
 # *************************** READ *************************** #
 
