@@ -29,30 +29,29 @@ export default class WebSocketService {
         };
     }
 
-    // // Fonction pour traiter les messages reçus
-    // handleMessage(event) {
-    //     const data = JSON.parse(event.data);
-    //     console.log("Message reçu:", data);
+    handleMessage(event) {
+        const data = JSON.parse(event.data);
+        console.log("Message reçu:", data);
 
-    //     // Mettre à jour le DOM avec les données reçues via WebSocket
-    //     const roomNameElement = document.getElementById('room-name');
-    //     const messageElement = document.getElementById('message');
-    //     const playersCountElement = document.getElementById('players-count');
+        // Mettre à jour le DOM avec les données reçues via WebSocket
+        const roomNameElement = document.getElementById('room-name');
+        const messageElement = document.getElementById('message');
+        const playersCountElement = document.getElementById('players-count');
 
-    //     if (roomNameElement) roomNameElement.textContent = data.room_name || roomNameElement.textContent;
-    //     if (messageElement) messageElement.textContent = data.message || messageElement.textContent;
-    //     if (playersCountElement) playersCountElement.textContent = data.players_count || playersCountElement.textContent;
-    // }
+        if (roomNameElement) roomNameElement.textContent = data.room_name || roomNameElement.textContent;
+        if (messageElement) messageElement.textContent = data.message || messageElement.textContent;
+        if (playersCountElement) playersCountElement.textContent = data.players_count || playersCountElement.textContent;
+    }
 
-    // // Fonction pour envoyer des messages via WebSocket
-    // sendMessage(message) {
-    //     if (this.isConnected && this.socket) {
-    //         this.socket.send(JSON.stringify({ 'message': message }));
-    //         console.log("Message envoyé:", message);
-    //     } else {
-    //         console.error("La connexion WebSocket n'est pas établie.");
-    //     }
-    // }
+    // Fonction pour envoyer des messages via WebSocket
+    sendMessage(message) {
+        if (this.isConnected && this.socket) {
+            this.socket.send(JSON.stringify({ 'message': message }));
+            console.log("Message envoyé:", message);
+        } else {
+            console.error("La connexion WebSocket n'est pas établie.");
+        }
+    }
 
     closeConnection() {
         if (this.isConnected && this.socket) {
