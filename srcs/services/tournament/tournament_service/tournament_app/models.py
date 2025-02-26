@@ -188,8 +188,9 @@ class Room(models.Model):
     def __str__(self):
         return f"{self.player_1.username} vs {self.player_2.username}"
 
+    """
     def play(self, winner):
-        """Termine le match et met à jour les statistiques."""
+        #Termine le match et met à jour les statistiques.
         if winner == self.player_1:
             self.winner = self.player_1
             self.loser = self.player_2
@@ -206,10 +207,11 @@ class Room(models.Model):
 
         # Mise à jour des stats du tournoi
         #self.tournament.update_match_stats()
+    """
 
 class PlayerHistory(models.Model):
     player = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
-    match = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     opponent = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='opponent_history')
     result = models.CharField(max_length=10, choices=[('win', 'Win'), ('loss', 'Loss')])
 

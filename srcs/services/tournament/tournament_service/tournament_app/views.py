@@ -28,7 +28,6 @@ from tournament_app.permissions import IsUsers
 from tournament_app.permissions import IsGame
 from tournament_app.permissions import IsOwnerAndAuthenticated
 from tournament_app.permissions import IsRoom
-#from .utils import calculate_ranking
 
 def tournament_service_running(request):
     return JsonResponse({"message": "Tournament service is running"})
@@ -288,6 +287,7 @@ class ListRooms(generics.ListAPIView):
         room_serializers = RoomSerializer(room_queryset, many=True)
         return Response(room_serializers.data, status=status.HTTP_200_OK)
 
+"""
 class ListWaitingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.filter(status='waiting')
@@ -372,7 +372,8 @@ class CountFinishedTournamentView(generics.GenericAPIView):
 #            return Response({"error": "Tournament not found"}, status=status.HTTP_404_NOT_FOUND)
 #        except Pool.DoesNotExist:
 #            return Response({"error": "Pool not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
+"""
 # *********************** PUT / PATCH ************************ #
 
 class SetRoomResult(generics.UpdateAPIView):
