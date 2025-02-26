@@ -175,7 +175,7 @@ class Room(models.Model):
     ]
 
     pool = models.ForeignKey(Pool, on_delete=models.CASCADE)
-    room_id = models.UUIDField(unique=True, blank=True, null=True)
+    room_id = models.CharField(max_length=100, unique=True)
     player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_1_matches')
     player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_2_matches')
     winner = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='won_matches')

@@ -406,7 +406,7 @@ class DeleteTournamentView(APIView):
             tournament = Tournament.objects.get(users=user)
             # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
             # if user.is_staff or (user == tournament.owner and tournament.status != 'playing'):
-            if user == tournament.owner: and tournament.status == 'waiting':
+            if user == tournament.owner and tournament.status == 'waiting':
                 tournament.delete()
                 return Response({
                     "message": "Tournament deleted successfully"
