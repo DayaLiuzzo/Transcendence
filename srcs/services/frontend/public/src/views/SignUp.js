@@ -81,7 +81,7 @@ export default class SignUp extends BaseView{
         document.getElementById("signup-form")?.removeEventListener("submit", this.handleSignupSubmit);
     }
 
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (signup)');
         document.getElementById("signup-form")?.addEventListener("submit", this.handleSignupSubmit);
     }

@@ -48,7 +48,7 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
               `;
         }
     }
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (Home)');
         const text = document.getElementById("test-text");
         const originalText = text.textContent;

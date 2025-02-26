@@ -31,7 +31,6 @@ export default class BaseView{
     async mount(){
         try {
             cleanUpThree();
-            await this.attachEvents();
         }
         catch (error) {
             console.error("Error in mount():", error);
@@ -129,7 +128,6 @@ export default class BaseView{
 
                 const avatarUrl =  await this.displayAvatar();
                 if (avatarUrl) {
-                    console.log("Lol");
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
                     avatarImg.alt = "User Avatar";
@@ -259,7 +257,7 @@ export default class BaseView{
         }
     }
 
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached');
     }
 

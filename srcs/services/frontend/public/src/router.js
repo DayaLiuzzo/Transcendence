@@ -113,6 +113,7 @@ class Router{
         document.getElementById("app").innerHTML = this.currentView.render();
         await this.currentView.updateNavbar();
         await this.currentView.mount();
+        this.currentView.attachEvents();
 
         this.updateBodyClass(path);
         this.updateStylesheet(path);

@@ -4,11 +4,36 @@ import BaseView from './BaseView.js';
 export default class LogIn extends BaseView{
     constructor(router, params){
         super(router, params);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     }
 
-    showError(message){
-        alert(message);
+    
+    getFormData(){
+        return {
+            username: document.getElementById("login-username").value,
+            password: document.getElementById("login-password").value,
+        };
     }
+    
+    getErrorContainer() {
+        let errorContainer = document.getElementById("login-error-container");
+        
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "login-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("login-form").insertBefore(errorContainer, document.getElementById("login-form").firstChild); // Insert at the top of the form
+        }
+        
+        return errorContainer;
+    }
+    
+    handleLoginSubmit(event){
+        event.preventDefault();
+        const formData = this.getFormData();
+        this.login(formData);
+    }
+
 
     validateInputs(formData){
         if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
@@ -16,14 +41,6 @@ export default class LogIn extends BaseView{
         if (!formData.password || formData.password.length < 6) return "Password must be at least 6 characters long.";
 
         return null;
-    }
-
-    getFormData(){
-        return {
-            username: document.getElementById("login-username").value,
-            password: document.getElementById("login-password").value,
-            // two_factor: document.getElementById("login-two-factor").value,
-        };
     }
 
     async login(formData) {
@@ -44,7 +61,7 @@ export default class LogIn extends BaseView{
         sessionStorage.setItem("userSession", JSON.stringify(userSession));
         this.navigateTo("/home");
     }
-
+    
     async handleOtp(formData){
         const otpPopup = document.createElement("div");
         otpPopup.id = "otp-popup";
@@ -107,12 +124,14 @@ export default class LogIn extends BaseView{
     `;
     }
 
-    async attachEvents(){
+    unmount(){
+        console.log('unmounting login');
+        document.getElementById("login-form")?.removeEventListener("submit", this.handleLoginSubmit);
+    
+    }
+
+    attachEvents(){
         console.log('Events attached (LogIn)');
-        document.getElementById("login-form").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const formData = this.getFormData();
-            this.login(formData);
-        });
+        document.getElementById("login-form")?.addEventListener("submit", this.handleLoginSubmit);
     }
 }

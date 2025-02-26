@@ -28,7 +28,7 @@ export default class Game extends BaseView{
     `;
     }
 
-    async attachEvents(){
+    attachEvents(){
         this.fetchRoomInfo();
         console.log('Events attached (LogIn)');
     }

@@ -122,7 +122,7 @@ export default class EditProfile extends BaseView{
     `;
     }
 
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (EditProfile)');
         document.getElementById("change-password-form").addEventListener("submit", (event) => {
             event.preventDefault();
@@ -198,7 +198,6 @@ export default class EditProfile extends BaseView{
             const userData = await this.sendGetRequest(this.API_URL + username + '/');
             if(userData.data.two_factor_enabled) document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
             console.log(userData.data.two_factor_enabled);
-            await this.attachEvents();
         }
         catch (error) {
             console.error("Error in mount():", error);

@@ -30,7 +30,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "coucou",
+  "username": "testi",
   "password": "Pagofraise01!",
   "otp": "820417"
 

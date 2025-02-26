@@ -82,7 +82,7 @@ export default class Profile extends BaseView{
 
     }
 
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (Profile)');
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
@@ -142,7 +142,6 @@ export default class Profile extends BaseView{
             this.renderFriends(users);
             this.updateFieldContent("username-field", this.formatField("username", username));
             this.updateFieldContent("biography-field", this.formatField("biography", biography));
-            await this.attachEvents();
         }
         catch (error) {
             console.error("Error in mount():", error);
