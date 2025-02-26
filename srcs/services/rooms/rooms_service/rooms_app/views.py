@@ -160,7 +160,7 @@ class JoinRoomView(APIView):
             user.save()
 
             #call join game
-            join_game_url = f'http://game:8443/api/game/join_game/{waiting_room.id}/'
+            join_game_url = f'http://game:8443/api/game/join_game/{waiting_room.room_id}/'
             client = MicroserviceClient()
             response2 = client.send_internal_request(join_game_url, 'post', data={'user': user.username})
             
@@ -181,20 +181,21 @@ class JoinRoomView(APIView):
         try:
             new_room = Room.objects.create(room_id=room_id, status='waiting', players_count=1)
             new_room.player1 = user
+            new_room.room_id = room_id
             new_room.save()
             
             user.rooms.add(new_room)
             user.save()
 
             #call create game
-            create_game_url = f'http://game:8443/api/game/create_game/{new_room.id}/'
+            create_game_url = f'http://game:8443/api/game/create_game/{new_room.room_id}/'
             client = MicroserviceClient()
             response2 = client.send_internal_request(create_game_url, 'post')
             if response2.status_code != 201:
                 raise MicroserviceError(response2.status_code, response2.text)
 
             #call join game
-            join_game_url = f'http://game:8443/api/game/join_game/{new_room.id}/'
+            join_game_url = f'http://game:8443/api/game/join_game/{new_room.room_id}/'
             client = MicroserviceClient()
             response3 = client.send_internal_request(join_game_url, 'post', data={'user': user.username})
             if response3.status_code != 200:
