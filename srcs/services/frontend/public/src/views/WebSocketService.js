@@ -4,6 +4,7 @@ export default class WebSocketService {
         this.socket = null;
         this.isConnected = false;
         this.WS_GAME_URL = `wss://${window.location.host}/ws/game/`;
+        this.token = this.getAccessToken();
     }
 
     connect() {
@@ -13,6 +14,9 @@ export default class WebSocketService {
         this.socket.onopen = () => {
             this.isConnected = true;
             console.log("Connexion WebSocket sécurisée établie!");
+            if (this.token) {
+                this.sendMessage({ Authorization: `Bearer ${this.token}`});
+            }
         };
 
         this.socket.onmessage = (event) => {
@@ -34,19 +38,11 @@ export default class WebSocketService {
         console.log("Message reçu:", data);
 
         // Mettre à jour le DOM avec les données reçues via WebSocket
-        const roomNameElement = document.getElementById('room-name');
-        const messageElement = document.getElementById('message');
-        const playersCountElement = document.getElementById('players-count');
-
-        if (roomNameElement) roomNameElement.textContent = data.room_name || roomNameElement.textContent;
-        if (messageElement) messageElement.textContent = data.message || messageElement.textContent;
-        if (playersCountElement) playersCountElement.textContent = data.players_count || playersCountElement.textContent;
     }
 
-    // Fonction pour envoyer des messages via WebSocket
     sendMessage(message) {
         if (this.isConnected && this.socket) {
-            this.socket.send(JSON.stringify({ 'message': message }));
+            this.socket.send(JSON.stringify({message }));
             console.log("Message envoyé:", message);
         } else {
             console.error("La connexion WebSocket n'est pas établie.");
@@ -61,5 +57,17 @@ export default class WebSocketService {
 
     isConnected() {
         return this.isConnected;
+    }
+
+    getUserSession(){
+        return JSON.parse(sessionStorage.getItem("userSession"));
+    }
+
+    getAccessToken(){
+        const userSession = this.getUserSession();
+        if(userSession){
+            return userSession.access_token;
+        }
+        return null;
     }
 }
