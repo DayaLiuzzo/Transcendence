@@ -11,7 +11,7 @@ export default class NotFound extends BaseView{
     }
 
     
-    async render(){
+    render(){
         return `
         <div>
             <h2>404 biiiitch</h2>

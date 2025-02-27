@@ -20,7 +20,7 @@ from auth_service import settings
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = CustomUser
-        fields = ['username', 'password', 'email']
+        fields = ['username', 'password', 'email', 'two_factor_enabled']
 
     def validate_username(self, value):
         if CustomUser.objects.filter(username=value).exists():

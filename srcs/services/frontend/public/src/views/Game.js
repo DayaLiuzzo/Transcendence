@@ -19,7 +19,7 @@ export default class Game extends BaseView{
         console.log(data);
     }
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Game</h2>
@@ -28,7 +28,7 @@ export default class Game extends BaseView{
     `;
     }
 
-    async attachEvents(){
+    attachEvents(){
         this.fetchRoomInfo();
         console.log('Events attached (LogIn)');
     }

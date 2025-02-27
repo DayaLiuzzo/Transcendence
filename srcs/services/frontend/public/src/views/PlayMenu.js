@@ -10,7 +10,7 @@ export default class PlayMenu extends BaseView{
     }
 
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Play Menu</h2>
