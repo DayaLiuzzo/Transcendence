@@ -102,6 +102,26 @@ enter_$(DB_USERS_SERVICE):
 	enter_$(DB_USERS_SERVICE)		\
 
 ########################################################################
+########################### Recreate container #########################
+########################################################################
+
+$(FRONTEND_SERVICE)			\
+$(AUTH_SERVICE)				\
+$(USERS_SERVICE)			\
+$(GAME_SERVICE)				\
+$(AVATAR_SERVICE)			\
+$(API_GATEWAY_SERVICE)		\
+$(ROOMS_SERVICE)			\
+$(TOURNAMENT_SERVICE)		\
+$(DB_AUTH_SERVICE)			\
+$(DB_AVATAR_SERVICE)		\
+$(DB_GAME_SERVICE)			\
+$(DB_ROOMS_SERVICE)			\
+$(DB_TOURNAMENT_SERVICE)	\
+$(DB_USERS_SERVICE):
+	docker compose -f srcs/docker-compose.yml up --force-recreate --build -d $@
+
+########################################################################
 ########################### Get service logs ###########################
 ########################################################################
 
