@@ -58,19 +58,6 @@ export default class Home extends BaseView{
           });
       });
 
-
-        // FONCTIONS A DEPLACER POUR UTILS MENU SLIDE, DOIVENT ETRE ACCESSIBLES PARTOUT
-        // OPEN MENU
-        const button = document.getElementById("button-nav");
-        button.addEventListener("mouseover", () => {
-          const navbar = document.getElementById("navbar");
-          navbar.classList.toggle("active");
-        });
-        // CLOSE MENU
-        button.addEventListener("mouseleave", () => {
-          setTimeout(() => navbar.classList.remove("active"), 800);
-        });
-
              //event listener pour detecter mouse moves
             const cursor = {x: 0, y: 0};
             window.addEventListener("mousemove", (event) => {

@@ -136,6 +136,18 @@ export default class BaseView{
                 <a href="/play-menu">Game</a>
                 `;
             }
+
+        // FONCTIONS A DEPLACER POUR UTILS MENU SLIDE, DOIVENT ETRE ACCESSIBLES PARTOUT
+        // OPEN MENU
+        const button = document.getElementById("button-nav");
+        button.addEventListener("mouseover", () => {
+          const navbar = document.getElementById("navbar");
+          navbar.classList.toggle("active");
+        });
+        // CLOSE MENU
+        button.addEventListener("mouseleave", () => {
+          setTimeout(() => navbar.classList.remove("active"), 800);
+        });
         }
     }
 

@@ -9,6 +9,8 @@ import PlayRemote from "./views/PlayRemote.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
 
+import { cleanUpThree } from "./three/utils.js";
+
 import EditProfile from "./views/EditProfile.js";
 import Profile from "./views/Profile.js";
 
@@ -110,6 +112,7 @@ class Router{
             this.currentView.unmount();
         }
         this.currentView = new ViewClass(this);
+        cleanUpThree();
         document.getElementById("app").innerHTML = this.currentView.render();
         await this.currentView.updateNavbar();
         await this.currentView.mount();
