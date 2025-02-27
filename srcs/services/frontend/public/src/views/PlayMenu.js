@@ -5,11 +5,6 @@ export default class PlayMenu extends BaseView{
         super(params);
     }
 
-    showError(message){
-        alert(message);
-    }
-
-
     render(){
         return `
         <div>
@@ -26,7 +21,7 @@ export default class PlayMenu extends BaseView{
     `;
     }
 
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (Play-Menu)');
 
         const playLocalButton = document.getElementById("play-local");

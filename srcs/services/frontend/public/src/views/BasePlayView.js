@@ -7,15 +7,13 @@ export default class BasePlayView extends BaseView{
         this.socketService = null;
     }
 
-    showError(message){
-        alert(message);
-    }
-
     async joinRoom() {
         const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
         if (result.success) {
+            console.log(result.success)
+            console.log(result.data)
             document.getElementById("room-id").innerText = result.data.room_id;
-            document.getElementById("user-1").innerText = this.getUsername();
+            // document.getElementById("user-1").innerText = this.getUsername();
             document.getElementById("user-2").innerText = "Looking for opponent...";
             this.openWebSocket(result.data.room_id);
         } else {
@@ -45,10 +43,7 @@ export default class BasePlayView extends BaseView{
     
     async mount() {
         try {
-            this.app.innerHTML = await this.render();
             await this.joinRoom();
-            // this.updateNavbar();
-            await this.attachEvents();
         } catch (error) {
             console.error("Error in mount():", error);
         }
