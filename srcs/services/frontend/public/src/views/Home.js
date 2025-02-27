@@ -1,6 +1,5 @@
 import BaseView from './BaseView.js';
 
-
 export default class Home extends BaseView{
     constructor(router, params){
         super(router,params);
@@ -9,66 +8,68 @@ export default class Home extends BaseView{
       if (this.isAuthenticated())
         {
           return `
-          <h1></h1>
-            <div button class="button-play">
-            <a href="/game">Play me rn</a>
-
-          <div id="follow-scroll-elements">
-          <p>(drag me please ➔)</p>
+          <div id="line"></div>
+          <div id="test-text-container"><p>welcome to our </p> <p id="test-text"> Pong Game </p></div>
+  canvas class="webgl"></canvas>
+  div id="follow-scroll-elements">
+          <p>(↖ drag me please)</p>
           </div>
-          <div id="test-text-container"> <p id="test-text">
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum facilisis, orci eget gravida faucibus, dolor nulla fermentum nunc, vel bibendum justo ligula non massa. Sed at arcu et augue sollicitudin mollis. Nulla gravida, elit id suscipit semper, enim lectus mattis eros, eget tincidunt nulla mauris a erat. Phasellus in mollis ex, ac ultrices lectus. Nunc sed turpis non justo euismod facilisis. Suspendisse interdum mattis nisl ut viverra. Sed placerat diam augue, eget lacinia odio tincidunt sit amet. Nulla dignissim aliquam volutpat. Fusce in arcu placerat, finibus est sed, semper dui. Fusce vitae diam eros.
-
-Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ullamcorper, lacus nec congue volutpat, elit nulla varius nibh, vel accumsan risus leo nec nisl. Quisque mi enim, imperdiet sit amet bibendum id, ornare nec elit. Donec maximus faucibus erat ut congue. Proin ut nisl dignissim, vestibulum arcu porttitor, pulvinar dui. Etiam ut ligula diam. Duis eget aliquam diam. Proin et eros sed nulla aliquet posuere. Curabitur eros massa, vehicula eu velit et, facilisis efficitur nisi. Aenean at fermentum sem. Pellentesque maximus lorem vitae ultricies commodo. Duis consectetur dolor et tortor tincidunt interdum. Vestibulum ullamcorper rutrum mi, ornare porttitor elit tempor sed. Donec quis ornare lorem. </p></div>
-<canvas class="webgl"></canvas>
           </div>
               `;
             }
         else {
           return `
-          <h1></h1>
-          <div button class="button-play">
-          <a href="/game">Play me rn</a>
-          </div>
-          <div id="follow-scroll-elements">
-          <p>(drag me please ➔)</p>
-          </div>
-          <div id="test-text-container"><p id="test-text">
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum facilisis, orci eget gravida faucibus, dolor nulla fermentum nunc, vel bibendum justo ligula non massa. Sed at arcu et augue sollicitudin mollis. Nulla gravida, elit id suscipit semper, enim lectus mattis eros, eget tincidunt nulla mauris a erat. Phasellus in mollis ex, ac ultrices lectus. Nunc sed turpis non justo euismod facilisis. Suspendisse interdum mattis nisl ut viverra. Sed placerat diam augue, eget lacinia odio tincidunt sit amet. Nulla dignissim aliquam volutpat. Fusce in arcu placerat, finibus est sed, semper dui. Fusce vitae diam eros.
-
-Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ullamcorper, lacus nec congue volutpat, elit nulla varius nibh, vel accumsan risus leo nec nisl. Quisque mi enim, imperdiet sit amet bibendum id, ornare nec elit. Donec maximus faucibus erat ut congue. Proin ut nisl dignissim, vestibulum arcu porttitor, pulvinar dui. Etiam ut ligula diam. Duis eget aliquam diam. Proin et eros sed nulla aliquet posuere. Curabitur eros massa, vehicula eu velit et, facilisis efficitur nisi. Aenean at fermentum sem. Pellentesque maximus lorem vitae ultricies commodo. Duis consectetur dolor et tortor tincidunt interdum. Vestibulum ullamcorper rutrum mi, ornare porttitor elit tempor sed. Donec quis ornare lorem.</p> </div>
+          <div id="line"></div>
+          <div id="test-text-container"><p>welcome to our</p> <p id="outstanding">outstanding </p><p id="test-text"> Pong
+          Game </p></div>
 <div class="ascii-container">
 <canvas class="webgl"></canvas>
 <div id="ascii-output"></div>
 </div>
-          </div>
+<div id="follow-scroll-elements">
+    <p>(↖ drag me please)</p>
+    </div>
+  </div>
               `;
         }
     }
     async attachEvents(){
         console.log('Events attached (Home)');
         const text = document.getElementById("test-text");
-        console.log(text);
         const originalText = text.textContent;
-        console.log(originalText);
 
         text.innerHTML = originalText.split("").map(char => `<span>${char}</span>`).join("");
+
+        console.log(text.innerHTML);
 
         text.addEventListener("mouseover", ()=> {
           text.querySelectorAll("span").forEach(letter => {
             const randomX = (Math.random() - 0.5) * 600;
             const randomY = (Math.random() - 0.5) * 600;
             letter.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${(Math.random() - 0.5) * 30}deg)`;
+            console.log("mouse over");
           });
         });
-
         text.addEventListener("mouseleave", () => {
-                text.querySelectorAll("span").forEach(letter => {
-                    letter.style.transform = "translate(0,0) rotate(0)";
-                });
-            });
+          console.log("mouse leave");
+          text.querySelectorAll("span").forEach(letter => {
+              console.log(letter);
+              letter.style.transform = "translate(0,0) rotate(0)";
+          });
+      });
+
+
+        // FONCTIONS A DEPLACER POUR UTILS MENU SLIDE, DOIVENT ETRE ACCESSIBLES PARTOUT
+        // OPEN MENU
+        const button = document.getElementById("button-nav");
+        button.addEventListener("mouseover", () => {
+          const navbar = document.getElementById("navbar");
+          navbar.classList.toggle("active");
+        });
+        // CLOSE MENU
+        button.addEventListener("mouseleave", () => {
+          setTimeout(() => navbar.classList.remove("active"), 800);
+        });
 
              //event listener pour detecter mouse moves
             const cursor = {x: 0, y: 0};
@@ -112,11 +113,12 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
 
           // on cache le rendu de base pour laisser apparaitre le rendu ascii
           effect.domElement.classList.add("ascii-effect");
+          effect.domElement.style.cursor = "grab";
           document.querySelector("#ascii-output").appendChild(effect.domElement);
           canvas.style.display = "none";
            // camera perspective etc
            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
-           camera.position.z = 3;
+           camera.position.z = 1;
            camera.lookAt(mesh.position);
             scene.add(camera);
 
@@ -124,6 +126,7 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
            const controls = new THREE.OrbitControls(camera, effect.domElement);
            controls.enableDamping = true;
            controls.enableZoom = false;
+           renderer.domElement.style.cursor = "grab";
 
             window.threeInstance = {
               scene,
@@ -148,7 +151,6 @@ Cras a posuere dolor, sit amet dignissim nibh. Ut vel vestibulum nisi. Donec ull
 
           window.addEventListener("resize", () => {
             const rect = container.getBoundingClientRect();
-            // console.log(rect);
 
             sizes.width = rect.width
             sizes.height = rect.height
