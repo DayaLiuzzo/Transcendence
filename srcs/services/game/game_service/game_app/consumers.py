@@ -25,12 +25,21 @@ class GameConsumer(AsyncWebsocketConsumer):
         
     async def receive(self, text_data):
         from .authentication import CustomJWTAuth
-        text_data_json = json.loads(text_data)
-        print("Donnees recues:", text_data_json)
-
-        message_data = text_data_json.get('message', {})
-        authorization_header = message_data.get('Authorization', '')
+        
         if not self.authenticated:
+            if not text_data:
+                await self.close()
+                return
+            
+            try:
+                text_data_json = json.loads(text_data)
+                print("Donnees recues:", text_data_json)
+            except json.JSONDecodeError:
+                await self.send_error_message("Invalid JSON format.")
+                await self.close()
+                return
+            message_data = text_data_json.get('message', {})
+            authorization_header = message_data.get('Authorization', '')
             print("authorization_header :", authorization_header)
             if authorization_header:
                 try:
