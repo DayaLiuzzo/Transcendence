@@ -18,20 +18,20 @@ const routes = [
     { path: '/log-in', view: LogIn, requiresGuest: true },
     { path: '/sign-up', view: SignUp, requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
-    { path: '/profile', view: Profile, requiresAuth: true },
-    { path: '/play-menu', view: PlayMenu},
-    { path: '/play-local', view: PlayLocal},
-    { path: '/play-remote', view: PlayRemote},
-    { path: '/play-tournament', view: PlayTournament},
-    { path: '/play-with-friends', view: PlayWithFriends}
-
-
+    { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
+    { path: '/play-menu', view: PlayMenu, css: "styles/core.css"},
+    { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
+    { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
+    { path: '/play-tournament', view: PlayTournament, css: "styles/core.css"},
+    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"},
+    { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true },
 ];
 
 
 class Router{
     constructor(routes){
         this.routes = routes;
+        this.currentView = null;
         this.init();
     }
 
@@ -106,9 +106,14 @@ class Router{
         if (!route) {
             console.warn(`Route for ${path} not found! Showing NotFound view.`);
         }
-        history.pushState({}, "", path);
-        const view = new ViewClass(this);
-        await view.mount();
+        if(this.currentView){
+            this.currentView.unmount();
+        }
+        this.currentView = new ViewClass(this);
+        document.getElementById("app").innerHTML = this.currentView.render();
+        await this.currentView.updateNavbar();
+        await this.currentView.mount();
+        this.currentView.attachEvents();
 
         // this.updateBodyClass(path);
         // this.updateStylesheet(path);
@@ -125,6 +130,7 @@ class Router{
             await this.loadView("/home");
             return;
         }
+        history.pushState({ path }, "", path);
         await this.loadView(path);
     }
 
@@ -139,30 +145,11 @@ class Router{
             await this.loadView("/home");
             return;
         }
+        history.replaceState({ path }, "", path);
         await this.loadView(path);
     }
 
     init() {
-        // Handle browser back/forward
-        // window.addEventListener("popstate", async () => {
-        //     console.log("Popstate");
-        //     const path = window.location.pathname;
-        //     const route = this.getRoute(path);
-        //     const isLoggedIn = this.isAuthenticated();
-
-        //     // Check if the user is trying to access a protected route without being logged in
-        //     if (route && route.requiresAuth && !isLoggedIn) {
-        //         history.replaceState({}, "", "/log-in");
-        //         await this.loadView("/log-in");
-        //     }
-        //     else if (route && route.requiresGuest && isLoggedIn) {
-        //         history.replaceState({}, "", "/home");
-        //         await this.loadView("/home");
-        //     }
-        //     else {
-        //         await this.loadView(path);  // Here, history pushState should already be handled inside loadView
-        //     }
-        // });
 
         // Handle all link clicks (Global Event Delegation)
         document.body.addEventListener("click", (event) => {
@@ -171,10 +158,41 @@ class Router{
                 this.navigateTo(event.target.getAttribute("href"));
             }
         });
+
+
+        window.addEventListener("popstate", async (event) => {
+            if (event.state && event.state.path) {
+                const path = event.state.path;
+                const route = this.getRoute(path);
+
+                if (route && route.requiresAuth && !this.isAuthenticated()) {
+                    console.warn(`Access denied to ${path}. Redirecting to /log-in.`);
+                    history.replaceState({ path: "/log-in" }, "", "/log-in");
+                    await this.loadView("/log-in");
+                    return;
+                }
+
+                if (route && route.requiresGuest && this.isAuthenticated()) {
+                    console.warn(`Guests cannot access ${path}. Redirecting to /home.`);
+                    history.replaceState({ path: "/home" }, "", "/home");
+                    await this.loadView("/home");
+                    return;
+                }
+
+                if (!route) {
+                    console.warn(`Route for ${path} not found! Redirecting to /home.`);
+                    history.replaceState({ path: "/home" }, "", "/home");
+                    await this.loadView("/home");
+                    return;
+                }
+
+                await this.loadView(path);
+            }
+        });
     }
 }
 
-// // Handle initial page load
+
 window.addEventListener("DOMContentLoaded", () => {
     const router = new Router(routes);
     router.initialLoad(window.location.pathname);

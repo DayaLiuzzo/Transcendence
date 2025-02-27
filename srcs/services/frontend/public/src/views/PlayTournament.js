@@ -5,12 +5,7 @@ export default class PlayTournament extends BasePlayView{
         super(params);
     }
 
-    showError(message){
-        alert(message);
-    }
-
-
-    async render(){
+    render(){
         return `
         <div>
             <h2>Play Tournament</h2>

@@ -1,16 +1,34 @@
 import BaseView from './BaseView.js';
+import WebSocketService from './WebSocketService.js';
 
 export default class BasePlayView extends BaseView{
     constructor(params){
         super(params);
+        this.socketService = null;
     }
 
-    showError(message){
-        alert(message);
+    async joinRoom() {
+        const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
+        if (result.success) {
+            console.log(result.success)
+            console.log(result.data)
+            document.getElementById("room-id").innerText = result.data.room_id;
+            // document.getElementById("user-1").innerText = this.getUsername();
+            document.getElementById("user-2").innerText = "Looking for opponent...";
+            this.openWebSocket(result.data.room_id);
+        } else {
+            document.getElementById("room-id").innerText = "No room found, please reload";
+        }
+        //set interval : renvoyer le call api toutes les xtemps 
+        //voir pour set interval websocket
     }
 
-    async handleJoinRoom() {
-        throw new Error("handleJoinRoom() doit être implémentée dans une classe dérivée.");
+    // Ouvrir une WebSocket pour cette salle
+    openWebSocket(roomId) {
+        if (!this.socketService) {
+            this.socketService = new WebSocketService(roomId);
+        }
+        this.socketService.connect();
     }
 
     async test(){
@@ -25,10 +43,9 @@ export default class BasePlayView extends BaseView{
     
     async mount() {
         try {
-            this.app.innerHTML = await this.render();
-            await this.handleJoinRoom();
+            await this.joinRoom();
         } catch (error) {
             console.error("Error in mount():", error);
         }
-    }   
+    }
 }

@@ -10,7 +10,7 @@ export default class PlayLocal extends BasePlayView{
     }
 
 
-    async render(){
+    render(){
         return `
         <div>
             <h2>Play local</h2>

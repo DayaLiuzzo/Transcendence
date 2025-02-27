@@ -34,7 +34,17 @@ Content-Type: application/json
 ###
 #delete user
 DELETE  https://localhost:4430/api/auth/delete/dd/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NDczOTI1LCJpYXQiOjE3Mzk0Njg1MjUsImp0aSI6ImFmMmFjYTkyN2U5MjRiMzU4YWVlYmFjZWEwOWUxNThhIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJkZCJ9.TKODLnEGYcqvz0DB1qjp0opLhj3zoXTUwqbx5nHxYfrfyms4HqdpypUlYd-kiRwBb3l9lgGS3JEu--uM-yH1iGqWqt0bhCukMwV4mgn3c6xoMIYcECo4COBw41O3X8FkcAqpI799recCi6h-Z5XF20sihGh-h8ss2fBZtl5LOBHc5-3f5yZKISoZ2VAnBUdOSvg0J0NzEfz_p3-df_qcHf4TGJR5P3fnatlGsN-ERtAVW5vKHo3gqDIIqxtzcLEUgvH8MGaeynEbIckqF8JzqkPe_cU3g3Ch2rw10ZZi4UnuJRw-XDg114SyQF0Xs9OsHoDXkK_5w_K-Vrx4jqgxNw
+Authorization: Bearer 
+
+###
+#get game token
+POST https://localhost:4430/api/auth/service-token/
+Content-Type: application/json
+
+{
+  "service_name": "game",
+  "password": "private"
+}
 
 ################################################################
 #                                                              #
@@ -47,23 +57,25 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ###
 #create game (for room service)
-POST https://localhost:4430/api/game/create_game/id_hihi/
-# Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODY0Mzk1LCJpYXQiOjE3Mzg4NTg5OTUsImp0aSI6ImE2OTdhMTk4M2I2OTQyZDc5Y2VmOTYwNTNhNDk1N2FkIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.a32f7IY-x3JvyUT3IDHDOevlSjML_sdaQcJztGrk4rKCgle5VmeFKEwol1uO__FeNE1hgMzF9CridmSdjJbUiJYHrNF4dsa3QEpisOt6BGM1bDu316v6RyUyfaTtA2k_o8VeG9GcAI6B2OkxswtmRePW5vENCLycVTPTM5CL76oekS8OVxrV8B7rcwytOYr0tXXFd-lbYFUtBWrNHmdRxCfs9iElPhqzg9OJg0A_nnKPXKwwwxb3uKAqT3VC5bgFZxgpMEa9Gj5ZwKfrNF7fEieQU3S3RN8VHXHKn2FrO6fsQa8AmXLSg3FR7IDsUpK0XOY7zclN76zjKx3wPsWOoA
+POST https://localhost:4430/api/game/create_game/t/
+Authorization: Bearer 
 
 ###
 #join game (for room service)
 POST https://localhost:4430/api/game/join_game/id_hihi/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4ODgwNzgwLCJpYXQiOjE3Mzg4NzUzODAsImp0aSI6IjZkNDc1ZjgwOTQyNDQyZDdhNmUwODNmMTQzZWU1NjQzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0NF91c2VyIn0.MvPR_Tk0hi58wQNb0QCoiEe5mAnrPsYqa2qK5G-EXPeD0suZmzHTLb1iZmLRfgqubWZfnl45k_vPOT81celAXzF0OqkvmudxIEhN04GtlE9Mf4GP4Wn9QQLi7KxR9L6wrzaGoquWo3X8EBjSEcRYW3OVKSjuqKs2FcESl9XibFyqyjx6H_6NQElnl61eHbwF_KUko08UxbuAHXpphDklQErbAEA4IN4UZ0XhRa4E851HG-pT_TrFtRXIQFWjDPPA8QBfZFORFrQsIKuEU-zELmD61LaGvGy7gm32-1Y8-xrPJS4wJ6seAqOYWEHIEMxg9i6F5m-a9j_rfnA7e--AXQ
+Authorization: Bearer 
 
 # *************************** READ *************************** #
 
 ###
 #get a list of all games
 GET https://localhost:4430/api/game/list_all_games/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJnYW1lIiwiZXhwIjoxNzQwNTUzMDE3LCJpYXQiOjE3NDA1MDk4MTd9.r8VqLpNo5jay5KEZjqVlK7AcBGv1ZdpCeOE5lGbQrptd1lGhScqvNTtLH-fW43vvdHtd1bc6RgRcIN2lYlRDBEd8igCjVH0lIl_mBLrmcTCutDGieZgHpE7OWQlUAmOolNsuPu4qn5PJX6J-Rxyf0AOCQhV9ZcZ7558YmRjVvly42bxFZnnm95P89e6MV1SYlh_gM5mTaCpuUXV_wHyvoiKajELvGYot3cxAhCmUeObPqkRfTlRDshaFjqv2pMYZ7cCmcgpMWg-N9o1h9YkFlSlFJ1cpSZ791xs_HaXgbw9WNKKO06AeYwZI0cRD7fTCRpV9e0FHR64a1CKih-_WaA
 
 ###
 #get the gamestate
 GET https://localhost:4430/api/game/gamestate/id_hihi/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJnYW1lIiwiZXhwIjoxNzQwNTM5ODQzLCJpYXQiOjE3NDA0OTY2NDN9.IZSg7UqVT-L4Sc7BIIT44Bc53tmKJhnBX4KLEMaRBzoksw3QtQat-dNbxTFsKsUzQrv9-YKn4sD-yYefNH9nzylJ2t2LmHtIWvLflQiFTENzJMqxAFeSTihLo-mXS3jEjUs-mJ3DysbSQ9oSDAt-13XRr_n0INcgXhzecHQncCCNfhuLUj3qfmGEfyBWwCV-Q0h8TDvahvv8GvfL4vpuhlAMQUquLA-0Woo3n1de4lepJNSjie8rdxLRyMN7wnF27Nug_xHlYk0OiJw3fOI9xO5ELPgQkVnsPNbFvfpONowVsaUexEoz6iYZAh4Mrtp1B6rYn7PckQMIHQ3duqUwsA
 
 # **************************** PUT *************************** #
 
@@ -71,5 +83,6 @@ GET https://localhost:4430/api/game/gamestate/id_hihi/
 
 ###
 #delete game
-DELETE https://localhost:4430/api/game/delete_game/id_hihi/
+DELETE https://localhost:4430/api/game/delete_game/1/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJnYW1lIiwiZXhwIjoxNzQwNTQ4NjQ1LCJpYXQiOjE3NDA1MDU0NDV9.AKwZ__KvUcWooraplWTdiIZ7iimqvlfF7U4Ony1pMPSg_mrdCqKWvkX7UAL5hdcva46vX_6G2ruA6q_T3aWeE6Tz6PK_jD-_wbfjbssv0h_H8eKwx4ygFdySj1Eo-Fa-4dvTJSZDmSKryXHQMq_7zLpZnhdzRZl5mz9q0-9TzNMi_O-2MsmDkU9cJmVJgmYcrB_zImnLwWUEG9FMKDYRsScmIMJxN8QrcbGkjd1-sarpLEVjzsx1JG6MwWTzAzp8W8CaVkAdtFIrDyQgCPiv9vN440QVXcFGixwvoGM7hEJxtsASir_J_keVzSGaTdDx-xkokT0Ku1kFwBa7uH6m0g
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 
 class UserProfile(models.Model):
@@ -18,104 +19,137 @@ class Tournament(models.Model):
         ('waiting', 'Waiting'),
         ('playing', 'Playing'),
         ('finished', 'Finished'),
+        ('error', 'Error'),
     ]
 
     tournament_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)  # ID unique généré
-    name = models.CharField(max_length=255, unique=True)
-    status = models.CharField(max_length=10, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
-    users = models.ManyToManyField(UserProfile)  # Many-to-Many relation with UserProfile
-    max_users = models.IntegerField(default=10)  # Maximum d'utilisateurs dans un tournoi
-    played_matches = models.IntegerField(default=0)
-    remaining_matches = models.IntegerField(default=0)
-    ongoing_matches = models.IntegerField(default=0)
-    total_matches = models.IntegerField(default=0)  # Ajouter un champ pour le total des matchs
+    name = models.CharField(max_length=64, unique=True)
+    status = models.CharField(max_length=16, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
+    users = models.ManyToManyField(UserProfile, blank=True, related_name='list_users_in_tournament')  # Many-to-Many relation with UserProfile
+    max_users = models.IntegerField(default=10, validators=[MinValueValidator(2), MaxValueValidator(32)])  # Maximum d'utilisateurs dans un tournoi
+    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='owner')
+    # played_matches = models.IntegerField(default=0)
+    # remaining_matches = models.IntegerField(default=0)
+    # ongoing_matches = models.IntegerField(default=0)
+    # total_matches = models.IntegerField(default=0)  # Ajouter un champ pour le total des matchs
+    pools = models.ManyToManyField('Pool', blank=True, related_name='pools')
+    pool_index = models.IntegerField(default=0)
 
     @property
-    def players_count(self):
+    def users_count(self):
         return self.users.count()  # C'est ok ici car 'users' est une relation ManyToMany
 
     def __str__(self):
-        return f"Tournament {self.id} {self.name} ({self.status})"
+        return f"Tournament {self.tournament_id} {self.name} ({self.status})"
 
-    def save(self, *args, **kwargs):
-        # Calculer les matchs totaux si nécessaire
-        if self.users.count() > 0 and self.total_matches == 0:
-            self.total_matches = (self.users.count() * (self.users.count() - 1)) // 2  # Matches à poules, chaque joueur contre chaque autre joueur
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Calculer les matchs totaux si nécessaire
+    #     if self.users.count() > 0 and self.total_matches == 0:
+    #         self.total_matches = (self.users.count() * (self.users.count() - 1)) // 2  # Matches à poules, chaque joueur contre chaque autre joueur
+    #     super().save(*args, **kwargs)
 
-    def update_match_stats(self):
-        self.played_matches = self.matches.filter(status='finished').count()
-        self.remaining_matches = self.total_matches - self.played_matches
-        self.ongoing_matches = self.matches.filter(status='playing').count()
+    # def update_match_stats(self):
+    #     self.played_matches = self.matches.filter(status='finished').count()
+    #     self.remaining_matches = self.total_matches - self.played_matches
+    #     self.ongoing_matches = self.matches.filter(status='playing').count()
 
-        if self.played_matches == self.total_matches:
-            self.status = 'finished'
-        self.save()
+    #     if self.played_matches == self.total_matches:
+    #         self.status = 'finished'
+    #     self.save()
 
     def is_full(self):
         return self.users.count() >= self.max_users
 
+    def get_pools(self):
+        return self.pools.all()
 
-    def create_pools(self):
-        """Divise les joueurs en poules et crée les matchs."""
-        players = list(self.users.all())
-        num_pools = len(players) // 4  # Divise les joueurs en groupes de 4 (poules de 4 joueurs)
+    def generate_pools(self):
+        if not self.pools.exists():
+            """Divise les joueurs en poules et crée les matchs."""
+            players = list(self.users.all())
+            reminder = len(players) % 4
+            num_pools = (len(players) + 4 - reminder) // 4  # Divise les joueurs en groupes de 4 (poules de 4 joueurs), on ajoute 4 - reminder car la division entiere arrondie vers le bas mais nous voulons l'arrondir vers le haut
+        else:
+            players = []
+            for pool in self.pools.all():
+                players.append(pool.winner)
+            reminder = len(players) % 4
+            num_pools = (len(players) + 4 - reminder) // 4  # Divise les joueurs en groupes de 4 (poules de 4 joueurs), on ajoute 4 - reminder car la division entiere arrondie vers le bas mais nous voulons l'arrondir vers le haut
 
-        pools = []
+        total_pools = self.pools.count()
         for i in range(num_pools):
-            pool_name = f"Poule {chr(65 + i)}"  # Poule A, Poule B, etc.
-            pool = Pool.objects.create(tournament=self, name=pool_name)
+            pool_name = f"Poule {chr(65 + total_pools + i)}"  # Poule A, Poule B, etc.
+            pool = Pool.objects.create(tournament=self, name=pool_name, pool_index=self.pool_index)
             
             # Ajoute les joueurs dans la poule
             pool.users.set(players[i*4:(i+1)*4])
             pool.save()
             
             # Génère les matchs pour cette poule
-            pool.generate_matches()
-            pools.append(pool)
+            pool.generate_rooms()
+            self.pools.add(pool)
 
-        return pools
-    
+        self.pool_index += 1
+
 class Pool(models.Model):
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="pools")
-    name = models.CharField(max_length=255)  # Par exemple: Poule A, Poule B
-    users = models.ManyToManyField(UserProfile)  # Liste des joueurs dans la poule
-    rank = models.IntegerField(default=1)  # Position dans l'ordre des poules (utile pour l'affichage)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+    name = models.CharField(max_length=16)  # Par exemple: Poule A, Poule B
+    users = models.ManyToManyField(UserProfile, related_name='list_users_in_pool')  # Liste des joueurs dans la poule
+    rooms = models.ManyToManyField('Room', blank=True, related_name='list_rooms')
+    winner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
+    pool_index = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.name} - {self.tournament.name}"
 
-    def get_matches(self):
+    def get_rooms(self):
         """Retourne tous les matchs de la poule."""
-        return self.matches.all()
+        return self.rooms.all()
     
-    def generate_matches(self):
+    def generate_rooms(self):
             """Génère tous les matchs entre les joueurs de la poule."""
-            players = list(self.users.all())
-            matches = []
-            for i in range(len(players)):
-                for j in range(i+1, len(players)):
-                    match = Match.objects.create(
-                        tournament=self.tournament,
-                        player_1=players[i],
-                        player_2=players[j],
-                        status='waiting',
-                        pool=self  # Lier le match à la poule
-                    )
-                    matches.append(match)
-            return matches
-    
+            if not self.rooms.exists():
+                players = list(self.users.all())
+                players_in_room = []
+                for i in range(len(players)):
+                    for j in range(i+1, len(players)):
+                        status = 'waiting'
+                        if players[i] in players_in_room or players[j] in players_in_room:
+                            status = 'standby'
+                        else:
+                            players_in_room.append(players[i])
+                            players_in_room.append(players[j])
+
+                        match = Room.objects.create(
+                            pool=self,  # Lier le match à la poule
+                            player_1=players[i],
+                            player_2=players[j],
+                            status=status
+                        )
+                        self.rooms.add(match)
+            else:
+                players_in_room = []
+                rooms = self.rooms.filter(status='standby')
+                for room in rooms:
+                    if not (room.player_1 in players_in_room) and not (room.player_2 in players_in_room):
+                        players_in_room.append(room.player_1)
+                        players_in_room.append(room.player_2)
+                        room.status = 'waiting'
+                        room.save()
+
+
     def calculate_ranking(self):
         players = list(self.users.all())
         ranking = []
 
         for player in players:
-            wins = Match.objects.filter(pool=self, winner=player).count()
-            losses = Match.objects.filter(pool=self, loser=player).count()
-            draws = Match.objects.filter(pool=self, winner__isnull=True, player_1=player).count()
+            wins = Room.objects.filter(pool=self, winner=player).count()
+            losses = Room.objects.filter(pool=self, loser=player).count()
+            draws = Room.objects.filter(pool=self, winner__isnull=True, player_1=player).count()
+            draws += Room.objects.filter(pool=self, winner__isnull=True, player_2=player).count()
             points = wins * 3 + draws  # 3 points pour chaque victoire, 1 pour chaque match nul
             ranking.append({
-                'player': player.username,
+                'player': player,
                 'points': points,
                 'wins': wins,
                 'losses': losses,
@@ -126,14 +160,22 @@ class Pool(models.Model):
         ranking.sort(key=lambda x: (-x['points'], -x['wins']))
         return ranking
 
-class Match(models.Model):
+    def all_rooms_finished(self):
+        return all(room.status == 'finished' for room in self.rooms)
+
+    def rooms_wave_finished(self):
+        return all(room.status != 'waiting' and room.status != 'playing' for room in self.rooms)
+
+class Room(models.Model):
     STATUS_CHOICES = [
         ('waiting', 'Waiting'),
+        ('standby', 'Standby'),
         ('playing', 'Playing'),
         ('finished', 'Finished'),
     ]
 
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='matches')
+    pool = models.ForeignKey(Pool, on_delete=models.CASCADE)
+    room_id = models.CharField(max_length=100, unique=True)
     player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_1_matches')
     player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_2_matches')
     winner = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='won_matches')
@@ -146,8 +188,9 @@ class Match(models.Model):
     def __str__(self):
         return f"{self.player_1.username} vs {self.player_2.username}"
 
+    """
     def play(self, winner):
-        """Termine le match et met à jour les statistiques."""
+        #Termine le match et met à jour les statistiques.
         if winner == self.player_1:
             self.winner = self.player_1
             self.loser = self.player_2
@@ -163,11 +206,12 @@ class Match(models.Model):
         self.save()
 
         # Mise à jour des stats du tournoi
-        self.tournament.update_match_stats()
+        #self.tournament.update_match_stats()
+    """
 
 class PlayerHistory(models.Model):
     player = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
-    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     opponent = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='opponent_history')
     result = models.CharField(max_length=10, choices=[('win', 'Win'), ('loss', 'Loss')])
 

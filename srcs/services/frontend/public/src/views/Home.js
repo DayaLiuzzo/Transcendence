@@ -4,7 +4,7 @@ export default class Home extends BaseView{
     constructor(router, params){
         super(router,params);
     }
-    async render(){
+    render(){
       if (this.isAuthenticated())
         {
           return `
@@ -33,7 +33,7 @@ export default class Home extends BaseView{
               `;
         }
     }
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (Home)');
         const text = document.getElementById("test-text");
         const originalText = text.textContent;

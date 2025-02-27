@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', "game"]
 # Application definition
 
 INSTALLED_APPS = [
-    'uvicorn',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'game_app',
     'channels',
+    'service_connector',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -88,7 +88,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'game_service.wsgi.application'
 
 SERVICE_CONNECTOR_SETTINGS = {
     "INTERNAL_TOKEN_ENDPOINT": os.getenv("INTERNAL_TOKEN_ENDPOINT"),

@@ -4,10 +4,7 @@ import BaseView from './BaseView.js';
 export default class SignUp extends BaseView{
     constructor(router, params){
         super(router, params);
-    }
-
-    showError(message){
-        alert(message);
+        this.handleSignupSubmit = this.handleSignupSubmit.bind(this);
     }
 
     containsSpecialCharacter(password) {
@@ -21,20 +18,21 @@ export default class SignUp extends BaseView{
         if (formData.username.length > 128) return "Username must be at most 128 characters long.";
         if (!formData.password || !formData.password2 || formData.password.length < 6) return "Password must be at least 6 characters long.";
         if (formData.password !== formData.password2) return "Passwords do not match.";
-        if (!this.containsSpecialCharacter(formData.password)) return "Password mustcontain special characters.";
+        if (!this.containsSpecialCharacter(formData.password)) return "Password must contain one of the following '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '='";
         return null;
     }
 
-    isAuthenticated() {
-        return localStorage.getItem("jwt") !== null;
+    handleSignupSubmit(event){
+        event.preventDefault();
+        const formData = this.getFormData();
+        this.signup(formData);
     }
-    
 
     async signup(formData) {
         const errorMessage = this.validateInputs(formData);
         if (errorMessage) return this.showError(errorMessage);
         const signUpResponse = await this.sendPostRequest(this.API_URL_SIGNUP, formData);
-        if (!signUpResponse.success) return this.showError(JSON.stringify(signUpResponse.error, null, 2));
+        if (!signUpResponse.success) return this.showError(signUpResponse.error);
         this.navigateTo("/log-in");
     }
 
@@ -47,7 +45,22 @@ export default class SignUp extends BaseView{
         };
     }
 
-    async render(){
+    getErrorContainer() {
+        let errorContainer = document.getElementById("signup-error-container");
+
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "signup-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("signup-form").insertBefore(errorContainer, document.getElementById("signup-form").firstChild); // Insert at the top of the form
+        }
+
+        return errorContainer;
+    }
+
+
+
+    render(){
         return `
         <div>
             <h2>signup</h2>
@@ -63,12 +76,15 @@ export default class SignUp extends BaseView{
     `;
     }
 
-    async attachEvents(){
-        console.log('Events attached (signup)');
-        document.getElementById("signup-form").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const formData = this.getFormData();
-            this.signup(formData);
-        });
+    unmount(){
+        console.log('unmounting signup');
+        document.getElementById("signup-form")?.removeEventListener("submit", this.handleSignupSubmit);
     }
+
+    attachEvents(){
+        console.log('Events attached (signup)');
+        document.getElementById("signup-form")?.addEventListener("submit", this.handleSignupSubmit);
+    }
+
+
 }
