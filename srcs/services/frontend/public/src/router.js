@@ -19,11 +19,11 @@ const routes = [
     { path: '/sign-up', view: SignUp, css: "styles/sign-up.css", requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
     { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
-    { path: '/play-menu', view: PlayMenu, css: "styles/core.css"},
-    { path: '/play-local', view: PlayLocal, css: "styles/core.css"},
-    { path: '/play-remote', view: PlayRemote, css: "styles/core.css"},
-    { path: '/play-tournament', view: PlayTournament, css: "styles/core.css"},
-    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css"},
+    { path: '/play-menu', view: PlayMenu, css: "styles/core.css", requiresAuth: true},
+    { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: true},
+    { path: '/play-remote', view: PlayRemote, css: "styles/core.css", requiresAuth: true},
+    { path: '/play-tournament', view: PlayTournament, css: "styles/core.css", requiresAuth: true},
+    { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
     { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true },
 ];
 

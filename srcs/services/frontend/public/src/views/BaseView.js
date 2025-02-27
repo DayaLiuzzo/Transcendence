@@ -119,7 +119,7 @@ export default class BaseView{
             if (this.isAuthenticated()) {
                 navbar.innerHTML += `
                 <a href="/home">Home</a>
-                <a href="/play-menu">Game</a>
+                <a href="/play-menu">Play</a>
                 <a href="/profile">Profile</a>
                 <a href="/logout">Logout</a>
                 `;
@@ -137,7 +137,6 @@ export default class BaseView{
                 <a href="/home">Home</a>
                 <a href="/log-in">Log in</a>
                 <a href="/sign-up">Sign up</a>
-                <a href="/play-menu">Game</a>
                 `;
             }
         }

@@ -15,6 +15,7 @@ export default class BasePlayView extends BaseView{
             document.getElementById("room-id").innerText = result.data.room_id;
             // document.getElementById("user-1").innerText = this.getUsername();
             document.getElementById("user-2").innerText = "Looking for opponent...";
+            document.getElementById("game-canvas").innerText = "Loading...";
             this.openWebSocket(result.data.room_id);
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
@@ -23,12 +24,22 @@ export default class BasePlayView extends BaseView{
         //voir pour set interval websocket
     }
 
+    play(){
+        console.log(this.socketService.name)
+        if (this.socketService.isplaying)
+            document.getElementById("game-canvas").innerText = "Wouhou...";
+            // this.render()
+    }
+
     // Ouvrir une WebSocket pour cette salle
     openWebSocket(roomId) {
         if (!this.socketService) {
             this.socketService = new WebSocketService(roomId);
+            this.socketService.name = "init"
         }
+        //try puis mettre this.socketservice a null si fail
         this.socketService.connect();
+        this.socketService.name = "after connexion"
     }
 
     async test(){
@@ -44,6 +55,9 @@ export default class BasePlayView extends BaseView{
     async mount() {
         try {
             await this.joinRoom();
+            console.log("TEST => ", this.socketService.name);
+            // setInterval(this.play, 100);
+
         } catch (error) {
             console.error("Error in mount():", error);
         }

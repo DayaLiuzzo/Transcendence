@@ -153,6 +153,8 @@ class JoinGame(APIView):
             left_paddle = game.paddles.filter(side='left').first()
             left_paddle.player = user
             left_paddle.save()
+            if game.player2 is not None:
+                game.status = 'playing'
             game.save()
             return Response({
                 'message': f'{user.username} a rejoint la room {room_id} en tant que joueur 1.'
@@ -162,6 +164,8 @@ class JoinGame(APIView):
             left_paddle = game.paddles.filter(side='right').first()
             left_paddle.player = user
             left_paddle.save()
+            if game.player1 is not None:
+                game.status = 'playing'
             game.save()
             return Response({
                 'message': f'{user.username} a rejoint la room {room_id} en tant que joueur 2.'
@@ -175,13 +179,13 @@ class JoinGame(APIView):
 # *************************** READ *************************** #
 
 class GameListAPIView(generics.ListAPIView):
-    permission_classes = [IsGame]
+    # permission_classes = [IsGame]
     queryset = Game.objects.all()
     serializer_class = GameSerializer
 
 #a proteger
 class GameStateAPIView(APIView):
-    permission_classes = [IsGame]
+    # permission_classes = [IsGame]
     def get(self, request, room_id, *args, **kwargs):
         game = get_object_or_404(Game, room_id=room_id)
         

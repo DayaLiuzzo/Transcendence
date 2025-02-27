@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from django.db.models import QuerySet
+from django.shortcuts import get_object_or_404
 
 class GameConsumer(AsyncWebsocketConsumer):
     
@@ -15,12 +16,20 @@ class GameConsumer(AsyncWebsocketConsumer):
         #add verif que le client est autorise dans la room non ?
         return Game.objects.filter(room_id=room_name).exists()
 
+    @sync_to_async
+    def room_isfull(self, room_name: str) -> bool:
+        from game_app.models import Game
+        game = get_object_or_404(Game, room_id=room_name)
+        return game.status=='playing'
+
+
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'room%s' % self.room_name
 
         self.authenticated = False
         self.user = None
+
         await self.accept()
         
     async def receive(self, text_data):
@@ -70,11 +79,13 @@ class GameConsumer(AsyncWebsocketConsumer):
                     self.channel_name
                 )
 
+                isfull = await self.room_isfull(self.room_name)
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
                         'type': 'send_message',
                         'message': f'{self.user.username} has joined the room.',
+                        'isfull': isfull,
                     }
                 )
             else:
@@ -88,12 +99,15 @@ class GameConsumer(AsyncWebsocketConsumer):
                     {
                         'type': 'send_message',
                         'message': message,
+
                     }
                 )
 
     async def send_message(self, event):
         message = event['message']
-        await self.send(text_data=json.dumps({'message': message}))
+        isfull = event['isfull']
+        await self.send(text_data=json.dumps({'message': message, 'isfull': isfull}))
+        # await self.send(text_data=json.dumps(event))
 
     async def send_error_message(self, error_message):
         await self.send(text_data=json.dumps({'error': error_message}))

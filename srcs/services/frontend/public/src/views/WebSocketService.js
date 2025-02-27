@@ -5,6 +5,8 @@ export default class WebSocketService {
         this.isConnected = false;
         this.WS_GAME_URL = `wss://${window.location.host}/ws/game/`;
         this.token = this.getAccessToken();
+        this.isplaying = false;
+        this.name = "pas init"
     }
 
     connect() {
@@ -20,7 +22,12 @@ export default class WebSocketService {
         };
 
         this.socket.onmessage = (event) => {
-            this.handleMessage(event);
+            if (this.isplaying == false){
+                this.handleStart(event);
+            }
+            else{
+                this.handleMessage(event);
+            }
         };
 
         this.socket.onclose = (event) => {
@@ -33,10 +40,22 @@ export default class WebSocketService {
         };
     }
 
+
+    handleStart(event) {
+        const data = JSON.parse(event.data);
+        // console.log("Message reçu:", data);
+        console.log("Message reçu:", data.isfull);
+        if (data.isfull)
+            this.isplaying = true
+
+        // Mettre à jour le DOM avec les données reçues via WebSocket
+    }
+
     handleMessage(event) {
         const data = JSON.parse(event.data);
-        console.log("Message reçu:", data);
-
+        // console.log("Message reçu:", data);
+        console.log("Message reçu:", data.isfull);
+ 
         // Mettre à jour le DOM avec les données reçues via WebSocket
     }
 
