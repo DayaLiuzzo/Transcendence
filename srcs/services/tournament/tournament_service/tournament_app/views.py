@@ -22,6 +22,7 @@ from .models import Room
 from .serializers import TournamentSerializer
 from .serializers import UserProfileSerializer
 from .serializers import RoomSerializer
+from .serializers import RoomSerializerInternal
 from tournament_app.permissions import IsAuth
 from tournament_app.permissions import IsTournament
 from tournament_app.permissions import IsUsers
@@ -38,14 +39,23 @@ def ask_room_to_generate(pool):
     method = 'put'
     client = MicroserviceClient()
     for room in rooms:
-        room_serializer = RoomSerializer(room)
+        room_serializer = RoomSerializerInternal(room)
         response = client.send_internal_request(url, method, data=room_serializer.data)
         if response.status_code != 201:
             raise MicroserviceError(response.status_code, response.text)
-        data = response.data
+        data = response.json()
         room.room_id = data.get('room_id')
         room.save()
 
+def ask_all_rooms_to_remove(tournament):
+    rooms = Room.objects.filter(pool__tournament=tournament).exclude(room_id='')
+    method = 'delete'
+    client = MicroserviceClient()
+    for room in rooms:
+        url = f'http://rooms:8443/api/rooms/delete_room/{room.room_id}/'
+        response = client.send_internal_request(url, method)
+        if response.status_code != 204:
+            print(f'ERROR rooms to remove : {response.text}')
 
 ################################################################
 #                                                              #
@@ -168,6 +178,7 @@ class LaunchTournamentView(APIView):
                     ask_room_to_generate(pool)
             except MicroserviceError as e:
                 tournament.status = 'error'
+                ask_all_rooms_to_remove(tournament)
                 tournament.save()
                 return Response(e.message, e.response_text, e.status_code)
 
@@ -198,18 +209,18 @@ class LaunchTournamentView(APIView):
 #                }, status=status.HTTP_400_BAD_REQUEST)
 #            
 #            # Obtenir les scores des joueurs
-#            score_player_1 = request.data.get('score_player_1')
-#            score_player_2 = request.data.get('score_player_2')
+#            score_player1 = request.data.get('score_player1')
+#            score_player2 = request.data.get('score_player2')
 #
 #            # Vérifier que les deux scores ont été fournis
-#            if score_player_1 is None or score_player_2 is None:
+#            if score_player1 is None or score_player2 is None:
 #                return Response({
 #                    "message": "Both scores must be provided."
 #                }, status=status.HTTP_400_BAD_REQUEST)
 #
 #            # Assigner les scores au match
-#            match.score_player_1 = score_player_1
-#            match.score_player_2 = score_player_2
+#            match.score_player1 = score_player1
+#            match.score_player2 = score_player2
 #
 #            # Vérifier et identifier le gagnant
 #            winner_username = request.data.get('winner')  # Nom d'utilisateur du gagnant
@@ -220,18 +231,18 @@ class LaunchTournamentView(APIView):
 #
 #            # Identifier le gagnant et le perdant
 #            winner = UserProfile.objects.get(username=winner_username)
-#            if winner not in [match.player_1, match.player_2]:
+#            if winner not in [match.player1, match.player2]:
 #                return Response({
 #                    "message": "Winner must be one of the match participants."
 #                }, status=status.HTTP_400_BAD_REQUEST)
 #            
 #            # Affecter le gagnant et le perdant
-#            if winner == match.player_1:
-#                match.winner = match.player_1
-#                match.loser = match.player_2
+#            if winner == match.player1:
+#                match.winner = match.player1
+#                match.loser = match.player2
 #            else:
-#                match.winner = match.player_2
-#                match.loser = match.player_1
+#                match.winner = match.player2
+#                match.loser = match.player1
 #
 #            # Marquer le match comme terminé
 #            match.status = 'finished'
@@ -281,9 +292,9 @@ class ListRooms(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         user = request.user
         room_queryset = Room.objects.filter(
-                    (Q(player_1=user) | Q(player_2=user))
+                    (Q(player1=user) | Q(player2=user))
                     & (Q(status='waiting') | Q(status='standby'))
-                )
+                ).exclude(pool__tournament__status='error')
         room_serializers = RoomSerializer(room_queryset, many=True)
         return Response(room_serializers.data, status=status.HTTP_200_OK)
 
@@ -357,11 +368,11 @@ class CountFinishedTournamentView(generics.GenericAPIView):
 #
 #            match_data = [
 #                {
-#                    "player_1": match.player_1.username,
-#                    "player_2": match.player_2.username,
+#                    "player1": match.player1.username,
+#                    "player2": match.player2.username,
 #                    "status": match.status,
-#                    "score_player_1": match.score_player_1,
-#                    "score_player_2": match.score_player_2,
+#                    "score_player1": match.score_player1,
+#                    "score_player2": match.score_player2,
 #                }
 #                for match in matches
 #            ]
@@ -383,17 +394,24 @@ class SetRoomResult(generics.UpdateAPIView):
     lookup_field = 'room_id'
 
     def partial_update(self, serializer):
-        serializer.save(status='finished')
-        pool = serializer.validated_data.get('pool')
-        if pool.all_rooms_finished():
-            pool.winner = pool.calculate_ranking()[0]['player']
-            pool.save()
-        elif pool.rooms_wave_finished():
-            pool.generate_rooms()
-            try:
-                ask_room_to_generate(pool)
-            except MicroserviceError as e:
-                print("ERROR when asking to create rooms")
+        if tournament.status != 'error':
+            serializer.save(status='finished')
+            pool = serializer.validated_data.get('pool')
+            tournament = pool.tournament
+            if pool.all_rooms_finished():
+                pool.winner = pool.calculate_ranking()[0]['player']
+                pool.save()
+            elif pool.rooms_wave_finished():
+                pool.generate_rooms()
+                try:
+                    ask_room_to_generate(pool)
+                except MicroserviceError as e:
+                    ask_all_rooms_to_remove(pool.tournament)
+                    tournament.status = 'error'
+                    tournament.save()
+            if tournament.get_current_pools().count() == 1:
+                user = pool.winner
+                
 
 # ************************** DELETE ************************** #
 
@@ -406,7 +424,8 @@ class DeleteTournamentView(APIView):
             tournament = Tournament.objects.get(users=user)
             # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
             # if user.is_staff or (user == tournament.owner and tournament.status != 'playing'):
-            if user == tournament.owner and tournament.status == 'waiting':
+            if user == tournament.owner:# and tournament.status == 'waiting':
+                ask_all_rooms_to_remove(tournament)
                 tournament.delete()
                 return Response({
                     "message": "Tournament deleted successfully"

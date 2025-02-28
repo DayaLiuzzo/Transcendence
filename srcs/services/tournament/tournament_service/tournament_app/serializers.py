@@ -11,13 +11,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['username']
 
 class RoomSerializer(serializers.ModelSerializer):
-    player_1 = serializers.StringRelatedField(read_only=True)
-    player_2 = serializers.StringRelatedField(read_only=True)
+    player1 = serializers.StringRelatedField(read_only=True)
+    player2 = serializers.StringRelatedField(read_only=True)
     winner = serializers.StringRelatedField()
     loser = serializers.StringRelatedField()
     class Meta:
         model = Room
-        fields = ['player_1', 'player_2', 'winner', 'loser', 'status', 'score_player_1', 'score_player_2']
+        fields = ['room_id', 'player1', 'player2', 'winner', 'loser', 'status', 'score_player1', 'score_player2']
+
+class RoomSerializerInternal(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ['player1', 'player2']
 
 class PoolSerializer(serializers.ModelSerializer):
     users = serializers.SlugRelatedField(slug_field='username', queryset=UserProfile.objects.all(), many=True)

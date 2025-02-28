@@ -63,6 +63,9 @@ class Tournament(models.Model):
     def get_pools(self):
         return self.pools.all()
 
+    def get_current_pools(self):
+        return self.pools.filter(pool_index=self.pool_index - 1)
+
     def generate_pools(self):
         if not self.pools.exists():
             """Divise les joueurs en poules et crée les matchs."""
@@ -122,8 +125,8 @@ class Pool(models.Model):
 
                         match = Room.objects.create(
                             pool=self,  # Lier le match à la poule
-                            player_1=players[i],
-                            player_2=players[j],
+                            player1=players[i],
+                            player2=players[j],
                             status=status
                         )
                         self.rooms.add(match)
@@ -131,9 +134,9 @@ class Pool(models.Model):
                 players_in_room = []
                 rooms = self.rooms.filter(status='standby')
                 for room in rooms:
-                    if not (room.player_1 in players_in_room) and not (room.player_2 in players_in_room):
-                        players_in_room.append(room.player_1)
-                        players_in_room.append(room.player_2)
+                    if not (room.player1 in players_in_room) and not (room.player2 in players_in_room):
+                        players_in_room.append(room.player1)
+                        players_in_room.append(room.player2)
                         room.status = 'waiting'
                         room.save()
 
@@ -145,8 +148,8 @@ class Pool(models.Model):
         for player in players:
             wins = Room.objects.filter(pool=self, winner=player).count()
             losses = Room.objects.filter(pool=self, loser=player).count()
-            draws = Room.objects.filter(pool=self, winner__isnull=True, player_1=player).count()
-            draws += Room.objects.filter(pool=self, winner__isnull=True, player_2=player).count()
+            draws = Room.objects.filter(pool=self, winner__isnull=True, player1=player).count()
+            draws += Room.objects.filter(pool=self, winner__isnull=True, player2=player).count()
             points = wins * 3 + draws  # 3 points pour chaque victoire, 1 pour chaque match nul
             ranking.append({
                 'player': player,
@@ -175,28 +178,28 @@ class Room(models.Model):
     ]
 
     pool = models.ForeignKey(Pool, on_delete=models.CASCADE)
-    room_id = models.CharField(max_length=100, unique=True)
-    player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_1_matches')
-    player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player_2_matches')
+    room_id = models.CharField(max_length=100, blank=True)
+    player1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player1_matches')
+    player2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player2_matches')
     winner = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='won_matches')
     loser = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='lost_matches')
-    score_player_1 = models.IntegerField(default=0)  # Ajout du score pour player 1
-    score_player_2 = models.IntegerField(default=0)  # Ajout du score pour player 2
+    score_player1 = models.IntegerField(default=0)  # Ajout du score pour player 1
+    score_player2 = models.IntegerField(default=0)  # Ajout du score pour player 2
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='waiting')
     date_played = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.player_1.username} vs {self.player_2.username}"
+        return f"{self.player1.username} vs {self.player2.username}"
 
     """
     def play(self, winner):
         #Termine le match et met à jour les statistiques.
-        if winner == self.player_1:
-            self.winner = self.player_1
-            self.loser = self.player_2
-        elif winner == self.player_2:
-            self.winner = self.player_2
-            self.loser = self.player_1
+        if winner == self.player1:
+            self.winner = self.player1
+            self.loser = self.player2
+        elif winner == self.player2:
+            self.winner = self.player2
+            self.loser = self.player1
         else:
             self.winner = None
             self.loser = None  # Cas d'un match nul
@@ -209,10 +212,8 @@ class Room(models.Model):
         #self.tournament.update_match_stats()
     """
 
-class PlayerHistory(models.Model):
-    player = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    opponent = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='opponent_history')
+class TournamentHistory(models.Model):
+    tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, blank=True)
     result = models.CharField(max_length=10, choices=[('win', 'Win'), ('loss', 'Loss')])
 
     def __str__(self):
