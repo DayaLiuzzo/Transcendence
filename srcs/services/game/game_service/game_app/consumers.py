@@ -11,24 +11,30 @@ from django.shortcuts import get_object_or_404
 class GameConsumer(AsyncWebsocketConsumer):
     
     @sync_to_async
-    def room_exists(self, room_name: str) -> bool:
+    def room_exists(self) -> bool:
         from game_app.models import Game
-        #add verif que le client est autorise dans la room non ?
-        return Game.objects.filter(room_id=room_name).exists()
+        #dans try and catch non ? changer la logique...
+        game = get_object_or_404(Game, room_id=self.room_name)
+        self.game = game
+        return Game.objects.filter(room_id=self.room_name).exists()
 
     @sync_to_async
-    def room_isfull(self, room_name: str) -> bool:
-        from game_app.models import Game
-        game = get_object_or_404(Game, room_id=room_name)
-        return game.status=='playing'
+    def room_is_full(self) -> bool:
+        return self.game.status=='playing'
 
+    @sync_to_async
+    def user_is_allowed(self) -> bool:
+        return self.game.player1.
 
+    player1 = models.ForeignKey('UserProfile', related_name='game_player1', null=True, blank=True, on_delete=models.SET_NULL)
+    player2 = models.ForeignKey('UserProfile', related_name='game_player2', null=True, blank=True, on_delete=models.SET_NULL)
+    
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'room%s' % self.room_name
-
         self.authenticated = False
         self.user = None
+        self.game = None
 
         await self.accept()
         
@@ -69,17 +75,19 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.user = user
                 self.authenticated = True
 
-                if not await self.room_exists(self.room_name):
+                if not await self.room_exists():
                     await self.send_error_message("Invalid room.")
                     await self.close()
                     return
+
+                if not await self.user_is_allowed():
 
                 await self.channel_layer.group_add(
                     self.room_group_name,
                     self.channel_name
                 )
 
-                isfull = await self.room_isfull(self.room_name)
+                isfull = await self.room_is_full(self.room_name)
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
@@ -87,7 +95,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                         'message': f'{self.user.username} has joined the room.',
                         'isfull': isfull,
                     }
-                )
+                )   
             else:
                 await self.send_error_message("Authorization header missing.")
                 await self.close()
