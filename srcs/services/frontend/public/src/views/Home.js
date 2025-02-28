@@ -106,6 +106,7 @@ export default class Home extends BaseView{
            // camera perspective etc
            const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
            camera.position.z = 1;
+           camera.position.y = 1;
            camera.lookAt(mesh.position);
             scene.add(camera);
 

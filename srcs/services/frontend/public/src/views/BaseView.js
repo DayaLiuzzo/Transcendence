@@ -107,6 +107,31 @@ export default class BaseView{
         }
     }
 
+    toggleMenu() {
+        const closeIcon= document.querySelector(".closeIcon");
+        const menuIcon = document.querySelector(".menuIcon");
+        const navbar = document.getElementById("navbar");
+
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+            closeIcon.style.display = "none";
+            menuIcon.style.display = "block";
+        } else {
+            navbar.classList.add("active");
+            closeIcon.style.display = "block";
+            menuIcon.style.display = "none";
+        }
+    }
+
+    closeMenu() {
+        const navbar = document.getElementById("navbar");
+        const closeIcon= document.querySelector(".closeIcon");
+        const menuIcon = document.querySelector(".menuIcon");
+        closeIcon.style.display = "none";
+        menuIcon.style.display = "block";
+        navbar.classList.remove("active");
+    }
+
     async updateNavbar() {
         const navbar = document.getElementById("navbar");
 
@@ -118,6 +143,7 @@ export default class BaseView{
                 <a href="/play-menu">Game</a>
                 <a href="/profile">Profile</a>
                 <a href="/logout">Logout</a>
+                <button id="close-nav">Close</button>
                 `;
 
                 const avatarUrl =  await this.displayAvatar();
@@ -134,20 +160,21 @@ export default class BaseView{
                 <a href="/log-in">Log in</a>
                 <a href="/sign-up">Sign up</a>
                 <a href="/play-menu">Game</a>
+                <button id="close-nav">Close</button>
                 `;
             }
-
-        // FONCTIONS A DEPLACER POUR UTILS MENU SLIDE, DOIVENT ETRE ACCESSIBLES PARTOUT
-        // OPEN MENU
-        const button = document.getElementById("button-nav");
-        button.addEventListener("mouseover", () => {
-          const navbar = document.getElementById("navbar");
-          navbar.classList.toggle("active");
-        });
-        // CLOSE MENU
-        button.addEventListener("mouseleave", () => {
-          setTimeout(() => navbar.classList.remove("active"), 800);
-        });
+            const menuButton = document.getElementById("button-nav");
+            const closeIcon = document.querySelector(".closeIcon");
+            const menuIcon = document.querySelector(".menuIcon");
+            const menuLinks = navbar.querySelectorAll("a");
+            menuIcon.style.display = "block";
+            closeIcon.style.display = "none";
+            menuButton.addEventListener("click", this.toggleMenu);
+            const closeNav = document.getElementById("close-nav");
+            closeNav.onclick = this.closeMenu;
+            menuLinks.forEach(link => {
+                link.onclick = this.closeMenu;
+            });
         }
     }
 
