@@ -23,9 +23,14 @@ export default class WebSocketService {
 
         this.socket.onmessage = (event) => {
             if (this.isplaying == false){
+                console.log("LAAA")
                 this.handleStart(event);
+
+                const e = new CustomEvent("gameStarted");
+
+                window.dispatchEvent(e);
             }
-            else{
+            else {
                 this.handleMessage(event);
             }
         };
@@ -47,6 +52,7 @@ export default class WebSocketService {
         console.log("Message reçu:", data.isfull);
         if (data.isfull)
             this.isplaying = true
+        console.log("Is playing ?", this.isplaying)
 
         // Mettre à jour le DOM avec les données reçues via WebSocket
     }

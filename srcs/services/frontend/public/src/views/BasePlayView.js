@@ -17,18 +17,17 @@ export default class BasePlayView extends BaseView{
             document.getElementById("user-2").innerText = "Looking for opponent...";
             document.getElementById("game-canvas").innerText = "Loading...";
             this.openWebSocket(result.data.room_id);
+            window.addEventListener("gameStarted", () => this.checkStart());
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
-        //set interval : renvoyer le call api toutes les xtemps 
-        //voir pour set interval websocket
     }
 
-    play(){
-        console.log(this.socketService.name)
-        if (this.socketService.isplaying)
-            document.getElementById("game-canvas").innerText = "Wouhou...";
-            // this.render()
+    checkStart(){
+        console.log(this.socketService);
+        if (this.socketService.isplaying){
+            document.getElementById("game-canvas").innerText = "Playing...";
+        }
     }
 
     // Ouvrir une WebSocket pour cette salle
@@ -55,9 +54,6 @@ export default class BasePlayView extends BaseView{
     async mount() {
         try {
             await this.joinRoom();
-            console.log("TEST => ", this.socketService.name);
-            // setInterval(this.play, 100);
-
         } catch (error) {
             console.error("Error in mount():", error);
         }
