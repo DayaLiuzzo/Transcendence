@@ -26,12 +26,18 @@ class RoomSerializerInternal(serializers.ModelSerializer):
         fields = ['player1', 'player2']
 
 class PoolSerializer(serializers.ModelSerializer):
-    users = serializers.SlugRelatedField(slug_field='username', queryset=UserProfile.objects.all(), many=True)
-    rooms = RoomSerializer(source='room_set', many=True, read_only=True)
+    users = serializers.StringRelatedField(many=True)
+    rooms = RoomSerializer(many=True)
 
     class Meta:
         model = Pool
-        fields = ['name', 'tournament', 'users', 'matches']
+        fields = ['name', 'tournament', 'users', 'rooms']
+        extra_kwargs = {
+                'name': {'read_only': True},
+                'tournament': {'read_only': True},
+                'users': {'read_only': True},
+                'rooms': {'read_only': True}
+        }
 
 class TournamentSerializer(serializers.ModelSerializer):
     users_count = serializers.ReadOnlyField()

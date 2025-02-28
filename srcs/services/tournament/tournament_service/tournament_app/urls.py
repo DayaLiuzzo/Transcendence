@@ -20,7 +20,9 @@ urlpatterns = [
 
     path('room_result/<uuid:room_id>/', views.SetRoomResult.as_view(), name='set-room-result'),
     path('get_room_result/<uuid:room_id>/', views.GetRoomResult.as_view(), name='get-room-result'),
-    path('list_rooms/', views.ListRooms.as_view(), name='list-rooms'),
+    path('list_my_rooms/', views.ListMyRooms.as_view(), name='list-my-rooms'),
+    path('list_pools/<uuid:tournament_id>/', views.ListPools.as_view(), name='list-pools'),
+    path('list_rooms_pool/', views.ListRoomsPool.as_view(), name='list-rooms-pool'),
     #path('list/waiting/', views.ListWaitingTournamentView.as_view(), name='list_waiting_tournament'),
     #path('list/playing/', views.ListPlayingTournamentView.as_view(), name='list_playing_tournament'),
     #path('list/finished/', views.ListFinishedTournamentView.as_view(), name='list_finished_tournament'),

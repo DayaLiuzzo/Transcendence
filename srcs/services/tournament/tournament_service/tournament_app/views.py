@@ -1,6 +1,7 @@
 from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.shortcuts import get_list_or_404
 from django.http import JsonResponse
 from rest_framework import generics
 from rest_framework import status
@@ -22,6 +23,7 @@ from .models import Room
 from .models import TournamentHistory
 from .serializers import TournamentSerializer
 from .serializers import UserProfileSerializer
+from .serializers import PoolSerializer
 from .serializers import RoomSerializer
 from .serializers import RoomSerializerInternal
 from tournament_app.permissions import IsAuth
@@ -294,18 +296,43 @@ class GetRoomResult(generics.RetrieveAPIView):
     serializer_class = RoomSerializer
     lookup_field = 'room_id'
 
-class ListRooms(generics.ListAPIView):
+class ListMyRooms(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = RoomSerializer
 
+    def list(self, request):
+        user = request.user
+        queryset = Room.objects.filter(
+                Q(player1=user) | Q(player2=user),
+                Q(status='waiting') | Q(status='standby'),
+                ~Q(pool__tournament__status='error'))
+        if queryset.count() == 0:
+            return Response({
+                'message': 'You don\'t have any rooms'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = RoomSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class ListPools(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Pool.objects.all()
+    serializer_class = PoolSerializer
+
+    def list(self, request, tournament_id):
+        queryset = get_list_or_404(Pool, tournament__tournament_id=tournament_id)
+        serializer = PoolSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class ListRoomsPool(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         user = request.user
-        room_queryset = Room.objects.filter(
-                    (Q(player1=user) | Q(player2=user))
-                    & (Q(status='waiting') | Q(status='standby'))
-                ).exclude(pool__tournament__status='error')
-        room_serializers = RoomSerializer(room_queryset, many=True)
-        return Response(room_serializers.data, status=status.HTTP_200_OK)
+        tournament = get_object_or_404(Tournament, users=user, status='playing')
+        rooms = get_list_or_404(Room, pool__tournament=tournament)
+        rooms_serializer = RoomSerializer(rooms, many=True)
+        return Response(rooms_serializer.data, status=status.HTTP_200_OK)
 
 """
 class ListWaitingTournamentView(generics.ListAPIView):
