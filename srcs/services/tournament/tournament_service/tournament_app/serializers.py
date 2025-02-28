@@ -4,6 +4,7 @@ from .models import Tournament
 from .models import UserProfile
 from .models import Pool    
 from .models import Room
+from .models import TournamentHistory
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,13 +39,20 @@ class TournamentSerializer(serializers.ModelSerializer):
     # pools = PoolSerializer(many=True, read_only=True)
     users = serializers.StringRelatedField(many=True, required=False)
     owner = serializers.StringRelatedField(required=False)
+    winner = serializers.StringRelatedField(required=False)
 
     class Meta:
         model = Tournament
-        fields = ['tournament_id', 'name', 'status', 'owner', 'users', 'max_users', 'users_count']
+        fields = ['tournament_id', 'name', 'status', 'owner', 'users', 'max_users', 'users_count', 'winner']
         extra_kwargs = {
                 'tournament_id': {'read_only': True},
                 'status': {'read_only': True},
                 'owner': {'read_only': True},
-                'users': {'read_only': True}
+                'users': {'read_only': True},
+                'winner': {'read_only': True}
         }
+
+class TournamentHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TournamentHistory
+        fields = ['tournament', 'result']

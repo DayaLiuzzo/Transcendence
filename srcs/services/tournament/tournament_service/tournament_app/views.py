@@ -19,6 +19,7 @@ from .models import Tournament
 from .models import UserProfile
 from .models import Pool
 from .models import Room
+from .models import TournamentHistory
 from .serializers import TournamentSerializer
 from .serializers import UserProfileSerializer
 from .serializers import RoomSerializer
@@ -56,6 +57,14 @@ def ask_all_rooms_to_remove(tournament):
         response = client.send_internal_request(url, method)
         if response.status_code != 204:
             print(f'ERROR rooms to remove : {response.text}')
+
+def add_tournament_history_to_users(tournament):
+    win = TournamentHistory.objects.create(tournament=tournament, result='win')
+    loss = TournamentHistory.objects.create(tournament=tournament, result='loss')
+    for user in tournament.users.exclude(tournament.winner):
+        user.tournaments.add(loss)
+
+    tournament.winner.tournaments.add(win)
 
 ################################################################
 #                                                              #
@@ -410,8 +419,10 @@ class SetRoomResult(generics.UpdateAPIView):
                     tournament.status = 'error'
                     tournament.save()
             if tournament.get_current_pools().count() == 1:
-                user = pool.winner
-                
+                tournament.winner = pool.winner
+                tournament.status = 'finished'
+                tournament.save()
+                add_tournament_history_to_users(tournament)
 
 # ************************** DELETE ************************** #
 
