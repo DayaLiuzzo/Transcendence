@@ -43,47 +43,22 @@ down:
 ######### Execute individual dockers with interactive terminal #########
 ########################################################################
 
-enter_$(FRONTEND_SERVICE):
-	docker exec -it $(FRONTEND_SERVICE) bash
+enter_$(FRONTEND_SERVICE)		\
+enter_$(AUTH_SERVICE)			\
+enter_$(USERS_SERVICE)			\
+enter_$(GAME_SERVICE)			\
+enter_$(AVATAR_SERVICE)			\
+enter_$(API_GATEWAY_SERVICE)	\
+enter_$(ROOMS_SERVICE)			\
+enter_$(TOURNAMENT_SERVICE)		\
+enter_$(DB_AUTH_SERVICE)		\
+enter_$(DB_AVATAR_SERVICE)		\
+enter_$(DB_GAME_SERVICE)		\
+enter_$(DB_ROOMS_SERVICE)		\
+enter_$(DB_TOURNAMENT_SERVICE)	\
+enter_$(DB_USERS_SERVICE)		:
+	docker exec -it $(patsubst enter_%,%,$@) bash
 
-enter_$(AUTH_SERVICE):
-	docker exec -it $(AUTH_SERVICE) bash
-
-enter_$(USERS_SERVICE):
-	docker exec -it $(USERS_SERVICE) bash
-
-enter_$(GAME_SERVICE):
-	docker exec -it $(GAME_SERVICE) bash
-
-enter_$(AVATAR_SERVICE):
-	docker exec -it $(AVATAR_SERVICE) bash
-
-enter_$(API_GATEWAY_SERVICE):
-	docker exec -it $(API_GATEWAY_SERVICE) bash
-
-enter_$(ROOMS_SERVICE):
-	docker exec -it $(ROOMS_SERVICE) bash
-
-enter_$(TOURNAMENT_SERVICE):
-	docker exec -it $(TOURNAMENT_SERVICE) bash
-
-enter_$(DB_AUTH_SERVICE):
-	docker exec -it $(DB_AUTH_SERVICE) bash
-
-enter_$(DB_AVATAR_SERVICE):
-	docker exec -it $(DB_AVATAR_SERVICE) bash
-
-enter_$(DB_GAME_SERVICE):
-	docker exec -it $(DB_GAME_SERVICE) bash
-
-enter_$(DB_ROOMS_SERVICE):
-	docker exec -it $(DB_ROOMS_SERVICE) bash
-
-enter_$(DB_TOURNAMENT_SERVICE):
-	docker exec -it $(DB_TOURNAMENT_SERVICE) bash
-
-enter_$(DB_USERS_SERVICE):
-	docker exec -it $(DB_USERS_SERVICE) bash
 
 .PHONY:	\
 	enter_$(FRONTEND_SERVICE)		\
@@ -118,7 +93,7 @@ $(DB_AVATAR_SERVICE)		\
 $(DB_GAME_SERVICE)			\
 $(DB_ROOMS_SERVICE)			\
 $(DB_TOURNAMENT_SERVICE)	\
-$(DB_USERS_SERVICE):
+$(DB_USERS_SERVICE)			:
 	docker compose -f srcs/docker-compose.yml up --force-recreate --build -d $@
 
 ########################################################################
