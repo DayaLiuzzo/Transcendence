@@ -425,15 +425,14 @@ class CountFinishedTournamentView(generics.GenericAPIView):
 
 class SetRoomResult(generics.UpdateAPIView):
     permission_classes = [IsRoom]
-    queryset = Room.objects.all()
-    serializer_class = Room
-    lookup_field = 'room_id'
 
-    def partial_update(self, serializer):
+    def patch(self, request, room_id):
+        room = get_object_or_404(room_id=room_id)
+        tournament = room.pool.tournament
         if tournament.status != 'error':
+            serializer = RoomSerializerInternal(room, data=request.data, partial=True)
             serializer.save(status='finished')
-            pool = serializer.validated_data.get('pool')
-            tournament = pool.tournament
+            pool = room.pool
             if pool.all_rooms_finished():
                 pool.winner = pool.calculate_ranking()[0]['player']
                 pool.save()

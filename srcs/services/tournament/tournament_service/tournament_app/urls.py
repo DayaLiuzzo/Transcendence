@@ -18,8 +18,8 @@ urlpatterns = [
     #path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament_stats'),
     path('list/', views.ListAllTournamentView.as_view(), name='list_all_tournament'),
 
-    path('room_result/<uuid:room_id>/', views.SetRoomResult.as_view(), name='set-room-result'),
-    path('get_room_result/<uuid:room_id>/', views.GetRoomResult.as_view(), name='get-room-result'),
+    path('room_result/<str:room_id>/', views.SetRoomResult.as_view(), name='set-room-result'),
+    path('get_room_result/<str:room_id>/', views.GetRoomResult.as_view(), name='get-room-result'),
     path('list_my_rooms/', views.ListMyRooms.as_view(), name='list-my-rooms'),
     path('list_pools/<uuid:tournament_id>/', views.ListPools.as_view(), name='list-pools'),
     path('list_rooms_pool/', views.ListRoomsPool.as_view(), name='list-rooms-pool'),

@@ -23,6 +23,7 @@ class Room(models.Model):
     score_player1 = models.IntegerField(default=0)  # Ajout du score pour player 1
     score_player2 = models.IntegerField(default=0)  # Ajout du score pour player 2
     date_played = models.DateTimeField(null=True, blank=True)
+    is_from_tournament = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Room {self.room_id} ({self.status})"

@@ -122,7 +122,8 @@ class CreateRoomView(APIView):
             serializer.is_valid(raise_exception=True)
             new_room = serializer.save()
 
-            print(serializer.data)
+            new_room.is_from_tournament = True
+            new_room.save()
             player1 = serializer.validated_data.get('player1')
             player2 = serializer.validated_data.get('player2')
 
@@ -306,6 +307,25 @@ class QuitAllRoomsView(APIView):
 
         user.save()
         return Response({"message": "You have successfully left all rooms."}, status=status.HTTP_200_OK)
+
+class UpdateRoomView(APIView):
+    permission_classes = [IsGame]
+
+    def patch(self, request, room_id):
+        room = get_object_or_404(room_id=room_id)
+        serializer = RoomSerializerInternal(room, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(status='finished')
+        if room.is_from_tournament:
+            client = MicroserviceClient()
+            url = f'http://tournament:8443/api/tournament/room_result/{room.room_id}/'
+            client = MicroserviceClient()
+            response = client.send_internal_request(join_game_url, 'patch', data=serializer.data)
+            
+            if response.status_code != 200: #a changer si besoin en fonction
+                print(f"ERROR communication between tournament and rooms service : {response.status_code}")
+        return Response(status=status.HTTP_200_OK)
+
 
 # *************************** READ *************************** #
 
