@@ -27,7 +27,30 @@ export default class BasePlayView extends BaseView{
         console.log(this.socketService);
         if (this.socketService.isplaying){
             document.getElementById("game-canvas").innerText = "Playing...";
+            this.listenToKeyboard();
+            window.addEventListener("keyboard", () => this.listenToKeyboard());
         }
+    }
+
+    listenToKeyboard() {
+        console.log("Listening to keyboard")
+        if (this.socketService.isplaying){
+            console.log("wesh")
+            window.addEventListener("keydown", (event) => {
+                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                    const movement = event.key === "ArrowUp" ? "up" : "down";
+                    this.sendMovementToWebSocket(movement);
+                }
+            });        
+        }
+
+    }
+
+    sendMovementToWebSocket(movement) {
+        // Si la connexion WebSocket est active et le jeu a commencé, envoyer le mouvement
+        //add condition pour checker que la websocket est ok
+        this.socketService.sendMessage(movement);
+        
     }
 
     // Ouvrir une WebSocket pour cette salle

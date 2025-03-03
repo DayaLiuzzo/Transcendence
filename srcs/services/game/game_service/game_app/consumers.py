@@ -22,7 +22,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         if not self.authenticated:
             await self.authenticate_user(text_data)
         else:
-            await self.handle_message(text_data)
+            await self.handle_received_message(text_data)
 
     async def authenticate_user(self, text_data):
         if not text_data:
@@ -89,17 +89,20 @@ class GameConsumer(AsyncWebsocketConsumer):
             return None
         return user
 
-    async def handle_message(self, text_data):
+    async def handle_received_message(self, text_data):
+        # print(f"Je suis {self.user.username} et je suis dans la fonction handle_received_message")
+        
         text_data_json = json.loads(text_data)
-        message = text_data_json.get('message', '')
-        if message:
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'send_message',
-                    'message': message,
-                }
-            )
+        movement = text_data_json.get('message', {})
+
+        if movement == "up":
+            print(f"{self.user.username}: up")
+        elif movement == "down":
+            print(f"{self.user.username}: down")
+        else:
+            print(f"{self.user.username}: wrong key") #inutil
+            # await self.send_error_message("movement invalide. Seuls 'up' et 'down' sont autorisés.")
+            return
 
     @sync_to_async
     def room_exists(self) -> bool:
