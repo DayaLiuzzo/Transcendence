@@ -96,13 +96,20 @@ class GameConsumer(AsyncWebsocketConsumer):
         movement = text_data_json.get('message', {})
 
         if movement == "up":
-            print(f"{self.user.username}: up")
+            action_message = f"{self.user.username} has moved up."
         elif movement == "down":
-            print(f"{self.user.username}: down")
-        else:
-            print(f"{self.user.username}: wrong key") #inutil
-            # await self.send_error_message("movement invalide. Seuls 'up' et 'down' sont autorisés.")
-            return
+            action_message = f"{self.user.username} has moved down."
+        print(f"{action_message}")
+        
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'send_message',
+                'message': action_message,  # this is the message to broadcast
+                'isfull': True,
+            }
+        )
+        return
 
     @sync_to_async
     def room_exists(self) -> bool:

@@ -60,7 +60,7 @@ export default class WebSocketService {
     handleMessage(event) {
         const data = JSON.parse(event.data);
         // console.log("Message reçu:", data);
-        console.log("Message reçu:", data.isfull);
+        console.log("Message reçu:", data.message);
  
         // Mettre à jour le DOM avec les données reçues via WebSocket
     }
