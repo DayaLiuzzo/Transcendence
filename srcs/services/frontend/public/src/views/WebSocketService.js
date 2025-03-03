@@ -5,6 +5,8 @@ export default class WebSocketService {
         this.isConnected = false;
         this.WS_GAME_URL = `wss://${window.location.host}/ws/game/`;
         this.token = this.getAccessToken();
+        this.isplaying = false;
+        this.name = "pas init"
     }
 
     connect() {
@@ -20,7 +22,17 @@ export default class WebSocketService {
         };
 
         this.socket.onmessage = (event) => {
-            this.handleMessage(event);
+            if (this.isplaying == false){
+                console.log("LAAA")
+                this.handleStart(event);
+
+                const e = new CustomEvent("gameStarted");
+
+                window.dispatchEvent(e);
+            }
+            else {
+                this.handleMessage(event);
+            }
         };
 
         this.socket.onclose = (event) => {
@@ -33,16 +45,29 @@ export default class WebSocketService {
         };
     }
 
+
+    handleStart(event) {
+        const data = JSON.parse(event.data);
+        // console.log("Message reçu:", data);
+        console.log("Message reçu:", data.isfull);
+        if (data.isfull)
+            this.isplaying = true
+        console.log("Is playing ?", this.isplaying)
+
+        // Mettre à jour le DOM avec les données reçues via WebSocket
+    }
+
     handleMessage(event) {
         const data = JSON.parse(event.data);
-        console.log("Message reçu:", data);
-
+        // console.log("Message reçu:", data);
+        console.log("Message reçu:", data.message);
+ 
         // Mettre à jour le DOM avec les données reçues via WebSocket
     }
 
     sendMessage(message) {
         if (this.isConnected && this.socket) {
-            this.socket.send(JSON.stringify({message }));
+            this.socket.send(JSON.stringify({message}));
             console.log("Message envoyé:", message);
         } else {
             console.error("La connexion WebSocket n'est pas établie.");

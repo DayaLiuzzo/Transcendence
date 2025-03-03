@@ -16,8 +16,7 @@ export default class PlayRemote extends BasePlayView{
             <div id="room-id"></div>
             <div id="user-1"></div>
             <div id="user-2"></div>
-            <p>ouvrir la websocket</p>
-            
+            <div id="game-canvas"></div>
         </div>
     `;
     }
