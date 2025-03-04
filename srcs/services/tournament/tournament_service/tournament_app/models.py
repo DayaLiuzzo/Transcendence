@@ -27,14 +27,16 @@ class Tournament(models.Model):
     status = models.CharField(max_length=16, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
     users = models.ManyToManyField(UserProfile, blank=True, related_name='list_users_in_tournament')  # Many-to-Many relation with UserProfile
     max_users = models.IntegerField(default=10, validators=[MinValueValidator(2), MaxValueValidator(32)])  # Maximum d'utilisateurs dans un tournoi
-    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='owner')
+    owner = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, blank=True, null=True, related_name='owner')
     # played_matches = models.IntegerField(default=0)
     # remaining_matches = models.IntegerField(default=0)
     # ongoing_matches = models.IntegerField(default=0)
     # total_matches = models.IntegerField(default=0)  # Ajouter un champ pour le total des matchs
     pools = models.ManyToManyField('Pool', blank=True, related_name='pools')
     pool_index = models.IntegerField(default=0)
-    winner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='tournament_winner')
+    winner = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, blank=True, null=True, related_name='tournament_winner')
+    win = models.ForeignKey('TournamentHistory', on_delete=models.CASCADE, blank=True, null=True, related_name='tournament_history_win')
+    loss = models.ForeignKey('TournamentHistory', on_delete=models.CASCADE, blank=True, null=True, related_name='tournament_history_loss')
 
     @property
     def users_count(self):
@@ -100,7 +102,7 @@ class Pool(models.Model):
     name = models.CharField(max_length=16)  # Par exemple: Poule A, Poule B
     users = models.ManyToManyField(UserProfile, related_name='list_users_in_pool')  # Liste des joueurs dans la poule
     rooms = models.ManyToManyField('Room', blank=True, related_name='list_rooms')
-    winner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='pool_winner')
+    winner = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, blank=True, null=True, related_name='pool_winner')
     pool_index = models.IntegerField(default=0)
 
     def __str__(self):
@@ -147,10 +149,11 @@ class Pool(models.Model):
         ranking = []
 
         for player in players:
-            wins = Room.objects.filter(pool=self, winner=player).count()
-            losses = Room.objects.filter(pool=self, loser=player).count()
-            draws = Room.objects.filter(pool=self, winner__isnull=True, player1=player).count()
-            draws += Room.objects.filter(pool=self, winner__isnull=True, player2=player).count()
+            wins = rooms.filter(winner=player).count()
+            wins += rooms.filter(winner__isnull=True, loser=player).count()
+            losses = rooms.filter(loser=player).count()
+            draws = rooms.filter(winner__isnull=True, player1=player).exclude(loser=player).count()
+            draws += rooms.filter(winner__isnull=True, player2=player).exclude(loser=player).count()
             points = wins * 3 + draws  # 3 points pour chaque victoire, 1 pour chaque match nul
             ranking.append({
                 'player': player,
@@ -180,10 +183,10 @@ class Room(models.Model):
 
     pool = models.ForeignKey(Pool, on_delete=models.CASCADE)
     room_id = models.CharField(max_length=100, blank=True)
-    player1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player1_matches')
-    player2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='player2_matches')
-    winner = models.ForeignKey('UserProfile', on_delete=models.CASCADE, null=True, blank=True, related_name='room_winner')
-    loser = models.ForeignKey('UserProfile', on_delete=models.CASCADE, null=True, blank=True, related_name='room_looser')
+    player1 = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, related_name='player1_matches')
+    player2 = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, related_name='player2_matches')
+    winner = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='room_winner')
+    loser = models.ForeignKey('UserProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='room_looser')
     score_player1 = models.IntegerField(default=0)  # Ajout du score pour player 1
     score_player2 = models.IntegerField(default=0)  # Ajout du score pour player 2
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='waiting')

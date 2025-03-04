@@ -60,13 +60,11 @@ def ask_all_rooms_to_remove(tournament):
         if response.status_code != 204:
             print(f'ERROR rooms to remove : {response.text}')
 
-def add_tournament_history_to_users(tournament):
-    win = TournamentHistory.objects.create(tournament=tournament, result='win')
-    loss = TournamentHistory.objects.create(tournament=tournament, result='loss')
-    for user in tournament.users.exclude(tournament.winner):
-        user.tournaments.add(loss)
-
-    tournament.winner.tournaments.add(win)
+def add_tournament_history_to_losers(pool):
+    losers = pool.users.exclude(pool.winner)
+    loss = pool.tournament.loss
+    for loser in losers:
+        loser.tournaments.add(loss)
 
 ################################################################
 #                                                              #
@@ -92,7 +90,12 @@ class CreateTournamentView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         tournament = serializer.save(owner=user)
+        win = TournamentHistory.objects.create(tournament=tournament, result='win')
+        loss = TournamentHistory.objects.create(tournament=tournament, result='loss')
+        tournament.win = win
+        tournament.loss = loss
         tournament.users.add(user)
+        tournament.save()
 
 class JoinTournamentView(APIView):
     permission_classes = [IsAuthenticated]
@@ -435,6 +438,7 @@ class SetRoomResult(generics.UpdateAPIView):
             pool = room.pool
             if pool.all_rooms_finished():
                 pool.winner = pool.calculate_ranking()[0]['player']
+                add_tournament_history_to_losers(pool)
                 pool.save()
             elif pool.rooms_wave_finished():
                 pool.generate_rooms()
@@ -448,7 +452,7 @@ class SetRoomResult(generics.UpdateAPIView):
                 tournament.winner = pool.winner
                 tournament.status = 'finished'
                 tournament.save()
-                add_tournament_history_to_users(tournament)
+                tournament.winner.tournaments.add(tournament.win)
 
 # ************************** DELETE ************************** #
 
