@@ -137,7 +137,7 @@ body {
   text-indent: 2em;
   left: 3vw;
   z-index: 30;
-  width: 90vw;
+  width: 70vw;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
   line-height: 1em;
@@ -177,13 +177,12 @@ body {
     box-sizing: border-box;
     text-indent: initial;
     border-color: gray;
-
   }
 
   canvas {
     cursor: grab;
-
   }
+  
   canvas:active {
     cursor: grabbing;
   }
