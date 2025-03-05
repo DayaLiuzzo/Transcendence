@@ -14,23 +14,84 @@ export default class PlayCanva extends BaseView {
 			cursor.x = event.clientX / window.innerWidth - 0.5;
 			cursor.y = -(event.clientY / window.innerHeight - 0.5);
 		});
+
+		window.addEventListener("keydown", (event) => {
+			if (event.key === "ArrowLeft") {
+				keys.ArrowLeft = true;
+				console.log(keys.ArrowLeft);
+				//this.displayPaddle(meshPaddleLeft, deltaTime, -1);
+			}
+			if (event.key === "ArrowRight") {
+				keys.ArrowRight = true;
+				console.log(keys.ArrowRight);
+				console.log(keys);
+				//this.displayPaddle(meshPaddleLeft, deltaTime, 1);
+			}
+			if (event.key === "a") {
+				keys.a = true;
+				console.log(keys.a);
+				//this.displayPaddle(meshPaddleRight, deltaTime, -1);
+			}
+			if (event.key === "d") {
+				keys.d = true;
+				console.log(keys.d);
+				//	this.displayPaddle(meshPaddleRight, deltaTime, 1);
+			}
+		});
+
+		window.addEventListener('keyup', (event) => {
+			if (event.key === 'ArrowLeft') {
+				keys.ArrowLeft = false;
+				console.log(keys.ArrowLeft);
+			}
+			if ( event.key === 'ArrowRight') {
+				keys.ArrowRight = false;
+				console.log(keys.ArrowRight);
+				console.log(keys);
+			}
+			if (event.key === 'a') {
+				keys.a = false;
+				console.log(keys.a);
+			}
+			if ( event.key === 'd') {
+				keys.d = false;
+				console.log(keys.d);
+			}
+		});
 	}
 
-	// SI PB SYNCHRO AVEC LE BACK CE SERA PEUT ETRE LIE AU DELTA TIME QUI PERMET DE SYNCHRONISER LES FRAMES INDEPENDAMMENT DE LA FPS (CAR CA BUG EN FONCTION DES NAV ET HARDWARE ETC)
-	displayPaddle(meshPaddle, positionDuBack, deltaTime) {
-		const LEFT = -1;
-		const RIGHT = 1;
+	displayPaddle(meshPaddleLeft, meshPaddleRight, deltaTime) {
 
-		const paddleSpeed = 0.1;
-		if (positionDuBack === LEFT)
-			meshPaddle.position.x -= paddleSpeed * deltaTime;
-		else if (positionDuBack === RIGHT)
-			meshPaddle.position.x += paddleSpeed * deltaTime;
-		else {
-			console.log("INVALID POSITION");
-			meshPaddle.position.x = meshPaddle.position.x;
+		const paddleSpeed = 5;
+
+		if (keys.ArrowLeft ) {
+			meshPaddleLeft.position.x -= paddleSpeed * deltaTime;
+			console.log(meshPaddleLeft.position.x);
+		}
+		if (keys.ArrowRight ) {
+			meshPaddleLeft.position.x += paddleSpeed * deltaTime;
+		}
+		if (keys.a) {
+			meshPaddleRight.position.x -= paddleSpeed * deltaTime;
+		}
+		if (keys.d) {
+			meshPaddleRight.position.x += paddleSpeed * deltaTime;
 		}
 	}
+
+	// updateBallPosition(meshBall, deltaTime) {
+	// 	const ballSpeed = 0.1;
+	// 	document.addEventListener('keydown', (event) => {
+	// 		if (event.key == 'ArrowUp') {
+	// 			meshBall.position.y += ballDirection.y * (ballSpeed * deltaTime);
+	// 			console.log(meshBall.position.y);
+	// 		}
+	// 		if (event.key == 'ArrowDown') {
+	// 			meshBall.position.y -= ballDirection.y * (ballSpeed * deltaTime);
+	// 		}
+	// });
+
+	// }
 
 	displayBall(meshBall, positionXDuBack, positionYDuBack, deltaTime) {
 		meshBall.position.y = positionYDuBack * deltaTime;
@@ -40,28 +101,11 @@ export default class PlayCanva extends BaseView {
 	initGame() {
 		console.log("Game Loading...");
 
-		// ON SELECTIONNE LES ELEMENTS HTML NECESSAIRES POUR METTRE EN PLACE NOTRE SCENE
 		const canvas = document.querySelector("canvas.webgl");
 		//	const container = document.getElementById("container-canvas-game-canva");
 		//	const asciiOutput = document.getElementById("ascii-output");
 
-		console.log(canvas);
-		//console.log(container);
-		//console.log(asciiOutput);
-
-		// CREATION DE LA SCENE THREEJS && CHARGER LES MODELES 3D GLTF VIA LE LOADER DE THREEJS
 		const scene = new THREE.Scene();
-		console.log(scene);
-		// const gltfLoader = new THREE.GLTFLoader();
-		// console.log(gltfLoader);
-
-		// gltfLoader.load(
-		//     "../../assets/models/",
-		//     (gltf) => {
-		//         console.log(gltf);
-		//         scene.add(gltf.scene);
-		//     }
-		// );
 
 		const meshPaddleLeft = new THREE.Mesh(
 			new THREE.BoxGeometry(40, 2, 1),
@@ -147,17 +191,7 @@ export default class PlayCanva extends BaseView {
 			//meshBall.rotation.y = elapsedTime * 0.5;
 			//meshBall.position.x = Math.sin(elapsedTime);
 
-			//updatePaddles(meshPaddleLeft, meshPaddleRight);
-			//launchBall(meshBall);
-			//updateBall(meshBall, meshPaddleLeft, meshPaddleRight);
-			//this.displayPaddle(meshPaddleLeft, meshPaddleRight, deltaTime);
-
-
-
-			/** LES DEUX FONCTIONS A DECOMMENTER POUR DISPLAY AVEC POSITIONS DU BACK */
-			//this.displayPaddle(meshPaddleLeft, positionDuBack, deltaTime);
-			//this.displayBall(meshBall, positionXDuBack, positionYDuBack, deltaTime);
-
+			this.displayPaddle(meshPaddleLeft, meshPaddleRight, deltaTime);
 
 			controls.update();
 			renderer.render(scene, camera);
@@ -185,7 +219,6 @@ export default class PlayCanva extends BaseView {
 
 	attachEvents() {
 		console.log("Events attached (PlayCanva)");
-		// appeler les events ici pour eviter lags potentiels dans fonction tick (animation frame by frame)
 		this.handlerEventsListeners();
 		this.initGame();
 	}

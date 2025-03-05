@@ -10,6 +10,8 @@ import PlayCanva from "./views/PlayCanva.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
 
+import PlayDraft from "./views/DraftPlay.js";
+
 import { cleanUpThree } from "./three/utils.js";
 
 import EditProfile from "./views/EditProfile.js";
@@ -29,6 +31,7 @@ const routes = [
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css", requiresAuth: true},
     { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
     { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true },
+    { path: '/play-draft', view: PlayDraft, css: "styles/core.css", requiresAuth: false},
 ];
 
 
