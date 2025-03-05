@@ -59,6 +59,7 @@ export default class LogIn extends BaseView{
             refresh_token: loginResponse.data.refresh_token
         };
         sessionStorage.setItem("userSession", JSON.stringify(userSession));
+        this.startUpdatingLastSeen();
         this.navigateTo("/home");
     }
     
@@ -98,6 +99,7 @@ export default class LogIn extends BaseView{
                 };
                 sessionStorage.setItem("userSession", JSON.stringify(userSession));
                 otpPopup.remove();
+                this.startUpdatingLastSeen();
                 this.navigateTo("/home");
             } else {
                 otpError.textContent = "Invalid OTP, try again.";

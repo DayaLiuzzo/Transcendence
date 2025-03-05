@@ -115,22 +115,6 @@ class SignUpView(generics.CreateAPIView):
         user = serializer.save()
         return user
 
-class DeleteUserView (generics.DestroyAPIView):
-    permission_classes = [IsOwner]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    lookup_field = 'username'
-
-    def perform_destroy(self, instance):
-        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
-                    f'http://game:8443/api/game/delete/{instance.username}/',
-                    f'http://rooms:8443/api/rooms/delete/{instance.username}/',
-                    f'http://tournament:8443/api/tournament/delete/{instance.username}/'
-                    ]
-        if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
-            raise ValidationError("Error deleting user")
-        instance.delete()
-
 class UpdateUserView(generics.UpdateAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
     queryset = CustomUser.objects.all()
@@ -175,6 +159,22 @@ class ChangePasswordView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = ChangePasswordSerializer
     lookup_field = 'username'
+
+class DeleteUserView (generics.DestroyAPIView):
+    permission_classes = [IsOwner]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    lookup_field = 'username'
+
+    def perform_destroy(self, instance):
+        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
+                    f'http://game:8443/api/game/delete/{instance.username}/',
+                    f'http://rooms:8443/api/rooms/delete/{instance.username}/',
+                    f'http://tournament:8443/api/tournament/delete/{instance.username}/'
+                    ]
+        if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
+            raise ValidationError("Error deleting user")
+        instance.delete()
 
 # ================================================
 # =============== SERVICE VIEWS ==================

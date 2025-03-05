@@ -33,6 +33,8 @@ class Router{
         this.routes = routes;
         this.currentView = null;
         this.init();
+        this.lastSeenInterval = null;
+        this.API_URL_USERS = '/api/users/';
     }
 
     getRoutes(){
@@ -49,6 +51,58 @@ class Router{
             return userSession.username;
         }
         return null;
+    }
+
+    async sendPatchRequest(url, formData){
+        try {
+            let headers = {
+                'Content-Type': 'application/json',
+            };
+            if(this.getAccessToken()){
+                headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+            }
+
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: headers,
+                body: JSON.stringify(formData),
+            });
+            const responseData = await response.json();
+            if (!response.ok) {
+                console.error("Error in sendPatchRequest():", url)
+                return { success: false, error: responseData};
+            }
+            return { success: true, data: responseData};
+        }
+        catch (error) {
+            console.error("Network Error at ", url);
+            return { success: false, error: { message: "Network error"}};
+        }
+    }
+
+    async updateLastSeen() {
+        const username = this.getUsername();
+        const response = await this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {});
+        if (!response.success)
+            return;
+
+    }
+
+    startUpdatingLastSeen() {
+        if (!this.lastSeenInterval) {
+            this.updateLastSeen();
+            this.lastSeenInterval = setInterval(() => this.updateLastSeen(), 30000);
+            console.log("⏳ Last seen tracking started...");
+        }
+    }
+
+    stopUpdatingLastSeen() {
+        console.log("🛑 Last seen tracking stop trying...");
+        if (this.lastSeenInterval) {
+            clearInterval(this.lastSeenInterval);
+            this.lastSeenInterval = null;
+            console.log("🛑 Last seen tracking stopped...");
+        }
     }
 
     getAccessToken(){

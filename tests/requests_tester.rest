@@ -10,9 +10,14 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 }
 
 ###
-POST https://localhost:4430/api/users/test
+get https://localhost:4430/api/users/status/test_user/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlX25hbWUiOiJhdXRoIiwiZXhwIjoxNzM4NzMxNzQyLCJpYXQiOjE3Mzg2ODg1NDJ9.AklLzzHNGshk-iaZrp0qQ4OnSeqCPH7WRccCxs4Fb0Xd2unqfm2tPXu8AfsZbpxe88RYU7ZgFH9cq9U5jOMzhHPKWGW5vHaJVQojK2mtE3rNAETF3Uy08BLK_c7XvcWlCeAfBv8ibOoyTidQXTjtOEZzmbiPfwO6DdinzWDWo47dswsOkZao5j8iGhDvWQaEPGdpspShreLKmgrjd_vJGlJhjIsjeY4vLZRgdcMDZbzj8G7SfKwVVGsiFSUNF6y02rKy2SPsqYeNXq3G-Lmh277nRcAE2_A9Z6l2Zcs_dLtJ5et22IxfkZZXqq5H2M9xjKgr633depPsA3u_a6Ilig
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMTExODkyLCJpYXQiOjE3NDExMDY0OTIsImp0aSI6ImY3MTA0OWVmNTI5ZDRmMjE4MDFiZTg3Yjk2NmE4YjVmIiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJ0ZXN0X3VzZXIifQ.n-cZWpWKgJ31axZy8XV7xINyL75pAjxsbQ-htQWztvB5y3FhJOes_0rIov1dJxVHaSij4u9n3jJb8om5-Avnx9rpFImdjVWn0LQLgNUX5Z_itRowTri7OZJ-8T6_Ch0GCJlIy9bqDchLwt29AhOWY0Y3w5Ccd6Vg422wuaVfWVibTFnVi2C513CiAA7LtzGEPs6mz0As7LrCW85r4n2Lskft4MgaksE02Mo1Mn3nbKIIYPAb4a9kn9JdigXQWGpkAURdXImRjNkUHiE5VdjuZqSSQ15HzPAoSStb5lTE80k7ez4JnuL_kUbKLaMqpahf_pA14ux8DRSZ_2Ld7qup8g
+
+###
+patch https://localhost:4430/api/users/update_last_seen/bidoenepiii/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxMTA0NjA4LCJpYXQiOjE3NDEwOTkyMDgsImp0aSI6Ijk0YWM1ZjgyZTYyMTQzNmRhYTRlNjE0NzBhMmM3MzAwIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvZW5lcGlpaSJ9.fysIGXWh0X7s8GYqFDze-1UkjuHoad74rQwSW-MhXFAi5Jql17w7fBAYz6bqXlmjUpnBvmQAXgVh-FboB1f6Lh6P1-MEpDO-aI-piRKA8r7evJOEHwfmzDqUkvbFQo2cpS4qIRZbyN3vMpICaDpY5eId6lj2V-LadCxk3EQ_ajiznkSFXxyzP2BdyU_0pf_OrOcATOuIMsXuRwZeKbVA1rXt6xr7dfpRk3W0QKRQ4f8iJ52298UzqYzncgTN1KAI5J-ZrDBvVJHWhFcEg1lHinCmsCSlNNgSDDuQSObiD56uCjHY411qEvocroT_WhTwjSw8MW54f0qKiFgje6PjyQ
 
 ###add user to db
 
@@ -20,9 +25,9 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "bidoenepii",
+  "username": "bidoenepiii",
   "password": "Pass12456!",
-  "email": "depeii@gmail.com"
+  "email": "depeiii@gmail.com"
 }
 ###
 #get user token
@@ -30,8 +35,8 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "testi",
-  "password": "Pagofraise01!",
+  "username": "bidoenepiii",
+  "password": "Pass12456!",
   "otp": "820417"
 
 }

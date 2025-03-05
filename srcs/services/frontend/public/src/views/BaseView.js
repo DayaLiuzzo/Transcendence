@@ -16,6 +16,7 @@ export default class BaseView{
         this.API_URL_LOGIN = '/api/auth/token/';
         this.API_URL_GAME = '/api/game/';
         this.API_URL_TOURNAMENT = '/api/tournament/';
+        this.lastSeenInterval = null;
 
         this.app = document.getElementById('app');
         if (!this.app) {
@@ -35,6 +36,18 @@ export default class BaseView{
         catch (error) {
             console.error("Error in mount():", error);
         }
+    }
+
+    async updateLastSeen() {
+        this.router.updateLastSeen();
+    }
+
+    startUpdatingLastSeen() {
+       this.router.startUpdatingLastSeen();
+    }
+
+    stopUpdatingLastSeen() {
+        this.router.stopUpdatingLastSeen();
     }
 
     showError(errors, formId) {
@@ -282,6 +295,7 @@ export default class BaseView{
         const refresh_token = this.getRefreshToken();
         if (refresh_token) {
             this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
+            this.stopUpdatingLastSeen();
             sessionStorage.removeItem("userSession");
             this.navigateTo("/log-in");
         }
