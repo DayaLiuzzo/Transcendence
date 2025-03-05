@@ -6,6 +6,7 @@ import Game from "./views/Game.js";
 import PlayMenu from "./views/PlayMenu.js";
 import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
+import PlayCanva from "./views/PlayCanva.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
 
@@ -22,7 +23,8 @@ const routes = [
     // { path: '/game', view: Game, css: "styles/game.css" },
     { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css", requiresAuth: true},
-    { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: true},
+    { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: false},
+    { path: '/play-canva', view: PlayCanva, css: "styles/core.css", requiresAuth: false},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css", requiresAuth: true},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css", requiresAuth: true},
     { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
