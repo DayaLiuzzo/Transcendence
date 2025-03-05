@@ -293,13 +293,13 @@ class DetailTournamentView(generics.RetrieveAPIView):
     serializer_class = TournamentSerializer
     lookup_field = 'tournament_id'
 
-class GetRoomResult(generics.RetrieveAPIView):
+class GetRoomResultView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     lookup_field = 'room_id'
 
-class ListMyRooms(generics.ListAPIView):
+class ListMyRoomsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = RoomSerializer
 
@@ -317,7 +317,7 @@ class ListMyRooms(generics.ListAPIView):
         serializer = RoomSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class ListPools(generics.ListAPIView):
+class ListPoolsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Pool.objects.all()
     serializer_class = PoolSerializer
@@ -327,7 +327,7 @@ class ListPools(generics.ListAPIView):
         serializer = PoolSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class ListRoomsPool(APIView):
+class ListRoomsPoolView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -426,7 +426,7 @@ class CountFinishedTournamentView(generics.GenericAPIView):
 """
 # *********************** PUT / PATCH ************************ #
 
-class SetRoomResult(generics.UpdateAPIView):
+class SetRoomResultView(generics.UpdateAPIView):
     permission_classes = [IsRoom]
 
     def patch(self, request, room_id):
