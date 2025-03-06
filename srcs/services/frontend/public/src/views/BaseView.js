@@ -79,20 +79,20 @@ export default class BaseView{
                 }
             }
         }
-        errorContainer.style.display = "block"; 
-    
+        errorContainer.style.display = "block";
+
     }
 
     getErrorContainer(formId) {
         let errorContainer = document.getElementById(formId+ "-error-container");
-        
+
         if (!errorContainer) {
             errorContainer = document.createElement("div");
             errorContainer.id = formId+ "-error-container";  
             errorContainer.classList.add("error-container"); 
             document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); 
         }
-        
+
         return errorContainer;
     }
 
@@ -103,10 +103,6 @@ export default class BaseView{
     getAccessToken(){
 
         return this.router.getAccessToken();
-    }
-    getRefreshToken(){
-
-        return this.router.getRefreshToken();
     }
 
     getUserSession(){
@@ -134,9 +130,34 @@ export default class BaseView{
         }
     }
 
+    toggleMenu() {
+        const closeIcon= document.querySelector(".closeIcon");
+        const menuIcon = document.querySelector(".menuIcon");
+        const navbar = document.getElementById("navbar");
+
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+            closeIcon.style.display = "none";
+            menuIcon.style.display = "block";
+        } else {
+            navbar.classList.add("active");
+            closeIcon.style.display = "block";
+            menuIcon.style.display = "none";
+        }
+    }
+
+    closeMenu() {
+        const navbar = document.getElementById("navbar");
+        const closeIcon= document.querySelector(".closeIcon");
+        const menuIcon = document.querySelector(".menuIcon");
+        closeIcon.style.display = "none";
+        menuIcon.style.display = "block";
+        navbar.classList.remove("active");
+    }
+
     async updateNavbar() {
         const navbar = document.getElementById("navbar");
-    
+
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
@@ -145,6 +166,7 @@ export default class BaseView{
                 <a href="/play-menu">Play</a>
                 <a href="/profile">Profile</a>
                 <a href="/logout">Logout</a>
+                <button id="close-nav">Close</button>
                 `;
 
                 const avatarUrl =  await this.displayAvatar();
@@ -160,8 +182,22 @@ export default class BaseView{
                 <a href="/home">Home</a>
                 <a href="/log-in">Log in</a>
                 <a href="/sign-up">Sign up</a>
+                <a href="/play-menu">Game</a>
+                <button id="close-nav">Close</button>
                 `;
             }
+            const menuButton = document.getElementById("button-nav");
+            const closeIcon = document.querySelector(".closeIcon");
+            const menuIcon = document.querySelector(".menuIcon");
+            const menuLinks = navbar.querySelectorAll("a");
+            menuIcon.style.display = "block";
+            closeIcon.style.display = "none";
+            menuButton.addEventListener("click", this.toggleMenu);
+            const closeNav = document.getElementById("close-nav");
+            closeNav.onclick = this.closeMenu;
+            menuLinks.forEach(link => {
+                link.onclick = this.closeMenu;
+            });
         }
     }
 
@@ -295,7 +331,6 @@ export default class BaseView{
             username: (val) => `Username: ${val}`,
             biography: (val) => `Biography: ${val}`,
             email: (val) => `Email: ${val}`,
-            friends: (val) => `friends: ${val}`,
         };
 
         return formats[type] ? formats[type](value) : value;
@@ -313,5 +348,5 @@ export default class BaseView{
         // this.sendPostRequest(this.API_URL + 'logout/', {});
     }
 
-    
+
 }

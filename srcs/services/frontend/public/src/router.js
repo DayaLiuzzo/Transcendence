@@ -6,25 +6,32 @@ import Game from "./views/Game.js";
 import PlayMenu from "./views/PlayMenu.js";
 import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
+import PlayCanva from "./views/PlayCanva.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
+
+import PlayDraft from "./views/DraftPlay.js";
+
+import { cleanUpThree } from "./three/utils.js";
 
 import EditProfile from "./views/EditProfile.js";
 import Profile from "./views/Profile.js";
 
 const routes = [
-    { path: '/', view: Home, css: "styles/home.css" },
-    { path: '/home', view: Home, css: "styles/home.css" },
-    { path: '/log-in', view: LogIn, css: "styles/log-in.css", requiresGuest: true },
-    { path: '/sign-up', view: SignUp, css: "styles/sign-up.css", requiresGuest:true },
+    { path: '/', view: Home},
+    { path: '/home', view: Home},
+    { path: '/log-in', view: LogIn, requiresGuest: true },
+    { path: '/sign-up', view: SignUp, requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
     { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css", requiresAuth: true},
-    { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: true},
+    { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: false},
+    { path: '/play-canva', view: PlayCanva, css: "styles/core.css", requiresAuth: false},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css", requiresAuth: true},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css", requiresAuth: true},
     { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
     { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true },
+    { path: '/play-draft', view: PlayDraft, css: "styles/core.css", requiresAuth: false},
 ];
 
 
@@ -136,24 +143,24 @@ class Router{
 
 
 
-    updateBodyClass(path) {
-        const className = path === "/" ? "home" : path.replace("/", "");
-        document.body.className = className;
-    }
+    // updateBodyClass(path) {
+    //     const className = path === "/" ? "home" : path.replace("/", "");
+    //     document.body.className = className;
+    // }
 
-    updateStylesheet(path) {
-        const route = this.getRoute(path);
-        const cssFile = route ? route.css : "styles/core.css";
+    // updateStylesheet(path) {
+    //     const route = this.getRoute(path);
+    //     const cssFile = route ? route.css : "styles/core.css";
 
-        let stylesheet = document.getElementById("dynamic-style");
-        if (!stylesheet) {
-            stylesheet = document.createElement("link");
-            stylesheet.rel = "stylesheet";
-            stylesheet.id = "dynamic-style";
-            document.head.appendChild(stylesheet);
-        }
-        stylesheet.href = cssFile;
-    }
+    //     let stylesheet = document.getElementById("dynamic-style");
+    //     if (!stylesheet) {
+    //         stylesheet = document.createElement("link");
+    //         stylesheet.rel = "stylesheet";
+    //         stylesheet.id = "dynamic-style";
+    //         document.head.appendChild(stylesheet);
+    //     }
+    //     stylesheet.href = cssFile;
+    // }
 
     async loadView(path){
         const route = this.getRoute(path);
@@ -165,13 +172,14 @@ class Router{
             this.currentView.unmount();
         }
         this.currentView = new ViewClass(this);
+        cleanUpThree();
         document.getElementById("app").innerHTML = this.currentView.render();
         await this.currentView.updateNavbar();
         await this.currentView.mount();
         this.currentView.attachEvents();
 
-        this.updateBodyClass(path);
-        this.updateStylesheet(path);
+        // this.updateBodyClass(path);
+        // this.updateStylesheet(path);
         }
 
     async navigateTo(path){
@@ -219,28 +227,28 @@ class Router{
             if (event.state && event.state.path) {
                 const path = event.state.path;
                 const route = this.getRoute(path);
-        
+
                 if (route && route.requiresAuth && !this.isAuthenticated()) {
                     console.warn(`Access denied to ${path}. Redirecting to /log-in.`);
                     history.replaceState({ path: "/log-in" }, "", "/log-in");
                     await this.loadView("/log-in");
                     return;
                 }
-        
+
                 if (route && route.requiresGuest && this.isAuthenticated()) {
                     console.warn(`Guests cannot access ${path}. Redirecting to /home.`);
                     history.replaceState({ path: "/home" }, "", "/home");
                     await this.loadView("/home");
                     return;
                 }
-        
+
                 if (!route) {
                     console.warn(`Route for ${path} not found! Redirecting to /home.`);
                     history.replaceState({ path: "/home" }, "", "/home");
                     await this.loadView("/home");
                     return;
                 }
-        
+
                 await this.loadView(path);
             }
         });

@@ -1,4 +1,3 @@
-import { cleanUpThree } from '../three/utils.js';
 import BaseView from './BaseView.js';
 
 export default class Profile extends BaseView {
