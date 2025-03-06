@@ -337,6 +337,14 @@ class ListRoomsPoolView(APIView):
         rooms_serializer = RoomSerializer(rooms, many=True)
         return Response(rooms_serializer.data, status=status.HTTP_200_OK)
 
+class ListTournamentHistoryView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        user = request.user
+        serializer = TournamentSerializer(user.tournaments, many=True)
+        return Response(serializer.data)
+
 """
 class ListWaitingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -465,7 +473,7 @@ class DeleteTournamentView(APIView):
             tournament = Tournament.objects.get(users=user)
             # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
             # if user.is_staff or (user == tournament.owner and tournament.status != 'playing'):
-            if user == tournament.owner:# and tournament.status == 'waiting':
+            if user == tournament.owner and tournament.status == 'waiting':
                 ask_all_rooms_to_remove(tournament)
                 tournament.delete()
                 return Response({

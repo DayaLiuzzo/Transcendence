@@ -59,6 +59,9 @@ class TournamentSerializer(serializers.ModelSerializer):
         }
 
 class TournamentHistorySerializer(serializers.ModelSerializer):
+    tournament_name = serializers.SlugRelatedField(
+        queryset=Tournament.objects.all(),
+        slug_field='name')
     class Meta:
         model = TournamentHistory
-        fields = ['tournament', 'result']
+        fields = ['tournament_name', 'result']

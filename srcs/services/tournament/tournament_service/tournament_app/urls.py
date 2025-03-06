@@ -23,6 +23,7 @@ urlpatterns = [
     path('list_my_rooms/', views.ListMyRoomsView.as_view(), name='list-my-rooms'),
     path('list_pools/<uuid:tournament_id>/', views.ListPoolsView.as_view(), name='list-pools'),
     path('list_rooms_pool/', views.ListRoomsPoolView.as_view(), name='list-rooms-pool'),
+    path('list_history/', views.ListTournamentHistoryView.as_view(), name='list-tournament-history'),
     #path('list/waiting/', views.ListWaitingTournamentView.as_view(), name='list_waiting_tournament'),
     #path('list/playing/', views.ListPlayingTournamentView.as_view(), name='list_playing_tournament'),
     #path('list/finished/', views.ListFinishedTournamentView.as_view(), name='list_finished_tournament'),
