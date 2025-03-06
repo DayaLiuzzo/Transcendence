@@ -83,8 +83,10 @@ class Router{
     async updateLastSeen() {
         const username = this.getUsername();
         const response = await this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {});
-        if (!response.success)
+        if (!response.success){
+            this.stopUpdatingLastSeen();
             return;
+        }
 
     }
 
@@ -97,7 +99,6 @@ class Router{
     }
 
     stopUpdatingLastSeen() {
-        console.log("🛑 Last seen tracking stop trying...");
         if (this.lastSeenInterval) {
             clearInterval(this.lastSeenInterval);
             this.lastSeenInterval = null;
@@ -122,7 +123,7 @@ class Router{
     }
 
     getUserSession(){
-        return JSON.parse(sessionStorage.getItem("userSession"));
+        return JSON.parse(localStorage.getItem("userSession"));
     }
 
     isAuthenticated() {
@@ -241,6 +242,14 @@ class Router{
                 }
         
                 await this.loadView(path);
+            }
+        });
+
+        window.addEventListener("storage", (event) => {
+            if (event.key === "logout") {
+                clearInterval(this.lastSeenInterval);
+                this.stopUpdatingLastSeen();
+                console.log("🛑 Logged out in another tab: Stopping interval...");
             }
         });
     }

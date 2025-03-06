@@ -11,9 +11,9 @@ export default class Profile extends BaseView {
         
         if (!errorContainer) {
             errorContainer = document.createElement("div");
-            errorContainer.id = formId+ "-error-container";  // Set a unique ID
-            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
-            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); // Insert at the top of the form
+            errorContainer.id = formId+ "-error-container";  
+            errorContainer.classList.add("error-container"); 
+            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); 
         }
         
         return errorContainer;

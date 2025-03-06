@@ -62,11 +62,11 @@ export default class EditProfile extends BaseView {
             return;
         }
         alert(response.data.message);
-        let userSession = JSON.parse(sessionStorage.getItem("userSession"));
+        let userSession = JSON.parse(localStorage.getItem("userSession"));
         userSession.username = formData.username;
-        userSession.access_token = response.data.access_token;
-        userSession.refresh_token = response.data.refresh_token;
-        sessionStorage.setItem("userSession", JSON.stringify(userSession));
+        userSession.access_token = response.data.access;
+        userSession.refresh_token = response.data.refresh;
+        localStorage.setItem("userSession", JSON.stringify(userSession));
         if (userSession.two_factor_enabled) {
             alert(response.data.otp);
             this.navigateTo("/profile");
@@ -145,9 +145,9 @@ export default class EditProfile extends BaseView {
             return;
         }
 
-        let userSession = JSON.parse(sessionStorage.getItem("userSession"));
+        let userSession = JSON.parse(localStorage.getItem("userSession"));
         userSession.two_factor_enabled = body.enable;
-        sessionStorage.setItem("userSession", JSON.stringify(userSession));
+        localStorage.setItem("userSession", JSON.stringify(userSession));
 
         alert(body.enable ? response.data.otp_secret : response.data.message);
         button.textContent = body.enable ? "Disable 2FA" : "Enable 2FA";

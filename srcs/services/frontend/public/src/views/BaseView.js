@@ -38,6 +38,16 @@ export default class BaseView{
         }
     }
 
+    async isOnline(username){
+        const response = await this.sendGetRequest(this.API_URL_USERS + "/status/" + username + "/");
+        if (!response.success) {
+            this.showError(response.error, "app");
+            return;
+        }
+        return response.data.online;
+
+    }
+
     async updateLastSeen() {
         this.router.updateLastSeen();
     }
@@ -78,9 +88,9 @@ export default class BaseView{
         
         if (!errorContainer) {
             errorContainer = document.createElement("div");
-            errorContainer.id = formId+ "-error-container";  // Set a unique ID
-            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
-            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); // Insert at the top of the form
+            errorContainer.id = formId+ "-error-container";  
+            errorContainer.classList.add("error-container"); 
+            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); 
         }
         
         return errorContainer;
@@ -294,9 +304,10 @@ export default class BaseView{
     logout() {
         const refresh_token = this.getRefreshToken();
         if (refresh_token) {
+            localStorage.setItem("logout", Date.now());
             this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
             this.stopUpdatingLastSeen();
-            sessionStorage.removeItem("userSession");
+            localStorage.removeItem("userSession");
             this.navigateTo("/log-in");
         }
         // this.sendPostRequest(this.API_URL + 'logout/', {});

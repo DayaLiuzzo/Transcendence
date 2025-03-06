@@ -32,6 +32,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer 
 
     def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
         username = request.data.get('username')
         password = request.data.get('password')
         otp = request.data.get('otp')
@@ -51,7 +52,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         # exp = token.access_token.get('exp')
         access_token = str(token.access_token)
         refresh_token = str(token)
-        return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
+        response.access_token = access_token
+        response.refresh_token = refresh_token
+        # return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
+        return response
 
 
 
@@ -144,8 +148,8 @@ class UpdateUserView(generics.UpdateAPIView):
         except Exception as e:
             raise ValidationError(f"Error updating user : {str(e)}")
         if user.two_factor_enabled:
-            return Response({"message": "Success", "otp": user.otp_secret, "access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
-        return Response({"message": 'Success', "access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
+            return Response({"message": "Success", "otp": user.otp_secret, "access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
+        return Response({"message": 'Success', "access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
 
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
