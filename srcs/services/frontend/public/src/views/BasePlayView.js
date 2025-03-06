@@ -12,10 +12,11 @@ export default class BasePlayView extends BaseView{
         if (result.success) {
             console.log(result.success)
             console.log(result.data)
+
             document.getElementById("room-id").innerText = result.data.room_id;
             // document.getElementById("user-1").innerText = this.getUsername();
             document.getElementById("user-2").innerText = "Looking for opponent...";
-            document.getElementById("game-canvas").innerText = "Loading...";
+            document.querySelector("canvas.webgl").innerText = "Loading...";
             this.openWebSocket(result.data.room_id);
             window.addEventListener("gameStarted", () => this.checkStart());
         } else {
@@ -26,7 +27,7 @@ export default class BasePlayView extends BaseView{
     checkStart(){
         console.log(this.socketService);
         if (this.socketService.isplaying){
-            document.getElementById("game-canvas").innerText = "Playing...";
+            document.querySelector("canvas.webgl").innerText = "Playing...";
             this.listenToKeyboard();
             window.addEventListener("keyboard", () => this.listenToKeyboard());
         }
@@ -41,7 +42,7 @@ export default class BasePlayView extends BaseView{
                     const movement = event.key === "ArrowUp" ? "up" : "down";
                     this.sendMovementToWebSocket(movement);
                 }
-            });        
+            });
         }
 
     }
@@ -50,7 +51,7 @@ export default class BasePlayView extends BaseView{
         // Si la connexion WebSocket est active et le jeu a commencé, envoyer le mouvement
         //add condition pour checker que la websocket est ok
         this.socketService.sendMessage(movement);
-        
+
     }
 
     // Ouvrir une WebSocket pour cette salle
@@ -73,7 +74,7 @@ export default class BasePlayView extends BaseView{
             document.getElementById("response-result").innerText = "Error: " + JSON.stringify(result.error, null, 2);
         }
     }
-    
+
     async mount() {
         try {
             await this.joinRoom();
