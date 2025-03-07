@@ -58,8 +58,15 @@ services:
     expose:
       - "8443"
     volumes:
-      - game_service_data:/service_code
       - auth_keys:/keys
+    develop:
+      watch:
+        - action: sync+restart
+          path: services/game/game_service/game_app/models.py
+          target: /service_code/game_app/models.py
+        - action: sync
+          path: services/game/game_service/
+          target: /service_code
     restart: on-failure
     depends_on:
       db_game:
@@ -275,14 +282,6 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/users/users_service
-
-  game_service_data:
-    name: game_service_data
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: $PWD/srcs/services/game/game_service
 
   avatar_service_data:
     name: avatar_service_data

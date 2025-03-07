@@ -1,7 +1,7 @@
 channels==4.1.0
 charset-normalizer==3.4.0
 cryptography==43.0.3
-uvicorn
+uvicorn[standard]
 Django==5.1.4
 django-cors-headers==4.5.0
 django-filter==24.2
