@@ -108,11 +108,11 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: services/tournament/tournament_service/tournament_app/models.py
-          target: /service_code/tournament_app/models.py
+          path: services/rooms/rooms_service/rooms_app/models.py
+          target: /service_code/rooms_app/models.py
         - action: sync
-          path: services/tournament/tournament_service
-          target: /service_code
+          path: services/rooms/rooms_service/
+          target: /service_code/
     expose:
       - "8443"
     restart: on-failure
@@ -136,8 +136,8 @@ services:
           path: services/tournament/tournament_service/tournament_app/models.py
           target: /service_code/tournament_app/models.py
         - action: sync
-          path: services/tournament/tournament_service
-          target: /service_code
+          path: services/tournament/tournament_service/
+          target: /service_code/
     expose:
       - "8443"
     restart: on-failure
