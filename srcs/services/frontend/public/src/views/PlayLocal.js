@@ -6,7 +6,6 @@ export default class PlayCanva extends BaseView {
 	constructor(params) {
 		super(params);
 	}
-
 	handlerEventsListeners() {
 		const cursor = { x: 0, y: 0 };
 
@@ -101,8 +100,18 @@ export default class PlayCanva extends BaseView {
 	initGame() {
 		console.log("Game Loading...");
 
-		const canvas = document.querySelector("canvas.webgl");
-		//	const container = document.getElementById("container-canvas-game-canva");
+		const canvas = document.querySelector("#webgl");
+		const gameBoard = document.querySelector("#game-container");
+		const gameWidth = gameBoard.clientWidth;
+		const gameHeight = gameBoard.clientHeight;
+		const ballRadius = 0.5;
+		const paddleSpeed = 5;
+		let ballSpeed = 1;
+		let ballX = gameWidth / 2;
+		let ballY = gameHeight / 2;
+		let ballDirection = { x: 1, y: 1 };
+		let player1Score = 0;
+		let player2Score = 0;
 		//	const asciiOutput = document.getElementById("ascii-output");
 
 		const scene = new THREE.Scene();
@@ -135,6 +144,20 @@ export default class PlayCanva extends BaseView {
 
 		scene.add(meshPaddleLeft);
 		scene.add(meshPaddleRight);
+		/*CONDITIONS POUR RANDOM MOVE AU DEBUT DE LA PARTIE)*/
+			// if (Math.random() > 0.5) {
+			// 	ballDirection.x = 1;
+			// } else {
+			// 	ballDirection.x = -1;
+			// }
+			// if (Math.random() > 0.5) {
+			// 	ballDirection.y = 1;
+			// } else {
+			// 	ballDirection.y = -1;
+			// }
+			// ballX = gameWidth / 2;
+			// ballY = gameHeight / 2;
+
 		scene.add(meshBall);
 
 		const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -192,6 +215,7 @@ export default class PlayCanva extends BaseView {
 			//meshBall.position.x = Math.sin(elapsedTime);
 
 			this.displayPaddle(meshPaddleLeft, meshPaddleRight, deltaTime);
+			//this.updateBallPosition(meshBall, deltaTime);
 
 			controls.update();
 			renderer.render(scene, camera);
@@ -208,8 +232,8 @@ export default class PlayCanva extends BaseView {
 		return `
         <div id="line"></div>
 
-        <div id="container-canvas-game-canva">
-            <canvas class="webgl"></canvas>
+        <div id="game-container">
+            <canvas id="webgl" width="400" height="400"></canvas>
             <div id="ascii-output"></div>
         </div>
             <div id="response-result"></div>

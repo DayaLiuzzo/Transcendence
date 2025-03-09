@@ -182,7 +182,7 @@ body {
   canvas {
     cursor: grab;
   }
-  
+
   canvas:active {
     cursor: grabbing;
   }
@@ -289,4 +289,18 @@ body {
       letter-spacing: 3px;
       text-shadow: 0 0 1px darkgray;
     }
+  }
+
+
+/* CSS STYLE FOR GAME PAGE*/
+  #webgl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid black;
+  }
+
+  #webgl canvas {
+    cursor: grab;
+
   }
