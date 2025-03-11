@@ -5,19 +5,18 @@ export default class Profile extends BaseView {
         super(router, params);
     }
 
-    getErrorContainer(formId) {
-        let errorContainer = document.getElementById(formId+ "-error-container");
+    getErrorContainer() {
+        let errorContainer = document.getElementById("add-friend-error-container");
         
         if (!errorContainer) {
             errorContainer = document.createElement("div");
-            errorContainer.id = formId+ "-error-container";  
-            errorContainer.classList.add("error-container"); 
-            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); 
+            errorContainer.id = "add-friend-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("add-friend-form").insertBefore(errorContainer, document.getElementById("add-friend-form").firstChild); // Insert at the top of the form
         }
         
         return errorContainer;
     }
-
 
     render() {
         return `
