@@ -15,7 +15,7 @@ export default class SignUp extends BaseView{
     validateInputs(formData){
         if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
         if ((!formData.email || !formData.email.includes("@"))) return "Invalid email address.";
-        if (formData.username.length > 128) return "Username must be at most 128 characters long.";
+        if (formData.username.length > 32) return "Username must be at most 32 characters long.";
         if (!formData.password || !formData.password2 || formData.password.length < 6) return "Password must be at least 6 characters long.";
         if (formData.password !== formData.password2) return "Passwords do not match.";
         if (!this.containsSpecialCharacter(formData.password)) return "Password must contain one of the following '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '='";

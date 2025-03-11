@@ -5,6 +5,14 @@ export default class Profile extends BaseView {
         super(router, params);
     }
 
+    async getStats(){
+        const response = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + '/stats/');
+        if (response.success){
+            return response.data;
+        }
+        return null;
+    }
+
     getErrorContainer() {
         let errorContainer = document.getElementById("add-friend-error-container");
         
@@ -26,6 +34,7 @@ export default class Profile extends BaseView {
             <div id="username-field"></div>
             <div id="biography-field"></div>
             <div id="friends-field"></div>
+            <div id="stats-field"></div>
             <form id="add-friend-form">
                 <input type="text" id="friend-username" placeholder="Enter friend's username">
                 <button type="submit">Add Friend</button>
@@ -33,6 +42,19 @@ export default class Profile extends BaseView {
             <button id="edit-profile">Edit Profile</button>
             <button id="logout">Logout</button>
         </div>
+        `;
+    }
+
+    async updateStatsField() {
+        const statsField = document.getElementById("stats-field");
+        if (!statsField) return;
+
+        let stats = await this.getStats() ?? { win: 6, loss: 4 };
+
+        statsField.innerHTML = `
+        <h3>Stats</h3>
+        <p>Wins: ${stats.win}</p>
+        <p>Losses: ${stats.loss}</p>
         `;
     }
 
@@ -151,6 +173,7 @@ export default class Profile extends BaseView {
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             this.renderFriends(users);
             this.updateFieldContent("username-field", this.formatField("username", username));
+            this.updateStatsField();
         }
         catch (error) {
             console.error("Error in mount():", error);

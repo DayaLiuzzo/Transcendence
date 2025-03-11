@@ -25,9 +25,9 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "bidoenepiii",
+  "username": "delete",
   "password": "Pass12456!",
-  "email": "depeiii@gmail.com"
+  "email": "deii@gmeail.com"
 }
 ###
 #get user token
@@ -77,7 +77,7 @@ default.jpg
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ####
-GET https://localhost:4430/api/users/bidonaaa/friends/
+GET https://localhost:4430/api/game
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5OTc4NDI4LCJpYXQiOjE3Mzk5NzMwMjgsImp0aSI6ImQ2MzhiNWJiZGZiNDQ3N2M4NmJkOGQ3NjZmYTBmNmY0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.a5QjISKPUWzIHHb9CyBS5B0b-9OTO8jlV08pxmaU3gu0BApEuDgTfkuXH8imTPz2l3SrKaDw5JBVfN99ktoYqyAzeyn_AtJ2UXBV_TXeU_xCQaEL1-3TbeFYHTdJ9vRplBf9OPGzZ-pd9vNOMiQVfAAiPOhlaJKyAmryfncrjrfcLUNHTNYwEUkXuE0KaQJqdV2Zw0XDTyujCBKVk1shLhVLTzJlJxlt1PBnsvK25olYcUkmyYKjmyf4oSUGDD12uwQrDpVauoEYJLWrAc_ATe0P_AX4xZquFZopXgOYf84EdD352He28qskQ_9-BMp2Fy0IjIBF8TwPggerbP2vhQ
 
 

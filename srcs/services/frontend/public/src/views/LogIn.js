@@ -7,7 +7,8 @@ export default class LogIn extends BaseView{
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     }
 
-    
+
+
     getFormData(){
         return {
             username: document.getElementById("login-username").value,
