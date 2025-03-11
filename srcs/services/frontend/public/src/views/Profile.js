@@ -6,7 +6,8 @@ export default class Profile extends BaseView {
     }
 
     async getStats(){
-        const response = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + '/stats/');
+        const username = this.getUsername();
+        const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
         if (response.success){
             return response.data;
         }
@@ -46,16 +47,32 @@ export default class Profile extends BaseView {
     }
 
     async updateStatsField() {
+        console.log('Updating stats field');
         const statsField = document.getElementById("stats-field");
-        if (!statsField) return;
-
-        let stats = await this.getStats() ?? { win: 6, loss: 4 };
-
+        if (!statsField){
+            console.log('No stats field');
+            return;
+        }
+        const username = this.getUsername();
+        const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
+        if(response.success){
+            console.log(response.data);
+            console.log(response.data.wins);
+            console.log(response.data.losses);
+            statsField.innerHTML = `
+            <h3>Stats</h3>
+            <p>Wins: ${response.data.wins}</p>
+            <p>Losses: ${response.data.losses}</p>
+            `;
+            
+        }
+        else {
         statsField.innerHTML = `
         <h3>Stats</h3>
-        <p>Wins: ${stats.win}</p>
-        <p>Losses: ${stats.loss}</p>
+        <p>Wins: Default</p>
+        <p>Losses: Default</p>
         `;
+        }
     }
 
     async addFriend(friendUsername) {

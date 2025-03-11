@@ -8,7 +8,8 @@ class UserProfile(models.Model):
     avatar_default_path = '/media/default_avatars/default_00.jpg'
     avatar = models.URLField(default='/media/default_avatars/default_00.jpg')
     last_seen = models.DateTimeField(null=True, blank=True)
-
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
     
     @property
     def is_authenticated(self):
