@@ -32,7 +32,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer 
 
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
         username = request.data.get('username')
         password = request.data.get('password')
         otp = request.data.get('otp')
@@ -49,13 +48,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             if not totp.verify(otp):
                 return Response({"error": "Invalid OTP."}, status=status.HTTP_401_UNAUTHORIZED)
         token = CustomTokenObtainPairSerializer.get_token(user)
-        # exp = token.access_token.get('exp')
         access_token = str(token.access_token)
         refresh_token = str(token)
-        response.access_token = access_token
-        response.refresh_token = refresh_token
-        # return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
-        return response
+        return Response({"access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
 
 
 

@@ -100,6 +100,10 @@ export default class BaseView{
         this.router.navigateTo(path);
     }
 
+    getRefreshToken(){
+        return this.router.getRefreshToken();
+    }
+    
     getAccessToken(){
 
         return this.router.getAccessToken();
@@ -342,9 +346,9 @@ export default class BaseView{
             localStorage.setItem("logout", Date.now());
             this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
             this.stopUpdatingLastSeen();
-            localStorage.removeItem("userSession");
-            this.navigateTo("/log-in");
         }
+        localStorage.removeItem("userSession");
+        this.navigateTo("/log-in");
         // this.sendPostRequest(this.API_URL + 'logout/', {});
     }
 
