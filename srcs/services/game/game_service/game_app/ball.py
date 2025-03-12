@@ -1,10 +1,9 @@
-import pygame
 import math
 import random
 
-from settings import WIDTH, HEIGHT, START_SPEED, ACCEL
-from settings import PLAYER_WIDTH, PLAYER_HEIGHT
-from settings import START_SPEED, ACCEL
+from .settings import WIDTH, HEIGHT, START_SPEED, ACCEL
+from .settings import PLAYER_WIDTH, PLAYER_HEIGHT
+from .settings import START_SPEED, ACCEL
 
 MAX_Y_VECTOR = 0.6
 
@@ -17,10 +16,8 @@ class Ball:
     def __init__(self, radius):
         self.x = 0
         self.y = 0
-        self.rect = pygame.Rect(self.x, self.y, radius, radius)
         self.radius = radius
         self.reset_pos()
-        self.color = pygame.Color('red')
         self.direction = None
         self.speed = START_SPEED
         self.start_random_direction()
@@ -60,7 +57,7 @@ class Ball:
                 self.direction[1] *= -1
 
         else:
-            dist = self.y - (player.rect.y + PLAYER_HEIGHT / 2)
+            dist = self.y - (player.y + PLAYER_HEIGHT / 2)
             self.direction[0] *= -1
             new_dir_y = (dist / (PLAYER_HEIGHT / 2)) * MAX_Y_VECTOR
             self.direction[1] = new_dir_y
@@ -70,13 +67,8 @@ class Ball:
         self.speed += ACCEL
 
     def _movement(self, delta):
-        new_x = self.x + self.direction[0] * self.speed * delta
-        new_y = self.y + self.direction[1] * self.speed * delta
-
-        self.x = new_x
-        self.y = new_y
-        self.rect.x = self.x
-        self.rect.y = self.y
+        self.x += self.direction[0] * self.speed * delta
+        self.y += self.direction[1] * self.speed * delta
 
     def reset_pos(self, with_random_pos=True):
         self.speed = START_SPEED
@@ -85,13 +77,8 @@ class Ball:
             self.y = random.randint(HEIGHT // 3, 2 * HEIGHT // 3)
         else:
             self.y = HEIGHT // 2
-        self.rect.x = self.x
-        self.rect.y = self.y
         self.start_random_direction()
         self.last_player = None
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.rect)
 
     def update(self, delta):
         self._movement(delta)

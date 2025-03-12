@@ -1,7 +1,5 @@
-import pygame
-
-from settings import HEIGHT
-from settings import PLAYER_WIDTH, PLAYER_HEIGHT, PADDLE_SPEED
+from .settings import HEIGHT
+from .settings import PLAYER_WIDTH, PLAYER_HEIGHT, PADDLE_SPEED
 
 DIR_UP = 2
 DIR_DOWN = 1
@@ -13,9 +11,8 @@ class Player:
         self.default_y = y
         self.x = x
         self.y = y
-        self.rect = pygame.Rect(self.x, self.y, PLAYER_WIDTH, PLAYER_HEIGHT)
-        self.color = pygame.Color('white')
         self.score = 0
+        self.direction = DIR_NONE
 
     def is_collision_wall_up(self):
         return self.y < 0
@@ -23,20 +20,16 @@ class Player:
     def is_collision_wall_down(self):
         return self.y + PLAYER_HEIGHT >= HEIGHT
 
-    def _movement(self, direction, delta):
-        if direction == DIR_UP:
-            self.y -= PADDLE_SPEED * delta
-        elif direction == DIR_DOWN:
-            self.y += PADDLE_SPEED * delta
-
-        self.rect.y = self.y
+    def _movement(self, delta):
+        if self.direction == DIR_UP:
+            if not self.is_collision_wall_up():
+                self.y -= PADDLE_SPEED * delta
+        elif self.direction == DIR_DOWN:
+            if not self.is_collision_wall_down():
+                self.y += PADDLE_SPEED * delta
 
     def reset_pos(self):
         self.y = self.default_y
-        self.rect.y = self.y
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.rect)
-
-    def update(self, direction, delta):
-        self._movement(direction, delta)
+    def update(self, delta):
+        self._movement(delta)
