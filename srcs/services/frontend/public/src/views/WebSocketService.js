@@ -45,7 +45,6 @@ export default class WebSocketService {
         };
     }
 
-
     handleStart(event) {
         const data = JSON.parse(event.data);
         // console.log("Message reçu:", data);
@@ -53,15 +52,19 @@ export default class WebSocketService {
         if (data.isfull)
             this.isplaying = true
         console.log("Is playing ?", this.isplaying)
-
         // Mettre à jour le DOM avec les données reçues via WebSocket
     }
 
     handleMessage(event) {
         const data = JSON.parse(event.data);
-        // console.log("Message reçu:", data);
+        //console.log("Message reçu:", data);
         console.log("Message reçu:", data.message);
- 
+
+        if (data.player1 && data.player2 && data.ball) {
+            const event = new CustomEvent("updateGame", { detail: data});
+            window.dispatchEvent(event);
+        }
+
         // Mettre à jour le DOM avec les données reçues via WebSocket
     }
 

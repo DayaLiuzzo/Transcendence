@@ -44,7 +44,6 @@ export default class BasePlayView extends BaseView{
                 }
             });
         }
-
     }
 
     sendMovementToWebSocket(movement) {
