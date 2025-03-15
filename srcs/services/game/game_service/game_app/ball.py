@@ -14,8 +14,6 @@ def normalize(vector):
 
 class Ball:
     def __init__(self, radius):
-        self.x = 0
-        self.y = 0
         self.radius = radius
         self.reset_pos()
         self.direction = None
