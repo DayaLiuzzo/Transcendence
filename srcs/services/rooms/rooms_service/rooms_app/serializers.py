@@ -16,11 +16,20 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ['room_id', 'player1_username', 'player2_username', 'players_count', 'status']
+        fields = ['room_id', 'player1_username', 'player2_username', 'players_count', 'status', 'player1', 'player2', 'winner', 'loser', 'score_player1', 'score_player2']
 
     @property
     def is_full(self, obj):
         return obj.players_count >= 2
+
+class RoomSerializerInternal(serializers.ModelSerializer):
+
+    class Meta:
+        model = Room
+        fields = ['room_id', 'status', 'player1', 'player2', 'winner', 'loser', 'score_player1', 'score_player2', 'date_played']
+        extra_kwargs = {
+                'room_id': {'required': False},
+            }
 
 ################################################################
 #                                                              #
@@ -30,11 +39,11 @@ class RoomSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     is_authenticated = serializers.SerializerMethodField()
-    room_id = serializers.CharField(source='room.room_id', read_only=True)
+    rooms = RoomSerializer(many=True, read_only=True)
     
     class Meta:
         model = UserProfile
-        fields = ['username', 'is_authenticated', 'room_id']
+        fields = ['username', 'is_authenticated', 'rooms']
 
     def get_is_authenticated(self, obj):
         return obj.is_authenticated

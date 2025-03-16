@@ -48,9 +48,9 @@ export default class WebSocketService {
 
     handleStart(event) {
         const data = JSON.parse(event.data);
-        // console.log("Message reçu:", data);
-        console.log("Message reçu:", data.isfull);
-        if (data.isfull)
+        console.log("Message reçu:", data.message);
+        //console.log("Message reçu:", data.isfull);
+        if (data.message.state === 'START')
             this.isplaying = true
         console.log("Is playing ?", this.isplaying)
 
@@ -59,7 +59,7 @@ export default class WebSocketService {
 
     handleMessage(event) {
         const data = JSON.parse(event.data);
-        // console.log("Message reçu:", data);
+        //console.log("Message reçu:", data);
         console.log("Message reçu:", data.message);
  
         // Mettre à jour le DOM avec les données reçues via WebSocket
