@@ -18,6 +18,7 @@ urlpatterns = [
         path('count_available_rooms/', views.CountAvailableRoomsView.as_view(), name='count_available_rooms'),
         path('count_locked_rooms/', views.CountLockedRoomsView.as_view(), name='count_locked_rooms'),
         path('delete_room/<str:room_id>/', views.DeleteRoomView.as_view(), name='delete_room'),
+        path('update_room/<str:room_id>/', views.UpdateRoomView.as_view(), name='delete_room'),
 
         path('create/', views.CreateUserView.as_view(), name='create_user'),
         # path('list/', views.ListUserView.as_view(), name='list_user'),
