@@ -314,10 +314,10 @@ class UpdateRoomView(APIView):
     permission_classes = [IsGame]
 
     def patch(self, request, room_id):
-        room = get_object_or_404(room_id=room_id)
+        room = get_object_or_404(Room, room_id=room_id)
         serializer = RoomSerializerInternal(room, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save(status='finished')
+        serializer.save()
         if room.is_from_tournament:
             client = MicroserviceClient()
             url = f'http://tournament:8443/api/tournament/room_result/{room.room_id}/'

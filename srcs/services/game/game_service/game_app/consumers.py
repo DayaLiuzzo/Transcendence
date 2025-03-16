@@ -2,6 +2,7 @@ import json
 import logging
 import asyncio
 import time
+import datetime
 
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -166,12 +167,29 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.game = await sync_to_async(get_object_or_404)(Game, room_id=self.room_name)
         if self.is_host and event['username'] != self.user.username:
             self.jeu = Jeu();
-
+            player1 = await sync_to_async(lambda: self.game.player1)()
+            player2 = await sync_to_async(lambda: self.game.player2)()
+            self.final_game_data = {
+                'room_id': self.room_name,
+                'player1': player1.pk,
+                'player2': player2.pk,
+                'date_played': datetime.datetime.today()
+            }
             self.jeu_task = asyncio.create_task(self.jeu_loop())
 
     async def game_state(self, event):
+        from service_connector.service_connector import MicroserviceClient
+        from .serializers import GameSerializer
+
         await self.send(text_data=json.dumps({'message': event['data']}))
         if event['data']['state'] == 'END':
+            if self.is_host:
+                serializer = GameSerializer(data=self.final_game_data)
+                await sync_to_async(serializer.is_valid)(raise_exception=True)
+                client = MicroserviceClient()
+                url = f'http://rooms:8443/api/rooms/update_room/{self.room_name}/'
+                print(serializer.data)
+                await sync_to_async(client.send_internal_request)(url, 'patch', data=serializer.data)
             await self.close()
 
     async def action_message(self, event):
@@ -231,9 +249,25 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.jeu.time = time.time()
             await asyncio.sleep(0.033) # 30 ticks per seconds
 
-        await self.send_game_state(self.jeu.get_game_end())
         self.game.status = 'finished'
         await sync_to_async(self.game.save)()
+        self.final_game_data['status'] = 'finished'
+        player1 = await sync_to_async(lambda: self.game.player1)()
+        player2 = await sync_to_async(lambda: self.game.player2)()
+        if not self.jeu.winner:
+            self.final_game_data['winner'] = None
+            self.final_game_data['loser'] = None
+        else:
+            if self.jeu.winner == self.jeu.player1:
+                self.final_game_data['winner'] = player1.pk
+                self.final_game_data['loser'] = player2.pk
+            else:
+                self.final_game_data['winner'] = player2.pk
+                self.final_game_data['loser'] = player1.pk
+
+        self.final_game_data['score_player1'] = self.jeu.player1.score
+        self.final_game_data['score_player2'] = self.jeu.player2.score
+        await self.send_game_state(self.jeu.get_game_end())
         print('END')
 
     async def update(self):
