@@ -23,7 +23,6 @@ export default class WebSocketService {
 
         this.socket.onmessage = (event) => {
             if (this.isplaying == false){
-                console.log("LAAA")
                 this.handleStart(event);
 
                 const e = new CustomEvent("gameStarted");
@@ -50,7 +49,11 @@ export default class WebSocketService {
         console.log("Message reçu:", data.message);
         //console.log("Message reçu:", data.isfull);
         if (data.message.state === 'START')
-            this.isplaying = true
+        {
+            this.isplaying = true;
+            const event = new CustomEvent("initSettingsGame", { detail: data.message});
+            window.dispatchEvent(event);
+        }
         console.log("Is playing ?", this.isplaying)
         // Mettre à jour le DOM avec les données reçues via WebSocket
     }
@@ -59,9 +62,9 @@ export default class WebSocketService {
         const data = JSON.parse(event.data);
         //console.log("Message reçu:", data);
         console.log("Message reçu:", data.message);
-
-        if (data.player1 && data.player2 && data.ball) {
-            const event = new CustomEvent("updateGame", { detail: data});
+        if (data.message.state === 'INFO') {
+            const event = new CustomEvent("updateGame", { detail: data.message});
+            console.log("OK");
             window.dispatchEvent(event);
         }
 

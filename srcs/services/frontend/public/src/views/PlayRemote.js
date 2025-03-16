@@ -7,9 +7,15 @@ export default class PlayCanva extends BasePlayView {
     constructor(params) {
         super(params);
 
-		this.meshPaddleLeft = null;
-		this.meshPaddleRight = null;
-		this.meshBall = null;
+		this.player1 = { x: null, y: null, width: null, height: null};
+		this.player2 = { x: null, y: null, width: null, height: null};
+		this.ball = { x: null, y: null };
+		this.gameBoard = { width: null, height: null };
+		this.ballRadius = null;
+		this.score = { winner: null, max_score: null, player1_score: null, player2_score: null };
+		this.centerX = null;
+		this.centerY = null;
+
     }
 
     showError(message) {
@@ -18,110 +24,115 @@ export default class PlayCanva extends BasePlayView {
 
     handlerEventsListeners() {
 		const cursor = { x: 0, y: 0 };
-
 		window.addEventListener("mousemove", (event) => {
 			cursor.x = event.clientX / window.innerWidth - 0.5;
 			cursor.y = -(event.clientY / window.innerHeight - 0.5);
 		});
-
 		this.listenToKeyboard();
-
+		window.addEventListener("initSettingsGame", (event) => {
+			this.setDataObjects(event.detail);
+		});
 		window.addEventListener("updateGame", (event) => {
 			this.updateGameObjects(event.detail);
 		});
-
 	}
 
 	initGame() {
 		console.log("Game Loading...");
 		const canvas = document.querySelector("canvas.webgl");
-		//	const container = document.getElementById("container-canvas-game-canva");
-		//	const asciiOutput = document.getElementById("ascii-output");
-
-		console.log("Canvas: ", canvas);
-		//console.log(container);
-		//console.log(asciiOutput);
-
 		const scene = new THREE.Scene();
-		console.log(scene);
 
 		this.meshPlayer1 = new THREE.Mesh(
-			new THREE.BoxGeometry(40, 2, 1),
+			new THREE.BoxGeometry(1, this.player1.width, 1, this.player1.height),
 			new THREE.MeshBasicMaterial({ color: 0x000000 })
 		);
-		this.meshPlayer1.position.x = 3;
-		this.meshPlayer1.position.y = -10;
+		this.meshPlayer1.position.set((this.player1.x - this.centerX), 0, -(this.player1.y - this.centerY));
+		console.log("MESHPLAYER1", this.meshPlayer1);
 
 		this.meshPlayer2 = new THREE.Mesh(
-			new THREE.BoxGeometry(40, 2, 1),
+			new THREE.BoxGeometry(this.player2.width, 1, this.player2.height),
 			new THREE.MeshBasicMaterial({ color: 0x000000 })
 		);
-		this.meshPlayer2.position.x = 3;
-		this.meshPlayer2.position.y = 1.5;
+		this.meshPlayer2.position.set((this.player2.x - this.centerX), 0, -(this.meshPlayer2.y - this.centerY));
 
 		this.meshBall = new THREE.Mesh(
-			new THREE.SphereGeometry(0.5, 32, 32),
+			new THREE.SphereGeometry(this.ballRadius, 16, 16),
 			new THREE.MeshBasicMaterial({ color: 0x000000 })
 		);
-		this.meshBall.position.y = 0;
+		this.meshBall.position.set((this.ball.x - this.centerX), 0, -(this.ball.y - this.centerY));
 
-		const sizes = {
-			width: window.innerWidth,
-			height: window.innerHeight,
-		};
-		console.log(sizes);
+		const meshBoard = new THREE.Mesh(
+			new THREE.PlaneGeometry(this.gameBoard.width, this.gameBoard.height),
+			new THREE.MeshStandardMaterial ({
+				color: 0x000000,
+				roughness: 0.7,
+				metalness: 0.3
+			})
+		);
+		meshBoard.rotation.x = Math.PI / 2;
+		//meshBoard.position.set(0, 0, 0);
+		//meshBoard.receiveShadow = true;
+		//scene.add(meshBoard);
 
 		scene.add(this.meshPlayer1);
 		scene.add(this.meshPlayer2);
 		scene.add(this.meshBall);
 
 		const light = new THREE.DirectionalLight(0xffffff, 1);
-		light.position.set(2, 2, 2);
+		light.position.set(10, 10, 10);
+		//light.castShadow = true;
+		//light.shadow.mapSize.width = this.gameBoard.width;
+		//light.shadow.mapSize.height = this.gameBoard.height;
 		scene.add(light);
+
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+		scene.add(ambientLight);
+
+		const aspectRatio = this.gameBoard.width / this.gameBoard.height;
+		const camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+		camera.position.set(0, 5, 100);
+		camera.lookAt(0, 0, 0);
+		scene.add(camera);
 
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
 		});
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(window.devicePixelRatio, 2);
 
-		// const asciiChar = " .";
-		// const effect = new THREE.AsciiEffect(renderer, asciiChar, {
-		// 	invert: false,
-		// 	resolution: 0.2,
-		// 	scale: 1,
-		// });
-		// effect.setSize(sizes.width, sizes.height);
-		// effect.domElement.style.color = "black";
-		// effect.domElement.style.backgroundColor = "none";
 
-		//effect.domElement.classList.add("ascii-effect");
-		//effect.domElement.style.cursor = "grab";
-		//document.querySelector("#ascii-output").appendChild(effect.domElement);
-		//canvas.style.display = "none";
+		//renderer.shadowMap.enabled = true;
+		//renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		document.body.appendChild(renderer.domElement);
 
-		const camera = new THREE.PerspectiveCamera(
-			75,
-			sizes.width / sizes.height
-		);
-		camera.position.z = 20;
-		scene.add(camera);
-
-		renderer.setSize(sizes.width, sizes.height);
-		renderer.setPixelRatio(window.devicePixelRatio);
-
-		//const controls = new THREE.OrbitControls(camera, effect.domElement);
-		//renderer.domElement.style.cursor = "grab";
-		const controls = new THREE.OrbitControls(camera, canvas);
-		console.log(controls);
+		renderer.domElement.style.cursor = "grab";
+		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enableDamping = true;
-		controls.enableZoom = true;
+		controls.enableZoom = false;
+		controls.maxPolarAngle = Math.PI / 2.1;
+		controls.minPolarAngle = Math.PI / 2.5;
+
+		const axesHelper = new THREE.AxesHelper(5);
+		scene.add( axesHelper );
+
+		const gridHelper = new THREE.GridHelper(this.gameBoard.width, 10);
+		scene.add(gridHelper);
 
 		const tick = () => {
 			controls.update();
 			renderer.render(scene, camera);
-			//effect.render(scene, camera);
-			//effect.animationId = requestAnimationFrame(tick);
-			//window.threeInstance.animationId = requestAnimationFrame(tick);
+
+			window.addEventListener("resize", () => {
+				const newWidth = window.innerWidth;
+				const newHeight = window.innerHeight;
+				const newAspect = newWidth / newHeight;
+
+				camera.aspect = newAspect;
+				camera.updateProjectionMatrix();
+				renderer.setSize(newWidth, newHeight);
+			});
+
 			requestAnimationFrame(tick);
 		};
 
@@ -144,22 +155,42 @@ export default class PlayCanva extends BasePlayView {
     `;
 	}
 
+	setDataObjects(data) {
+		this.gameBoard.height = data.height;
+		this.gameBoard.width = data.width;
+		this.centerY = data.height / 2;
+		this.centerX = data.width / 2;
+		this.ballRadius = data.ball_radius;
+		this.score.max_score = data.max_score;
+		this.score.winner = false;
+		this.player1_score = 0;
+		this.player2_score = 0;
+		this.player1.x = data.player1.x;
+		this.player1.y = data.player1.y;
+		this.player1.width = data.player_width;
+		this.player1.height = data.player_height;
+		this.player2.x = data.player2.x;
+		this.player2.y = data.player2.y;
+		this.player2.width = data.player_width;
+		this.player2.height = data.player_height;
+		this.ball.x = data.ball.x;
+		this.ball.y = data.ball.y;
+
+		this.initGame();
+	}
+
 	updateGameObjects(data) {
-		if (this.this.meshPlayer1 && this.this.meshPlayer2 && this.this.meshBall) {
-			this.this.meshPlayer1.position.y = data.player1.y;
-			this.this.meshPlayer1.position.x = data.player1.x;
-			this.this.meshPlayer2.position.y = data.player2.y;
-			this.this.meshPlayer2.position.x = data.player2.x;
-			this.this.meshBall.position.y = data.ball.y;
-			this.this.meshBall.position.x = data.ball.x;
+		if (this.meshPlayer1 && this.meshPlayer2 && this.meshBall) {
+			this.meshPlayer1.position.y = -(data.player1_y - this.centerY);
+			this.meshPlayer2.position.y = -(data.player2_y - this.centerY);
+			this.meshBall.position.y = -(data.ball.y - this.centerY);
+			this.meshBall.position.x = data.ball.x - this.centerX;
 		}
 	}
 
 	attachEvents() {
 		console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
-		// handle message de start partie
-		this.initGame();
 	}
 }
 
