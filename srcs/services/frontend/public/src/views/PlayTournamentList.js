@@ -19,46 +19,60 @@ export default class PlayTournamentList extends BaseView{
         `;
     }
 
+    async joinTournament(tournamentId) {
+        const body = {};
+        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
+        if (!response.success) {
+            console.log("error join tournament")
+            this.showError(response.error);
+            return;
+        }
+        else
+            console.log("Fetch pour join le tournoi a marche")
+        this.navigateTo("/my-tournament");
+    }
 
+    handleJoinTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
+            const tournamentId = event.target.getAttribute("data-tournamentID");
+            this.joinTournament(tournamentId);
+        }
+    }
 
     attachEvents() {
         console.log('Events attached (Tournament list)');
 
 
         const tournamentListField = document.getElementById("tournament-list-field");
-        // if (tournamentListField) {
-        //     tournamentListField.addEventListener("click", this.handleFriendRemoveClick.bind(this));
-        // } on va l'utiliser pour join
+        if (tournamentListField) {
+            tournamentListField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
+        }
 
     }
 
     renderTournamentList(tournaments) {
-        console.log("Coucou!!!!!!!!!")
         const tournamentListField = document.getElementById("tournament-list-field");
         if (!tournamentListField) return;
-        console.log("Toujours la!!!!!!!!!")
         tournamentListField.innerHTML = "";
         const tournamentList = document.createElement("ul");
         tournaments.forEach(tournament => {
             const tournamentItem = document.createElement("li");
-            console.log(tournament.name);
             tournamentItem.textContent = tournament.name;
-
             const joinButton = document.createElement("button");
             joinButton.textContent = "Join";
-            joinButton.setAttribute("data-tournamentname", tournament.name);
+            joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
             tournamentItem.appendChild(joinButton);
             tournamentList.appendChild(tournamentItem);
         });
         tournamentListField.appendChild(tournamentList);
     }
-
+tournament_id
     async mount() {
         try {
             const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/');
             if (!getTournamentList.success){
                 console.log("Erreur fetch get tournament list")
-                return this.showError(getTournamentList.error)
+                return
             }
             console.log("Success fetch get tournament list")
             console.log(getTournamentList.data)
