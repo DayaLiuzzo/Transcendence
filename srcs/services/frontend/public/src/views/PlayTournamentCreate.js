@@ -82,11 +82,10 @@ export default class PlayTournamentCreate extends BaseView{
             
             <form id="createTournament-form">
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
-                <input type="text" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
+                <input type="number" min="2" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
                 <button type="submit">Create tournament</button>
             </form>
 
-            <p>gerer les erreurs dinput pour le max user<\p>
 
         </div>
         
