@@ -67,12 +67,7 @@ export default class EditProfile extends BaseView {
         userSession.access_token = response.data.access;
         userSession.refresh_token = response.data.refresh;
         localStorage.setItem("userSession", JSON.stringify(userSession));
-        if (userSession.two_factor_enabled) {
-            alert(response.data.otp);
-            this.navigateTo("/profile");
-        } else {
-            this.navigateTo("/profile");
-        }
+        this.navigateTo("/profile");
     }
 
     getPasswordFormData() {
