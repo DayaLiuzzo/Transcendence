@@ -91,7 +91,7 @@ export default class WebSocketService {
     }
 
     getUserSession(){
-        return JSON.parse(sessionStorage.getItem("userSession"));
+        return JSON.parse(localStorage.getItem("userSession"));
     }
 
     getAccessToken(){
