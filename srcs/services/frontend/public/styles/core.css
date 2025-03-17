@@ -297,10 +297,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid black;
+    background-color: transparent;
+    background: none;
   }
 
   #webgl canvas {
     cursor: grab;
-
+    background-color: transparent;
+    background: none;
   }

@@ -1,11 +1,12 @@
 import BaseView from "./BaseView.js";
 
-let keys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
+let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
 
 export default class PlayCanva extends BaseView {
 	constructor(params) {
 		super(params);
 	}
+
 	handlerEventsListeners() {
 		const cursor = { x: 0, y: 0 };
 
@@ -15,228 +16,263 @@ export default class PlayCanva extends BaseView {
 		});
 
 		window.addEventListener("keydown", (event) => {
-			if (event.key === "ArrowLeft") {
-				keys.ArrowLeft = true;
-				console.log(keys.ArrowLeft);
-				//this.displayPaddle(meshPaddleLeft, deltaTime, -1);
-			}
-			if (event.key === "ArrowRight") {
-				keys.ArrowRight = true;
-				console.log(keys.ArrowRight);
-				console.log(keys);
-				//this.displayPaddle(meshPaddleLeft, deltaTime, 1);
-			}
-			if (event.key === "a") {
-				keys.a = true;
-				console.log(keys.a);
-				//this.displayPaddle(meshPaddleRight, deltaTime, -1);
-			}
-			if (event.key === "d") {
-				keys.d = true;
-				console.log(keys.d);
-				//	this.displayPaddle(meshPaddleRight, deltaTime, 1);
+			if (keys.hasOwnProperty(event.key)) {
+				keys[event.key] = true;
 			}
 		});
 
-		window.addEventListener('keyup', (event) => {
-			if (event.key === 'ArrowLeft') {
-				keys.ArrowLeft = false;
-				console.log(keys.ArrowLeft);
-			}
-			if ( event.key === 'ArrowRight') {
-				keys.ArrowRight = false;
-				console.log(keys.ArrowRight);
-				console.log(keys);
-			}
-			if (event.key === 'a') {
-				keys.a = false;
-				console.log(keys.a);
-			}
-			if ( event.key === 'd') {
-				keys.d = false;
-				console.log(keys.d);
+		window.addEventListener("keyup", (event) => {
+			if (keys.hasOwnProperty(event.key)) {
+				keys[event.key] = false;
 			}
 		});
-	}
-
-	displayPaddle(meshPaddleLeft, meshPaddleRight, deltaTime) {
-
-		const paddleSpeed = 5;
-
-		if (keys.ArrowLeft ) {
-			meshPaddleLeft.position.x -= paddleSpeed * deltaTime;
-			console.log(meshPaddleLeft.position.x);
-		}
-		if (keys.ArrowRight ) {
-			meshPaddleLeft.position.x += paddleSpeed * deltaTime;
-		}
-		if (keys.a) {
-			meshPaddleRight.position.x -= paddleSpeed * deltaTime;
-		}
-		if (keys.d) {
-			meshPaddleRight.position.x += paddleSpeed * deltaTime;
-		}
-	}
-
-	// updateBallPosition(meshBall, deltaTime) {
-	// 	const ballSpeed = 0.1;
-	// 	document.addEventListener('keydown', (event) => {
-	// 		if (event.key == 'ArrowUp') {
-	// 			meshBall.position.y += ballDirection.y * (ballSpeed * deltaTime);
-	// 			console.log(meshBall.position.y);
-	// 		}
-	// 		if (event.key == 'ArrowDown') {
-	// 			meshBall.position.y -= ballDirection.y * (ballSpeed * deltaTime);
-	// 		}
-	// });
-
-	// }
-
-	displayBall(meshBall, positionXDuBack, positionYDuBack, deltaTime) {
-		meshBall.position.y = positionYDuBack * deltaTime;
-		meshBall.position.x = positionXDuBack * deltaTime;
+		window.addEventListener("resize", () => {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+		});
 	}
 
 	initGame() {
 		console.log("Game Loading...");
 
-		const canvas = document.querySelector("#webgl");
-		const gameBoard = document.querySelector("#game-container");
-		const gameWidth = gameBoard.clientWidth;
-		const gameHeight = gameBoard.clientHeight;
-		const ballRadius = 0.5;
-		const paddleSpeed = 5;
-		let ballSpeed = 1;
-		let ballX = gameWidth / 2;
-		let ballY = gameHeight / 2;
-		let ballDirection = { x: 1, y: 1 };
-		let player1Score = 0;
-		let player2Score = 0;
-		//	const asciiOutput = document.getElementById("ascii-output");
+		const canvas = document.querySelector("canvas.webgl");
 
 		const scene = new THREE.Scene();
+		//scene.background = new THREE.Color(0x000000);
 
-		const meshPaddleLeft = new THREE.Mesh(
-			new THREE.BoxGeometry(40, 2, 1),
-			new THREE.MeshBasicMaterial({ color: 0x000000 })
+		const camera = new THREE.PerspectiveCamera(
+			75,
+			window.innerWidth / window.innerHeight,
+			0.1,
+			1000
 		);
-		meshPaddleLeft.position.x = 3;
-		meshPaddleLeft.position.y = -10;
-
-		const meshPaddleRight = new THREE.Mesh(
-			new THREE.BoxGeometry(40, 2, 1),
-			new THREE.MeshBasicMaterial({ color: 0x000000 })
-		);
-		meshPaddleRight.position.x = 3;
-		meshPaddleRight.position.y = 1.5;
-
-		const meshBall = new THREE.Mesh(
-			new THREE.SphereGeometry(0.5, 32, 32),
-			new THREE.MeshBasicMaterial({ color: 0x000000 })
-		);
-		meshBall.position.y = 0;
-
-		const sizes = {
-			width: window.innerWidth,
-			height: window.innerHeight,
-		};
-		console.log(sizes);
-
-		scene.add(meshPaddleLeft);
-		scene.add(meshPaddleRight);
-		/*CONDITIONS POUR RANDOM MOVE AU DEBUT DE LA PARTIE)*/
-			// if (Math.random() > 0.5) {
-			// 	ballDirection.x = 1;
-			// } else {
-			// 	ballDirection.x = -1;
-			// }
-			// if (Math.random() > 0.5) {
-			// 	ballDirection.y = 1;
-			// } else {
-			// 	ballDirection.y = -1;
-			// }
-			// ballX = gameWidth / 2;
-			// ballY = gameHeight / 2;
-
-		scene.add(meshBall);
-
-		const light = new THREE.DirectionalLight(0xffffff, 1);
-		light.position.set(2, 2, 2);
-		scene.add(light);
+		camera.position.set(0, 5, 10);
+		camera.lookAt(0, 0, 0);
 
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
 		});
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		// renderer.shadowMap.enabled = true;
+		// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		// document.body.appendChild(renderer.domElement);
 
-		const asciiChar = " .";
-		const effect = new THREE.AsciiEffect(renderer, asciiChar, {
-			invert: false,
-			resolution: 0.2,
-			scale: 1,
-		});
-		effect.setSize(sizes.width, sizes.height);
-		effect.domElement.style.color = "black";
-		effect.domElement.style.backgroundColor = "none";
-
-		//effect.domElement.classList.add("ascii-effect");
-		//effect.domElement.style.cursor = "grab";
-		//document.querySelector("#ascii-output").appendChild(effect.domElement);
-		//canvas.style.display = "none";
-
-		const camera = new THREE.PerspectiveCamera(
-			75,
-			sizes.width / sizes.height
-		);
-		camera.position.z = 20;
-
-		//camera.position.y = 1;
-		//camera.lookAt(meshPaddleLeft.position);
-		//camera.lookAt(mesh.position);
-		scene.add(camera);
-
-		renderer.setSize(sizes.width, sizes.height);
-		renderer.setPixelRatio(window.devicePixelRatio);
-
-		//const controls = new THREE.OrbitControls(camera, effect.domElement);
-		//renderer.domElement.style.cursor = "grab";
-		const controls = new THREE.OrbitControls(camera, canvas);
-		console.log(controls);
+		const controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.enablePan = false;
 		controls.enableDamping = true;
 		controls.enableZoom = true;
+		controls.maxPolarAngle = Math.PI / 2.1;
+		controls.minPolarAngle = Math.PI / 2.5;
+
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		directionalLight.position.set(5, 10, 5);
+		directionalLight.castShadow = true;
+		directionalLight.shadow.mapSize.width = 2048;
+		directionalLight.shadow.mapSize.height = 2048;
+		scene.add(directionalLight);
+
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+		scene.add(ambientLight);
+
+		const ballSpotlight = new THREE.SpotLight(0xffffff, 10);
+		ballSpotlight.angle = Math.PI / 6;
+		ballSpotlight.penumbra = 0.3;
+		ballSpotlight.decay = 1;
+		ballSpotlight.distance = 10;
+		ballSpotlight.castShadow = true;
+		scene.add(ballSpotlight);
+		scene.add(ballSpotlight.target);
+
+		const paddleMaterial = new THREE.MeshStandardMaterial({
+			color: 0xffffff,
+			roughness: 0.2,
+			metalness: 1.5,
+			emissive: 0xffffff,
+			emissiveIntensity: 0.4,
+		});
+
+		const meshPlayer1 = new THREE.Mesh(
+			new THREE.BoxGeometry(0.5, 0.1, 1.5),
+			paddleMaterial
+		);
+		meshPlayer1.position.set(-4.5, 0.5, 0);
+
+		const meshPlayer2 = new THREE.Mesh(
+			new THREE.BoxGeometry(0.5, 0.1, 1.5),
+			paddleMaterial
+		);
+		meshPlayer2.position.set(4.5, 0.5, 0);
+
+		const meshBall = new THREE.Mesh(
+			new THREE.SphereGeometry(0.2, 32, 32),
+			new THREE.MeshBasicMaterial({
+				color: 0x000000,
+			})
+		);
+		meshBall.position.set(0, 0.2, 0);
+
+		const meshBoard = new THREE.Mesh(
+			new THREE.PlaneGeometry(10, 6),
+			new THREE.MeshStandardMaterial({
+				color: 0x000000,
+				roughness: 0.7,
+				metalness: 0.3,
+			})
+		);
+		meshBoard.rotation.x = -Math.PI / 2;
+		meshBoard.receiveShadow = true;
+
+		const boardLine = new THREE.Mesh(
+			new THREE.PlaneGeometry(0.05, 6),
+			new THREE.MeshStandardMaterial({
+				color: 0xffffff,
+				emissive: 0xffffff,
+				emissiveIntensity: 0.2,
+			})
+		);
+		boardLine.rotation.x = -Math.PI / 2;
+		boardLine.position.y = 0.01;
+		scene.add(boardLine);
+
+		scene.add(meshBoard);
+		scene.add(meshPlayer1);
+		scene.add(meshPlayer2);
+		scene.add(meshBall);
+
+		const particleCount = 100;
+		const particleGeometry = new THREE.BufferGeometry();
+		const particleMaterial = new THREE.PointsMaterial({
+			color: 0xffffff,
+			size: 0.05,
+			transparent: true,
+			opacity: 0.8,
+		});
+
+		const particlePositions = new Float32Array(particleCount * 3);
+		particleGeometry.setAttribute(
+			"position",
+			new THREE.BufferAttribute(particlePositions, 3)
+		);
+		const particles = new THREE.Points(particleGeometry, particleMaterial);
+		scene.add(particles);
+
+		let activeParticles = [];
+
+		// CREATE THE DISPLAY SCORE TEXT 3D FUNCTION HERE
+
+		let ballVelocity = { x: 0.05, z: 0.02 };
+		let scores = { left: 0, right: 0 };
+		const scoreElement = document.getElementById("score");
+
+		function createCollisionParticles(position) {
+			for (let i = 0; i < particleCount; i++) {
+				activeParticles.push({
+					position: position.clone(),
+					velocity: new THREE.Vector3(
+						(Math.random() - 0.5) * 0.2,
+						Math.random() * 0.2,
+						(Math.random() - 0.5) * 0.2
+					),
+					life: 1.0,
+				});
+			}
+		}
+
+		function updateParticles() {
+			activeParticles = activeParticles.filter((particle) => {
+				particle.position.add(particle.velocity);
+				particle.life -= 0.02;
+				return particle.life > 0;
+			});
+
+			const positions = new Float32Array(particleCount * 3);
+			for (let i = 0; i < activeParticles.length; i++) {
+				const particle = activeParticles[i];
+				positions[i * 3] = particle.position.x;
+				positions[i * 3 + 1] = particle.position.y;
+				positions[i * 3 + 2] = particle.position.z;
+			}
+
+			particles.geometry.setAttribute(
+				"position",
+				new THREE.BufferAttribute(positions, 3)
+			);
+			particles.geometry.attributes.position.needsUpdate = true;
+		}
+
+		function resetBall() {
+			meshBall.position.set(0, 0.2, 0);
+			ballVelocity = {
+				x: (Math.random() > 0.5 ? 1 : -1) * 0.05,
+				z: (Math.random() - 0.5) * 0.05,
+			};
+		}
+
+		// HERE FUNCTION TO UPDATE THE SCORES (HANDLE THE DISPLAY IN 3D)
 
 		const clock = new THREE.Clock();
 		const tick = () => {
-			let deltaTime = clock.getDelta();
-			//const elapsedTime = clock.getElapsedTime();
-			//meshPaddleLeft.rotation.y = elapsedTime * 0.5;
-			//meshPaddleRight.rotation.y = elapsedTime * 0.5;
-			//meshBall.rotation.y = elapsedTime * 0.5;
-			//meshBall.position.x = Math.sin(elapsedTime);
+			requestAnimationFrame(tick);
 
-			this.displayPaddle(meshPaddleLeft, meshPaddleRight, deltaTime);
-			//this.updateBallPosition(meshBall, deltaTime);
+			// PADDLE POSITION UPDATE
+			if (keys.w && meshPlayer1.position.z > -2)
+				meshPlayer1.position.z -= 0.1;
+			if (keys.s && meshPlayer1.position.z < 2)
+				meshPlayer1.position.z += 0.1;
+			if (keys.ArrowUp && meshPlayer2.position.z > -2)
+				meshPlayer2.position.z -= 0.1;
+			if (keys.ArrowDown && meshPlayer2.position.z < 2)
+				meshPlayer2.position.z += 0.1;
 
+			// BALL POS UPDATE
+			meshBall.position.x += ballVelocity.x;
+			meshBall.position.z += ballVelocity.z;
+
+			ballSpotlight.position.set(
+				meshBall.position.x,
+				3,
+				meshBall.position.z
+			);
+			ballSpotlight.target.position.copy(meshBall.position);
+			updateParticles();
+			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
+				ballVelocity.z *= -1;
+				createCollisionParticles(meshBall.position);
+			}
+			if ((meshBall.position.x <= meshPlayer1.position.x + 0.3 &&
+					meshBall.position.x >= meshPlayer1.position.x - 0.3 &&
+					Math.abs(meshBall.position.z - meshPlayer1.position.z) <
+						0.8) ||
+				(meshBall.position.x >= meshPlayer2.position.x - 0.3 &&
+					meshBall.position.x <= meshPlayer2.position.x + 0.3 &&
+					Math.abs(meshBall.position.z - meshPlayer2.position.z) <
+						0.8)
+			) {
+				ballVelocity.x *= -1.1;
+				createCollisionParticles(meshBall.position);
+			}
+			if (meshBall.position.x > 4.5) {
+				scores.left++;
+				//updateScore();
+				resetBall();
+			} else if (meshBall.position.x < -4.5) {
+				scores.right++;
+				//updateScore();
+				resetBall();
+			}
 			controls.update();
 			renderer.render(scene, camera);
-			//effect.render(scene, camera);
-			//effect.animationId = requestAnimationFrame(tick);
-			//window.threeInstance.animationId = requestAnimationFrame(tick);
-			requestAnimationFrame(tick);
 		};
-
+		resetBall();
 		tick();
 	}
 
 	render() {
 		return `
-        <div id="line"></div>
-
-        <div id="game-container">
-            <canvas id="webgl" width="400" height="400"></canvas>
-            <div id="ascii-output"></div>
-        </div>
-            <div id="response-result"></div>
+        <div id="container-canvas">
+            <canvas class="webgl"></canvas>
         </div>
     `;
 	}
