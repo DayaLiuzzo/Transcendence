@@ -177,13 +177,13 @@ export default class PlayCanva extends BasePlayView {
 				</nav>
 			</div>
 			<div id="line"></div>
-			</div>          
+			</div>
 		</div>
 		<div id="container">
 			<h2>Play remote</h2>
+			<div id="room-id"></div>
 			<div id="user-1"></div>
-			<div id="user-2">Looking for opponent...</div>
-			<div id="loader" class="loader"></div>
+			<div id="user-2"></div>
 			<div id="container-canvas">
 				<canvas class="webgl"></canvas>
 				<div id="ascii-output"></div>

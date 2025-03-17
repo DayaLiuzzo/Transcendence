@@ -1,18 +1,12 @@
-import { cleanUpThree } from "../three/utils.js";
 import BaseView from "./BaseView.js";
-//import { FontLoader } from
-// import { TextGeometry } from "https://https://unpkg.com/three@0.126.0/examples/jsm//geometries/TextGeometry.js"
-// import { FontLoader } from "https://unpkg.com/three@v0.126.0-qHpLjSttpMdFq2EjKvPI/mode=raw/examples/jsm/loaders/FontLoader.js"
-
 
 let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
 let gameOver = false;
+let isRunning = true;
 
 export default class PlayCanva extends BaseView {
 	constructor(params) {
 		super(params);
-
-
 	}
 
 	handlerEventsListeners() {
@@ -34,7 +28,6 @@ export default class PlayCanva extends BaseView {
 				keys[event.key] = false;
 			}
 		});
-
 	}
 
 	initGame() {
@@ -43,7 +36,6 @@ export default class PlayCanva extends BaseView {
 		const canvas = document.querySelector("canvas.webgl");
 
 		const scene = new THREE.Scene();
-		//scene.background = new THREE.Color(0x000000);
 
 		const camera = new THREE.PerspectiveCamera(
 			75,
@@ -117,7 +109,7 @@ export default class PlayCanva extends BaseView {
 			new THREE.MeshStandardMaterial({
 				color: 0x000000,
 				roughness: 0.7,
-				metalness: 0.3
+				metalness: 0.3,
 			})
 		);
 		meshBoard.rotation.x = -Math.PI / 2;
@@ -162,33 +154,42 @@ export default class PlayCanva extends BaseView {
 		let leftScoreText;
 		let rightScoreText;
 		const fontLoader = new THREE.FontLoader();
-		console.log (fontLoader)
-		fontLoader.load( 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-			const textMaterial = new THREE.MeshStandardMaterial({
-				color: 0x000000,
-				emissive: 0xffffff,
-				emissiveIntensity: 0.4
-			  });
-		const createScoreText = (score, position) => {
-			const geometry = new THREE.TextGeometry(score.toString(), {
-				font: font,
-				size: 0.5,
-				height: 0.1
-			});
-			const mesh = new THREE.Mesh(geometry, textMaterial);
-			mesh.position.copy(position);
-			return mesh;
-		};
-		leftScoreText = createScoreText('0', new THREE.Vector3(-2, 2, 0));
-		rightScoreText = createScoreText('0', new THREE.Vector3(2, 2, 0));
-		scene.add(leftScoreText);
-		scene.add(rightScoreText);
-	});
+		console.log(fontLoader);
+		fontLoader.load(
+			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+			function (font) {
+				const textMaterial = new THREE.MeshStandardMaterial({
+					color: 0x000000,
+					emissive: 0xffffff,
+					emissiveIntensity: 0.4,
+				});
+				const createScoreText = (score, position) => {
+					const geometry = new THREE.TextGeometry(score.toString(), {
+						font: font,
+						size: 0.5,
+						height: 0.1,
+					});
+					const mesh = new THREE.Mesh(geometry, textMaterial);
+					mesh.position.copy(position);
+					return mesh;
+				};
+				leftScoreText = createScoreText(
+					"0",
+					new THREE.Vector3(-2, 2, 0)
+				);
+				rightScoreText = createScoreText(
+					"0",
+					new THREE.Vector3(2, 2, 0)
+				);
+				scene.add(leftScoreText);
+				scene.add(rightScoreText);
+			}
+		);
 
 		let ballVelocity = { x: 0.05, z: 0.02 };
 		let scores = { left: 0, right: 0 };
 		const scoreElement = document.getElementById("score");
-		console.log(scoreElement)
+		console.log(scoreElement);
 
 		function createCollisionParticles(position) {
 			for (let i = 0; i < particleCount; i++) {
@@ -228,61 +229,97 @@ export default class PlayCanva extends BaseView {
 
 		function resetBall() {
 			meshBall.position.set(0, 0.2, 0);
-			ballVelocity = {
-				x: (Math.random() > 0.5 ? 1 : -1) * 0.05,
-				z: (Math.random() - 0.5) * 0.05,
-			};
+			ballVelocity = { x: 0, z: 0 };
+
+			setTimeout(() => {
+				ballVelocity = {
+					x: (Math.random() > 0.5 ? 1 : -1) * 0.05,
+					z: (Math.random() - 0.5) * 0.05,
+				};
+			}, 500);
 		}
 
-		// HERE FUNCTION TO UPDATE THE SCORES (HANDLE THE DISPLAY IN 3D)
 		function updateScore() {
+			const fontLoader = new THREE.FontLoader();
+			fontLoader.load(
+				"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+				function (font) {
+					const textMaterial = new THREE.MeshStandardMaterial({
+						color: 0x000000,
+						emissive: 0xffffff,
+						emissiveIntensity: 0.4,
+					});
 
-		const fontLoader = new THREE.FontLoader();
-		fontLoader.load( 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-			const textMaterial = new THREE.MeshStandardMaterial({
-				color: 0x000000,
-				emissive: 0xffffff,
-				emissiveIntensity: 0.4
-			  });
-			scoreElement.textContent = `${scores.left} - ${scores.right}`;
-			if (leftScoreText && rightScoreText) {
-			  scene.remove(leftScoreText);
-			  scene.remove(rightScoreText);
+					if (leftScoreText && rightScoreText) {
+						scene.remove(leftScoreText);
+						scene.remove(rightScoreText);
 
-			  const textMaterial = leftScoreText.material;
-			  leftScoreText = new THREE.TextGeometry(scores.left.toString(), {
-				font: font,
-				size: 0.5,
-				height: 0.1
-			  });
-			  rightScoreText = new THREE.TextGeometry(scores.right.toString(), {
-				font: font,
-				size: 0.5,
-				height: 0.1
-			  });
+						const textMaterial = leftScoreText.material;
+						leftScoreText = new THREE.TextGeometry(
+							scores.left.toString(),
+							{
+								font: font,
+								size: 0.5,
+								height: 0.1,
+							}
+						);
+						rightScoreText = new THREE.TextGeometry(
+							scores.right.toString(),
+							{
+								font: font,
+								size: 0.5,
+								height: 0.1,
+							}
+						);
 
-			  leftScoreText = new THREE.Mesh(leftScoreText, textMaterial);
-			  rightScoreText = new THREE.Mesh(rightScoreText, textMaterial);
+						leftScoreText = new THREE.Mesh(
+							leftScoreText,
+							textMaterial
+						);
+						rightScoreText = new THREE.Mesh(
+							rightScoreText,
+							textMaterial
+						);
 
-			  leftScoreText.position.set(-2, 2, 0);
-			  rightScoreText.position.set(2, 2, 0);
+						leftScoreText.position.set(-2, 2, 0);
+						rightScoreText.position.set(2, 2, 0);
 
-			  scene.add(leftScoreText);
-			  scene.add(rightScoreText);
+						scene.add(leftScoreText);
+						scene.add(rightScoreText);
 
-			  if (scores.left >= 5 || scores.right >= 5) {
-				alert(`Le joueur ${scores.left >= 5 ? "1" : "2"} a gagné !`);
-				gameOver = true;
+						if (scores.left >= 2 || scores.right >= 2) {
+							alert(
+								`Le joueur ${
+									scores.left >= 5 ? "1" : "2"
+								} a gagné !`
+							);
+							gameOver = true;
+						}
+					}
+				}
+			);
+		}
 
-			}
-			}
-		  })};
+		// function resetGame() {
+		// 	isRunning = false;
+		// 	scores.left = 0;
+		// 	scores.right = 0;
+		// 	updateScore();
+		// 	cancelAnimationFrame(tick);
+		// 	while (scene.children.length > 0) {
+		// 		scene.remove(scene.children[0]);
+		// 	}
+		// 	meshBall.position.set(0, 0, 0);
+		// 	meshPlayer1.position.set(-5, 0, 0);
+		// 	meshPlayer2.position.set(5, 0, 0);
+		// 	meshBall.position.set(0, 0, 0);
+		// 	return;
+		// }
 
 		const clock = new THREE.Clock();
 		const tick = () => {
-			if (gameOver === true)
-			{
-				resetBall();
+			if (gameOver === true) {
+				//resetGame();
 				return;
 			}
 			requestAnimationFrame(tick);
@@ -312,7 +349,8 @@ export default class PlayCanva extends BaseView {
 				ballVelocity.z *= -1;
 				createCollisionParticles(meshBall.position);
 			}
-			if ((meshBall.position.x <= meshPlayer1.position.x + 0.3 &&
+			if (
+				(meshBall.position.x <= meshPlayer1.position.x + 0.3 &&
 					meshBall.position.x >= meshPlayer1.position.x - 0.3 &&
 					Math.abs(meshBall.position.z - meshPlayer1.position.z) <
 						0.8) ||
@@ -344,6 +382,11 @@ export default class PlayCanva extends BaseView {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 				renderer.setSize(window.innerWidth, window.innerHeight);
+			});
+			document.addEventListener("visibilitychange", () => {
+				if (document.hidden) {
+					resetGame();
+				}
 			});
 
 			renderer.render(scene, camera);

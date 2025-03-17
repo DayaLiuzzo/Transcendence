@@ -1,10 +1,6 @@
 import BaseView from './BaseView.js';
 import WebSocketService from './WebSocketService.js';
 
-function toggleLoader() {
-    const loader = document.getElementById("loader");
-    loader.style.display = loader.style.display === "none" || loader.style.display === "" ? "inline-block" : "none";
-}
 export default class BasePlayView extends BaseView{
     constructor(params){
         super(params);
@@ -13,16 +9,13 @@ export default class BasePlayView extends BaseView{
 
     async joinRoom() {
         const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
-        const loader = document.getElementById("loader");
-        loader.style.display = "inline-block";
         if (result.success) {
             console.log(result.success)
             console.log(result.data)
 
             document.getElementById("room-id").innerText = result.data.room_id;
             // document.getElementById("user-1").innerText = this.getUsername();
-            document.getElementById("loader").style.display = "inline-block";            
-            setTimeout(() => { oader.style.display = "none";}, 3000);
+            document.getElementById("user-2").innerText = "Looking for opponent...";
             document.querySelector("canvas.webgl").innerText = "Loading...";
             this.openWebSocket(result.data.room_id);
             window.addEventListener("gameStarted", () => this.checkStart());
