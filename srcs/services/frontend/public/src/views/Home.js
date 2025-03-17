@@ -7,27 +7,50 @@ export default class Home extends BaseView {
 	render() {
 		if (this.isAuthenticated()) {
 			return `
-          <div id="line"></div>
-          <div id="test-text-container"><p>welcome to our </p> <p id="test-text"> Pong Game </p></div>
-  canvas class="webgl"></canvas>
-  div id="follow-scroll-elements">
-          <p>(↖ drag me please)</p>
-          </div>
-          </div>
+				<div id="header">
+					<div>
+						<button id="button-nav">
+						<i class="menuIcon material-icons">menu</i>
+						<i class="closeIcon material-icons" style="display: none;" >close</i>
+						</button>
+						<nav id="navbar">
+						</nav>
+					</div>
+					<div id="line"></div>
+					</div>          
+				</div>  
+			
+				<div id="test-text-container"><p>welcome to our </p> <p id="test-text"> Pong Game </p></div>
+					canvas class="webgl"></canvas>
+					div id="follow-scroll-elements">
+				<p>(↖ drag me please)</p>
+				</div>
+			</div>
               `;
 		} else {
 			return `
-          <div id="line"></div>
-          <div id="test-text-container"><p>welcome to our</p> <p id="outstanding">outstanding </p><p id="test-text"> Pong
-          Game </p></div>
-<div class="ascii-container">
-<canvas class="webgl"></canvas>
-<div id="ascii-output"></div>
-</div>
-<div id="follow-scroll-elements">
-    <p>(↖ drag me please)</p>
-    </div>
-  </div>
+				<div id="header">
+					<div>
+						<button id="button-nav">
+						<i class="menuIcon material-icons">menu</i>
+						<i class="closeIcon material-icons" style="display: none;" >close</i>
+						</button>
+						<nav id="navbar">
+						</nav>
+					</div>
+					<div id="line"></div>
+					</div>          
+				</div>          
+				<div id="test-text-container"><p>welcome to our</p> <p id="outstanding">outstanding </p><p id="test-text"> Pong
+						Game </p></div>
+					<div class="ascii-container">
+					<canvas class="webgl"></canvas>
+					<div id="ascii-output"></div>
+				</div>
+				<div id="follow-scroll-elements">
+					<p>(↖ drag me please)</p>
+				</div>
+			</div>
               `;
 		}
 	}
