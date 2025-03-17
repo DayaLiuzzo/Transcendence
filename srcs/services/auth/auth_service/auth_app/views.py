@@ -67,7 +67,6 @@ class TwoFactorSetupView(APIView):
         serializer.is_valid(raise_exception=True)
         if serializer.validated_data.get('enable'):
             user.otp_secret = pyotp.random_base32()
-            user.two_factor_enabled = True
             user.save()
             return Response(TwoFactorSetupSerializer(user).data, status=status.HTTP_200_OK)
         user.two_factor_enabled = False

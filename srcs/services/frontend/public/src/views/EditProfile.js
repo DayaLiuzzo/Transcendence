@@ -128,6 +128,57 @@ export default class EditProfile extends BaseView {
         this.changeUsername(formData);
     }
 
+    async verify2FA(otp_qr) {
+        const otpPopup = document.createElement("div");
+        otpPopup.id = "otp-popup";
+        otpPopup.innerHTML = `
+            <div class="popup-content">
+                <h3>Enter OTP</h3>
+                <div id="otp-qr"></div>
+                <h2>Scan the QR code with your 2FA app</h2>
+                <input type="text" id="otp-input" placeholder="Enter OTP" required />
+                <button id="verify-otp">Verify</button>
+                <button id="close-otp">Cancel</button>
+                <p id="otp-error" style="color: red; display: none;"></p>
+            </div>
+        `;
+        const script = document.createElement("script");
+        script.src = "https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js";
+        script.onload = () => {
+            new QRCode(document.getElementById("otp-qr"), otp_qr);
+        };
+        document.body.appendChild(script);
+        otpPopup.style.cssText = `
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        `;
+        document.body.appendChild(otpPopup); // Add popup to the DOM
+
+        const verifyOtpBtn = document.getElementById("verify-otp");
+        const closeOtpBtn = document.getElementById("close-otp");
+        const otpInput = document.getElementById("otp-input");
+        const otpError = document.getElementById("otp-error");
+
+        verifyOtpBtn.addEventListener("click", async () => {
+            const response = await this.sendPostRequest(this.API_URL + '2fa/verify/', {otp: otpInput.value});
+            if (response.success){
+                let userSession = JSON.parse(localStorage.getItem("userSession"));
+                userSession.two_factor_enabled = true;
+                localStorage.setItem("userSession", JSON.stringify(userSession));
+                otpPopup.remove();
+                return true;
+            } else {
+                otpError.textContent = "Invalid OTP, try again.";
+                document.getElementById("otp-error").style.display = "block";
+            }
+        });
+        closeOtpBtn.addEventListener("click", () => {
+            otpPopup.remove();
+            return false;
+        })
+    }
+
     async handleToggle2FA() {
         const button = document.getElementById("toggle-2fa-button");
         const body = {
@@ -139,12 +190,7 @@ export default class EditProfile extends BaseView {
             this.showError(response.error, "toggle-2fa-button");
             return;
         }
-
-        let userSession = JSON.parse(localStorage.getItem("userSession"));
-        userSession.two_factor_enabled = body.enable;
-        localStorage.setItem("userSession", JSON.stringify(userSession));
-
-        alert(body.enable ? response.data.otp_secret : response.data.message);
+        if (!this.verify2FA(response.data.otp_secret, response.data.qr_code_url)) return;
         button.textContent = body.enable ? "Disable 2FA" : "Enable 2FA";
     }
 
