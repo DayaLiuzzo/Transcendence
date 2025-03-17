@@ -116,7 +116,19 @@ class CreateGame(APIView):
         if Game.objects.filter(room_id=room_id).exists():
             return Response({'error': f'La room avec l\'ID {room_id} existe déjà.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        game = Game(room_id=room_id)
+        game = Game(room_id=room_id, from_tournament=False)
+        game.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+#called by Rooms service when creating a rooms
+class CreateGameTournament(APIView):
+    permission_classes = [IsRooms]
+    def post(self, request, room_id, *args, **kwargs):
+        if Game.objects.filter(room_id=room_id).exists():
+            return Response({'error': f'La room avec l\'ID {room_id} existe déjà.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        game = Game(room_id=room_id, from_tournament=True)
         game.save()
 
         return Response(status=status.HTTP_201_CREATED)
