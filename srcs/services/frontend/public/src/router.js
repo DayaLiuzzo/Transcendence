@@ -9,9 +9,7 @@ import PlayRemote from "./views/PlayRemote.js";
 import PlayCanva from "./views/PlayCanva.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
-
 import { cleanUpThree } from "./three/utils.js";
-
 import EditProfile from "./views/EditProfile.js";
 import Profile from "./views/Profile.js";
 
@@ -24,13 +22,11 @@ const routes = [
     { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css", requiresAuth: true},
     { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: false},
-    { path: '/play-canva', view: PlayCanva, css: "styles/core.css", requiresAuth: false},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css", requiresAuth: true},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css", requiresAuth: true},
     { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
     { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true }
 ];
-
 
 class Router{
     constructor(routes){
@@ -82,27 +78,6 @@ class Router{
        }
        return false;
     }
-
-
-
-    // updateBodyClass(path) {
-    //     const className = path === "/" ? "home" : path.replace("/", "");
-    //     document.body.className = className;
-    // }
-
-    // updateStylesheet(path) {
-    //     const route = this.getRoute(path);
-    //     const cssFile = route ? route.css : "styles/core.css";
-
-    //     let stylesheet = document.getElementById("dynamic-style");
-    //     if (!stylesheet) {
-    //         stylesheet = document.createElement("link");
-    //         stylesheet.rel = "stylesheet";
-    //         stylesheet.id = "dynamic-style";
-    //         document.head.appendChild(stylesheet);
-    //     }
-    //     stylesheet.href = cssFile;
-    // }
 
     async loadView(path){
         const route = this.getRoute(path);
@@ -196,7 +171,6 @@ class Router{
         });
     }
 }
-
 
 window.addEventListener("DOMContentLoaded", () => {
     const router = new Router(routes);
