@@ -5,10 +5,13 @@ import BaseView from "./BaseView.js";
 
 
 let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
+let gameOver = false;
 
 export default class PlayCanva extends BaseView {
 	constructor(params) {
 		super(params);
+
+
 	}
 
 	handlerEventsListeners() {
@@ -30,11 +33,7 @@ export default class PlayCanva extends BaseView {
 				keys[event.key] = false;
 			}
 		});
-		window.addEventListener("resize", () => {
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
-			renderer.setSize(window.innerWidth, window.innerHeight);
-		});
+
 	}
 
 	initGame() {
@@ -164,6 +163,16 @@ export default class PlayCanva extends BaseView {
 
 		let activeParticles = [];
 
+		let leftScoreText;
+		let rightScoreText;
+		const fontLoader = new THREE.FontLoader();
+		console.log (fontLoader)
+		fontLoader.load( 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+			const textMaterial = new THREE.MeshStandardMaterial({
+				color: 0x000000,
+				emissive: 0xffffff,
+				emissiveIntensity: 0.4
+			  });
 		const createScoreText = (score, position) => {
 			const geometry = new THREE.TextGeometry(score.toString(), {
 				font: font,
@@ -178,6 +187,7 @@ export default class PlayCanva extends BaseView {
 		rightScoreText = createScoreText('0', new THREE.Vector3(2, 2, 0));
 		scene.add(leftScoreText);
 		scene.add(rightScoreText);
+	});
 
 
 
@@ -186,6 +196,7 @@ export default class PlayCanva extends BaseView {
 		let ballVelocity = { x: 0.05, z: 0.02 };
 		let scores = { left: 0, right: 0 };
 		const scoreElement = document.getElementById("score");
+		console.log(scoreElement)
 
 		function createCollisionParticles(position) {
 			for (let i = 0; i < particleCount; i++) {
@@ -232,9 +243,52 @@ export default class PlayCanva extends BaseView {
 		}
 
 		// HERE FUNCTION TO UPDATE THE SCORES (HANDLE THE DISPLAY IN 3D)
+		function updateScore() {
+
+		const fontLoader = new THREE.FontLoader();
+		fontLoader.load( 'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+			const textMaterial = new THREE.MeshStandardMaterial({
+				color: 0x000000,
+				emissive: 0xffffff,
+				emissiveIntensity: 0.4
+			  });
+			scoreElement.textContent = `${scores.left} - ${scores.right}`;
+			if (leftScoreText && rightScoreText) {
+			  scene.remove(leftScoreText);
+			  scene.remove(rightScoreText);
+
+			  const textMaterial = leftScoreText.material;
+			  leftScoreText = new THREE.TextGeometry(scores.left.toString(), {
+				font: font,
+				size: 0.5,
+				height: 0.1
+			  });
+			  rightScoreText = new THREE.TextGeometry(scores.right.toString(), {
+				font: font,
+				size: 0.5,
+				height: 0.1
+			  });
+
+			  leftScoreText = new THREE.Mesh(leftScoreText, textMaterial);
+			  rightScoreText = new THREE.Mesh(rightScoreText, textMaterial);
+
+			  leftScoreText.position.set(-2, 2, 0);
+			  rightScoreText.position.set(2, 2, 0);
+
+			  scene.add(leftScoreText);
+			  scene.add(rightScoreText);
+
+			  if (scores.left >= 5 || scores.right >= 5) {
+				alert(`Le joueur ${scores.left >= 5 ? "1" : "2"} a gagné !`);
+				gameOver = true;
+			}
+			}
+		  })};
 
 		const clock = new THREE.Clock();
 		const tick = () => {
+			if (gameOver === true)
+				return;
 			requestAnimationFrame(tick);
 
 			// PADDLE POSITION UPDATE
@@ -276,14 +330,21 @@ export default class PlayCanva extends BaseView {
 			}
 			if (meshBall.position.x > 4.5) {
 				scores.left++;
-				//updateScore();
+				updateScore();
 				resetBall();
 			} else if (meshBall.position.x < -4.5) {
 				scores.right++;
-				//updateScore();
+				updateScore();
 				resetBall();
 			}
 			controls.update();
+
+			window.addEventListener("resize", () => {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			});
+
 			renderer.render(scene, camera);
 		};
 		resetBall();
@@ -294,6 +355,7 @@ export default class PlayCanva extends BaseView {
 		return `
         <div id="container-canvas">
             <canvas class="webgl"></canvas>
+			<div id="score"></div>
         </div>
     `;
 	}
