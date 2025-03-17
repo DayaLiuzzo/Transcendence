@@ -9,17 +9,9 @@ export default class PlayTournamentCreate extends BaseView{
         this.handleCreateTournamentSubmit = this.handleCreateTournamentSubmit.bind(this);
     }
     
-    containsSpecialCharacter(password) {
-        const regex = /[@#$%^&*!]/; // Check for specific special characters
-        return regex.test(password);
-    }
-
     validateInputs(formData){
         if (!formData.name || formData.name.length < 3) return "Tournament name must be at least 3 characters long.";
         if (formData.name.length > 32) return "Tournament name must be at most 32 characters long.";
-        //To do : checker que l'input est bien un nb
-        // if (!formData.maxuser || formData.password.length < 6) return "Password must be at least 6 characters long.";
-        // if (!this.containsSpecialCharacter(formData.password)) return "Password must contain one of the following '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '='";
         return null;
     }
 
