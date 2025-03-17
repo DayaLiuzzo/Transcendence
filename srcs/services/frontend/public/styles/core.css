@@ -16,6 +16,7 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
   #navbar {
@@ -306,3 +307,5 @@ body {
     background-color: transparent;
     background: none;
   }
+
+

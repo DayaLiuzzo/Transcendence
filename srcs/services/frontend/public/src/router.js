@@ -28,7 +28,7 @@ const routes = [
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css", requiresAuth: true},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css", requiresAuth: true},
     { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
-    { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true },
+    { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true }
 ];
 
 
