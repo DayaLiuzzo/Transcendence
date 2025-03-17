@@ -299,22 +299,99 @@ body {
     font-family: 'Roboto', sans-serif;
   }
 
-#login-form, #signup-form, #add-friend-form button {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
-  font-size: 1.5em;
-  background-color: grey;
-  border: none;
-  width: auto;
-  height: 30px;
-  background-color: transparent;
-  cursor: pointer;
-  margin-top: 16px;
+  #login-form button, 
+  #signup-form button, 
+  #add-friend-form button {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1.5em;
+    border: none;
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  #login-form button:hover, 
+  #signup-form button:hover, 
+  #add-friend-form button:hover {
+    color: #4CAF50;
+  }
+
+  .navbar-flex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 12px;
+  }
+
+  .navbar-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+  .welcome-text {
+      font-family: 'SaolDisplay-LightItalic';
+      font-size: 18px;
+      font-weight: bold;
+      text-align: left;
+  }
+
+  .navbar-bar {
+    width: 100%;
+    height: 3px;
+    background-color: #000;
 }
 
-#login-form, #signup-form, #add-friend-form :hover {
-  opacity: 0.60;
+
+.play-menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 10px;
+  padding-top: 16px;
 }
+
+.play-option {
+  padding: 20px;
+  font-size: 18px;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: 3px solid #333;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #fff;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  animation: spin 1.5s linear infinite;
+  margin: 0 auto;
+  display: none;
+  margin-top: 26px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.play-option:hover {
+  background-color: black;
+  opacity: 0.5;
+  color: white;
+}
+
 
 #container-profile {
   display: flex;

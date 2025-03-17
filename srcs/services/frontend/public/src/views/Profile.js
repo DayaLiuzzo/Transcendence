@@ -50,7 +50,9 @@ export default class Profile extends BaseView {
                         <button id="logout">Logout</button>
                     </div>
                 </div>
-                <div id="username-field"></div>
+                <div id="username-field">
+                    <img src={}/>
+                </div>
                 <div id="biography-field"></div>
                 <div id="friends-field"></div>
                 <form id="add-friend-form">

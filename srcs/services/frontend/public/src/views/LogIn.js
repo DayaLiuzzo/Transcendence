@@ -131,7 +131,6 @@ export default class LogIn extends BaseView{
             </div>
             <div id="container">
                 <h2>Login</h2>
-                <h3> please just be ok</h3>
                 <form id="login-form">
                     <input type="text" id="login-username" placeholder="Username" required>
                     <input type="password" id="login-password" placeholder="Password" required>
