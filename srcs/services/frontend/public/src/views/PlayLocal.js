@@ -48,12 +48,12 @@ export default class PlayCanva extends BaseView {
 				console.log(keys.ArrowRight);
 				console.log(keys);
 			}
-			if (event.key === 'a') {
-				keys.a = false;
+			if (event.key === 'w') {
+				keys.w = false;
 				console.log(keys.a);
 			}
-			if ( event.key === 'd') {
-				keys.d = false;
+			if ( event.key === 's') {
+				keys.s = false;
 				console.log(keys.d);
 			}
 		});
@@ -167,6 +167,7 @@ export default class PlayCanva extends BaseView {
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
+			antialias: true,
 		});
 
 		const asciiChar = " .";
@@ -185,10 +186,9 @@ export default class PlayCanva extends BaseView {
 		//canvas.style.display = "none";
 
 		const camera = new THREE.PerspectiveCamera(
-			75,
-			sizes.width / sizes.height
-		);
-		camera.position.z = 20;
+			75, sizes.width / sizes.height, 0.1, 1000);
+		camera.position.set(0, 5, 10);
+		camera.lookAt(0, 0, 0);
 
 		//camera.position.y = 1;
 		//camera.lookAt(meshPaddleLeft.position);
@@ -200,31 +200,23 @@ export default class PlayCanva extends BaseView {
 
 		//const controls = new THREE.OrbitControls(camera, effect.domElement);
 		//renderer.domElement.style.cursor = "grab";
-		const controls = new THREE.OrbitControls(camera, canvas);
+		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		console.log(controls);
 		controls.enableDamping = true;
 		controls.enableZoom = true;
+		controls.maxPolarAngle = Math.PI / 2.1;
+		controls.minPolarAngle = Math.PI / 2.5;
 
 		const clock = new THREE.Clock();
 		const tick = () => {
 			let deltaTime = clock.getDelta();
-			//const elapsedTime = clock.getElapsedTime();
-			//meshPaddleLeft.rotation.y = elapsedTime * 0.5;
-			//meshPaddleRight.rotation.y = elapsedTime * 0.5;
-			//meshBall.rotation.y = elapsedTime * 0.5;
-			//meshBall.position.x = Math.sin(elapsedTime);
-
+			requestAnimationFrame(tick);
 			this.displayPaddle(meshPaddleLeft, meshPaddleRight, deltaTime);
 			//this.updateBallPosition(meshBall, deltaTime);
-
 			controls.update();
 			renderer.render(scene, camera);
-			//effect.render(scene, camera);
-			//effect.animationId = requestAnimationFrame(tick);
-			//window.threeInstance.animationId = requestAnimationFrame(tick);
-			requestAnimationFrame(tick);
 		};
-
+		resetBall();
 		tick();
 	}
 

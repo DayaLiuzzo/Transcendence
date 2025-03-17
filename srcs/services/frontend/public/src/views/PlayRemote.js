@@ -69,7 +69,7 @@ export default class PlayCanva extends BasePlayView {
 				metalness: 0.3
 			})
 		);
-		meshBoard.rotation.x = Math.PI / 2;
+		meshBoard.rotation.x = -(Math.PI / 2);
 		//meshBoard.position.set(0, 0, 0);
 		//meshBoard.receiveShadow = true;
 		//scene.add(meshBoard);

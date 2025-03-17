@@ -11,7 +11,7 @@ export default class SignUp extends BaseView{
         const regex = /[@#$%^&*!]/; // Check for specific special characters
         return regex.test(password);
     }
-    
+
     validateInputs(formData){
         if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
         if ((!formData.email || !formData.email.includes("@"))) return "Invalid email address.";
@@ -54,22 +54,18 @@ export default class SignUp extends BaseView{
             errorContainer.classList.add("error-container");  // Optional: Add a class for styling
             document.getElementById("signup-form").insertBefore(errorContainer, document.getElementById("signup-form").firstChild); // Insert at the top of the form
         }
-
         return errorContainer;
     }
-
-
 
     render(){
         return `
         <div>
-            <h2>signup</h2>
-            <h3> please just be ok</h3>
+            <h2>Sign-Up</h2>
             <form id="signup-form">
-            <input type="text" id="signup-username" placeholder="Username" required>
-            <input type="email" id="signup-email" placeholder="Email" required> 
-            <input type="password" id="signup-password" placeholder="Password" required>
-            <input type="password" id="signup-password2" placeholder="Password2" required>
+                <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <input type="password" id="signup-password2" placeholder="Password2" required>
                 <button type="submit">signup</button>
             </form>
         </div>
