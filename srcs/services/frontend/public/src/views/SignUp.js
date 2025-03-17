@@ -77,7 +77,6 @@ export default class SignUp extends BaseView{
             </div>
             <div id="container">
                 <h2>Sign-up</h2>
-                <h3> please just be ok</h3>
                 <form id="signup-form">
                 <input type="text" id="signup-username" placeholder="Username" required>
                 <input type="email" id="signup-email" placeholder="Email" required> 

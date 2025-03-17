@@ -20,10 +20,14 @@ export default class Home extends BaseView {
 					</div>          
 				</div>  
 			
-				<div id="test-text-container"><p>welcome to our </p> <p id="test-text"> Pong Game </p></div>
-					canvas class="webgl"></canvas>
-					div id="follow-scroll-elements">
-				<p>(↖ drag me please)</p>
+				<div id="test-text-container"><p>welcome to our</p> <p id="outstanding">outstanding </p><p id="test-text"> Pong
+						Game </p></div>
+					<div class="ascii-container">
+					<canvas class="webgl"></canvas>
+					<div id="ascii-output"></div>
+				</div>
+				<div id="follow-scroll-elements">
+					<p>(↖ drag me please)</p>
 				</div>
 			</div>
               `;

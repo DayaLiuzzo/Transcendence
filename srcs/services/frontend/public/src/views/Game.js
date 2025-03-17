@@ -35,7 +35,6 @@ export default class Game extends BaseView{
                 </div>          
             </div> 
             <h2>Game</h2>
-            <h3> please just be ok</h3>
         </div>
     `;
     }

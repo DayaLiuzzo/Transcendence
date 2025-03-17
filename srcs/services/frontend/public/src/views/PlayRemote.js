@@ -167,17 +167,30 @@ export default class PlayCanva extends BasePlayView {
 
 	render() {
 		return `
-        <div id="line"></div>
-        <h2>Play remote</h2>
-        <div id="room-id"></div>
-        <div id="user-1"></div>
-        <div id="user-2"></div>
-        <div id="container-canvas">
-            <canvas class="webgl"></canvas>
-            <div id="ascii-output"></div>
-        </div>
-            <div id="response-result"></div>
-        </div>
+		<div id="header">
+			<div>
+				<button id="button-nav">
+				<i class="menuIcon material-icons">menu</i>
+				<i class="closeIcon material-icons" style="display: none;" >close</i>
+				</button>
+				<nav id="navbar">
+				</nav>
+			</div>
+			<div id="line"></div>
+			</div>          
+		</div>
+		<div id="container">
+			<h2>Play remote</h2>
+			<div id="user-1"></div>
+			<div id="user-2">Looking for opponent...</div>
+			<div id="loader" class="loader"></div>
+			<div id="container-canvas">
+				<canvas class="webgl"></canvas>
+				<div id="ascii-output"></div>
+			</div>
+				<div id="response-result"></div>
+			</div>
+		</div>
     `;
 	}
 

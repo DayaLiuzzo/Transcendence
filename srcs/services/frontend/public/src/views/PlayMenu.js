@@ -23,13 +23,12 @@ export default class PlayMenu extends BaseView{
             </div>
             <div id="container">
                 <h2>Play Menu</h2>
-                <button id="play-local">Play localy</button>
-                <br>
-                <button id="play-remote">Play remote</button>
-                <br>
-                <button id="play-tournament">Play in tournament</button>
-                <br>
-                <button id="play-with-friends">Play in tournament</button>
+                <div class="play-menu">
+                    <div class="play-option" id="play-local">Play locally</div>
+                    <div class="play-option" id="play-remote">Play remote</div>
+                    <div class="play-option" id="play-tournament">Play in tournament</div>
+                    <div class="play-option" id="play-with-friends">Play with friends</div>
+                </div>
             </div>
         </div>
     `;

@@ -165,6 +165,30 @@ export default class BaseView{
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
+                const avatarUrl = await this.displayAvatar();
+                if (avatarUrl) {
+                    const avatarImg = document.createElement("img");
+                    avatarImg.src = avatarUrl;
+                    avatarImg.alt = "User Avatar";
+                    avatarImg.className = "navbar-avatar";
+            
+                    const welcomeText = document.createElement("span");
+                    welcomeText.textContent = "Welcome";
+                    welcomeText.className = "welcome-text";
+            
+                    const flexContainer = document.createElement("div");
+                    flexContainer.className = "navbar-flex";
+
+                    const bar = document.createElement("div");
+                    bar.className = "navbar-bar"
+            
+                    flexContainer.appendChild(avatarImg);
+                    flexContainer.appendChild(welcomeText);
+            
+                    navbar.appendChild(flexContainer);
+                    navbar.appendChild(bar);
+                }
+                
                 navbar.innerHTML += `
                 <a href="/home">Home</a>
                 <a href="/play-menu">Play</a>
@@ -172,14 +196,6 @@ export default class BaseView{
                 <a href="/logout">Logout</a>
                 `;
 
-                const avatarUrl =  await this.displayAvatar();
-                if (avatarUrl) {
-                    const avatarImg = document.createElement("img");
-                    avatarImg.src = avatarUrl;
-                    avatarImg.alt = "User Avatar";
-                    avatarImg.className = "navbar-avatar";
-                    navbar.appendChild(avatarImg);
-                }
             } else {
                 navbar.innerHTML = `
                 <a href="/home">Home</a>
