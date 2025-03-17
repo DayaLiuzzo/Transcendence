@@ -42,6 +42,7 @@ export default class Profile extends BaseView {
             </form>
             <button id="edit-profile">Edit Profile</button>
             <button id="logout">Logout</button>
+            <button id="match-history">Match History</button>
         </div>
         `;
     }
@@ -120,6 +121,10 @@ export default class Profile extends BaseView {
         this.navigateTo('/edit-profile');
     }
 
+    handleMatchHistoryClick() {
+        this.navigateTo('/match-history');
+    }
+
     handleFriendFormSubmit(event) {
         event.preventDefault();
         const friendUsername = document.getElementById("friend-username").value;
@@ -143,6 +148,11 @@ export default class Profile extends BaseView {
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));
+        }
+
+        const matchHistoryButton = document.getElementById("match-history");
+        if (matchHistoryButton) {
+            matchHistoryButton.addEventListener("click", this.handleMatchHistoryClick.bind(this));
         }
 
         const addFriendForm = document.getElementById("add-friend-form");

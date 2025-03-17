@@ -35,18 +35,58 @@ export default class SignUp extends BaseView{
             console.log('No match history field');
             return;
         }
-        const username = this.getUsername();
-        const response = await this.sendGetRequest(this.API_URL_USERS + username + '/' + 'match_history/');
+        const response = await this.sendGetRequest(this.API_URL_ROOMS + 'list_my_finished_rooms/');
         if(response.success){
             console.log('Match history found');
-            for (matches in response.data.matches){
-                matchHistoryField.innerHTML += `
-                <h3>Match History</h3>
-                <p>personnal score: ${matches.personalScore}</p>
-                <p>score_player1: ${matches.oppScore}</p>
-                <p>date: ${matches.date}</p>
+            console.log(response.data);
+            console.log(response.data[0]['room_id']);
+            const username = this.getUsername();
+            response.data.forEach((match, index) => {
+                let you_id;
+                let you_username;
+                let opponent_id;
+                let opponent_username;
+                let winner;
+                let you_score;
+                let opponent_score;
+                let matchElement = document.createElement('div');
+                matchElement.classList.add('match-history-item');
+                matchElement.id = `matchHistory${index + 1}`;
+
+                if(match.player1_username === username){
+                    you_id = match.player1;
+                    you_score = match.score_player1;
+                    you_username = match.player1_username;
+                    opponent_id = match.player2;
+                    opponent_username = match.player2_username;
+                    opponent_score = match.score_player2;
+                }
+                else{
+                    you_id = match.player2;
+                    you_username = match.player2_username;
+                    you_score = match.score_player2;
+                    opponent_id = match.player1;
+                    opponent_username = match.player1_username;
+                    opponent_score = match.score_player1;
+                }
+                if(match.winner = you_id){
+                    winner = you_username;
+                }
+                else{
+                    winner = opponent_username;
+                }
+                match.player1_username === username 
+                matchElement.innerHTML = `
+                <h3>Game number ${index + 1}</h3>
+                <p>you: ${you_username}</p>
+                <p>opponent: ${opponent_username}</p>
+                <p>winner: ${winner}</p>
+                <p>you score: ${you_score}</p>
+                <p>opponent score: ${opponent_score}</p>
+                
                 `;
-            }
+                matchHistoryField.appendChild(matchElement);
+            });
         }
         else {
         console.log('No match history found');
