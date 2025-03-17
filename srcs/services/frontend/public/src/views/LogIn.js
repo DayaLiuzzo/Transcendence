@@ -7,27 +7,27 @@ export default class LogIn extends BaseView{
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     }
 
-
+    
     getFormData(){
         return {
             username: document.getElementById("login-username").value,
             password: document.getElementById("login-password").value,
         };
     }
-
+    
     getErrorContainer() {
         let errorContainer = document.getElementById("login-error-container");
-
+        
         if (!errorContainer) {
             errorContainer = document.createElement("div");
             errorContainer.id = "login-error-container";  // Set a unique ID
             errorContainer.classList.add("error-container");  // Optional: Add a class for styling
             document.getElementById("login-form").insertBefore(errorContainer, document.getElementById("login-form").firstChild); // Insert at the top of the form
         }
-
+        
         return errorContainer;
     }
-
+    
     handleLoginSubmit(event){
         event.preventDefault();
         const formData = this.getFormData();
@@ -49,7 +49,7 @@ export default class LogIn extends BaseView{
         const loginResponse = await this.sendPostRequest(this.API_URL_LOGIN, formData);
         if (!loginResponse.success && loginResponse.error.error === "OTP is required."){
             return await this.handleOtp(formData);
-        }
+        } 
         else if (!loginResponse.success){
             return this.showError(loginResponse.error.error);
         }
@@ -61,7 +61,7 @@ export default class LogIn extends BaseView{
         sessionStorage.setItem("userSession", JSON.stringify(userSession));
         this.navigateTo("/home");
     }
-
+    
     async handleOtp(formData){
         const otpPopup = document.createElement("div");
         otpPopup.id = "otp-popup";
@@ -107,13 +107,14 @@ export default class LogIn extends BaseView{
         closeOtpBtn.addEventListener("click", () => {
             otpPopup.remove();
         })
-
+        
     }
 
     render(){
         return `
         <div>
             <h2>Login</h2>
+            <h3> please just be ok</h3>
             <form id="login-form">
                 <input type="text" id="login-username" placeholder="Username" required>
                 <input type="password" id="login-password" placeholder="Password" required>
@@ -126,7 +127,7 @@ export default class LogIn extends BaseView{
     unmount(){
         console.log('unmounting login');
         document.getElementById("login-form")?.removeEventListener("submit", this.handleLoginSubmit);
-
+    
     }
 
     attachEvents(){
