@@ -65,7 +65,7 @@ export default class PlayCanva extends BaseView {
 		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enablePan = false;
 		controls.enableDamping = true;
-		controls.enableZoom = true;
+		controls.enableZoom = false;
 		controls.maxPolarAngle = Math.PI / 2.1;
 		controls.minPolarAngle = Math.PI / 2.5;
 
@@ -337,6 +337,11 @@ export default class PlayCanva extends BaseView {
 				updateScore();
 				resetBall();
 			}
+			window.addEventListener("resize", () => {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			});
 			controls.update();
 
 			window.addEventListener("resize", () => {
