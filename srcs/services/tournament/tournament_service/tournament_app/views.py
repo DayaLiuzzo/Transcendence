@@ -291,8 +291,9 @@ class MyTournamentView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def retrieve(self, request):
+        user = request.user
         tournament = get_object_or_404(Tournament,
-                users=user,
+                Q(users=user),
                 Q(status='waiting') | Q(status='playing'))
         serializer = TournamentSerializer(tournament)
         return Response(serializer.data)
