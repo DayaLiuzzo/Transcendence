@@ -47,7 +47,6 @@ export default class Profile extends BaseView {
     }
 
     async updateStatsField() {
-        console.log('Updating stats field');
         const statsField = document.getElementById("stats-field");
         if (!statsField){
             console.log('No stats field');
@@ -56,9 +55,6 @@ export default class Profile extends BaseView {
         const username = this.getUsername();
         const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
         if(response.success){
-            console.log(response.data);
-            console.log(response.data.wins);
-            console.log(response.data.losses);
             statsField.innerHTML = `
             <h3>Stats</h3>
             <p>Wins: ${response.data.wins}</p>

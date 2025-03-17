@@ -9,6 +9,7 @@ import PlayRemote from "./views/PlayRemote.js";
 import PlayCanva from "./views/PlayCanva.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
+import MatchHistory from "./views/MatchHistory.js";
 
 import { cleanUpThree } from "./three/utils.js";
 
@@ -21,6 +22,7 @@ const routes = [
     { path: '/log-in', view: LogIn, requiresGuest: true },
     { path: '/sign-up', view: SignUp, requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
+    { path: '/match-history', view: MatchHistory, css: "styles/core.css", requiresAuth: true},
     { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css", requiresAuth: true},
     { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: false},

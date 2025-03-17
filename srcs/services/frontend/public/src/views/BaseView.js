@@ -348,7 +348,6 @@ export default class BaseView{
         }
         localStorage.removeItem("userSession");
         this.navigateTo("/log-in");
-        // this.sendPostRequest(this.API_URL + 'logout/', {});
     }
 
 
