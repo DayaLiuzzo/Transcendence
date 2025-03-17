@@ -22,17 +22,34 @@ export default class Profile extends BaseView {
     render() {
         return `
         <div>
-            <h2>Profile</h2>
-            <h3> please just be ok</h3>
-            <div id="username-field"></div>
-            <div id="biography-field"></div>
-            <div id="friends-field"></div>
-            <form id="add-friend-form">
-                <input type="text" id="friend-username" placeholder="Enter friend's username">
-                <button type="submit">Add Friend</button>
-            </form>
-            <button id="edit-profile">Edit Profile</button>
-            <button id="logout">Logout</button>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>          
+            </div>
+            <div id="container">
+                <div id="container-profile">
+                    <h2>Profile</h2>
+                    <div id="container-button">
+                        <button id="edit-profile">Edit Profile</button>
+                        <button id="logout">Logout</button>
+                    </div>
+                </div>
+                <div id="username-field"></div>
+                <div id="biography-field"></div>
+                <div id="friends-field"></div>
+                <form id="add-friend-form">
+                    <input type="text" id="friend-username" placeholder="Enter friend's username">
+                    <button type="submit">Add Friend</button>
+                </form>
+            </div>
         </div>
         `;
     }

@@ -19,7 +19,6 @@ body {
 }
 
   #navbar {
-
     position: fixed;
     background-color: transparent;
     transition: left 0.4s ease;
@@ -34,24 +33,20 @@ body {
     gap: 30px;
     z-index: 1000;
     font-size: 2em;
-
+    visibility: hidden;
   }
 
   #button-nav {
-    position: fixed;
-    top: 20px;
-    left: 20px;
     background-color: transparent;
     border: none;
     cursor: pointer;
     z-index: 1000;
-
   }
 
   #navbar.active {
     left: 0;
     height: 100%;
-    width: 350px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -60,6 +55,10 @@ body {
     top: 80px;
     z-index: 1000;
     font-size: 2em;
+    background-color: #ffffff;
+    padding-left: 18px;
+    padding-top: 12px;
+    visibility: visible;
   }
 
   #button-nav i.menuIcon.material-icons {
@@ -84,7 +83,6 @@ body {
   }
 
   #app {
-    display: flex;
     min-height: 100vh;
     align-items: space-evenly;
     flex-direction: row;
@@ -94,13 +92,20 @@ body {
   }
 
   #line {
-    position: fixed;
+    display: flex;
     height: 3px;
-    top : 40px;
-    width: 80%;
+    flex-grow: 1;
+    justify-content: flex-end;
     background-color: black;
-    z-index: 0;
+  }
 
+  #header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 4vh;
+    gap: 12px
   }
 
   #test-text-container {
@@ -143,6 +148,31 @@ body {
   line-height: 1em;
   gap: 5px;
   font-size: 6rem;
+}
+
+#container {
+  margin: 0 12px;
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1500px) {
+  #test-text {
+    text-indent: 1em;
+    font-size: 6rem;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  #test-text-container {
+    text-indent: initial;
+  }
+  #outstanding{
+    text-indent: initial;
+    font-size: 4rem;
+  }
+  #test-text {
+    text-indent: initial;
+    font-size: 2rem;
+  }
 }
 
 #test-text span {
@@ -222,8 +252,7 @@ body {
     line-height: 80px;
   }
 
-  #login-username {
-    position: relative;
+  #login-username, #login-password {
     width: 100%;
     height: 80px;
     outline: none;
@@ -233,11 +262,9 @@ body {
     border-bottom: 2px solid black;
     background: transparent;
     transition: 0.1s ease;
-    z-index: 1111;
   }
 
-  #login-password {
-    position: relative;
+  #signup-username, #signup-email, #signup-password, #signup-password2, #friend-username {
     width: 100%;
     height: 80px;
     outline: none;
@@ -247,32 +274,61 @@ body {
     border-bottom: 2px solid black;
     background: transparent;
     transition: 0.1s ease;
-    z-index: 1111;
   }
 
   #login-username:focus,
-  #login-username:valid {
-    border-color: #8dd4ab;
-    font-family: 'Roboto', sans-serif;
-  }
-
+  #login-username:valid,
   #login-password:focus,
-  #login-password:valid {
+  #login-password:valid
+  {
     border-color: #8dd4ab;
     font-family: 'Roboto', sans-serif;
   }
 
-#login-form button {
-  position: relative;
+  #signup-username:focus,
+  #signup-username:valid,
+  #signup-email:focus,
+  #signup-email:valid,
+  #signup-password:focus,
+  #signup-password:valid,
+  #signup-password2:focus,
+  #signup-password2:valid
+  {
+    border-color: #8dd4ab;
+    font-family: 'Roboto', sans-serif;
+  }
+
+#login-form, #signup-form, #add-friend-form button {
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
   font-size: 1.5em;
-  top : 30px;
   background-color: grey;
   border: none;
-  width: 50%;
+  width: auto;
   height: 30px;
   background-color: transparent;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+#login-form, #signup-form, #add-friend-form :hover {
+  opacity: 0.60;
+}
+
+#container-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%
+}
+
+#container-button {
+  display: flex;
+  gap: 4px;
+}
+
+#container-button button{
+  cursor: pointer;
 }
 
  @keyframes text-slide-infinite {

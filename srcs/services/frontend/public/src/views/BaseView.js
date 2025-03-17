@@ -143,7 +143,6 @@ export default class BaseView{
                 <a href="/play-menu">Play</a>
                 <a href="/profile">Profile</a>
                 <a href="/logout">Logout</a>
-                <button id="close-nav">Close</button>
                 `;
 
                 const avatarUrl =  await this.displayAvatar();
@@ -160,7 +159,6 @@ export default class BaseView{
                 <a href="/log-in">Log in</a>
                 <a href="/sign-up">Sign up</a>
                 <a href="/play-menu">Game</a>
-                <button id="close-nav">Close</button>
                 `;
             }
             const menuButton = document.getElementById("button-nav");
@@ -170,8 +168,6 @@ export default class BaseView{
             menuIcon.style.display = "block";
             closeIcon.style.display = "none";
             menuButton.addEventListener("click", this.toggleMenu);
-            const closeNav = document.getElementById("close-nav");
-            closeNav.onclick = this.closeMenu;
             menuLinks.forEach(link => {
                 link.onclick = this.closeMenu;
             });
