@@ -1,4 +1,8 @@
 import BaseView from "./BaseView.js";
+//import { FontLoader } from
+// import { TextGeometry } from "https://https://unpkg.com/three@0.126.0/examples/jsm//geometries/TextGeometry.js"
+// import { FontLoader } from "https://unpkg.com/three@v0.126.0-qHpLjSttpMdFq2EjKvPI/mode=raw/examples/jsm/loaders/FontLoader.js"
+
 
 let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
 
@@ -159,6 +163,23 @@ export default class PlayCanva extends BaseView {
 		scene.add(particles);
 
 		let activeParticles = [];
+
+		const createScoreText = (score, position) => {
+			const geometry = new THREE.TextGeometry(score.toString(), {
+				font: font,
+				size: 0.5,
+				height: 0.1
+			});
+			const mesh = new THREE.Mesh(geometry, textMaterial);
+			mesh.position.copy(position);
+			return mesh;
+		};
+		leftScoreText = createScoreText('0', new THREE.Vector3(-2, 2, 0));
+		rightScoreText = createScoreText('0', new THREE.Vector3(2, 2, 0));
+		scene.add(leftScoreText);
+		scene.add(rightScoreText);
+
+
 
 		// CREATE THE DISPLAY SCORE TEXT 3D FUNCTION HERE
 
