@@ -2,6 +2,7 @@ import logging
 import uuid
 
 from django.db import IntegrityError
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
@@ -131,7 +132,7 @@ class CreateRoomView(APIView):
             player2.rooms.add(new_room)
 
             #call create game
-            create_game_url = f'http://game:8443/api/game/create_game/{new_room.room_id}/'
+            create_game_url = f'http://game:8443/api/game/create_game/{new_room.room_id}/tournament'
             client = MicroserviceClient()
             response = client.send_internal_request(create_game_url, 'post')
             if response.status_code != 201:
@@ -314,10 +315,10 @@ class UpdateRoomView(APIView):
     permission_classes = [IsGame]
 
     def patch(self, request, room_id):
-        room = get_object_or_404(room_id=room_id)
+        room = get_object_or_404(Room, room_id=room_id)
         serializer = RoomSerializerInternal(room, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save(status='finished')
+        serializer.save()
         if room.is_from_tournament:
             client = MicroserviceClient()
             url = f'http://tournament:8443/api/tournament/room_result/{room.room_id}/'
@@ -326,10 +327,27 @@ class UpdateRoomView(APIView):
             
             if response.status_code != 200: #a changer si besoin en fonction
                 print(f"ERROR communication between tournament and rooms service : {response.status_code}")
+
+        else:
+            if request.data['status'] == 'deleted':
+                room.delete()
         return Response(status=status.HTTP_200_OK)
 
 
 # *************************** READ *************************** #
+
+class ListMyFinishedRoomsView(generics.ListAPIView):
+    serializer_class = RoomSerializer
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        rooms = Room.objects.filter(
+                Q(status='finished'),
+                Q(player1=user) | Q(player2=user))
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(serializer.data)
+
 
 class ListAllRoomsView(generics.ListAPIView):
     serializer_class = RoomSerializer

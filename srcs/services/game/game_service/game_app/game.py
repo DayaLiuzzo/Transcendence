@@ -6,11 +6,12 @@ from .settings import WIDTH, HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 
 class Game:
     def __init__(self):
-        self.score_limit = 3
+        self.score_limit = 1
         self.winner = None
         self.direction = [None, None]
         self.started = False
         self.pause = False
+        self.game_started = False
         self.game_end = False
         self.winner = None
         self.player1 = Player(WIDTH // 16, HEIGHT // 2 - (PLAYER_HEIGHT // 2))
@@ -98,6 +99,12 @@ class Game:
             'winner': winner
         }
         return data
+
+    def set_game_end(self, winner):
+        if winner == 'player1':
+            self.winner = self.player1
+        elif winner == 'player2':
+            self.winner = self.player2
 
     def get_game_state(self):
         data = {

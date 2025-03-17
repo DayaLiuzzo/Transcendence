@@ -63,15 +63,28 @@ export default class SignUp extends BaseView{
     render(){
         return `
         <div>
-            <h2>signup</h2>
-            <h3> please just be ok</h3>
-            <form id="signup-form">
-            <input type="text" id="signup-username" placeholder="Username" required>
-            <input type="email" id="signup-email" placeholder="Email" required> 
-            <input type="password" id="signup-password" placeholder="Password" required>
-            <input type="password" id="signup-password2" placeholder="Password2" required>
-                <button type="submit">signup</button>
-            </form>
+        	<div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>          
+            </div>
+            <div id="container">
+                <h2>Sign-up</h2>
+                <form id="signup-form">
+                <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="email" id="signup-email" placeholder="Email" required> 
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <input type="password" id="signup-password2" placeholder="Confim password" required>
+                    <button type="submit">Sign-up</button>
+                </form>
+            </div>
         </div>
     `;
     }

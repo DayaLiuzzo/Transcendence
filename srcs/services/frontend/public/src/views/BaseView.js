@@ -88,9 +88,9 @@ export default class BaseView{
 
         if (!errorContainer) {
             errorContainer = document.createElement("div");
-            errorContainer.id = formId+ "-error-container";  
-            errorContainer.classList.add("error-container"); 
-            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); 
+            errorContainer.id = formId+ "-error-container";
+            errorContainer.classList.add("error-container");
+            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
 
         return errorContainer;
@@ -103,7 +103,7 @@ export default class BaseView{
     getRefreshToken(){
         return this.router.getRefreshToken();
     }
-    
+
     getAccessToken(){
 
         return this.router.getAccessToken();
@@ -165,28 +165,44 @@ export default class BaseView{
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
-                navbar.innerHTML += `
-                <a href="/home">Home</a>
-                <a href="/play-menu">Play</a>
-                <a href="/profile">Profile</a>
-                <button id="close-nav">Close</button>
-                `;
-
-                const avatarUrl =  await this.displayAvatar();
+                const avatarUrl = await this.displayAvatar();
+                console.log(avatarUrl)
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
-                    navbar.appendChild(avatarImg);
+            
+                    const welcomeText = document.createElement("span");
+                    welcomeText.textContent = "Welcome";
+                    welcomeText.className = "welcome-text";
+            
+                    const flexContainer = document.createElement("div");
+                    flexContainer.className = "navbar-flex";
+
+                    const bar = document.createElement("div");
+                    bar.className = "navbar-bar"
+            
+                    flexContainer.appendChild(avatarImg);
+                    flexContainer.appendChild(welcomeText);
+            
+                    navbar.appendChild(flexContainer);
+                    navbar.appendChild(bar);
                 }
+                
+                navbar.innerHTML += `
+                <a href="/home">Home</a>
+                <a href="/play-menu">Play</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+                `;
+
             } else {
                 navbar.innerHTML = `
                 <a href="/home">Home</a>
                 <a href="/log-in">Log in</a>
                 <a href="/sign-up">Sign up</a>
                 <a href="/play-menu">Game</a>
-                <button id="close-nav">Close</button>
                 `;
             }
             const menuButton = document.getElementById("button-nav");
@@ -196,8 +212,6 @@ export default class BaseView{
             menuIcon.style.display = "block";
             closeIcon.style.display = "none";
             menuButton.addEventListener("click", this.toggleMenu);
-            const closeNav = document.getElementById("close-nav");
-            closeNav.onclick = this.closeMenu;
             menuLinks.forEach(link => {
                 link.onclick = this.closeMenu;
             });
