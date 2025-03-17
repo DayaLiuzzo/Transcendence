@@ -99,6 +99,12 @@ class Game:
         }
         return data
 
+    def set_game_end(self, winner):
+        if winner == 'player1':
+            self.winner = self.player1
+        elif winner == 'player2':
+            self.winner = self.player2
+
     def get_game_state(self):
         data = {
             'state': 'INFO',
