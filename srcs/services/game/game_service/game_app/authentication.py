@@ -5,6 +5,7 @@ from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
+from asgiref.sync import sync_to_async
 
 from .models import UserProfile
 
@@ -30,6 +31,19 @@ class CustomJWTAuth(BaseAuthentication):
         if user == None:
             return (None, None)
         return (user, token)
+
+    def authenticate_from_token(self, token):
+            """For websockets"""
+            payload = self._decode_token(token)
+            user = self._get_user_from_payloadWS(payload)
+            if user is None:
+                raise AuthenticationFailed("User not found for the provided token.")
+            return user
+
+    @sync_to_async
+    def _get_user_from_payloadWS(self, payload):
+        username = payload.get('username')
+        return UserProfile.objects.get(username=username)
     
     def _extract_token(self, auth_header):
         try:

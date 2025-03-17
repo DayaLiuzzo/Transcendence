@@ -1,60 +1,311 @@
 /*
 * STYLES FILE GLOBAL PARAMS POUR L'ENSEMBLE DU SITE
 */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+@import url('https://db.onlinewebfonts.com/c/c0de8fb6038e76e28f87f58c819bbda8?family=SaolDisplay-LightItalic');
+
+
 
 body {
-    font-family: "Courier New", monospace;
-    margin-left: 2%;
-    margin-right: 2%;
-    padding: 20px;
-    background-color: #ffff;
-    color: #000;
-    font-size: 15px;
-    line-height: 1.5;
-    transition: background-color 0.5s ease-in-out, color 2.5s ease-in-out;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    scroll-behavior: smooth;
+    min-height: 100vh;
+    background-color: #ffffff;
     overflow-x: hidden;
-    white-space: pre-line;
+    overflow-y: hidden;
 }
 
-  nav {
-    background: none;
-    color: white;
-    margin: 0 auto;
-    padding-bottom: 10px;
-    text-align: right;
-    right: 0px;
-    position: absolute;
-    width: 100%;
-  }
+  #navbar {
 
-  nav::after {
-    content: "";
-    display: block;
-    width: 80%;
-    height: 2px;
-    background: black;
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-  }
-
-  nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+    position: fixed;
+    background-color: transparent;
+    transition: left 0.4s ease;
+    left: -240px;
+    top: 80px;
+    height: 100%;
+    width: 350px;
     display: flex;
-    justify-content: left;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    z-index: 1000;
+    font-size: 2em;
+
   }
 
-  nav ul li {
-    margin: 0 10px;
-    display: inline;
+  #button-nav {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+
   }
 
-  nav ul li a {
-    color: #0000FF;
+  #navbar.active {
+    left: 0;
+    height: 100%;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 30px;
+    top: 80px;
+    z-index: 1000;
+    font-size: 2em;
+  }
+
+  #button-nav i.menuIcon.material-icons {
+    font-size: 3em;
+  }
+  #button-nav i.closeIcon.material-icons {
+    font-size: 3em;
+  }
+
+
+  #navbar a {
+
+    list-style: none;
+    background: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.5em;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: black;
     text-decoration: none;
-    font-size: 18px;
-    text-decoration: underline;
   }
+
+  #app {
+    display: flex;
+    min-height: 100vh;
+    align-items: space-evenly;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  #line {
+    position: fixed;
+    height: 3px;
+    top : 40px;
+    width: 80%;
+    background-color: black;
+    z-index: 0;
+
+  }
+
+  #test-text-container {
+    position: relative;
+    line-height: 99%;
+    text-indent: 4em;
+    left: 3vw;
+    z-index: 30;
+    width: 90vw;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    line-height: 1em;
+    gap: 5px;
+    font-size: 6rem;
+  }
+
+#outstanding{
+  position: relative;
+    line-height: 99%;
+    text-indent: 2em;
+    left: 3vw;
+    z-index: 30;
+    width: 90vw;
+    font-family: 'SaolDisplay-LightItalic';
+    font-weight: 500;
+    line-height: 1em;
+    gap: 5px;
+    font-size: 6rem;
+}
+
+#test-text {
+  position: relative;
+  line-height: 99%;
+  text-indent: 2em;
+  left: 3vw;
+  z-index: 30;
+  width: 70vw;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  line-height: 1em;
+  gap: 5px;
+  font-size: 6rem;
+}
+
+#test-text span {
+  transition: transform 0.5s ease;
+  display:inline-block;
+  /* border: 2px solid black; */
+  /* animation: text-slide-infinite 1s linear forwards; */
+}
+
+  .ascii-container {
+    position: absolute;
+    border-collapse: separate;
+    box-sizing: border-box;
+    text-indent: initial;
+    border-color: gray;
+    white-space: pre;
+    font-family: "courier new", monospace;
+    top: 80px;
+    right: 0;
+    width: 70vw;
+    height: 70vh;
+    z-index: 100;
+    cursor: grab;
+  }
+
+  .ascii-output {
+    cursor: grab;
+    position: absolute;
+    font-size: 8px;
+    line-height: 8px;
+    white-space: pre;
+    box-sizing: border-box;
+    text-indent: initial;
+    border-color: gray;
+  }
+
+  canvas {
+    cursor: grab;
+  }
+
+  canvas:active {
+    cursor: grabbing;
+  }
+
+  element {
+    cursor: grab;
+    color: black;
+  }
+
+  #follow-scroll-elements {
+    cursor: grab;
+    font-family: 'SaolDisplay-LightItalic';
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    z-index: 100;
+
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 680px;
+  }
+
+  .entry-login {
+    position: absolute;
+    height: 80px;
+    line-height: 80px;
+  }
+
+  .entry-password {
+    position: absolute;
+    height: 80px;
+    line-height: 80px;
+  }
+
+  #login-username {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    outline: none;
+    font-size: 2.2em;
+    line-height: 80px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: transparent;
+    transition: 0.1s ease;
+    z-index: 1111;
+  }
+
+  #login-password {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    outline: none;
+    font-size: 2.2em;
+    line-height: 80px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: transparent;
+    transition: 0.1s ease;
+    z-index: 1111;
+  }
+
+  #login-username:focus,
+  #login-username:valid {
+    border-color: #8dd4ab;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  #login-password:focus,
+  #login-password:valid {
+    border-color: #8dd4ab;
+    font-family: 'Roboto', sans-serif;
+  }
+
+#login-form button {
+  position: relative;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1.5em;
+  top : 30px;
+  background-color: grey;
+  border: none;
+  width: 50%;
+  height: 30px;
+  background-color: transparent;
+}
+
+ @keyframes text-slide-infinite {
+    0% {
+      opacity: 0;
+      letter-spacing: 150px;
+      text-shadow: 0 0 50px #fff;
+    }
+    50% {
+      letter-spacing: 50px
+    }
+    100% {
+      opacity: 0.8;
+      letter-spacing: 3px;
+      text-shadow: 0 0 1px darkgray;
+    }
+  }
+
+
+/* CSS STYLE FOR GAME PAGE*/
+  #webgl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    background: none;
+  }
+
+  #webgl canvas {
+    cursor: grab;
+    background-color: transparent;
+    background: none;
+  }
+
+

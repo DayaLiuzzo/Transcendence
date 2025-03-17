@@ -4,6 +4,9 @@ export default class WebSocketService {
         this.socket = null;
         this.isConnected = false;
         this.WS_GAME_URL = `wss://${window.location.host}/ws/game/`;
+        this.token = this.getAccessToken();
+        this.isplaying = false;
+        this.name = "pas init"
     }
 
     connect() {
@@ -13,10 +16,22 @@ export default class WebSocketService {
         this.socket.onopen = () => {
             this.isConnected = true;
             console.log("Connexion WebSocket sécurisée établie!");
+            if (this.token) {
+                this.sendMessage({ Authorization: `Bearer ${this.token}`});
+            }
         };
 
         this.socket.onmessage = (event) => {
-            this.handleMessage(event);
+            if (this.isplaying == false){
+                this.handleStart(event);
+
+                const e = new CustomEvent("gameStarted");
+
+                window.dispatchEvent(e);
+            }
+            else {
+                this.handleMessage(event);
+            }
         };
 
         this.socket.onclose = (event) => {
@@ -29,24 +44,36 @@ export default class WebSocketService {
         };
     }
 
-    handleMessage(event) {
+    handleStart(event) {
         const data = JSON.parse(event.data);
-        console.log("Message reçu:", data);
-
+        console.log("Message reçu:", data.message);
+        //console.log("Message reçu:", data.isfull);
+        if (data.message.state === 'START')
+        {
+            this.isplaying = true;
+            const event = new CustomEvent("initSettingsGame", { detail: data.message});
+            window.dispatchEvent(event);
+        }
+        console.log("Is playing ?", this.isplaying)
         // Mettre à jour le DOM avec les données reçues via WebSocket
-        const roomNameElement = document.getElementById('room-name');
-        const messageElement = document.getElementById('message');
-        const playersCountElement = document.getElementById('players-count');
-
-        if (roomNameElement) roomNameElement.textContent = data.room_name || roomNameElement.textContent;
-        if (messageElement) messageElement.textContent = data.message || messageElement.textContent;
-        if (playersCountElement) playersCountElement.textContent = data.players_count || playersCountElement.textContent;
     }
 
-    // Fonction pour envoyer des messages via WebSocket
+    handleMessage(event) {
+        const data = JSON.parse(event.data);
+        //console.log("Message reçu:", data);
+        console.log("Message reçu:", data.message);
+        if (data.message.state === 'INFO') {
+            const event = new CustomEvent("updateGame", { detail: data.message});
+            console.log("OK");
+            window.dispatchEvent(event);
+        }
+
+        // Mettre à jour le DOM avec les données reçues via WebSocket
+    }
+
     sendMessage(message) {
         if (this.isConnected && this.socket) {
-            this.socket.send(JSON.stringify({ 'message': message }));
+            this.socket.send(JSON.stringify({message}));
             console.log("Message envoyé:", message);
         } else {
             console.error("La connexion WebSocket n'est pas établie.");
@@ -61,5 +88,17 @@ export default class WebSocketService {
 
     isConnected() {
         return this.isConnected;
+    }
+
+    getUserSession(){
+        return JSON.parse(localStorage.getItem("userSession"));
+    }
+
+    getAccessToken(){
+        const userSession = this.getUserSession();
+        if(userSession){
+            return userSession.access_token;
+        }
+        return null;
     }
 }

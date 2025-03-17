@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     last_log = models.DateTimeField(default=now)
     two_factor_enabled = models.BooleanField(default=False)
     otp_secret = models.CharField(max_length=32, default=pyotp.random_base32, blank=True, null=True)
+    
     @property
     def is_authenticated(self):
         return True

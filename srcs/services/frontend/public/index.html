@@ -1,36 +1,34 @@
 <!-- RAPPEL SPA: Fichier entrypoint principal de l'application, accessible a tous-->
 
+
 <!DOCTYPE html>
   <html lang="fr">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Pong</title>
-      <link rel="stylesheet" href="./styles/core.css">
+      <link rel="stylesheet" href="/styles/core.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
     </head>
     <body>
+      <button id="button-nav">
+      <i class="menuIcon material-icons">menu</i>
+      <i class="closeIcon material-icons" style="display: none;" >close</i>
+      </button>
       <nav id="navbar">
-        <ul>
-          <li><a class="nav-link" href="/home">Home</a></li>
-          <li><a class="nav-link" href="/log-in">Log-in</a></li>
-          <li><a class="nav-link" href="/sign-up">Sign-up</a></li>
-          <li><a class="nav-link" href="/game">Play</a></li>
-          <li><a class="nav-link" href="/edit-profile">Profile</a></li>
-          <li><a class="nav-link" href="/play-menu">Play</a></li>
-        </ul>
       </nav>
 
-    <div id="app"></div>
+    <div id="app">
 
        <!---THREEJS IMPORT VIA CDN-->
        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.min.js" integrity="sha512-n8IpKWzDnBOcBhRlHirMZOUvEq2bLRMuJGjuVqbzUJwtTsgwOgK5aS0c1JA647XWYfqvXve8k3PtZdzpipFjgg==" crossorigin="anonymous"></script>
        <script src="https://unpkg.com/three@0.126.0/examples/js/controls/OrbitControls.js"></script>
-       <script src="https://unpkg.com/three@0.126.0/examples/js/effects/AsciiEffect.js"></script>
+      <script src="https://unpkg.com/three@0.126.0/examples/js/effects/AsciiEffect.js"></script>
       <script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script>
 
-      <script type="module" src="./src/router.js" defer></script>
+      <script type="module" src="/src/router.js" defer></script>
 
 
     </body>

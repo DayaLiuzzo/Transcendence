@@ -1,16 +1,12 @@
 import BaseView from './BaseView.js';
 
 export default class PlayMenu extends BaseView{
+    
     constructor(params){
         super(params);
     }
 
-    showError(message){
-        alert(message);
-    }
-
-
-    async render(){
+    render(){
         return `
         <div>
             <h2>Play Menu</h2>
@@ -26,7 +22,7 @@ export default class PlayMenu extends BaseView{
     `;
     }
 
-    async attachEvents(){
+    attachEvents(){
         console.log('Events attached (Play-Menu)');
 
         const playLocalButton = document.getElementById("play-local");

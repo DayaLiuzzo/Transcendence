@@ -18,13 +18,16 @@ from .models import Service
 from auth_service import settings
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
     class Meta(object):
         model = CustomUser
-        fields = ['username', 'password', 'email']
+        fields = ['username', 'password', 'email', 'two_factor_enabled']
 
     def validate_username(self, value):
         if CustomUser.objects.filter(username=value).exists():
             raise serializers.ValidationError("This username already exists.")
+        if not custom_username_validator(value):
+            raise serializers.ValidationError("Invalid username.")
         return value
 
     def validate_email(self, value):
@@ -142,8 +145,24 @@ class ChangePasswordSerializer(serializers.Serializer):
     
 
 
-def custom_password_validator(value):
+def custom_username_validator(value):
+    if not value:
+        raise serializers.ValidationError("Username cannot be empty.")
+    if len(value) < 4:
+        raise serializers.ValidationError("Username must be at least 4 characters long.")
+    if len(value) > 32:
+        raise serializers.ValidationError("Username max len is 32")
+    if any(char in [' ', '\t', '\n'] for char in value):
+        raise serializers.ValidationError("Username cannot contain whitespace.")
+    if any(char in ["'", '"', '`', '~', '\\', '/', '|', ':', ';'] for char in value):
+        raise serializers.ValidationError("Username cannot contain special characters.")
+    if value in ['admin', 'root', 'superuser', 'administrator', 'delete', 'update', 'signup', 'login', 'logout', 'service-token', 'change-password', '2fa', '2fa-setup', '2fa-verify']:
+        raise serializers.ValidationError("Username cannot be a reserved word.")
+    return value
 
+
+
+def custom_password_validator(value):
     if not value:
         raise serializers.ValidationError("Password cannot be empty.")
     if len(value) < 8:

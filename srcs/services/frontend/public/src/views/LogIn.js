@@ -4,11 +4,37 @@ import BaseView from './BaseView.js';
 export default class LogIn extends BaseView{
     constructor(router, params){
         super(router, params);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     }
 
-    showError(message){
-        alert(message);
+
+
+    getFormData(){
+        return {
+            username: document.getElementById("login-username").value,
+            password: document.getElementById("login-password").value,
+        };
     }
+    
+    getErrorContainer() {
+        let errorContainer = document.getElementById("login-error-container");
+        
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "login-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("login-form").insertBefore(errorContainer, document.getElementById("login-form").firstChild); // Insert at the top of the form
+        }
+        
+        return errorContainer;
+    }
+    
+    handleLoginSubmit(event){
+        event.preventDefault();
+        const formData = this.getFormData();
+        this.login(formData);
+    }
+
 
     validateInputs(formData){
         if (!formData.username || formData.username.length < 3) return "Username must be at least 3 characters long.";
@@ -18,29 +44,77 @@ export default class LogIn extends BaseView{
         return null;
     }
 
-    getFormData(){
-        return {
-            username: document.getElementById("login-username").value,
-            password: document.getElementById("login-password").value,
-            // two_factor: document.getElementById("login-two-factor").value,
-        };
-    }
-
     async login(formData) {
         const errorMessage = this.validateInputs(formData);
         if (errorMessage) return this.showError(errorMessage)
         const loginResponse = await this.sendPostRequest(this.API_URL_LOGIN, formData);
-        if (!loginResponse.success) return this.showError(JSON.stringify(loginResponse.error, null, 2));
+        if (!loginResponse.success && loginResponse.error.error === "OTP is required."){
+            return await this.handleOtp(formData);
+        } 
+        else if (!loginResponse.success){
+            return this.showError(loginResponse.error.error);
+        }
         const userSession = {
             username: formData.username,
-            access_token: loginResponse.data.access_token,
-            refresh_token: loginResponse.data.refresh_token
+            access_token: loginResponse.data.access,
+            refresh_token: loginResponse.data.refresh
         };
-        sessionStorage.setItem("userSession", JSON.stringify(userSession));
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+        this.startUpdatingLastSeen();
         this.navigateTo("/home");
     }
+    
+    async handleOtp(formData){
+        const otpPopup = document.createElement("div");
+        otpPopup.id = "otp-popup";
+        otpPopup.innerHTML = `
+            <div class="popup-content">
+                <h3>Enter OTP</h3>
+                <input type="text" id="otp-input" placeholder="Enter OTP" required />
+                <button id="verify-otp">Verify</button>
+                <button id="close-otp">Cancel</button>
+                <p id="otp-error" style="color: red; display: none;"></p>
+            </div>
+        `;
+        otpPopup.style.cssText = `
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        `;
+        document.body.appendChild(otpPopup); // Add popup to the DOM
 
-    async render(){
+        const verifyOtpBtn = document.getElementById("verify-otp");
+        const closeOtpBtn = document.getElementById("close-otp");
+        const otpInput = document.getElementById("otp-input");
+        const otpError = document.getElementById("otp-error");
+
+        verifyOtpBtn.addEventListener("click", async () => {
+            const otp = otpInput.value;
+            formData.otp = otp;
+            const response = await this.sendPostRequest(this.API_URL_LOGIN, formData);
+            if (response.success){
+                const userSession = {
+                    username: formData.username,
+                    access_token: response.data.access,
+                    refresh_token: response.data.refresh,
+                    two_factor_enabled: true
+                };
+                localStorage.setItem("userSession", JSON.stringify(userSession));
+                otpPopup.remove();
+                this.startUpdatingLastSeen();
+                this.navigateTo("/home");
+            } else {
+                otpError.textContent = "Invalid OTP, try again.";
+                document.getElementById("otp-error").style.display = "block";
+            }
+        });
+        closeOtpBtn.addEventListener("click", () => {
+            otpPopup.remove();
+        })
+        
+    }
+
+    render(){
         return `
         <div>
             <h2>Login</h2>
@@ -54,12 +128,14 @@ export default class LogIn extends BaseView{
     `;
     }
 
-    async attachEvents(){
+    unmount(){
+        console.log('unmounting login');
+        document.getElementById("login-form")?.removeEventListener("submit", this.handleLoginSubmit);
+    
+    }
+
+    attachEvents(){
         console.log('Events attached (LogIn)');
-        document.getElementById("login-form").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const formData = this.getFormData();
-            this.login(formData);
-        });
+        document.getElementById("login-form")?.addEventListener("submit", this.handleLoginSubmit);
     }
 }
