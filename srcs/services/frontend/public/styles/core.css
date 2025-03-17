@@ -265,7 +265,7 @@ body {
     transition: 0.1s ease;
   }
 
-  #signup-username, #signup-email, #signup-password, #signup-password2, #friend-username {
+  #signup-username, #signup-email, #signup-password, #signup-password2 {
     width: 100%;
     height: 80px;
     outline: none;
@@ -276,6 +276,44 @@ body {
     background: transparent;
     transition: 0.1s ease;
   }
+
+  #EditProfile-password, #EditProfile-new_password, #EditProfile-new_password2, #EditProfile-username{
+    width: 100%;
+    height: 60px;
+    outline: none;
+    font-size: 1em;
+    line-height: 80px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: transparent;
+    transition: 0.1s ease;
+  }
+
+  #EditProfile-password:focus,
+  #EditProfile-password:valid,
+  #EditProfile-new_password:focus,
+  #EditProfile-new_password:valid,
+  #EditProfile-new_password2:focus,
+  #EditProfile-new_password2:valid,
+  #EditProfile-username:focus,
+  #EditProfile-username:valid,
+  {
+    border-color: #8dd4ab;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  #friend-username {
+    width: 50%;
+    height: 60px;
+    outline: none;
+    font-size: 1em;
+    line-height: 80px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: transparent;
+    transition: 0.1s ease;
+  }
+
 
   #login-username:focus,
   #login-username:valid,
@@ -300,8 +338,8 @@ body {
   }
 
   #login-form button, 
-  #signup-form button, 
-  #add-friend-form button {
+  #signup-form button
+  {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     font-size: 1.5em;
@@ -314,10 +352,75 @@ body {
     transition: background-color 0.3s, color 0.3s;
   }
   
+  #add-friend-form button,
+  #change-password-form button,
+  #change-username-form button {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    border: none;
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  #toggle-2fa-button {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    border: none;
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 26px;
+    transition: background-color 0.3s, color 0.3s;
+    border: 1px solid black;
+  }
+
   #login-form button:hover, 
   #signup-form button:hover, 
-  #add-friend-form button:hover {
+  #add-friend-form button:hover,
+  #change-password-form button:hover,
+  #change-username-form button:hover
+  {
     color: #4CAF50;
+  }
+
+  #username-form {
+    margin-top: 36px;
+  }
+
+  .avatar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: 2px solid black;
+    width: 60vh;
+    margin-top: 26px;
+  }
+
+  #upload-avatar-btn {
+      background-color: white;
+      color: black;
+      font-family: 'SaolDisplay-LightItalic';
+      border: 2px solid black;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+  }
+
+  #error {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
   }
 
   .navbar-flex {
@@ -386,6 +489,23 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+.username-container {
+  display: flex;
+}
+
+.avatar-img {
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+  border: 2px solid black;
+  border-radius: 2%;
+}
+
+.username-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
 .play-option:hover {
   background-color: black;
   opacity: 0.5;
@@ -402,11 +522,17 @@ body {
 
 #container-button {
   display: flex;
-  gap: 4px;
+  gap: 16px;
 }
 
-#container-button button{
+#container-button i {
+  font-size: 20px;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#container-button i:hover {
+  opacity: 0.6;
 }
 
  @keyframes text-slide-infinite {

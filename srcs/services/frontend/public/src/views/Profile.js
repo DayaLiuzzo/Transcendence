@@ -26,7 +26,7 @@ export default class Profile extends BaseView {
 
         return errorContainer;
     }
-
+    
     render() {
         return `
         <div>
@@ -46,12 +46,11 @@ export default class Profile extends BaseView {
                 <div id="container-profile">
                     <h2>Profile</h2>
                     <div id="container-button">
-                        <button id="edit-profile">Edit Profile</button>
-                        <button id="logout">Logout</button>
+                        <i class="fas fa-edit" id="edit-profile" title="Edit Profile"></i>
+                        <i class="fas fa-sign-out-alt" id="logout" title="Logout"></i>
                     </div>
                 </div>
                 <div id="username-field">
-                    <img src={}/>
                 </div>
                 <div id="biography-field"></div>
                 <div id="friends-field"></div>
@@ -207,7 +206,25 @@ export default class Profile extends BaseView {
             const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             this.renderFriends(users);
-            this.updateFieldContent("username-field", this.formatField("username", username));
+            
+            const avatarUrl = await this.displayAvatar();            
+            const container = document.createElement("div");
+            container.classList.add("username-container");
+
+            const avatarImg = document.createElement("img");
+            avatarImg.src = avatarUrl;
+            avatarImg.alt = "User Avatar";
+            avatarImg.classList.add("avatar-img");
+
+            const textContainer = document.createElement("div");
+            textContainer.innerHTML = this.formatField("username", username);
+            textContainer.classList.add("username-text");
+
+            container.appendChild(avatarImg);
+            container.appendChild(textContainer);
+
+            document.getElementById("username-field").appendChild(container);
+            
             this.updateStatsField();
         }
         catch (error) {
