@@ -6,7 +6,6 @@ import Game from "./views/Game.js";
 import PlayMenu from "./views/PlayMenu.js";
 import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
-import PlayCanva from "./views/PlayCanva.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
 import { cleanUpThree } from "./three/utils.js";

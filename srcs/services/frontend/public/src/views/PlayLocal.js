@@ -1,3 +1,4 @@
+import { cleanUpThree } from "../three/utils.js";
 import BaseView from "./BaseView.js";
 //import { FontLoader } from
 // import { TextGeometry } from "https://https://unpkg.com/three@0.126.0/examples/jsm//geometries/TextGeometry.js"
@@ -58,14 +59,11 @@ export default class PlayCanva extends BaseView {
 			alpha: true,
 		});
 		renderer.setSize(window.innerWidth, window.innerHeight);
-		// renderer.shadowMap.enabled = true;
-		// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-		// document.body.appendChild(renderer.domElement);
 
 		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enablePan = false;
 		controls.enableDamping = true;
-		controls.enableZoom = false;
+		controls.enableZoom = true;
 		controls.maxPolarAngle = Math.PI / 2.1;
 		controls.minPolarAngle = Math.PI / 2.5;
 
@@ -110,9 +108,7 @@ export default class PlayCanva extends BaseView {
 
 		const meshBall = new THREE.Mesh(
 			new THREE.SphereGeometry(0.2, 32, 32),
-			new THREE.MeshBasicMaterial({
-				color: 0x000000,
-			})
+			paddleMaterial
 		);
 		meshBall.position.set(0, 0.2, 0);
 
@@ -121,7 +117,7 @@ export default class PlayCanva extends BaseView {
 			new THREE.MeshStandardMaterial({
 				color: 0x000000,
 				roughness: 0.7,
-				metalness: 0.3,
+				metalness: 0.3
 			})
 		);
 		meshBoard.rotation.x = -Math.PI / 2;
@@ -188,10 +184,6 @@ export default class PlayCanva extends BaseView {
 		scene.add(leftScoreText);
 		scene.add(rightScoreText);
 	});
-
-
-
-		// CREATE THE DISPLAY SCORE TEXT 3D FUNCTION HERE
 
 		let ballVelocity = { x: 0.05, z: 0.02 };
 		let scores = { left: 0, right: 0 };
@@ -281,6 +273,7 @@ export default class PlayCanva extends BaseView {
 			  if (scores.left >= 5 || scores.right >= 5) {
 				alert(`Le joueur ${scores.left >= 5 ? "1" : "2"} a gagné !`);
 				gameOver = true;
+
 			}
 			}
 		  })};
@@ -288,7 +281,10 @@ export default class PlayCanva extends BaseView {
 		const clock = new THREE.Clock();
 		const tick = () => {
 			if (gameOver === true)
+			{
+				resetBall();
 				return;
+			}
 			requestAnimationFrame(tick);
 
 			// PADDLE POSITION UPDATE
