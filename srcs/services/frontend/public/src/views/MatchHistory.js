@@ -43,7 +43,7 @@ export default class SignUp extends BaseView{
                 matchHistoryField.innerHTML += `
                 <h3>Match History</h3>
                 <p>personnal score: ${matches.personalScore}</p>
-                <p>opp score: ${matches.oppScore}</p>
+                <p>score_player1: ${matches.oppScore}</p>
                 <p>date: ${matches.date}</p>
                 `;
             }
