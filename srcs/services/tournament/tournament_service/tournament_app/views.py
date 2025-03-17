@@ -287,6 +287,16 @@ class ListAllTournamentView(generics.ListAPIView):
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
 
+class MyTournamentView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def retrieve(self, request):
+        tournament = get_object_or_404(Tournament,
+                users=user,
+                Q(status='waiting') | Q(status='playing'))
+        serializer = TournamentSerializer(tournament)
+        return Response(serializer.data)
+
 class DetailTournamentView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.all()

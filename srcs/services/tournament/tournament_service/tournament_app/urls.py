@@ -14,6 +14,7 @@ urlpatterns = [
     path('launch/', views.LaunchTournamentView().as_view(), name='launch-tournament'),
 
     path('detail/<uuid:tournament_id>/', views.DetailTournamentView().as_view(), name='detail-tournament'),
+    path('my_tournament/', views.MyTournamentView().as_view(), name='my-tournament'),
 
     #path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament_stats'),
     path('list/', views.ListAllTournamentView.as_view(), name='list_all_tournament'),
