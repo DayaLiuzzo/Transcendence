@@ -2,7 +2,7 @@
 
 import BaseView from './BaseView.js';
 
-export default class PlayTournamentList extends BaseView{
+export default class PlayTournamentMine extends BaseView{
     
     constructor(params){
         super(params);
@@ -11,8 +11,8 @@ export default class PlayTournamentList extends BaseView{
     render(){
         return `
         <div>
-            <h2>Play Tournament List (Pas pret !!!)</h2>
-            <p>afficher une list<\p>
+            <h2>Play Tournament Mine (Pas pret !!!)</h2>
+            <p>a voir<\p>
             
         </div>
     `;

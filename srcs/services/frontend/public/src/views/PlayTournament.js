@@ -19,6 +19,8 @@ export default class PlayMenu extends BaseView{
             <br>
             <button id="list-tournament">List a tournament</button>
             <br>
+            <button id="my-tournament">My tournament</button>
+            <br>
         </div>
     `;
     }
@@ -44,6 +46,13 @@ export default class PlayMenu extends BaseView{
         if (listTournamentButton) {
             listTournamentButton.addEventListener("click", async () => {
                 this.navigateTo('/list-tournament');
+            });
+        }
+        
+        const myTournamentButton = document.getElementById("my-tournament");
+        if (myTournamentButton) {
+            myTournamentButton.addEventListener("click", async () => {
+                this.navigateTo('/my-tournament');
             });
         }
 

@@ -39,6 +39,7 @@ export default class PlayTournamentCreate extends BaseView{
             console.log("Succes fetch create tournament")
             console.log(createTournamentResponse.data)
         }
+        this.navigateTo("/my-tournament");
     }
 
     getFormData(){
