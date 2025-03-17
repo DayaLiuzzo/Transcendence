@@ -31,8 +31,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.user = None
         self.game = None
         self.jeu_task = None
+        self.jeu = None
         self.is_host = False
         self.data_sent = False
+        self.final_game_data = {
+        }
         await self.accept()
         
     async def receive(self, text_data):
@@ -178,7 +181,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         from .models import Game
         self.game = await sync_to_async(get_object_or_404)(Game, room_id=self.room_name)
         if self.is_host and event['username'] != self.user.username:
-            self.jeu = Jeu();
+            self.jeu = Jeu()
             player1 = await sync_to_async(lambda: self.game.player1)()
             player2 = await sync_to_async(lambda: self.game.player2)()
             self.final_game_data = {
@@ -197,23 +200,38 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.game.status = 'finished'
                 await sync_to_async(self.game.save)()
 
-                if self.jeu.game_end:
-                    await self.update_final_game_data()
-                else:
-                    player1 = await sync_to_async(lambda: self.game.player1)()
-                    player2 = await sync_to_async(lambda: self.game.player2)()
-
-                    if player_disconnected == '1':
-                        self.jeu.set_game_end('player2')
+                if self.jeu:
+                    if self.jeu.game_end:
+                        await self.update_final_game_data()
                     else:
-                        self.jeu.set_game_end('player1')
+                        player1 = await sync_to_async(lambda: self.game.player1)()
+                        player2 = await sync_to_async(lambda: self.game.player2)()
 
-                    await self.update_final_game_data()
+                        if player_disconnected == '1':
+                            self.jeu.set_game_end('player2')
+                        else:
+                            self.jeu.set_game_end('player1')
 
-                await self.send_game_state(self.jeu.get_game_end())
+                        await self.update_final_game_data()
+                    await self.send_game_state(self.jeu.get_game_end())
+                else:
+                    self.final_game_data = {
+                        'room_id': self.room_name,
+                        'status': 'deleted',
+                        'winner': None,
+                        'loser': None,
+                        'score_player1': 0,
+                        'score_player2': 0,
+                        'date_played': None
+                    }
                 await send_results_to_rooms(self.final_game_data)
 
                 self.data_sent = True
+                await sync_to_async(self.game.delete)()
+            else:
+                from_tournament = await sync_to_async(lambda: self.game.from_tournament)()
+                if not from_tournament:
+                    self.data_sent = True
             print("LEFT2")
 
 
@@ -243,7 +261,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         player1 = await sync_to_async(lambda: self.game.player1)()
         player_type = '1' if self.user == player1 else '2'
         if self.is_host:
-            await self.left({'player_type': player_type, 'is_host': True})
+            await self.left({'player_type': player_type})
         else:
             print(f'{self.user.username} left')
             await self.channel_layer.group_send(
@@ -251,7 +269,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'left',
                     'player_type': player_type,
-                    'is_host': self.is_host
                 }
             )
 
@@ -306,7 +323,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         await sync_to_async(self.game.save)()
 
         self.jeu.generate_world()
-        while time.time() - self.jeu.start_time < 600:
+        while True:
+            if not self.jeu.game_started:
+                if time.time() - self.jeu.start_time >= 3:
+                    self.jeu.game_started = True
+
             await self.update()
 
             self.jeu.delta = time.time() - self.jeu.time
@@ -326,7 +347,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.jeu._ball_hit()
         self.jeu.player1.update(self.jeu.delta)
         self.jeu.player2.update(self.jeu.delta)
-        self.jeu.ball.update(self.jeu.delta)
+        if self.jeu.game_started:
+            self.jeu.ball.update(self.jeu.delta)
         if self.jeu.pause:
             await self.send_game_state(self.jeu.get_game_score())
             if not self.jeu.game_end:

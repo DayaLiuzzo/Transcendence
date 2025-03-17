@@ -11,6 +11,7 @@ class Game:
         self.direction = [None, None]
         self.started = False
         self.pause = False
+        self.game_started = False
         self.game_end = False
         self.winner = None
         self.player1 = Player(WIDTH // 16, HEIGHT // 2 - (PLAYER_HEIGHT // 2))

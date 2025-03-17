@@ -132,7 +132,7 @@ class CreateRoomView(APIView):
             player2.rooms.add(new_room)
 
             #call create game
-            create_game_url = f'http://game:8443/api/game/create_game/{new_room.room_id}/'
+            create_game_url = f'http://game:8443/api/game/create_game/{new_room.room_id}/tournament'
             client = MicroserviceClient()
             response = client.send_internal_request(create_game_url, 'post')
             if response.status_code != 201:
@@ -327,6 +327,10 @@ class UpdateRoomView(APIView):
             
             if response.status_code != 200: #a changer si besoin en fonction
                 print(f"ERROR communication between tournament and rooms service : {response.status_code}")
+
+        else:
+            if request.data['status'] == 'deleted':
+                room.delete()
         return Response(status=status.HTTP_200_OK)
 
 
