@@ -166,6 +166,7 @@ export default class BaseView{
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
                 const avatarUrl = await this.displayAvatar();
+                console.log(avatarUrl)
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;

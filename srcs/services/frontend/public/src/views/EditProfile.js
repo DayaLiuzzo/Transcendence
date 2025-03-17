@@ -113,15 +113,19 @@ export default class EditProfile extends BaseView {
                         <input type="password" id="EditProfile-new_password2" placeholder="Confirm New Password" required>
                         <button type="submit">Change Password</button>
                     </form>
-                    <h3>Change Username</h3>
-                    <div id="username-field"></div>
-                    <form id="change-username-form">
-                        <input type="text" id="EditProfile-username" placeholder="Username" required>
-                        <button type="submit">Change Username</button>
-                    </form>
-                    <button id="toggle-2fa-button">Enable 2FA</button>
-                    <input type="file" id="avatar-upload" accept="image/*" />
-                    <button id="upload-avatar-btn">Upload Avatar</button>
+                    <div id="username-form"> 
+                        <h3>Change Username</h3>
+                        <div id="username-field"></div>
+                        <form id="change-username-form">
+                            <input type="text" id="EditProfile-username" placeholder="Username" required>
+                            <button type="submit">Change Username</button>
+                        </form>
+                        <button id="toggle-2fa-button">Enable 2FA</button>
+                        <div class="avatar-container">
+                            <input type="file" id="avatar-upload" accept="image/*" />                         
+                            <button id="upload-avatar-btn">Upload Avatar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
