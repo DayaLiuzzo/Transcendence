@@ -2,6 +2,7 @@ import logging
 import uuid
 
 from django.db import IntegrityError
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
@@ -330,6 +331,19 @@ class UpdateRoomView(APIView):
 
 
 # *************************** READ *************************** #
+
+class ListMyFinishedRoomsView(generics.ListAPIView):
+    serializer_class = RoomSerializer
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        rooms = Room.objects.filter(
+                Q(status='finished'),
+                Q(player1=user) | Q(player2=user))
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(serializer.data)
+
 
 class ListAllRoomsView(generics.ListAPIView):
     serializer_class = RoomSerializer
