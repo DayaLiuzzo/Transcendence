@@ -5,19 +5,27 @@ export default class Profile extends BaseView {
         super(router, params);
     }
 
-    getErrorContainer(formId) {
-        let errorContainer = document.getElementById(formId+ "-error-container");
-        
-        if (!errorContainer) {
-            errorContainer = document.createElement("div");
-            errorContainer.id = formId+ "-error-container";  // Set a unique ID
-            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
-            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); // Insert at the top of the form
+    async getStats(){
+        const username = this.getUsername();
+        const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
+        if (response.success){
+            return response.data;
         }
-        
-        return errorContainer;
+        return null;
     }
 
+    getErrorContainer() {
+        let errorContainer = document.getElementById("add-friend-error-container");
+
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "add-friend-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("add-friend-form").insertBefore(errorContainer, document.getElementById("add-friend-form").firstChild); // Insert at the top of the form
+        }
+
+        return errorContainer;
+    }
 
     render() {
         return `
@@ -32,7 +40,7 @@ export default class Profile extends BaseView {
                     </nav>
                 </div>
                 <div id="line"></div>
-                </div>          
+                </div>
             </div>
             <div id="container">
                 <div id="container-profile">
@@ -52,6 +60,35 @@ export default class Profile extends BaseView {
             </div>
         </div>
         `;
+    }
+
+    async updateStatsField() {
+        console.log('Updating stats field');
+        const statsField = document.getElementById("stats-field");
+        if (!statsField){
+            console.log('No stats field');
+            return;
+        }
+        const username = this.getUsername();
+        const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
+        if(response.success){
+            console.log(response.data);
+            console.log(response.data.wins);
+            console.log(response.data.losses);
+            statsField.innerHTML = `
+            <h3>Stats</h3>
+            <p>Wins: ${response.data.wins}</p>
+            <p>Losses: ${response.data.losses}</p>
+            `;
+
+        }
+        else {
+        statsField.innerHTML = `
+        <h3>Stats</h3>
+        <p>Wins: Default</p>
+        <p>Losses: Default</p>
+        `;
+        }
     }
 
     async addFriend(friendUsername) {
@@ -113,7 +150,7 @@ export default class Profile extends BaseView {
         if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Remove") {
             const friendUsername = event.target.getAttribute("data-username");
             const friendItem = event.target.parentElement;
-            this.removeFriend(friendUsername, friendItem); 
+            this.removeFriend(friendUsername, friendItem);
         }
     }
 
@@ -169,6 +206,7 @@ export default class Profile extends BaseView {
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             this.renderFriends(users);
             this.updateFieldContent("username-field", this.formatField("username", username));
+            this.updateStatsField();
         }
         catch (error) {
             console.error("Error in mount():", error);
@@ -177,27 +215,27 @@ export default class Profile extends BaseView {
 
     unmount() {
         console.log('Unmounting Profile');
-        
+
         const addFriendForm = document.getElementById("add-friend-form");
         if (addFriendForm) {
             addFriendForm.removeEventListener("submit", this.handleAddFriendSubmit);
         }
-    
+
         const friendsField = document.getElementById("friends-field");
         if (friendsField) {
             friendsField.removeEventListener("click", this.handleRemoveFriendClick);
         }
-    
+
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.removeEventListener("click", this.handleEditProfileClick);
         }
-    
+
         const logoutButton = document.getElementById("logout");
         if (logoutButton) {
             logoutButton.removeEventListener("click", this.handleLogoutClick);
         }
 
     }
-    
+
 }

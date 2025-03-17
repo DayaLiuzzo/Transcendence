@@ -16,6 +16,7 @@ export default class BaseView{
         this.API_URL_LOGIN = '/api/auth/token/';
         this.API_URL_GAME = '/api/game/';
         this.API_URL_TOURNAMENT = '/api/tournament/';
+        this.lastSeenInterval = null;
 
         this.app = document.getElementById('app');
         if (!this.app) {
@@ -35,6 +36,28 @@ export default class BaseView{
         catch (error) {
             console.error("Error in mount():", error);
         }
+    }
+
+    async isOnline(username){
+        const response = await this.sendGetRequest(this.API_URL_USERS + "/status/" + username + "/");
+        if (!response.success) {
+            this.showError(response.error, "app");
+            return;
+        }
+        return response.data.online;
+
+    }
+
+    async updateLastSeen() {
+        this.router.updateLastSeen();
+    }
+
+    startUpdatingLastSeen() {
+       this.router.startUpdatingLastSeen();
+    }
+
+    stopUpdatingLastSeen() {
+        this.router.stopUpdatingLastSeen();
     }
 
     showError(errors, formId) {
@@ -65,9 +88,9 @@ export default class BaseView{
 
         if (!errorContainer) {
             errorContainer = document.createElement("div");
-            errorContainer.id = formId+ "-error-container";  // Set a unique ID
-            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
-            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); // Insert at the top of the form
+            errorContainer.id = formId+ "-error-container";
+            errorContainer.classList.add("error-container");
+            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
 
         return errorContainer;
@@ -75,6 +98,10 @@ export default class BaseView{
 
     async navigateTo(path){
         this.router.navigateTo(path);
+    }
+
+    getRefreshToken(){
+        return this.router.getRefreshToken();
     }
 
     getAccessToken(){
@@ -312,11 +339,12 @@ export default class BaseView{
     logout() {
         const refresh_token = this.getRefreshToken();
         if (refresh_token) {
-            console.log(refresh_token);
+            localStorage.setItem("logout", Date.now());
             this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
-            sessionStorage.removeItem("userSession");
-            this.navigateTo("/log-in");
+            this.stopUpdatingLastSeen();
         }
+        localStorage.removeItem("userSession");
+        this.navigateTo("/log-in");
         // this.sendPostRequest(this.API_URL + 'logout/', {});
     }
 
