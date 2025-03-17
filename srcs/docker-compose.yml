@@ -92,13 +92,25 @@ services:
     build: services/rooms
     container_name: rooms
     volumes:
-      - rooms_service_data:/service_code
+      #- rooms_service_data:/service_code
       - auth_keys:/keys
     expose:
       - "8443"
+    develop:
+      watch:
+        - action: sync+restart
+          path: services/rooms/rooms_service/rooms_app/models.py
+          target: /service_code/rooms_app/models.py
+        - action: sync
+          path: services/rooms/rooms_service
+          target: /service_code
     restart: on-failure
     depends_on:
-      - db_rooms
+      db_rooms:
+        condition: service_healthy
+        restart: true
+      auth:
+        condition: service_started
     env_file: .env
 
   tournament:
@@ -162,6 +174,11 @@ services:
     env_file: .env
     expose:
       - '5432'
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 1m30s
+      start_period: 30s
+      start_interval: 5s
 
   db_tournament:
     image: db_tournament
@@ -185,6 +202,11 @@ services:
     env_file: .env
     expose:
       - '5432'
+
+  redis:
+    image: "redis:bullseye"
+    expose:
+      - '6379'
 
 volumes:
   auth_keys:

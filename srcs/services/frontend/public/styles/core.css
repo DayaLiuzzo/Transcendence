@@ -16,6 +16,7 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
   #navbar {
@@ -182,7 +183,7 @@ body {
   canvas {
     cursor: grab;
   }
-  
+
   canvas:active {
     cursor: grabbing;
   }
@@ -290,3 +291,21 @@ body {
       text-shadow: 0 0 1px darkgray;
     }
   }
+
+
+/* CSS STYLE FOR GAME PAGE*/
+  #webgl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    background: none;
+  }
+
+  #webgl canvas {
+    cursor: grab;
+    background-color: transparent;
+    background: none;
+  }
+
+

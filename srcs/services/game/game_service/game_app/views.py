@@ -14,12 +14,8 @@ from rest_framework.views import APIView
 from .authentication import CustomJWTAuth
 from .models import Game
 from .models import UserProfile
-from .models import Ball
-from .models import Paddle
 from .serializers import GameSerializer
 from .serializers import UserProfileSerializer
-from .serializers import BallSerializer
-from .serializers import PaddleSerializer
 from .permissions import IsAuth
 from .permissions import IsRooms
 from .permissions import IsUsers
@@ -121,21 +117,7 @@ class CreateGame(APIView):
             return Response({'error': f'La room avec l\'ID {room_id} existe déjà.'}, status=status.HTTP_400_BAD_REQUEST)
 
         game = Game(room_id=room_id)
-        game.save(force_insert=True)
-
-        ball = Ball(game=game)
-        ball.save(force_insert=True)
-
-        left_paddle = Paddle(game=game, side='left', x_position=-2.0)
-        right_paddle = Paddle(game=game, side='right', x_position=2.0)
-        left_paddle.save()
-        right_paddle.save()
-
-        game.ball = ball
-        game.paddles.set([left_paddle, right_paddle])
         game.save()
-
-        game_serializer = GameSerializer(game)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -150,22 +132,12 @@ class JoinGame(APIView):
 
         if game.player1 is None:
             game.player1 = user
-            left_paddle = game.paddles.filter(side='left').first()
-            left_paddle.player = user
-            left_paddle.save()
-            if game.player2 is not None:
-                game.status = 'playing'
             game.save()
             return Response({
                 'message': f'{user.username} a rejoint la room {room_id} en tant que joueur 1.'
             }, status=status.HTTP_200_OK)
         elif game.player2 is None:
             game.player2 = user
-            left_paddle = game.paddles.filter(side='right').first()
-            left_paddle.player = user
-            left_paddle.save()
-            if game.player1 is not None:
-                game.status = 'playing'
             game.save()
             return Response({
                 'message': f'{user.username} a rejoint la room {room_id} en tant que joueur 2.'
@@ -201,13 +173,6 @@ class DeleteGame(APIView):
     permission_classes = [IsRooms]
     def delete(self, request, room_id, *args, **kwargs):
         game = get_object_or_404(Game, room_id=room_id)
-
-        paddles = game.paddles.all()
-        for paddle in paddles:
-            paddle.delete()
-
-        if game.ball:
-            game.ball.delete()
 
         game.delete()
 

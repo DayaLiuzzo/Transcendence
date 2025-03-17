@@ -17,12 +17,14 @@ from .authentication import CustomJWTAuth
 from .models import Room
 from .models import UserProfile
 from .serializers import RoomSerializer
+from .serializers import RoomSerializerInternal
 from .serializers import UserProfileSerializer
 from .permissions import IsAuth
 from .permissions import IsRooms
 from .permissions import IsUsers
 from .permissions import IsGame
 from .permissions import IsOwnerAndAuthenticated
+from .permissions import IsTournament
 from service_connector.service_connector import MicroserviceClient
 from service_connector.exceptions import MicroserviceError
 
@@ -107,20 +109,47 @@ class DeleteUserView(generics.DestroyAPIView):
 
 #peut etre utilisee par tournament maybe ??
 class CreateRoomView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTournament]
 
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         room_id = f"room_{str(uuid.uuid4())[:8]}"
         try:
-            new_room = Room.objects.create(room_id=room_id, status='waiting', players_count=1)
-            user = request.user
-            new_room.player1 = user
+            data = request.data
+            data['room_id'] = room_id
+            data['players_count'] = 2
+
+            serializer = RoomSerializerInternal(data=data)
+            serializer.is_valid(raise_exception=True)
+            new_room = serializer.save()
+
+            new_room.is_from_tournament = True
             new_room.save()
+            player1 = serializer.validated_data.get('player1')
+            player2 = serializer.validated_data.get('player2')
 
-            user.rooms.add(new_room)
-            user.save()
+            player1.rooms.add(new_room)
+            player2.rooms.add(new_room)
 
-            #add service co join game + exception
+            #call create game
+            create_game_url = f'http://game:8443/api/game/create_game/{new_room.room_id}/'
+            client = MicroserviceClient()
+            response = client.send_internal_request(create_game_url, 'post')
+            if response.status_code != 201:
+                raise MicroserviceError(response.status_code, response.text)
+
+            join_game_data = {}
+            join_game_data['user'] = player1.username
+            #call join game
+            join_game_url = f'http://game:8443/api/game/join_game/{new_room.room_id}/'
+            response = client.send_internal_request(join_game_url, 'post', data=join_game_data)
+            if response.status_code != 200:
+                raise MicroserviceError(response.status_code, response.text)
+
+            join_game_data['user'] = player2.username
+            response = client.send_internal_request(join_game_url, 'post', data=join_game_data)
+            if response.status_code != 200:
+                raise MicroserviceError(response.status_code, response.text)
+
             return Response({"message": "New room created", "room_id": new_room.room_id}, status=status.HTTP_201_CREATED)
         
         except IntegrityError as e:
@@ -128,8 +157,8 @@ class CreateRoomView(APIView):
                 {"message": "Room ID conflict, try again.", "error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        except Exception as e:
-            return Response({"message": "Error while creating room", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        #except Exception as e:
+        #    return Response({"message": "Error while creating room", "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class JoinRoomView(APIView):
     permission_classes = [IsAuthenticated]
@@ -139,6 +168,8 @@ class JoinRoomView(APIView):
         user = request.user
 
         waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).exclude(player1=user).exclude(player2=user).first()
+
+        print(waiting_room)
 
         if waiting_room:
             return self.join_room(request, waiting_room, user)
@@ -279,6 +310,25 @@ class QuitAllRoomsView(APIView):
         user.save()
         return Response({"message": "You have successfully left all rooms."}, status=status.HTTP_200_OK)
 
+class UpdateRoomView(APIView):
+    permission_classes = [IsGame]
+
+    def patch(self, request, room_id):
+        room = get_object_or_404(room_id=room_id)
+        serializer = RoomSerializerInternal(room, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(status='finished')
+        if room.is_from_tournament:
+            client = MicroserviceClient()
+            url = f'http://tournament:8443/api/tournament/room_result/{room.room_id}/'
+            client = MicroserviceClient()
+            response = client.send_internal_request(join_game_url, 'patch', data=serializer.data)
+            
+            if response.status_code != 200: #a changer si besoin en fonction
+                print(f"ERROR communication between tournament and rooms service : {response.status_code}")
+        return Response(status=status.HTTP_200_OK)
+
+
 # *************************** READ *************************** #
 
 class ListAllRoomsView(generics.ListAPIView):
@@ -339,7 +389,7 @@ class CountLockedRoomsView(APIView):
 # ************************** DELETE ************************** #
 
 class DeleteRoomView(generics.DestroyAPIView):
-    permission_classes = [IsRooms]
+    permission_classes = (IsRooms|IsTournament,)
     queryset = Room.objects.all()
     # permission_classes = [IsAuthenticated] 
     lookup_field = 'room_id'
