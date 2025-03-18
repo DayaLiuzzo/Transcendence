@@ -47,7 +47,6 @@ export default class WebSocketService {
     handleStart(event) {
         const data = JSON.parse(event.data);
         console.log("Message reçu:", data.message);
-        //console.log("Message reçu:", data.isfull);
         if (data.message.state === 'START')
         {
             this.isplaying = true;
@@ -55,20 +54,23 @@ export default class WebSocketService {
             window.dispatchEvent(event);
         }
         console.log("Is playing ?", this.isplaying)
-        // Mettre à jour le DOM avec les données reçues via WebSocket
     }
 
     handleMessage(event) {
         const data = JSON.parse(event.data);
-        //console.log("Message reçu:", data);
         console.log("Message reçu:", data.message);
         if (data.message.state === 'INFO') {
             const event = new CustomEvent("updateGame", { detail: data.message});
-            console.log("OK");
             window.dispatchEvent(event);
         }
-
-        // Mettre à jour le DOM avec les données reçues via WebSocket
+        if (data.message.state === 'SCORE') {
+            const event = new CustomEvent("updateScore", { detail: data.message});
+            window.dispatchEvent(event);
+        }
+        if (data.message.state === 'END') {
+            const event = new CustomEvent("handleEndGame", { detail: data.message});
+            window.dispatchEvent(event);
+        }
     }
 
     sendMessage(message) {
