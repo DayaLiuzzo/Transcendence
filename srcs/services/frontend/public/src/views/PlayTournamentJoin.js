@@ -37,6 +37,18 @@ export default class PlayTournamentJoin extends BaseView{
         }
     }
     
+    async seeMyTournament() {
+        const body = {};
+
+        //add alerte avant redirection??
+        this.navigateTo("/my-tournament");
+    }
+    
+    handleMyTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "See my tournament page") {
+            this.seeMyTournament();
+        }
+    }
 
     getFormData(){
         return {
@@ -87,11 +99,24 @@ export default class PlayTournamentJoin extends BaseView{
     unmount(){
         console.log('unmounting join tournament');
         document.getElementById("joinTournament-form")?.removeEventListener("submit", this.handleJoinTournamentSubmit);
+   
+        const tournamentSeeMineField = document.getElementById("tournament-mine-button");
+        if (tournamentSeeMineField) {
+            tournamentSeeMineField.removeEventListener("click", this.handleMyTournamentClick);
+        }
     }
 
     attachEvents(){
         console.log('Events attached (join tournament)');
         document.getElementById("joinTournament-form")?.addEventListener("submit", this.handleJoinTournamentSubmit);
+    
+        
+        const tournamentSeeMineField = document.getElementById("tournament-mine-button");
+        if (tournamentSeeMineField) {
+            tournamentSeeMineField.addEventListener("click", this.handleMyTournamentClick.bind(this));
+        }
+
+        
     }
 
 }

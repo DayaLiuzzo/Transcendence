@@ -13,7 +13,6 @@ export default class PlayTournamentList extends BaseView{
         return `
         <div>
             <h2>List tournament</h2>
-            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
             <div id="tournament-list-field"></div>
             <div id ="no-tournament" hidden>No tournament available
             <button id="tournament-create-button">Create</button>
