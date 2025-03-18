@@ -13,7 +13,6 @@ export default class PlayTournamentList extends BaseView{
         return `
         <div>
             <h2>List tournament</h2>
-            <p>si deja dans un tournoi, pas de button join<\p>
             <div id="tournament-list-field"></div>
         </div>
         `;
@@ -59,7 +58,7 @@ export default class PlayTournamentList extends BaseView{
         return errorContainer;
     }
 
-    renderTournamentList(tournaments) {
+    renderTournamentList(tournaments, userIsIntournament) {
         const tournamentListField = document.getElementById("tournament-list-field");
         if (!tournamentListField) return;
         if (!tournaments.length){
@@ -67,16 +66,19 @@ export default class PlayTournamentList extends BaseView{
             // rediriger vers create tournament 
             return;
         }
+        console.log("User in tournament? ", userIsIntournament);
         tournamentListField.innerHTML = "";
         const tournamentList = document.createElement("ul");
         tournaments.forEach(tournament => {
             const tournamentItem = document.createElement("li");
             tournamentItem.textContent = tournament.name;
-            const joinButton = document.createElement("button");
-            joinButton.id = "joinButton"
-            joinButton.textContent = "Join";
-            joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
-            tournamentItem.appendChild(joinButton);
+            if (!userIsIntournament){
+                const joinButton = document.createElement("button");
+                joinButton.id = "joinButton"
+                joinButton.textContent = "Join";
+                joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
+                tournamentItem.appendChild(joinButton);
+            }
             tournamentList.appendChild(tournamentItem);
         });
         tournamentListField.appendChild(tournamentList);
@@ -89,7 +91,17 @@ export default class PlayTournamentList extends BaseView{
             if (!getTournamentList.success) { return this.showError(response.error, "tournament-list-field"); }
             
             const tournaments = Array.isArray(getTournamentList.data) ? getTournamentList.data : [getTournamentList.data];
-            this.renderTournamentList(tournaments);
+            
+            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+            let userIsIntournament = false;
+            if (checkIfInTournament.success) {
+                if (checkIfInTournament.data.in_tournament){
+                    userIsIntournament = true;
+                } 
+            }
+            else
+                return;
+            this.renderTournamentList(tournaments, userIsIntournament);
         }
         catch (error) {
             console.error("Error in mount():", error);
