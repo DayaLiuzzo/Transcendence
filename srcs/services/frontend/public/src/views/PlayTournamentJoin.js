@@ -60,7 +60,6 @@ export default class PlayTournamentJoin extends BaseView{
         return `
         <div>
             <h2>Join Tournament (Pas pret !!!!)</h2>
-            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
 
             <form id="joinTournament-form" hidden>
                 <input type="text" id="joinTournament-id" placeholder="Tournament id" required>

@@ -37,9 +37,7 @@ export default class PlayTournamentMine extends BaseView{
             </div>
 
             <div id ="no-tournament" hidden>You are not part of any tournament
-                <p>Button : create a tournament page (A lier !!)<\p>
                 <button id="tournament-create-button">Create</button>
-                <p>Button : join a tournament page (A lier !!)<\p>
                 <button id="tournament-join-button">Join</button>
             </div>
 
@@ -69,6 +67,19 @@ export default class PlayTournamentMine extends BaseView{
         }
 
         
+        async joinTournament() {
+            const body = {};
+    
+            //add alerte avant redirection??
+            this.navigateTo("/join-tournament");
+        }
+        
+        handleJoinTournamentClick(event) {
+            if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
+                this.joinTournament();
+            }
+        }
+
     async leaveTournament() {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
@@ -132,14 +143,18 @@ export default class PlayTournamentMine extends BaseView{
             tournamentDeleteField.addEventListener("click", this.handleDeleteTournamentClick.bind(this));
         }
             
-        const tournamentCreateMineField = document.getElementById("tournament-create-button");
-        if (tournamentCreateMineField) {
-            tournamentCreateMineField.addEventListener("click", this.handleCreateTournamentClick.bind(this));
+        const tournamentCreateField = document.getElementById("tournament-create-button");
+        if (tournamentCreateField) {
+            tournamentCreateField.addEventListener("click", this.handleCreateTournamentClick.bind(this));
+        }
+
+        const tournamentJoinField = document.getElementById("tournament-join-button");
+        if (tournamentJoinField) {
+            tournamentJoinField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
         }
 
     }
 
-    
     formatField(type, value){
         // if (!value) return "No information available.";
         if (!value) return `${type.charAt(0).toUpperCase() + type.slice(1)}: No information available.`; 
@@ -239,10 +254,14 @@ export default class PlayTournamentMine extends BaseView{
             tournamentDeleteField.removeEventListener("click", this.handleDeleteTournamentClick);
         }
 
-        const tournamentCreateMineField = document.getElementById("tournament-create-button");
-        if (tournamentCreateMineField) {
-            tournamentCreateMineField.removeEventListener("click", this.handleCreateTournamentClick);
+        const tournamentCreateField = document.getElementById("tournament-create-button");
+        if (tournamentCreateField) {
+            tournamentCreateField.removeEventListener("click", this.handleCreateTournamentClick);
         }
 
+        const tournamentJoinField = document.getElementById("tournament-join-button");
+        if (tournamentJoinField) {
+            tournamentJoinField.removeEventListener("click", this.handleJoinTournamentClick);
+        }
     }
 }
