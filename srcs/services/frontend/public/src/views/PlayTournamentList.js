@@ -62,6 +62,11 @@ export default class PlayTournamentList extends BaseView{
     renderTournamentList(tournaments) {
         const tournamentListField = document.getElementById("tournament-list-field");
         if (!tournamentListField) return;
+        if (!tournaments.length){
+            tournamentListField.innerHTML = "No available tournament";
+            // rediriger vers create tournament 
+            return;
+        }
         tournamentListField.innerHTML = "";
         const tournamentList = document.createElement("ul");
         tournaments.forEach(tournament => {
@@ -76,7 +81,7 @@ export default class PlayTournamentList extends BaseView{
         });
         tournamentListField.appendChild(tournamentList);
     }
-    
+
     async mount() {
         console.log('Mounting Play tournament List');
         try {
