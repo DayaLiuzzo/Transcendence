@@ -11,10 +11,9 @@ export default class PlayTournamentMine extends BaseView{
     render(){
         return `
         <div>
-            <h2>Play Tournament Mine (Pas pret !!!)</h2>
+            <h2>My tournament (En cours !!!)</h2>
 
-            <br>
-            <div id="tournament-info"></div>
+            <h3>Tournament information</h3>
             <div id="tournament-name"></div>
             <div id="tournament-id"></div>
             <div id="tournament-owner"></div>
@@ -23,58 +22,106 @@ export default class PlayTournamentMine extends BaseView{
             <div id="tournament-users-nb-max"></div>
             <div id="tournament-status"></div>
             <div id="tournament-winner"></div>
-            <br>
-
-            <h2>Afficher les infos du tournoi</h2>
-            <p>[x] Call get endpoint my tournament<\p>
-            <p>[x] Detailler donnees de get endpoint my tournament<\p>
-            <p>[ ] Mieux formater les donnees<\p>
             <p>[ ] Boucle pour update check si new user<\p>
-            <br>
-
-            <h2>Actions du tournoi</h2>
-            <p>[ ] button leave<\p>
-            <p>[ ] button delete tournament (pour le owner + voir comment on gere si le tournoi est lance<\p>
-            <p>[ ] button start tournament (pour le owner + voir comment on gere si le tournoi est plein, il est lance automatiquement<\p>
-            <p>[ ] lister les current match et y acceder ?<\p>
-            <p>[ ] voir les resultats<\p>
-        </div>
-    `;
+ 
+            <h3>Actions du tournoi</h3>
+            <h4>Pour le user lambda<h4>
+            <button id="tournament-leave-field">Leave</button>
+            <h4>Pour le owner<h4>
+            <button id="tournament-launch-field">Launch</button>
+            <button id="tournament-delete-field">Delete</button>
+           
+            `;
+        }
+        // <h4>Pour tous les user<h4>
+        // <button id="tournament-play-field">Play tournament</button>
+        
+        // <p>[ ] lister les current match et y acceder ??<\p>
+        // <p>[ ] voir les resultats??<\p>
+        // <br>
+        // </div>
+    
+    //pour leave tournament
+    async leaveTournament() {
+        const body = {};
+        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
+        if (!response.success) {
+            console.log("error leave tournament")
+            this.showError(response.error);
+            return;
+        }
+        else
+            console.log("Fetch pour leave le tournoi a marche")
+        this.navigateTo("/play-tournament");
     }
     
-    // async joinTournament(tournamentId) {
-    //     const body = {};
-    //     const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
-    //     if (!response.success) {
-    //         console.log("error join tournament")
-    //         this.showError(response.error);
-    //         return;
-    //     }
-    //     else
-    //         console.log("Fetch pour join le tournoi a marche")
-    //     this.navigateTo("/my-tournament");
-    // }
+    handleLeaveTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Leave") {
+            this.leaveTournament();
+        }
+    }
 
-    // handleJoinTournamentClick(event) {
-    //     if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
-    //         const tournamentId = event.target.getAttribute("data-tournamentID");
-    //         this.joinTournament(tournamentId);
-    //     }
-    // }
+    //pour delete tournament
+    async deleteTournament() {
+        const body = {};
+        const response = await this.sendDeleteRequest(this.API_URL_TOURNAMENT + "delete_tournament/", body);
+        if (!response.success) {
+            console.log("error delete tournament")
+            this.showError(response.error);
+            return;
+        }
+        else
+            console.log("Fetch pour delete le tournoi a marche")
+            this.navigateTo("/play-tournament");
+        }
+    
+    handleDeleteTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Delete") {
+            this.deleteTournament();
+        }
+    }
 
-    // attachEvents() {
-    //     console.log('Events attached (Tournament Mine)');
+        //pour launch tournament
+        async launchTournament() {
+            const body = {};
+            const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
+            if (!response.success) {
+                console.log("error launch tournament")
+                this.showError(response.error);
+                return;
+            }
+            else
+                console.log("Fetch pour launch le tournoi a marche")
+            // this.navigateTo("/play-tournament"); refresh?
+        }
+        
+        handleLaunchTournamentClick(event) {
+            if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Launch") {
+                this.launchTournament();
+            }
+        }
 
+    attachEvents() {
+        console.log('Events attached (Tournament Mine)');
 
-    //     const tournamentListField = document.getElementById("tournament-list-field");
-    //     if (tournamentListField) {
-    //         tournamentListField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
-    //     }
+        const tournamentLeaveField = document.getElementById("tournament-leave-field");
+        if (tournamentLeaveField) {
+            tournamentLeaveField.addEventListener("click", this.handleLeaveTournamentClick.bind(this));
+        }
 
-    // }
+        const tournamentLaunchField = document.getElementById("tournament-launch-field");
+        if (tournamentLaunchField) {
+            tournamentLaunchField.addEventListener("click", this.handleLaunchTournamentClick.bind(this));
+        }
+
+        const tournamentDeleteField = document.getElementById("tournament-delete-field");
+        if (tournamentDeleteField) {
+            tournamentDeleteField.addEventListener("click", this.handleDeleteTournamentClick.bind(this));
+        }
+    }
 
     // renderTournamentList(tournaments) {
-    //     const tournamentListField = document.getElementById("tournament-list-field");
+    //     const tournamentListField = document.getElementById("tournament-leave-field");
     //     if (!tournamentListField) return;
     //     tournamentListField.innerHTML = "";
     //     const tournamentList = document.createElement("ul");
@@ -125,6 +172,7 @@ export default class PlayTournamentMine extends BaseView{
 
             console.log('Mounting Play tournament Mine success');
 
+            /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
             const tournamentName = getTournamentInfo.data.name;
             // document.getElementById("tournament-name").innerText = tournamentName;
             document.getElementById("tournament-name").innerHTML = this.formatField('name', tournamentName);
@@ -149,7 +197,7 @@ export default class PlayTournamentMine extends BaseView{
             // document.getElementById("tournament-users-nb-max").innerText = tournamentUsersNbMax;
             document.getElementById("tournament-users-nb-max").innerHTML = this.formatField('max_users', tournamentUsersNbMax);
             
-            const tournamentStatus = getTournamentInfo.data.name;
+            const tournamentStatus = getTournamentInfo.data.status;
             // document.getElementById("tournament-status").innerText = tournamentStatus;
             document.getElementById("tournament-status").innerHTML = this.formatField('status', tournamentStatus);
             
@@ -166,9 +214,20 @@ export default class PlayTournamentMine extends BaseView{
     unmount() {
         console.log('Unmounting Profile');
         
-        // const tournamentListField = document.getElementById("tournament-list-field");
-        // if (tournamentListField) {
-        //     tournamentListField.removeEventListener("click", this.handleRemoveFriendClick);
-        // }
+        const tournamentLeaveField = document.getElementById("tournament-leave-field");
+        if (tournamentLeaveField) {
+            tournamentLeaveField.removeEventListener("click", this.handleLeaveTournamentClick);
+        }
+
+        const tournamentLaunchField = document.getElementById("tournament-launch-field");
+        if (tournamentLaunchField) {
+            tournamentLaunchField.removeEventListener("click", this.handleLaunchTournamentClick);
+        }
+
+
+        const tournamentDeleteField = document.getElementById("tournament-delete-field");
+        if (tournamentDeleteField) {
+            tournamentDeleteField.removeEventListener("click", this.handleDeleteTournamentClick);
+        }
     }
 }
