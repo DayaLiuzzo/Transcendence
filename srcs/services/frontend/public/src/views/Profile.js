@@ -108,13 +108,17 @@ export default class Profile extends BaseView {
         const friendsField = document.getElementById("friends-field");
         if (friendsField) {
             const newFriendItem = document.createElement("li");
+            newFriendItem.classList.add("friend-item");
+
             newFriendItem.textContent = friendUsername;
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
-
+            
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             removeButton.setAttribute("data-username", friendUsername);
+            removeButton.classList.add("remove-button");
 
+            
             newFriendItem.appendChild(removeButton);
             friendsField.querySelector("ul").appendChild(newFriendItem);
         }
@@ -189,11 +193,29 @@ export default class Profile extends BaseView {
         const friendsList = document.createElement("ul");
         users.forEach(user => {
             const friendItem = document.createElement("li");
-            friendItem.textContent = user.username;
+            friendItem.classList.add("friend-item");
+
+            const usernameSpan = document.createElement("span");
+            usernameSpan.textContent = user.username;
+            usernameSpan.classList.add("username");
+
+            const statusIndicator = document.createElement("span");
+            statusIndicator.classList.add("status-indicator");
+            if (user.is_online) {
+                statusIndicator.textContent = "connected";
+                statusIndicator.classList.add("connected");
+            } else {
+                statusIndicator.textContent = "disconnected";
+                statusIndicator.classList.add("disconnected");
+            }
 
             const removeButton = document.createElement("button");
+            removeButton.classList.add("remove-button");
             removeButton.textContent = "Remove";
             removeButton.setAttribute("data-username", user.username);
+
+            friendItem.appendChild(usernameSpan);
+            friendItem.appendChild(statusIndicator);
             friendItem.appendChild(removeButton);
             friendsList.appendChild(friendItem);
         });
