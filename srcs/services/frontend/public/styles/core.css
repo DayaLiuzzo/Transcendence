@@ -337,7 +337,7 @@ body {
     font-family: 'Roboto', sans-serif;
   }
 
-  #login-form button, 
+  #login-form button,
   #signup-form button
   {
     font-family: 'Roboto', sans-serif;
@@ -351,7 +351,7 @@ body {
     margin-top: 16px;
     transition: background-color 0.3s, color 0.3s;
   }
-  
+
   #add-friend-form button,
   #change-password-form button,
   #change-username-form button {
@@ -422,8 +422,9 @@ body {
       background-color: rgba(255, 0, 0, 0.5);
   }
 
-  #login-form button:hover, 
-  #signup-form button:hover, 
+  #login-form button:hover,
+  #signup-form button:hover,
+  #upload-avatar-btn:hover,
   #add-friend-form button:hover,
   #change-password-form button:hover,
   #change-username-form button:hover
