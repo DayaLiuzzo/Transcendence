@@ -132,43 +132,43 @@ export default class PlayTournamentMine extends BaseView{
         console.log('Mounting Play tournament Mine');
 
         try {
+
+            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+            if (checkIfInTournament.success) {
+                    if (!checkIfInTournament.data.in_tournament){ 
+                        document.getElementById("no-tournament").removeAttribute("hidden");
+                        return;
+                    }
+                }
+
             const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
             if (!getTournamentInfo.success) {
-                document.getElementById("no-tournament").removeAttribute("hidden");
                 return ;
             }
 
             /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
             const tournamentName = getTournamentInfo.data.name;
-            // document.getElementById("tournament-name").innerText = tournamentName;
             document.getElementById("tournament-name").innerHTML = this.formatField('name', tournamentName);
 
             const tournamentID = getTournamentInfo.data.tournament_id;
-            // document.getElementById("tournament-id").innerText = tournamentID;
             document.getElementById("tournament-id").innerHTML = this.formatField('id', tournamentID);
            
             const tournamentOwner = getTournamentInfo.data.owner;
-            // document.getElementById("tournament-owner").innerText = tournamentOwner;
             document.getElementById("tournament-owner").innerHTML = this.formatField('owner', tournamentOwner);
 
             const tournamentUsersList = getTournamentInfo.data.users;
-            // document.getElementById("tournament-users-list").innerText = tournamentUsersList;
             document.getElementById("tournament-users-list").innerHTML = this.formatField('users', tournamentUsersList);
             
             const tournamentUsersNbCurrent = getTournamentInfo.data.users_count;
-            // document.getElementById("tournament-users-nb-current").innerText = tournamentUsersNbCurrent;
             document.getElementById("tournament-users-nb-current").innerHTML = this.formatField('users_count', tournamentUsersNbCurrent);
             
             const tournamentUsersNbMax = getTournamentInfo.data.max_users;
-            // document.getElementById("tournament-users-nb-max").innerText = tournamentUsersNbMax;
             document.getElementById("tournament-users-nb-max").innerHTML = this.formatField('max_users', tournamentUsersNbMax);
             
             const tournamentStatus = getTournamentInfo.data.status;
-            // document.getElementById("tournament-status").innerText = tournamentStatus;
             document.getElementById("tournament-status").innerHTML = this.formatField('status', tournamentStatus);
             
             const tournamentWinner= getTournamentInfo.data.winner;
-            // document.getElementById("tournament-winner").innerText = tournamentWinner;
             document.getElementById("tournament-winner").innerHTML = this.formatField('winner', tournamentWinner);
             
             document.getElementById("tournament-info").removeAttribute("hidden");

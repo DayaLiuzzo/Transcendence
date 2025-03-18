@@ -74,9 +74,9 @@ export default class PlayTournamentCreate extends BaseView{
         console.log('Mounting Play tournament create');
 
         try {
-            const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
-            if (getTournamentInfo.success) {
-                if (getTournamentInfo.data.in_tournament){ return this.navigateTo('/my-tournament') }
+            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+            if (checkIfInTournament.success) {
+                if (checkIfInTournament.data.in_tournament){ return this.navigateTo('/my-tournament') }
                 
                 document.getElementById("createTournament-form").removeAttribute("hidden");
                 }
