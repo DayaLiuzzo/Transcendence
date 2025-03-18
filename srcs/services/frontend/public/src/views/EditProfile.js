@@ -3,6 +3,7 @@ import BaseView from './BaseView.js';
 export default class EditProfile extends BaseView {
     constructor(router, params) {
         super(router, params);
+        this.handle2faVerification = this.handle2faVerification.bind(this);
     }
 
 
@@ -175,30 +176,38 @@ export default class EditProfile extends BaseView {
 
         const verifyOtpBtn = document.getElementById("verify-otp");
         const closeOtpBtn = document.getElementById("close-otp");
-        const otpInput = document.getElementById("otp-input");
-        const otpError = document.getElementById("otp-error");
 
-        verifyOtpBtn.addEventListener("click", async () => {
-            const response = await this.sendPostRequest(this.API_URL + '2fa/verify/', {otp: otpInput.value});
-            if (response.success){
-                let userSession = JSON.parse(localStorage.getItem("userSession"));
-                userSession.two_factor_enabled = true;
-                localStorage.setItem("userSession", JSON.stringify(userSession));
-                otpPopup.remove();
-                let twofaButton = document.getElementById("toggle-2fa-button");
-                twofaButton.textContent = "Disable 2FA";
-                return true;
-            } else {
-                otpError.textContent = "Invalid OTP, try again.";
-                document.getElementById("otp-error").style.display = "block";
-                let twofaButton = document.getElementById("toggle-2fa-button");
-                twofaButton.textContent = "Enable 2FA";
-            }
-        });
+        verifyOtpBtn.addEventListener("click", this.handle2faVerification);
         closeOtpBtn.addEventListener("click", () => {
             otpPopup.remove();
             return false;
         })
+    }
+
+    async handle2faVerification(event) {
+        event.preventDefault();
+        this.do2faVerification();
+    }
+
+    async do2faVerification(event) {
+        const otpPopup = document.getElementById("otp-popup");
+        const otpInput = document.getElementById("otp-input");
+        const response = await this.sendPostRequest(this.API_URL + '2fa/verify/', { otp: otpInput.value });
+        const otpError = document.getElementById("otp-error");
+        if (response.success) {
+            let userSession = this.getUserSession();
+            userSession.two_factor_enabled = true;
+            localStorage.setItem("userSession", JSON.stringify(userSession));
+            otpPopup.remove();
+            let twofaButton = document.getElementById("toggle-2fa-button");
+            twofaButton.textContent = "Disable 2FA";
+        } else {
+            otpError.textContent = "Invalid OTP, try again.";
+            otpError.style.display = "block";
+            let twofaButton = document.getElementById("toggle-2fa-button");
+            twofaButton.textContent = "Enable 2FA";
+        }
+
     }
 
     async handleToggle2FA() {
