@@ -55,8 +55,20 @@ export default class PlayTournamentMine extends BaseView{
         // </div>
     
 
+        async createTournament() {
+            const body = {};
     
+            //add alerte avant redirection??
+            this.navigateTo("/create-tournament");
+        }
+        
+        handleCreateTournamentClick(event) {
+            if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create") {
+                this.createTournament();
+            }
+        }
 
+        
     async leaveTournament() {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
@@ -119,6 +131,12 @@ export default class PlayTournamentMine extends BaseView{
         if (tournamentDeleteField) {
             tournamentDeleteField.addEventListener("click", this.handleDeleteTournamentClick.bind(this));
         }
+            
+        const tournamentCreateMineField = document.getElementById("tournament-create-button");
+        if (tournamentCreateMineField) {
+            tournamentCreateMineField.addEventListener("click", this.handleCreateTournamentClick.bind(this));
+        }
+
     }
 
     
@@ -220,5 +238,11 @@ export default class PlayTournamentMine extends BaseView{
         if (tournamentDeleteField) {
             tournamentDeleteField.removeEventListener("click", this.handleDeleteTournamentClick);
         }
+
+        const tournamentCreateMineField = document.getElementById("tournament-create-button");
+        if (tournamentCreateMineField) {
+            tournamentCreateMineField.removeEventListener("click", this.handleCreateTournamentClick);
+        }
+
     }
 }
