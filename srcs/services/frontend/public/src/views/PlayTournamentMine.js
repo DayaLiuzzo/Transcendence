@@ -27,11 +27,18 @@ export default class PlayTournamentMine extends BaseView{
                 
                 <h3>Actions du tournoi</h3>
                 <h4>Pour le user lambda<h4>
+                
+                <p>(not owner + status = waiting)<\p>
                 <button id="tournament-leave-button">Leave</button>
                 <div id="tournament-leave-field"></div>
+
                 <h4>Pour le owner<h4>
+                
+                <p>(owner + status = waiting)<\p>
                 <button id="tournament-launch-button">Launch</button>
                 <div id="tournament-launch-field"></div>
+                
+                <p>(owner + status = waiting)<\p>
                 <button id="tournament-delete-button">Delete</button>
                 <div id="tournament-delete-field"></div>            
             </div>
