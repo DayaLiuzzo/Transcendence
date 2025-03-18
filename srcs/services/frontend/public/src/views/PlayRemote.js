@@ -104,8 +104,12 @@ export default class PlayCanva extends BasePlayView {
 		);
 		this.meshPlayer2.position.set((this.player2.x - this.centerX), (this.meshPlayer2.y - this.centerY), 20);
 
+		// this.meshBall = new THREE.Mesh(
+		// 	new THREE.SphereGeometry(this.ballRadius, 16, 16),
+		// 	paddleMaterial
+		// );
 		this.meshBall = new THREE.Mesh(
-			new THREE.SphereGeometry(this.ballRadius, 16, 16),
+			new THREE.BoxGeometry(this.ballRadius, this.ballRadius, this.ballRadius),
 			paddleMaterial
 		);
 		this.meshBall.castShadow = true;
@@ -126,7 +130,7 @@ export default class PlayCanva extends BasePlayView {
 		const boardLine = new THREE.Mesh(
 			new THREE.PlaneGeometry(10, this.gameBoard.height),
 			new THREE.MeshStandardMaterial({
-				color: 0x000001,
+				color: 0x00000,
 				emissive: 0xffffff,
 				emissiveIntensity: 0.2,
 			})
