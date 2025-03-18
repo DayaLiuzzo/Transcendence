@@ -172,29 +172,28 @@ export default class BaseView{
                     avatarImg.src = avatarUrl;
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
-            
+
                     const welcomeText = document.createElement("span");
                     welcomeText.textContent = "Welcome";
                     welcomeText.className = "welcome-text";
-            
+
                     const flexContainer = document.createElement("div");
                     flexContainer.className = "navbar-flex";
 
                     const bar = document.createElement("div");
                     bar.className = "navbar-bar"
-            
+
                     flexContainer.appendChild(avatarImg);
                     flexContainer.appendChild(welcomeText);
-            
+
                     navbar.appendChild(flexContainer);
                     navbar.appendChild(bar);
                 }
-                
+
                 navbar.innerHTML += `
                 <a href="/home">Home</a>
                 <a href="/play-menu">Play</a>
                 <a href="/profile">Profile</a>
-                <a href="/logout">Logout</a>
                 `;
 
             } else {
