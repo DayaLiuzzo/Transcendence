@@ -1,4 +1,4 @@
-//status : en cours
+//status : pret pour css
 
 import BaseView from './BaseView.js';
 
@@ -56,7 +56,7 @@ export default class PlayTournamentCreate extends BaseView{
     render(){
         return `
         <div>
-            <h2>Create Tournament (En cours : presque fini)</h2>
+            <h2>Create Tournament (pret pour css)</h2>
 
             <form id="createTournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
