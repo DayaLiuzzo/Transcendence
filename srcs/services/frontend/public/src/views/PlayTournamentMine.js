@@ -11,6 +11,20 @@ export default class PlayTournamentMine extends BaseView{
     render(){
         return `
         <div>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>          
+            </div>
+
+            <div id="container">
             <h2>My tournament (En cours !!!)</h2>
 
             <div id="tournament-info" hidden>
@@ -42,7 +56,7 @@ export default class PlayTournamentMine extends BaseView{
                 <p>Button : join a tournament page (A lier !!)<\p>
                 <button id="tournament-join-button">Join</button>
             </div>
-
+            </div>
            
             `;
         }

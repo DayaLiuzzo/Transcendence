@@ -1,5 +1,3 @@
-//status : pret pour css
-
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentCreate extends BaseView{
@@ -57,20 +55,31 @@ export default class PlayTournamentCreate extends BaseView{
     render(){
         return `
         <div>
-            <h2>Create Tournament (pret pour css)</h2>
-            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>          
+            </div>
+            <div id="container">
+                <h2>Create Tournament</h2>
 
-            <form id="createTournament-form" hidden>
-                <input type="text" id="createTournament-name" placeholder="Tournament name" required>
-                <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
-                <button type="submit">Create tournament</button>
-            </form>
-            <div id="tournament-create-field"></div>
+                <form id="createTournament-form" hidden>
+                    <input type="text" id="createTournament-name" placeholder="Tournament name" required>
+                    <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
+                    <button type="submit">Create tournament</button>
+                </form>
+                <div id="tournament-create-field"></div>
 
-            <button id="tournament-mine-button" hidden>See my tournament page</button>
-
+                <button id="tournament-mine-button" hidden>See my tournament page</button>
+            </div>
         </div>
-        
     `;
     }
 
