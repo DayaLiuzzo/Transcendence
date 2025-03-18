@@ -381,17 +381,13 @@ body {
     border: 1px solid black;
   }
 
-//List friends css
   .remove-button {
     cursor: pointer;
-    background-color: transparent;
+    background-color: white;
     color: black;
     border: none;
     padding: 2px 4px;
     margin-left: 16px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
 }
 
   .remove-button:hover {
@@ -412,20 +408,19 @@ body {
 
   .status-indicator {
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 4px;
     color: white;
     font-size: 0.8em;
     margin-left: 12px;
   }
 
   .connected {
-      background-color: rgba(0, 255, 0, 0.5);
+      background-color: #94C973;
   }
 
   .disconnected {
       background-color: rgba(255, 0, 0, 0.5);
   }
-//
 
   #login-form button:hover, 
   #signup-form button:hover, 

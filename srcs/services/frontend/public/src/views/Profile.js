@@ -109,16 +109,28 @@ export default class Profile extends BaseView {
         if (friendsField) {
             const newFriendItem = document.createElement("li");
             newFriendItem.classList.add("friend-item");
-
             newFriendItem.textContent = friendUsername;
+
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             
+            const isConnected = this.sendGetRequest(this.API_URL_USERS + 'status/' + friendUsername + '/')
+            const statusIndicator = document.createElement("span");
+            statusIndicator.classList.add("status-indicator");
+            if (isConnected) {
+                statusIndicator.textContent = "connected";
+                statusIndicator.classList.add("connected");
+            } else {
+                statusIndicator.textContent = "disconnected";
+                statusIndicator.classList.add("disconnected");
+            }
+
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             removeButton.setAttribute("data-username", friendUsername);
             removeButton.classList.add("remove-button");
 
             
+            newFriendItem.appendChild(statusIndicator);
             newFriendItem.appendChild(removeButton);
             friendsField.querySelector("ul").appendChild(newFriendItem);
         }
@@ -210,9 +222,9 @@ export default class Profile extends BaseView {
             }
 
             const removeButton = document.createElement("button");
-            removeButton.classList.add("remove-button");
             removeButton.textContent = "Remove";
             removeButton.setAttribute("data-username", user.username);
+            removeButton.classList.add("remove-button");
 
             friendItem.appendChild(usernameSpan);
             friendItem.appendChild(statusIndicator);
