@@ -16,34 +16,51 @@ export default class Profile extends BaseView {
 
     getErrorContainer() {
         let errorContainer = document.getElementById("add-friend-error-container");
-        
+
         if (!errorContainer) {
             errorContainer = document.createElement("div");
             errorContainer.id = "add-friend-error-container";  // Set a unique ID
             errorContainer.classList.add("error-container");  // Optional: Add a class for styling
             document.getElementById("add-friend-form").insertBefore(errorContainer, document.getElementById("add-friend-form").firstChild); // Insert at the top of the form
         }
-        
+
         return errorContainer;
     }
-
+    
     render() {
         return `
         <div>
-            <h2>Profile</h2>
-            <h3> please just be ok</h3>
-            <div id="username-field"></div>
-            <div id="biography-field"></div>
-            <div id="friends-field"></div>
-            <div id="stats-field"></div>
-            <form id="add-friend-form">
-                <input type="text" id="friend-username" placeholder="Enter friend's username">
-                <button type="submit">Add Friend</button>
-            </form>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
+            <div id="container">
+                <div id="container-profile">
+                    <h2>Profile</h2>
+                    <div id="container-button">
+                        <i class="fas fa-edit" id="edit-profile" title="Edit Profile"></i>
+                        <i class="fas fa-sign-out-alt" id="logout" title="Logout"></i>
+                    </div>
+                </div>
+                <div id="username-field">
+                </div>
+                <div id="biography-field"></div>
+                <div id="friends-field"></div>
+                <form id="add-friend-form">
+                    <input type="text" id="friend-username" placeholder="Enter friend's username">
+                    <button type="submit">Add Friend</button>
+                </form>
             <button id="refresh">Refresh</button>
-            <button id="edit-profile">Edit Profile</button>
-            <button id="logout">Logout</button>
             <button id="match-history">Match History</button>
+            </div>
         </div>
         `;
     }
@@ -62,7 +79,7 @@ export default class Profile extends BaseView {
             <p>Wins: ${response.data.wins}</p>
             <p>Losses: ${response.data.losses}</p>
             `;
-            
+
         }
         else {
         statsField.innerHTML = `
@@ -136,7 +153,7 @@ export default class Profile extends BaseView {
         if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Remove") {
             const friendUsername = event.target.getAttribute("data-username");
             const friendItem = event.target.parentElement;
-            this.removeFriend(friendUsername, friendItem); 
+            this.removeFriend(friendUsername, friendItem);
         }
     }
 
@@ -204,7 +221,25 @@ export default class Profile extends BaseView {
             const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             this.renderFriends(users);
-            this.updateFieldContent("username-field", this.formatField("username", username));
+            
+            const avatarUrl = await this.displayAvatar();            
+            const container = document.createElement("div");
+            container.classList.add("username-container");
+
+            const avatarImg = document.createElement("img");
+            avatarImg.src = avatarUrl;
+            avatarImg.alt = "User Avatar";
+            avatarImg.classList.add("avatar-img");
+
+            const textContainer = document.createElement("div");
+            textContainer.innerHTML = this.formatField("username", username);
+            textContainer.classList.add("username-text");
+
+            container.appendChild(avatarImg);
+            container.appendChild(textContainer);
+
+            document.getElementById("username-field").appendChild(container);
+            
             this.updateStatsField();
         }
         catch (error) {
@@ -214,27 +249,27 @@ export default class Profile extends BaseView {
 
     unmount() {
         console.log('Unmounting Profile');
-        
+
         const addFriendForm = document.getElementById("add-friend-form");
         if (addFriendForm) {
             addFriendForm.removeEventListener("submit", this.handleAddFriendSubmit);
         }
-    
+
         const friendsField = document.getElementById("friends-field");
         if (friendsField) {
             friendsField.removeEventListener("click", this.handleRemoveFriendClick);
         }
-    
+
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.removeEventListener("click", this.handleEditProfileClick);
         }
-    
+
         const logoutButton = document.getElementById("logout");
         if (logoutButton) {
             logoutButton.removeEventListener("click", this.handleLogoutClick);
         }
 
     }
-    
+
 }

@@ -20,7 +20,7 @@ post https://localhost:4430/api/auth/signup/
 Content-Type: application/json
 
 {
-  "username": "tkt",
+  "username": "tktt",
   "password": "Pass12456!",
   "email": "oui@gmail.com"
 }
@@ -52,7 +52,7 @@ POST https://localhost:4430/api/auth/token/
 Content-Type: application/json
 
 {
-  "username": "tkt",
+  "username": "tktt",
   "password": "Pass12456!"
 }
 ###
@@ -80,11 +80,11 @@ GET https://localhost:4430/api/tournament/test/
 
 #create tournament
 POST https://localhost:4430/api/tournament/create_tournament/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwOTM0Njc1LCJpYXQiOjE3NDA5MjkyNzUsImp0aSI6IjIxNzUxNDQwOGZlYjQ1Njg5NDcwYzdiNGIxZGNmZjg0IiwidXNlcl9pZCI6MiwidXNlcm5hbWUiOiJ0a3QifQ.IFF0kRFlu-pSK8F_1ifiFwT6LQsO6M-Ig88c12T6KkOnltTA9-aNh0v1C8H4PWMeKsB_0E5KwHJGVuwZwv1z0x3F2nvSvlT65f4dmxKDXghGJWgNiPLMwDxtp_gI2VMfIwUBD1gprC_do9I2VWV3fIavOJuZ_jfeAIcg2-aAea9FIBN128Wmo3bgkIGNkMHHp_tNvQ0DSSFxCB7gCE7WklfRA_NrmbT_slEPnzq9u_zfMtoDS0JUeOyrXSPXHOcBYdEYd9ksg75vYVKAYFo7ru7Mt0JKyfjD1YJlhMzxquDhDG-Hp-cEWKBagQick6BNKKSDRUomkH14iyhl-pXFAw
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyMjMxNDM4LCJpYXQiOjE3NDIyMjYwMzgsImp0aSI6ImJmZjYzNTM5YjI3MDRmODQ4MWUxYzA1OTA4OWFlZGU4IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.7qGINBrN4WTZRVSHwDCUm6Z7g8ukfcH-wuLgCzHns6oyrbBfZ9xvo2mEczF1JRoM0uj0awH7EtGUyIOhouclL5sPzIrY1x_dncotio2U-y7JTfc0J2ginZYQ1_nHxVNcFA_Mj0Zu80eqhlLmHXVlXMrhKZWAOJboSjfUa_TEGL0PSK5jZ1wHdOJ1Y8pFbRFbSRC_F11Yh7XOGaGPlkrNari3A_znb5IOrRIiDYIz7Zcv9lU6GyQ463jfk3JHpLgYkVSavXXYL1lPdnL77kRNG07dMQmJVMcGQsiS7WPtX2sGf9F5FGA6vC2aCrpYll26JdeY2K8CcFLIaxrN-d46Wg
 Content-Type: application/json
 
 {
-    "name": "chokbarr de bz",
+    "name": "chokbarr d gggg",
     "max_users": 3
 }
 ###
@@ -98,7 +98,7 @@ Content-Type: application/json
 
 #leave tournament
 POST https://localhost:4430/api/tournament/leave/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwOTM0NjUzLCJpYXQiOjE3NDA5MjkyNTMsImp0aSI6ImM3NGE2NDI1Zjg1MjQxMzJhZDY5NWMxODJiY2U0MDMzIiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.WVabbnv6zDlTNAtaIUcnVHSstOoatPjejWI4DGOwJPJ1gpDBm2znZpc68iYDR81mGSt6qlU9DEYrWo-acJYQwu7Dob97A4yT7TOZjHV_W5RxmuEohRaulobxsEcmpUnRNMEs9nx0IYenjhSiBzi6Q66JCxkSR1RrP84pm4vD3PYlvaYwsUHvBpKUDTxUvFCJxX0DfE4eHombGh4oJBBaItyMZYsj8X7xqTitBQ-zfDZEoEWS10HufjmdmcsrQ2lzPTOINiJoYp3nLz5Vv_MgaXaiKluxaDw-o2aMhE6myvU_Gx_UzavmGUcX3fazdqbAw1eg5SvBtCV_o9jePEJsQA
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyMjMxNDM4LCJpYXQiOjE3NDIyMjYwMzgsImp0aSI6ImJmZjYzNTM5YjI3MDRmODQ4MWUxYzA1OTA4OWFlZGU4IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.7qGINBrN4WTZRVSHwDCUm6Z7g8ukfcH-wuLgCzHns6oyrbBfZ9xvo2mEczF1JRoM0uj0awH7EtGUyIOhouclL5sPzIrY1x_dncotio2U-y7JTfc0J2ginZYQ1_nHxVNcFA_Mj0Zu80eqhlLmHXVlXMrhKZWAOJboSjfUa_TEGL0PSK5jZ1wHdOJ1Y8pFbRFbSRC_F11Yh7XOGaGPlkrNari3A_znb5IOrRIiDYIz7Zcv9lU6GyQ463jfk3JHpLgYkVSavXXYL1lPdnL77kRNG07dMQmJVMcGQsiS7WPtX2sGf9F5FGA6vC2aCrpYll26JdeY2K8CcFLIaxrN-d46Wg
 Content-Type: application/json
 
 ###
