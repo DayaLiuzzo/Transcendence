@@ -185,7 +185,6 @@ export default class PlayCanva extends BaseView {
 				scene.add(rightScoreText);
 			}
 		);
-
 		let ballVelocity = { x: 0.05, z: 0.02 };
 		let scores = { left: 0, right: 0 };
 		const scoreElement = document.getElementById("score");
