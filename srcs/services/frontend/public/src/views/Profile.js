@@ -106,13 +106,29 @@ export default class Profile extends BaseView {
         const friendsField = document.getElementById("friends-field");
         if (friendsField) {
             const newFriendItem = document.createElement("li");
+            newFriendItem.classList.add("friend-item");
             newFriendItem.textContent = friendUsername;
+
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
+            
+            const isConnected = this.sendGetRequest(this.API_URL_USERS + 'status/' + friendUsername + '/')
+            const statusIndicator = document.createElement("span");
+            statusIndicator.classList.add("status-indicator");
+            if (isConnected) {
+                statusIndicator.textContent = "connected";
+                statusIndicator.classList.add("connected");
+            } else {
+                statusIndicator.textContent = "disconnected";
+                statusIndicator.classList.add("disconnected");
+            }
 
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             removeButton.setAttribute("data-username", friendUsername);
+            removeButton.classList.add("remove-button");
 
+            
+            newFriendItem.appendChild(statusIndicator);
             newFriendItem.appendChild(removeButton);
             friendsField.querySelector("ul").appendChild(newFriendItem);
         }
@@ -205,12 +221,30 @@ export default class Profile extends BaseView {
         users.forEach(user => {
             // chaque nom user
             const friendItem = document.createElement("li");
-            friendItem.textContent = user.username;
-            // creer une autre div avec on ou off icon selon isOnline()  response
+            friendItem.classList.add("friend-item");
+
+            const usernameSpan = document.createElement("span");
+            usernameSpan.textContent = user.username;
+            usernameSpan.classList.add("username");
+
+            const statusIndicator = document.createElement("span");
+            statusIndicator.classList.add("status-indicator");
+            if (user.is_online) {
+                statusIndicator.textContent = "connected";
+                statusIndicator.classList.add("connected");
+            } else {
+                statusIndicator.textContent = "disconnected";
+                statusIndicator.classList.add("disconnected");
+            }
+
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             // ce que va supprimer le remove
             removeButton.setAttribute("data-username", user.username);
+            removeButton.classList.add("remove-button");
+
+            friendItem.appendChild(usernameSpan);
+            friendItem.appendChild(statusIndicator);
             friendItem.appendChild(removeButton);
             friendsList.appendChild(friendItem);
         });
