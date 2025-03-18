@@ -42,7 +42,15 @@ export default class BasePlayView extends BaseView{
                     const movement = event.key === "ArrowUp" ? "up" : "down";
                     this.sendMovementToWebSocket(movement);
                 }
+
             });
+            window.addEventListener("keyup", (event) => {
+                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                    const movement = "idle";
+                    this.sendMovementToWebSocket(movement);
+                }
+            });
+
         }
     }
 
