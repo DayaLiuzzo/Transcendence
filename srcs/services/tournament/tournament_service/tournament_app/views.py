@@ -298,6 +298,12 @@ class MyTournamentView(generics.RetrieveAPIView):
         serializer = TournamentSerializer(tournament)
         return Response(serializer.data)
 
+class IsInTournamentView(APIView):
+    def get(self, request):
+        user = request.user
+        tournament = Tournament.objects.filter(Q(users=user), Q(status='waiting') | Q(status='playing'))
+        return Response({'in_tournament': tournament.exists()})
+
 class DetailTournamentView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.all()

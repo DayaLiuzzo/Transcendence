@@ -76,11 +76,17 @@ GET https://localhost:4430/api/tournament/test/
 #                                                              #
 ################################################################
 
+#is in tournament
+GET https://localhost:4430/api/tournament/is_in_tournament/
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyMzE3NjEwLCJpYXQiOjE3NDIzMTIyMTAsImp0aSI6IjgzY2NkYWJmMjJiODQyNjBhZjllNTA5MWQzMjBjNjk0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.0hGHNDK6XzGPK_uKCrCAgRRv0MnNZu9yjoIOYnx4-1ig42JwhW_6ZkenpXY3J1VNtSBhVhfMjVarQN58JLCJmLY-WAeW_KUoRvvigCaWDmtExugept-97qgRgop_s8QEIOQAKz2y9N4Vt42uGw0ANK1ccQCPsxdHk8WbYVENSwf4XDneX6RqxCRtLiAjmaqIWcGFtLFzuM888IKdYmAgMRI4ijuVHaWlrfRiIRjloy3WO_A3X3d3YFOaOvOUQTHG1v4ZFW0QOrtD5n5VHI_SS8izhgIWCL5VgS124K7x3RVH_WyA-Ir9lE0kwjOZzi8M5Mpj1JccuhnLYAo6K0yp4A
+
+###
+
 # ************************** POST ************************** #
 
 #create tournament
 POST https://localhost:4430/api/tournament/create_tournament/
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyMjMxNDM4LCJpYXQiOjE3NDIyMjYwMzgsImp0aSI6ImJmZjYzNTM5YjI3MDRmODQ4MWUxYzA1OTA4OWFlZGU4IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJNYXJpbmUifQ.7qGINBrN4WTZRVSHwDCUm6Z7g8ukfcH-wuLgCzHns6oyrbBfZ9xvo2mEczF1JRoM0uj0awH7EtGUyIOhouclL5sPzIrY1x_dncotio2U-y7JTfc0J2ginZYQ1_nHxVNcFA_Mj0Zu80eqhlLmHXVlXMrhKZWAOJboSjfUa_TEGL0PSK5jZ1wHdOJ1Y8pFbRFbSRC_F11Yh7XOGaGPlkrNari3A_znb5IOrRIiDYIz7Zcv9lU6GyQ463jfk3JHpLgYkVSavXXYL1lPdnL77kRNG07dMQmJVMcGQsiS7WPtX2sGf9F5FGA6vC2aCrpYll26JdeY2K8CcFLIaxrN-d46Wg
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyMzE3NjEwLCJpYXQiOjE3NDIzMTIyMTAsImp0aSI6IjgzY2NkYWJmMjJiODQyNjBhZjllNTA5MWQzMjBjNjk0IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJiaWRvbiJ9.0hGHNDK6XzGPK_uKCrCAgRRv0MnNZu9yjoIOYnx4-1ig42JwhW_6ZkenpXY3J1VNtSBhVhfMjVarQN58JLCJmLY-WAeW_KUoRvvigCaWDmtExugept-97qgRgop_s8QEIOQAKz2y9N4Vt42uGw0ANK1ccQCPsxdHk8WbYVENSwf4XDneX6RqxCRtLiAjmaqIWcGFtLFzuM888IKdYmAgMRI4ijuVHaWlrfRiIRjloy3WO_A3X3d3YFOaOvOUQTHG1v4ZFW0QOrtD5n5VHI_SS8izhgIWCL5VgS124K7x3RVH_WyA-Ir9lE0kwjOZzi8M5Mpj1JccuhnLYAo6K0yp4A
 Content-Type: application/json
 
 {
