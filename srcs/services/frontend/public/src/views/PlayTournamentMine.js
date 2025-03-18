@@ -26,10 +26,13 @@ export default class PlayTournamentMine extends BaseView{
  
             <h3>Actions du tournoi</h3>
             <h4>Pour le user lambda<h4>
-            <button id="tournament-leave-field">Leave</button>
+            <button id="tournament-leave-button">Leave</button>
+            <div id="tournament-leave-field"></div>
             <h4>Pour le owner<h4>
-            <button id="tournament-launch-field">Launch</button>
-            <button id="tournament-delete-field">Delete</button>
+            <button id="tournament-launch-button">Launch</button>
+            <div id="tournament-launch-field"></div>
+            <button id="tournament-delete-button">Delete</button>
+            <div id="tournament-delete-field"></div>            
            
             `;
         }
@@ -47,7 +50,7 @@ export default class PlayTournamentMine extends BaseView{
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
         if (!response.success) {
             console.log("error leave tournament")
-            this.showError(response.error);
+            this.showError(response.error, "tournament-leave-field");
             return;
         }
         else
@@ -67,7 +70,7 @@ export default class PlayTournamentMine extends BaseView{
         const response = await this.sendDeleteRequest(this.API_URL_TOURNAMENT + "delete_tournament/", body);
         if (!response.success) {
             console.log("error delete tournament")
-            this.showError(response.error);
+            this.showError(response.error, "tournament-delete-field");
             return;
         }
         else
@@ -87,7 +90,7 @@ export default class PlayTournamentMine extends BaseView{
             const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
             if (!response.success) {
                 console.log("error launch tournament")
-                this.showError(response.error);
+                this.showError(response.error, "tournament-launch-field");
                 return;
             }
             else
@@ -104,24 +107,24 @@ export default class PlayTournamentMine extends BaseView{
     attachEvents() {
         console.log('Events attached (Tournament Mine)');
 
-        const tournamentLeaveField = document.getElementById("tournament-leave-field");
+        const tournamentLeaveField = document.getElementById("tournament-leave-button");
         if (tournamentLeaveField) {
             tournamentLeaveField.addEventListener("click", this.handleLeaveTournamentClick.bind(this));
         }
 
-        const tournamentLaunchField = document.getElementById("tournament-launch-field");
+        const tournamentLaunchField = document.getElementById("tournament-launch-button");
         if (tournamentLaunchField) {
             tournamentLaunchField.addEventListener("click", this.handleLaunchTournamentClick.bind(this));
         }
 
-        const tournamentDeleteField = document.getElementById("tournament-delete-field");
+        const tournamentDeleteField = document.getElementById("tournament-delete-button");
         if (tournamentDeleteField) {
             tournamentDeleteField.addEventListener("click", this.handleDeleteTournamentClick.bind(this));
         }
     }
 
     // renderTournamentList(tournaments) {
-    //     const tournamentListField = document.getElementById("tournament-leave-field");
+    //     const tournamentListField = document.getElementById("tournament-leave-button");
     //     if (!tournamentListField) return;
     //     tournamentListField.innerHTML = "";
     //     const tournamentList = document.createElement("ul");
@@ -214,18 +217,18 @@ export default class PlayTournamentMine extends BaseView{
     unmount() {
         console.log('Unmounting Profile');
         
-        const tournamentLeaveField = document.getElementById("tournament-leave-field");
+        const tournamentLeaveField = document.getElementById("tournament-leave-button");
         if (tournamentLeaveField) {
             tournamentLeaveField.removeEventListener("click", this.handleLeaveTournamentClick);
         }
 
-        const tournamentLaunchField = document.getElementById("tournament-launch-field");
+        const tournamentLaunchField = document.getElementById("tournament-launch-button");
         if (tournamentLaunchField) {
             tournamentLaunchField.removeEventListener("click", this.handleLaunchTournamentClick);
         }
 
 
-        const tournamentDeleteField = document.getElementById("tournament-delete-field");
+        const tournamentDeleteField = document.getElementById("tournament-delete-button");
         if (tournamentDeleteField) {
             tournamentDeleteField.removeEventListener("click", this.handleDeleteTournamentClick);
         }

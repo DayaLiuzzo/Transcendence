@@ -19,26 +19,28 @@ export default class PlayTournamentList extends BaseView{
         `;
     }
 
-    async joinTournament(tournamentId) {
-        const body = {};
-        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
-        if (!response.success) {
-            console.log("error join tournament")
-            this.showError(response.error);
-            return;
-        }
-        else
-            console.log("Fetch pour join le tournoi a marche")
-        this.navigateTo("/my-tournament");
-    }
-
+    
     handleJoinTournamentClick(event) {
         if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
             const tournamentId = event.target.getAttribute("data-tournamentID");
             this.joinTournament(tournamentId);
         }
     }
-
+    
+    async joinTournament(tournamentId) {
+        const body = {};
+        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
+        if (!response.success) {
+            console.log("error join tournament")
+            // this.showError(response.error);
+            this.showError(response.error, "tournament-list-field");
+            return;
+        }
+        else
+            console.log("Fetch pour join le tournoi a marche")
+        this.navigateTo("/my-tournament");
+    }
+    
     attachEvents() {
         console.log('Events attached (Tournament list)');
 
@@ -50,6 +52,19 @@ export default class PlayTournamentList extends BaseView{
 
     }
 
+    getErrorContainer() {
+        let errorContainer = document.getElementById("list-tournament-error-container");
+
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "list-tournament-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("tournament-list-field").insertBefore(errorContainer, document.getElementById("tournament-list-field").firstChild);
+        }
+
+        return errorContainer;
+    }
+
     renderTournamentList(tournaments) {
         const tournamentListField = document.getElementById("tournament-list-field");
         if (!tournamentListField) return;
@@ -59,6 +74,7 @@ export default class PlayTournamentList extends BaseView{
             const tournamentItem = document.createElement("li");
             tournamentItem.textContent = tournament.name;
             const joinButton = document.createElement("button");
+            joinButton.id = "joinButton"
             joinButton.textContent = "Join";
             joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
             tournamentItem.appendChild(joinButton);
