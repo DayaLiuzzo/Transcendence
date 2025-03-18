@@ -92,8 +92,8 @@ export default class PlayTournamentMine extends BaseView{
             const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
             if (!response.success) {return this.showError(response.error, "tournament-launch-field");}
             
-            //add alerte avant redirection??
-            // this.navigateTo("/play-tournament"); refresh?
+            //add alerte avant refresh??
+            this.navigateTo("/my-tournament");
         }
         
         handleLaunchTournamentClick(event) {
