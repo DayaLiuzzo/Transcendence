@@ -42,9 +42,13 @@ export default class PlayTournamentMine extends BaseView{
                 <button id="tournament-delete-button">Delete</button>
                 <div id="tournament-delete-field"></div>            
             </div>
-            <div id ="no-tournament" hidden>You are not part of any tournament</div>
-            <p>Button : create a tournament page<\p>
-            <p>Button : join a tournament page<\p>
+
+            <div id ="no-tournament" hidden>You are not part of any tournament
+                <p>Button : create a tournament page (A lier !!)<\p>
+                <button id="tournament-create-button">Create</button>
+                <p>Button : join a tournament page (A lier !!)<\p>
+                <button id="tournament-join-button">Join</button>
+            </div>
 
            
             `;
@@ -57,6 +61,9 @@ export default class PlayTournamentMine extends BaseView{
         // <br>
         // </div>
     
+
+    
+
     async leaveTournament() {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
