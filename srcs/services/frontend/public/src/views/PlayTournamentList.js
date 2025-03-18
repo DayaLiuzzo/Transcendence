@@ -66,8 +66,10 @@ export default class PlayTournamentList extends BaseView{
         });
         tournamentListField.appendChild(tournamentList);
     }
+    
 tournament_id
     async mount() {
+        console.log('Mounting Play tournament List');
         try {
             const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/');
             if (!getTournamentList.success){
@@ -79,7 +81,9 @@ tournament_id
             
             const tournaments = Array.isArray(getTournamentList.data) ? getTournamentList.data : [getTournamentList.data];
             console.log("tournament --> ", tournaments)
+            console.log('Mounting Play tournament List success');
             this.renderTournamentList(tournaments);
+
         }
         catch (error) {
             console.error("Error in mount():", error);
@@ -87,7 +91,7 @@ tournament_id
     }
 
     unmount() {
-        console.log('Unmounting Profile');
+        console.log('Unmounting Play tournament List');
         
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
