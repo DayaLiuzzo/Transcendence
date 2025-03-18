@@ -11,16 +11,27 @@ export default class PlayMenu extends BaseView{
     render(){
         return `
         <div>
-            <h2>Play Tournament Menu (pret pour integration du CSS)</h2>
-            
-            <button id="create-tournament">Create a tournament</button>
-            <br>
-            <button id="join-tournament">Join a tournament</button>
-            <br>
-            <button id="list-tournament">List a tournament</button>
-            <br>
-            <button id="my-tournament">My tournament</button>
-            <br>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>          
+            </div>
+            <div id="container">
+                <h2>Play Tournament Menu</h2>
+                <div class="play-menu">
+                    <div class="play-option" id="create-tournament">Create a tournament</div>
+                    <div class="play-option" id="join-tournament">Join a tournament</div>
+                    <div class="play-option" id="list-tournament">List a tournament</div>
+                    <div class="play-option" id="my-tournament">My tournament</div>
+                </div>
+            </div>
         </div>
     `;
     }
