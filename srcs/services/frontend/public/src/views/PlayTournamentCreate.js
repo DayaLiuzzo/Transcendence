@@ -33,6 +33,20 @@ export default class PlayTournamentCreate extends BaseView{
         this.navigateTo("/my-tournament");
     }
 
+    
+    async seeMyTournament() {
+        const body = {};
+
+        //add alerte avant redirection??
+        this.navigateTo("/my-tournament");
+    }
+    
+    handleMyTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "See my tournament page") {
+            this.seeMyTournament();
+        }
+    }
+
     getFormData(){
         return {
             name: document.getElementById("createTournament-name").value,
@@ -58,7 +72,6 @@ export default class PlayTournamentCreate extends BaseView{
         return `
         <div>
             <h2>Create Tournament (pret pour css)</h2>
-            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
 
             <form id="createTournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
@@ -99,11 +112,24 @@ export default class PlayTournamentCreate extends BaseView{
     unmount(){
         console.log('unmounting create tournament');
         document.getElementById("createTournament-form")?.removeEventListener("submit", this.handleCreateTournamentSubmit);
+
+        const tournamentSeeMineField = document.getElementById("tournament-mine-button");
+        if (tournamentSeeMineField) {
+            tournamentSeeMineField.removeEventListener("click", this.handleMyTournamentClick);
+        }
+
     }
 
     attachEvents(){
         console.log('Events attached (create tournament)');
         document.getElementById("createTournament-form")?.addEventListener("submit", this.handleCreateTournamentSubmit);
+    
+        const tournamentSeeMineField = document.getElementById("tournament-mine-button");
+        if (tournamentSeeMineField) {
+            tournamentSeeMineField.addEventListener("click", this.handleMyTournamentClick.bind(this));
+        }
+
+        
     }
 
 }
