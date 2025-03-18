@@ -5,6 +5,8 @@ export default class BasePlayView extends BaseView{
     constructor(params){
         super(params);
         this.socketService = null;
+        this.handleGameEnd = this.handleGameEnd.bind(this);
+        this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
     }
 
     async joinRoom() {
@@ -22,6 +24,38 @@ export default class BasePlayView extends BaseView{
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
+    }
+
+    async handleTournamentGameEnd(){
+    }
+
+    handleGameEnd(winner, looser, winner_score, looser_score){
+        console.log("game end")
+        
+        const finalScreen = document.createElement("div");
+        finalScreen.id = "final-screen";
+        finalScreen.innerHTML = `
+            <h1>Game Over</h1>
+            <p>${winner} wins!</p>
+            <p>score: ${winner} ${winner_score} - ${looser} ${looser_score}</p>
+            <button id="back-to-lobby">Back to Lobby</button>
+        `;
+        finalScreen.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+
+        `;
+        document.body.appendChild(finalScreen);
+        document.getElementById("back-to-lobby").addEventListener("click", () => {
+            this.navigateTo("/play-menu");
+        }); 
     }
 
     checkStart(){

@@ -4,7 +4,7 @@ let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
 let gameOver = false;
 let isRunning = true;
 
-export default class PlayCanva extends BaseView {
+export default class PlayCanva extends BaseView{
 	constructor(params) {
 		super(params);
 	}
@@ -29,6 +29,35 @@ export default class PlayCanva extends BaseView {
 			}
 		});
 	}
+
+    handleGameEnd(winner, looser, winner_score, looser_score){
+        console.log("game end")
+        
+        const finalScreen = document.createElement("div");
+        finalScreen.id = "final-screen";
+        finalScreen.innerHTML = `
+            <h1>Game Over</h1>
+            <p>${winner} wins!</p>
+            <p>score: ${winner} ${winner_score} - ${looser} ${looser_score}</p>
+            <button id="back-to-lobby">Back to Lobby</button>
+        `;
+        finalScreen.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+
+        `;
+        document.body.appendChild(finalScreen);
+        document.getElementById("back-to-lobby").addEventListener("click", () => {
+            this.navigateTo("/play-menu");
+        }); 
+    }
 
 	initGame() {
 		console.log("Game Loading...");
@@ -242,7 +271,7 @@ export default class PlayCanva extends BaseView {
 			const fontLoader = new THREE.FontLoader();
 			fontLoader.load(
 				"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
-				function (font) {
+				 (font) => {
 					const textMaterial = new THREE.MeshStandardMaterial({
 						color: 0x000000,
 						emissive: 0xffffff,
@@ -287,6 +316,24 @@ export default class PlayCanva extends BaseView {
 						scene.add(rightScoreText);
 
 						if (scores.left >= 2 || scores.right >= 2) {
+							// let winner;  
+							// let looser; 
+							// let winner_score; 
+							// let looser_score;  
+							
+							// if(scores.left >= 2){
+							// 	winner = "Player 1";
+							// 	looser = "Player 2";
+							// 	winner_score = scores.left;
+							// 	looser_score = scores.right;
+							// }
+							// else{
+							// 	winner = "Player 2";
+							// 	looser = "Player 1";
+							// 	winner_score = scores.right;
+							// 	looser_score = scores.left;
+							// }
+							// this.handleGameEnd(winner, looser, winner_score, looser_score);
 							alert(
 								`Le joueur ${
 									scores.left >= 5 ? "1" : "2"
