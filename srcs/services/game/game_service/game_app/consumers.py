@@ -34,6 +34,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.jeu = None
         self.is_host = False
         self.data_sent = False
+        self.player_count = 0
         self.final_game_data = {
         }
         await self.accept()
@@ -153,10 +154,19 @@ class GameConsumer(AsyncWebsocketConsumer):
         return is_allowed
 
     async def joined(self, event):
+        self.player_count += 1
+        if self.player_count >= 2:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {'type': 'launch_game'}
+            )
+
+    async def launch_game(self, event):
         from .models import Game
-        self.game = await sync_to_async(get_object_or_404)(Game, room_id=self.room_name)
-        if self.is_host and event['username'] != self.user.username:
+
+        if self.is_host:
             self.jeu = Jeu()
+            self.game = await sync_to_async(get_object_or_404)(Game, room_id=self.room_name)
             player1 = await sync_to_async(lambda: self.game.player1)()
             player2 = await sync_to_async(lambda: self.game.player2)()
             self.final_game_data = {
