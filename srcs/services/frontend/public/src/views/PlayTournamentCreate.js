@@ -57,13 +57,8 @@ export default class PlayTournamentCreate extends BaseView{
         return `
         <div>
             <h2>Create Tournament (En cours : presque fini)</h2>
-            <div id="tournament-name"></div>
-            <div id="tournament-max-user"></div>
-            <div id="tournament-id"></div>
 
-            
-            
-            <form id="createTournament-form">
+            <form id="createTournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
                 <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
                 <button type="submit">Create tournament</button>
@@ -73,6 +68,22 @@ export default class PlayTournamentCreate extends BaseView{
         </div>
         
     `;
+    }
+
+    async mount() {
+        console.log('Mounting Play tournament create');
+
+        try {
+            const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
+            if (getTournamentInfo.success) {
+                this.navigateTo('/my-tournament');
+                return ;
+            }
+            document.getElementById("createTournament-form").removeAttribute("hidden");
+        }
+        catch (error) {
+            console.error("Error in mount():", error);
+        }
     }
 
     unmount(){
