@@ -39,13 +39,39 @@ export default class PlayTournamentJoin extends BaseView{
         return `
         <div>
             <h2>Join Tournament (Pas pret !!!!)</h2>
-            <form id="joinTournament-form">
+            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
+            <form id="joinTournament-form" hidden>
                 <input type="text" id="joinTournament-id" placeholder="Tournament id" required>
                 <button type="submit">Join tournament</button>
             </form>
             <div id="tournament-join-field"></div>
+
+            <button id="tournament-mine-button" hidden>See my tournament page</button>
+
         </div>
     `;
+    }
+
+    async mount() {
+        console.log('Mounting Play tournament Join');
+
+        try {
+            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+            if (checkIfInTournament.success) {
+                if (checkIfInTournament.data.in_tournament) {
+                    // return this.navigateTo('/my-tournament')
+                    document.getElementById("tournament-mine-button").removeAttribute("hidden"); 
+                    document.getElementById("tournament-join-field").innerText = "You cannot join a tournament since you are already part of one"; 
+
+                    return;
+                }
+                
+                document.getElementById("joinTournament-form").removeAttribute("hidden");
+                }
+            }
+        catch (error) {
+            console.error("Error in mount():", error);
+        }
     }
 
     unmount(){

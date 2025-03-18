@@ -13,7 +13,7 @@ export default class PlayTournamentList extends BaseView{
         return `
         <div>
             <h2>List tournament</h2>
-
+            <p>si deja dans un tournoi, pas de button join<\p>
             <div id="tournament-list-field"></div>
         </div>
         `;
@@ -26,7 +26,7 @@ export default class PlayTournamentList extends BaseView{
             this.joinTournament(tournamentId);
         }
     }
-    
+
     async joinTournament(tournamentId) {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);

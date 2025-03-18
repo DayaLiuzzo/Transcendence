@@ -43,6 +43,9 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-delete-field"></div>            
             </div>
             <div id ="no-tournament" hidden>You are not part of any tournament</div>
+            <p>Button : create a tournament page<\p>
+            <p>Button : join a tournament page<\p>
+
            
             `;
         }

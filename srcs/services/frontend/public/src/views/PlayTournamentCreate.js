@@ -57,7 +57,8 @@ export default class PlayTournamentCreate extends BaseView{
         return `
         <div>
             <h2>Create Tournament (pret pour css)</h2>
-
+            <p>Add : you cannot create a tournament as you are already in a tournament<\p>
+            <p>Button : see my tournament page<\p>
             <form id="createTournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
                 <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
