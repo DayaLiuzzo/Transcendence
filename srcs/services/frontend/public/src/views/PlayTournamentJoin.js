@@ -49,7 +49,6 @@ export default class PlayTournamentJoin extends BaseView{
         <div>
             <h2>Join Tournament (Pas pret !!!!)</h2>
             <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
-            <p>!!!To do : add nouveau endpoint de Pascal pour check si le tournoi exist avant de le rejoindre<\p>
 
             <form id="joinTournament-form" hidden>
                 <input type="text" id="joinTournament-id" placeholder="Tournament id" required>
