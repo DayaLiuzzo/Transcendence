@@ -154,7 +154,6 @@ export default class PlayCanva extends BaseView {
 		let leftScoreText;
 		let rightScoreText;
 		const fontLoader = new THREE.FontLoader();
-		console.log(fontLoader);
 		fontLoader.load(
 			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
 			function (font) {
