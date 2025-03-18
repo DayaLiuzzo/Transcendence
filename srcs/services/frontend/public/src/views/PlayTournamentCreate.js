@@ -74,13 +74,13 @@ export default class PlayTournamentCreate extends BaseView{
         console.log('Mounting Play tournament create');
 
         try {
-            const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
+            const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
             if (getTournamentInfo.success) {
-                this.navigateTo('/my-tournament');
-                return ;
+                if (getTournamentInfo.data.in_tournament){ return this.navigateTo('/my-tournament') }
+                
+                document.getElementById("createTournament-form").removeAttribute("hidden");
+                }
             }
-            document.getElementById("createTournament-form").removeAttribute("hidden");
-        }
         catch (error) {
             console.error("Error in mount():", error);
         }
