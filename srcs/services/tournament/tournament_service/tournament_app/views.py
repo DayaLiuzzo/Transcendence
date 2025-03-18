@@ -304,6 +304,15 @@ class IsInTournamentView(APIView):
         tournament = Tournament.objects.filter(Q(users=user), Q(status='waiting') | Q(status='playing'))
         return Response({'in_tournament': tournament.exists()})
 
+class TournamentExistsView(APIView):
+    def post(self, request):
+        try:
+            tournament_id = request.data.get('tournament_id')
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            return Response({'exists': True})
+        except:
+            return Response({'exists': False})
+
 class DetailTournamentView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.all()
