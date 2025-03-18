@@ -30,20 +30,13 @@ export default class PlayTournamentList extends BaseView{
     async joinTournament(tournamentId) {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
-        if (!response.success) {
-            console.log("error join tournament")
-            // this.showError(response.error);
-            this.showError(response.error, "tournament-list-field");
-            return;
-        }
-        else
-            console.log("Fetch pour join le tournoi a marche")
+        if (!response.success) { return this.showError(response.error, "tournament-list-field"); }
+
         this.navigateTo("/my-tournament");
     }
     
     attachEvents() {
         console.log('Events attached (Tournament list)');
-
 
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
@@ -83,23 +76,14 @@ export default class PlayTournamentList extends BaseView{
         tournamentListField.appendChild(tournamentList);
     }
     
-tournament_id
     async mount() {
         console.log('Mounting Play tournament List');
         try {
             const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/');
-            if (!getTournamentList.success){
-                console.log("Erreur fetch get tournament list")
-                return
-            }
-            console.log("Success fetch get tournament list")
-            console.log(getTournamentList.data)
+            if (!getTournamentList.success) { return this.showError(response.error, "tournament-list-field"); }
             
             const tournaments = Array.isArray(getTournamentList.data) ? getTournamentList.data : [getTournamentList.data];
-            console.log("tournament --> ", tournaments)
-            console.log('Mounting Play tournament List success');
             this.renderTournamentList(tournaments);
-
         }
         catch (error) {
             console.error("Error in mount():", error);

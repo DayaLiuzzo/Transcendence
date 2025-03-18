@@ -48,13 +48,8 @@ export default class PlayTournamentMine extends BaseView{
     async leaveTournament() {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
-        if (!response.success) {
-            console.log("error leave tournament")
-            this.showError(response.error, "tournament-leave-field");
-            return;
-        }
-        else
-            console.log("Fetch pour leave le tournoi a marche")
+        if (!response.success) {return this.showError(response.error, "tournament-leave-field");}
+
         this.navigateTo("/play-tournament");
     }
     
@@ -68,15 +63,10 @@ export default class PlayTournamentMine extends BaseView{
     async deleteTournament() {
         const body = {};
         const response = await this.sendDeleteRequest(this.API_URL_TOURNAMENT + "delete_tournament/", body);
-        if (!response.success) {
-            console.log("error delete tournament")
-            this.showError(response.error, "tournament-delete-field");
-            return;
-        }
-        else
-            console.log("Fetch pour delete le tournoi a marche")
-            this.navigateTo("/play-tournament");
-        }
+        if (!response.success) {return this.showError(response.error, "tournament-delete-field"); }
+        
+        this.navigateTo("/play-tournament");
+    }
     
     handleDeleteTournamentClick(event) {
         if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Delete") {
@@ -88,13 +78,7 @@ export default class PlayTournamentMine extends BaseView{
         async launchTournament() {
             const body = {};
             const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
-            if (!response.success) {
-                console.log("error launch tournament")
-                this.showError(response.error, "tournament-launch-field");
-                return;
-            }
-            else
-                console.log("Fetch pour launch le tournoi a marche")
+            if (!response.success) {return this.showError(response.error, "tournament-launch-field");}
             // this.navigateTo("/play-tournament"); refresh?
         }
         
@@ -166,14 +150,8 @@ export default class PlayTournamentMine extends BaseView{
 
         try {
             const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
-            if (!getTournamentInfo.success){
-                console.log("Erreur fetch get tournament list")
-                return
-            }
-            console.log("Success fetch get tournament info")
-            // console.log(getTournamentInfo.data)
+            if (!getTournamentInfo.success) { return this.showError(getTournamentInfo.error); }
 
-            console.log('Mounting Play tournament Mine success');
 
             /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
             const tournamentName = getTournamentInfo.data.name;

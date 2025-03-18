@@ -24,21 +24,11 @@ export default class PlayTournamentCreate extends BaseView{
 
     async createTournament(formData) {
         const errorMessage = this.validateInputs(formData);
-        if (errorMessage){
-            console.log("wrong input!")
-            return this.showError(errorMessage);
-        }
-        console.log("bons input!")
+        if (errorMessage){ return this.showError(errorMessage); }
+        
         const createTournamentResponse = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'create_tournament/', formData);
-        if (!createTournamentResponse.success){
-            console.log("Erreur fetch create tournament")
-            return this.showError(createTournamentResponse.error);
-        }
-        else
-        {
-            console.log("Succes fetch create tournament")
-            console.log(createTournamentResponse.data)
-        }
+        if (!createTournamentResponse.success){ return this.showError(createTournamentResponse.error); }
+
         this.navigateTo("/my-tournament");
     }
 
