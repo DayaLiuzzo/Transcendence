@@ -38,6 +38,20 @@ export default class PlayTournamentList extends BaseView{
         this.navigateTo("/my-tournament");
     }
     
+    
+    async createTournament() {
+        const body = {};
+
+        //add alerte avant redirection??
+        this.navigateTo("/create-tournament");
+    }
+    
+    handleCreateTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create") {
+            this.createTournament();
+        }
+    }
+
     attachEvents() {
         console.log('Events attached (Tournament list)');
 
@@ -45,7 +59,13 @@ export default class PlayTournamentList extends BaseView{
         if (tournamentListField) {
             tournamentListField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
         }
+    
+        const tournamentCreateMineField = document.getElementById("tournament-create-button");
+        if (tournamentCreateMineField) {
+            tournamentCreateMineField.addEventListener("click", this.handleCreateTournamentClick.bind(this));
+        }
 
+        
     }
 
     getErrorContainer() {
@@ -119,6 +139,12 @@ export default class PlayTournamentList extends BaseView{
         if (tournamentListField) {
             tournamentListField.removeEventListener("click", this.handleJoinTournamentClick);
         }
+
+        const tournamentCreateMineField = document.getElementById("tournament-create-button");
+        if (tournamentCreateMineField) {
+            tournamentCreateMineField.removeEventListener("click", this.handleCreateTournamentClick);
+        }
+
     }
 
 }
