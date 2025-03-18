@@ -95,7 +95,7 @@ tournament_id
         
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
-            tournamentListField.removeEventListener("click", this.handleRemoveFriendClick);
+            tournamentListField.removeEventListener("click", this.handleJoinTournamentClick);
         }
     }
 
