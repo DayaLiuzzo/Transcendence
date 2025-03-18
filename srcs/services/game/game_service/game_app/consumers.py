@@ -86,13 +86,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'send_message',
-                'message': f'{self.user.username} has joined the room.',
-            }
-        )
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
                 'type': 'joined',
                 'username': self.user.username,
             }
@@ -125,21 +118,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         
         text_data_json = json.loads(text_data)
         movement = text_data_json.get('message', {})
-
-        if movement == "up":
-            action_message = f"{self.user.username} has moved up."
-        elif movement == "down":
-            action_message = f"{self.user.username} has moved down."
         
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'send_message',
-                'message': action_message,  # this is the message to broadcast
-            }
-        )
-
-        if movement == 'down' or movement == 'up':
+        if movement == 'down' or movement == 'up' or movement == 'idle':
             if self.is_host:
                 identity = 1
             else:
@@ -171,11 +151,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         player2 = await sync_to_async(lambda: self.game.player2)()
         is_allowed = self.user == player1 or self.user == player2
         return is_allowed
-
-    async def send_message(self, event):
-        message = event['message']
-        print(self.user.username, ':', message)
-        await self.send(text_data=json.dumps({'message': message}))
 
     async def joined(self, event):
         from .models import Game

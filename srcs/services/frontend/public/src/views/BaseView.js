@@ -134,6 +134,19 @@ export default class BaseView{
         }
     }
 
+    async refreshToken(){
+        const refresh_token = this.getRefreshToken();
+        const response = await this.sendPostRequest(this.API_URL+ 'refresh/', { refresh: refresh_token });
+        if (!response.success){
+            this.stopUpdatingLastSeen();
+            return;
+        }
+        let userSession = this.getUserSession();
+        userSession.access_token = response.data.access;
+        userSession.refresh_token = response.data.refresh;
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+    }
+    
     toggleMenu() {
         const closeIcon= document.querySelector(".closeIcon");
         const menuIcon = document.querySelector(".menuIcon");
@@ -172,29 +185,28 @@ export default class BaseView{
                     avatarImg.src = avatarUrl;
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
-            
+
                     const welcomeText = document.createElement("span");
                     welcomeText.textContent = "Welcome";
                     welcomeText.className = "welcome-text";
-            
+
                     const flexContainer = document.createElement("div");
                     flexContainer.className = "navbar-flex";
 
                     const bar = document.createElement("div");
                     bar.className = "navbar-bar"
-            
+
                     flexContainer.appendChild(avatarImg);
                     flexContainer.appendChild(welcomeText);
-            
+
                     navbar.appendChild(flexContainer);
                     navbar.appendChild(bar);
                 }
-                
+
                 navbar.innerHTML += `
                 <a href="/home">Home</a>
                 <a href="/play-menu">Play</a>
                 <a href="/profile">Profile</a>
-                <a href="/logout">Logout</a>
                 `;
 
             } else {
@@ -247,6 +259,7 @@ export default class BaseView{
             return { success: false, error: { message: "Network error"}};
         }
     }
+    
 
     async sendPatchRequest(url, formData){
         try {
@@ -362,7 +375,6 @@ export default class BaseView{
         }
         localStorage.removeItem("userSession");
         this.navigateTo("/log-in");
-        // this.sendPostRequest(this.API_URL + 'logout/', {});
     }
 
 

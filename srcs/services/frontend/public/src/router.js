@@ -12,6 +12,8 @@ import PlayTournamentList from "./views/PlayTournamentList.js";
 import PlayTournamentJoin from "./views/PlayTournamentJoin.js";
 import PlayTournamentMine from "./views/PlayTournamentMine.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
+import MatchHistory from "./views/MatchHistory.js";
+
 import { cleanUpThree } from "./three/utils.js";
 import EditProfile from "./views/EditProfile.js";
 import Profile from "./views/Profile.js";
@@ -22,6 +24,7 @@ const routes = [
     { path: '/log-in', view: LogIn, requiresGuest: true },
     { path: '/sign-up', view: SignUp, requiresGuest:true },
     // { path: '/game', view: Game, css: "styles/game.css" },
+    { path: '/match-history', view: MatchHistory, css: "styles/core.css", requiresAuth: true},
     { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css", requiresAuth: true},
     { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: false},

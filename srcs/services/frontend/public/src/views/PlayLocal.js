@@ -125,8 +125,8 @@ export default class PlayCanva extends BaseView {
 		);
 		boardLine.rotation.x = -Math.PI / 2;
 		boardLine.position.y = 0.01;
-		scene.add(boardLine);
 
+		scene.add(boardLine);
 		scene.add(meshBoard);
 		scene.add(meshPlayer1);
 		scene.add(meshPlayer2);
@@ -376,19 +376,13 @@ export default class PlayCanva extends BaseView {
 				camera.updateProjectionMatrix();
 				renderer.setSize(window.innerWidth, window.innerHeight);
 			});
-			controls.update();
 
-			window.addEventListener("resize", () => {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize(window.innerWidth, window.innerHeight);
-			});
 			document.addEventListener("visibilitychange", () => {
 				if (document.hidden) {
 					resetGame();
 				}
 			});
-
+			controls.update();
 			renderer.render(scene, camera);
 		};
 		resetBall();
