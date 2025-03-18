@@ -13,25 +13,13 @@ export default class PlayTournamentList extends BaseView{
         return `
         <div>
             <h2>List tournament</h2>
-
+            <p>si deja dans un tournoi, pas de button join<\p>
             <div id="tournament-list-field"></div>
         </div>
         `;
     }
 
-    async joinTournament(tournamentId) {
-        const body = {};
-        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
-        if (!response.success) {
-            console.log("error join tournament")
-            this.showError(response.error);
-            return;
-        }
-        else
-            console.log("Fetch pour join le tournoi a marche")
-        this.navigateTo("/my-tournament");
-    }
-
+    
     handleJoinTournamentClick(event) {
         if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
             const tournamentId = event.target.getAttribute("data-tournamentID");
@@ -39,15 +27,36 @@ export default class PlayTournamentList extends BaseView{
         }
     }
 
+    async joinTournament(tournamentId) {
+        const body = {};
+        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
+        if (!response.success) { return this.showError(response.error, "tournament-list-field"); }
+
+        //add alerte avant redirection??
+        this.navigateTo("/my-tournament");
+    }
+    
     attachEvents() {
         console.log('Events attached (Tournament list)');
-
 
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
             tournamentListField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
         }
 
+    }
+
+    getErrorContainer() {
+        let errorContainer = document.getElementById("list-tournament-error-container");
+
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "list-tournament-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("tournament-list-field").insertBefore(errorContainer, document.getElementById("tournament-list-field").firstChild);
+        }
+
+        return errorContainer;
     }
 
     renderTournamentList(tournaments) {
@@ -59,6 +68,7 @@ export default class PlayTournamentList extends BaseView{
             const tournamentItem = document.createElement("li");
             tournamentItem.textContent = tournament.name;
             const joinButton = document.createElement("button");
+            joinButton.id = "joinButton"
             joinButton.textContent = "Join";
             joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
             tournamentItem.appendChild(joinButton);
@@ -66,19 +76,14 @@ export default class PlayTournamentList extends BaseView{
         });
         tournamentListField.appendChild(tournamentList);
     }
-tournament_id
+    
     async mount() {
+        console.log('Mounting Play tournament List');
         try {
             const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/');
-            if (!getTournamentList.success){
-                console.log("Erreur fetch get tournament list")
-                return
-            }
-            console.log("Success fetch get tournament list")
-            console.log(getTournamentList.data)
+            if (!getTournamentList.success) { return this.showError(response.error, "tournament-list-field"); }
             
             const tournaments = Array.isArray(getTournamentList.data) ? getTournamentList.data : [getTournamentList.data];
-            console.log("tournament --> ", tournaments)
             this.renderTournamentList(tournaments);
         }
         catch (error) {
@@ -87,11 +92,11 @@ tournament_id
     }
 
     unmount() {
-        console.log('Unmounting Profile');
+        console.log('Unmounting Play tournament List');
         
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
-            tournamentListField.removeEventListener("click", this.handleRemoveFriendClick);
+            tournamentListField.removeEventListener("click", this.handleJoinTournamentClick);
         }
     }
 

@@ -1,4 +1,4 @@
-//status : en cours
+//status : pret pour css
 
 import BaseView from './BaseView.js';
 
@@ -24,21 +24,12 @@ export default class PlayTournamentCreate extends BaseView{
 
     async createTournament(formData) {
         const errorMessage = this.validateInputs(formData);
-        if (errorMessage){
-            console.log("wrong input!")
-            return this.showError(errorMessage);
-        }
-        console.log("bons input!")
+        if (errorMessage){ return this.showError(errorMessage); }
+        
         const createTournamentResponse = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'create_tournament/', formData);
-        if (!createTournamentResponse.success){
-            console.log("Erreur fetch create tournament")
-            return this.showError(createTournamentResponse.error);
-        }
-        else
-        {
-            console.log("Succes fetch create tournament")
-            console.log(createTournamentResponse.data)
-        }
+        if (!createTournamentResponse.success){ return this.showError(createTournamentResponse.error); }
+
+        //add alerte avant redirection??
         this.navigateTo("/my-tournament");
     }
 
@@ -66,23 +57,43 @@ export default class PlayTournamentCreate extends BaseView{
     render(){
         return `
         <div>
-            <h2>Create Tournament (En cours : presque fini)</h2>
-            <div id="tournament-name"></div>
-            <div id="tournament-max-user"></div>
-            <div id="tournament-id"></div>
+            <h2>Create Tournament (pret pour css)</h2>
+            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
 
-            
-            
-            <form id="createTournament-form">
+            <form id="createTournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
                 <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
                 <button type="submit">Create tournament</button>
             </form>
+            <div id="tournament-create-field"></div>
 
+            <button id="tournament-mine-button" hidden>See my tournament page</button>
 
         </div>
         
     `;
+    }
+
+    async mount() {
+        console.log('Mounting Play tournament create');
+
+        try {
+            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+            if (checkIfInTournament.success) {
+                if (checkIfInTournament.data.in_tournament){ 
+                    
+                    // return this.navigateTo('/my-tournament')
+                    document.getElementById("tournament-mine-button").removeAttribute("hidden"); 
+                    document.getElementById("tournament-create-field").innerText = "You cannot join a tournament since you are already part of one"; 
+                    return;
+                }
+                document.getElementById("createTournament-form").removeAttribute("hidden");
+            
+                }
+            }
+        catch (error) {
+            console.error("Error in mount():", error);
+        }
     }
 
     unmount(){
