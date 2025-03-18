@@ -25,20 +25,13 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-winner"></div>
                 <p>[ ] Boucle pour update check si new user<\p>
                 
-                <h3>Actions du tournoi</h3>
-                <h4>Pour le user lambda<h4>
                 
-                <p>(not owner + status = waiting)<\p>
                 <button id="tournament-leave-button" hidden>Leave</button>
                 <div id="tournament-leave-field"></div>
 
-                <h4>Pour le owner<h4>
-                
-                <p>(owner + status = waiting)<\p>
                 <button id="tournament-launch-button" hidden>Launch</button>
                 <div id="tournament-launch-field"></div>
                 
-                <p>(owner + status = waiting)<\p>
                 <button id="tournament-delete-button" hidden>Delete</button>
                 <div id="tournament-delete-field"></div>            
             </div>
@@ -188,10 +181,12 @@ export default class PlayTournamentMine extends BaseView{
             
             const tournamentStatus = getTournamentInfo.data.status;
             document.getElementById("tournament-status").innerHTML = this.formatField('status', tournamentStatus);
-            if (tournamentStatus === "waiting")// add not owner
+            
+            //a deplacer maybe
+            if (tournamentStatus === "waiting" && tournamentOwner != this.getUsername())// add not owner
                 document.getElementById("tournament-leave-button").removeAttribute("hidden");
             
-            if (tournamentStatus === "waiting"){// add  owner
+            if (tournamentStatus === "waiting" && tournamentOwner === this.getUsername()){// add  owner
                 document.getElementById("tournament-delete-button").removeAttribute("hidden");
                 document.getElementById("tournament-launch-button").removeAttribute("hidden");
             }
