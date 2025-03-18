@@ -155,8 +155,10 @@ export default class EditProfile extends BaseView {
                 <h3>Enter OTP</h3>
                 <div id="otp-qr"></div>
                 <h2>Scan the QR code with your 2FA app</h2>
+                <form id ="otp-form">
                 <input type="text" id="otp-input" placeholder="Enter OTP" required />
-                <button id="verify-otp">Verify</button>
+                <button type="verify-otp">Verify</button>
+                </form>
                 <button id="close-otp">Cancel</button>
                 <p id="otp-error" style="color: red; display: none;"></p>
             </div>
@@ -174,10 +176,8 @@ export default class EditProfile extends BaseView {
         `;
         document.body.appendChild(otpPopup); // Add popup to the DOM
 
-        const verifyOtpBtn = document.getElementById("verify-otp");
         const closeOtpBtn = document.getElementById("close-otp");
-
-        verifyOtpBtn.addEventListener("click", this.handle2faVerification);
+        document.getElementById("otp-form")?.addEventListener("submit", this.handle2faVerification);
         closeOtpBtn.addEventListener("click", () => {
             otpPopup.remove();
             return false;
