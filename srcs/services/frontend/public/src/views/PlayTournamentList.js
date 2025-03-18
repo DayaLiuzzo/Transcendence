@@ -13,7 +13,11 @@ export default class PlayTournamentList extends BaseView{
         return `
         <div>
             <h2>List tournament</h2>
+            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
             <div id="tournament-list-field"></div>
+            <div id ="no-tournament" hidden>No tournament available
+            <button id="tournament-create-button">Create</button>
+            </div>
         </div>
         `;
     }
@@ -62,7 +66,8 @@ export default class PlayTournamentList extends BaseView{
         const tournamentListField = document.getElementById("tournament-list-field");
         if (!tournamentListField) return;
         if (!tournaments.length){
-            tournamentListField.innerHTML = "No available tournament";
+            // tournamentListField.innerHTML = "No available tournament";
+            document.getElementById("no-tournament").removeAttribute("hidden");
             // rediriger vers create tournament 
             return;
         }
