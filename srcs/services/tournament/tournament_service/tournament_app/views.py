@@ -57,7 +57,7 @@ def ask_all_rooms_to_remove(tournament):
     for room in rooms:
         url = f'http://rooms:8443/api/rooms/delete_room/{room.room_id}/'
         response = client.send_internal_request(url, method)
-        if response.status_code != 204:
+        if response.status_code != 200:
             print(f'ERROR rooms to remove : {response.text}')
 
 def add_tournament_history_to_losers(pool):
@@ -504,7 +504,7 @@ class DeleteTournamentView(APIView):
                 tournament.delete()
                 return Response({
                     "message": "Tournament deleted successfully"
-                    }, status=status.HTTP_204_NO_CONTENT)
+                    }, status=status.HTTP_200_OK)
             else:
                 if tournament.status != 'waiting':
                     return Response({

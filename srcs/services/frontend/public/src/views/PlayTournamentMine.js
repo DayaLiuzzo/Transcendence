@@ -12,7 +12,6 @@ export default class PlayTournamentMine extends BaseView{
         return `
         <div>
             <h2>My tournament (En cours !!!)</h2>
-            <p>[ ] Erreur delete?<\p>
             <p>[ ] Erreur leave?<\p>
 
             <div id="tournament-info" hidden>
