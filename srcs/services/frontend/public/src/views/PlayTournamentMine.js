@@ -13,26 +13,29 @@ export default class PlayTournamentMine extends BaseView{
         <div>
             <h2>My tournament (En cours !!!)</h2>
 
+            <div id="tournament-info" hidden>
             <h3>Tournament information</h3>
-            <div id="tournament-name"></div>
-            <div id="tournament-id"></div>
-            <div id="tournament-owner"></div>
-            <div id="tournament-users-list"></div>
-            <div id="tournament-users-nb-current"></div>
-            <div id="tournament-users-nb-max"></div>
-            <div id="tournament-status"></div>
-            <div id="tournament-winner"></div>
-            <p>[ ] Boucle pour update check si new user<\p>
- 
-            <h3>Actions du tournoi</h3>
-            <h4>Pour le user lambda<h4>
-            <button id="tournament-leave-button">Leave</button>
-            <div id="tournament-leave-field"></div>
-            <h4>Pour le owner<h4>
-            <button id="tournament-launch-button">Launch</button>
-            <div id="tournament-launch-field"></div>
-            <button id="tournament-delete-button">Delete</button>
-            <div id="tournament-delete-field"></div>            
+                <div id="tournament-name"></div>
+                <div id="tournament-id"></div>
+                <div id="tournament-owner"></div>
+                <div id="tournament-users-list"></div>
+                <div id="tournament-users-nb-current"></div>
+                <div id="tournament-users-nb-max"></div>
+                <div id="tournament-status"></div>
+                <div id="tournament-winner"></div>
+                <p>[ ] Boucle pour update check si new user<\p>
+                
+                <h3>Actions du tournoi</h3>
+                <h4>Pour le user lambda<h4>
+                <button id="tournament-leave-button">Leave</button>
+                <div id="tournament-leave-field"></div>
+                <h4>Pour le owner<h4>
+                <button id="tournament-launch-button">Launch</button>
+                <div id="tournament-launch-field"></div>
+                <button id="tournament-delete-button">Delete</button>
+                <div id="tournament-delete-field"></div>            
+            </div>
+            <div id ="no-tournament" hidden>You are not part of any tournament</div>
            
             `;
         }
@@ -44,7 +47,6 @@ export default class PlayTournamentMine extends BaseView{
         // <br>
         // </div>
     
-    //pour leave tournament
     async leaveTournament() {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
@@ -59,7 +61,6 @@ export default class PlayTournamentMine extends BaseView{
         }
     }
 
-    //pour delete tournament
     async deleteTournament() {
         const body = {};
         const response = await this.sendDeleteRequest(this.API_URL_TOURNAMENT + "delete_tournament/", body);
@@ -74,7 +75,6 @@ export default class PlayTournamentMine extends BaseView{
         }
     }
 
-        //pour launch tournament
         async launchTournament() {
             const body = {};
             const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
@@ -107,23 +107,6 @@ export default class PlayTournamentMine extends BaseView{
         }
     }
 
-    // renderTournamentList(tournaments) {
-    //     const tournamentListField = document.getElementById("tournament-leave-button");
-    //     if (!tournamentListField) return;
-    //     tournamentListField.innerHTML = "";
-    //     const tournamentList = document.createElement("ul");
-    //     tournaments.forEach(tournament => {
-    //         const tournamentItem = document.createElement("li");
-    //         tournamentItem.textContent = tournament.name;
-    //         const joinButton = document.createElement("button");
-    //         joinButton.textContent = "Join";
-    //         joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
-    //         tournamentItem.appendChild(joinButton);
-    //         tournamentList.appendChild(tournamentItem);
-    //     });
-    //     tournamentListField.appendChild(tournamentList);
-    // }
-
     
     formatField(type, value){
         // if (!value) return "No information available.";
@@ -150,8 +133,10 @@ export default class PlayTournamentMine extends BaseView{
 
         try {
             const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
-            if (!getTournamentInfo.success) { return this.showError(getTournamentInfo.error); }
-
+            if (!getTournamentInfo.success) {
+                document.getElementById("no-tournament").removeAttribute("hidden");
+                return ;
+            }
 
             /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
             const tournamentName = getTournamentInfo.data.name;
@@ -185,6 +170,8 @@ export default class PlayTournamentMine extends BaseView{
             const tournamentWinner= getTournamentInfo.data.winner;
             // document.getElementById("tournament-winner").innerText = tournamentWinner;
             document.getElementById("tournament-winner").innerHTML = this.formatField('winner', tournamentWinner);
+            
+            document.getElementById("tournament-info").removeAttribute("hidden");
 
         }
         catch (error) {
