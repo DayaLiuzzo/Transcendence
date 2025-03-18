@@ -20,12 +20,21 @@ export default class PlayTournamentJoin extends BaseView{
     }
 
     async joinTournament(tournamentId) {
-        const body = {};
 
-        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
-        if (!response.success) { return this.showError(response.error, "tournament-join-field"); }
-
-        this.navigateTo("/my-tournament");
+        
+       const body = {"tournament_id": tournamentId}
+       const checkIfTournamentExists = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'tournament_exists/', body);
+       if (checkIfTournamentExists.success) {
+            if (!checkIfTournamentExists.data.exists) {
+                this.showError("Invalid tournament ID, please retry", "tournament-join-field"); 
+                return
+            }
+    
+            const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", {});
+            if (!response.success) { return this.showError(response.error, "tournament-join-field"); }
+    
+            this.navigateTo("/my-tournament");
+        }
     }
     
 

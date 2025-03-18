@@ -59,7 +59,6 @@ export default class PlayTournamentCreate extends BaseView{
         <div>
             <h2>Create Tournament (pret pour css)</h2>
             <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
-            <p>!!!To do : add nouveau endpoint de Pascal pour check si le tournoi exist avant de le rejoindre<\p>
 
             <form id="createTournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
