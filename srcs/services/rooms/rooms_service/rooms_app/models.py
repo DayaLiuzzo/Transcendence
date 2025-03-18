@@ -11,6 +11,7 @@ class Room(models.Model):
         ('waiting', 'Waiting'),
         ('playing', 'Playing'),
         ('finished', 'Finished'),
+        ('deleted', 'Deleted'),
     ]
     
     room_id = models.CharField(max_length=100, unique=True)

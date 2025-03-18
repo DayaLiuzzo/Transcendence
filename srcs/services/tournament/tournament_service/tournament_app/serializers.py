@@ -23,7 +23,7 @@ class RoomSerializer(serializers.ModelSerializer):
 class RoomSerializerInternal(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ['player1', 'player2', 'winner' 'loser', 'status', 'score_player1', 'score_player2']
+        fields = ['player1', 'player2', 'winner', 'loser', 'status', 'score_player1', 'score_player2']
 
 class PoolSerializer(serializers.ModelSerializer):
     users = serializers.StringRelatedField(many=True)
@@ -59,6 +59,9 @@ class TournamentSerializer(serializers.ModelSerializer):
         }
 
 class TournamentHistorySerializer(serializers.ModelSerializer):
+    tournament_name = serializers.SlugRelatedField(
+        queryset=Tournament.objects.all(),
+        slug_field='name')
     class Meta:
         model = TournamentHistory
-        fields = ['tournament', 'result']
+        fields = ['tournament_name', 'result']

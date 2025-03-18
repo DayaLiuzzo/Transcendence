@@ -287,19 +287,30 @@ class ListAllTournamentView(generics.ListAPIView):
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
 
+class MyTournamentView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def retrieve(self, request):
+        user = request.user
+        tournament = get_object_or_404(Tournament,
+                Q(users=user),
+                Q(status='waiting') | Q(status='playing'))
+        serializer = TournamentSerializer(tournament)
+        return Response(serializer.data)
+
 class DetailTournamentView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
     lookup_field = 'tournament_id'
 
-class GetRoomResult(generics.RetrieveAPIView):
+class GetRoomResultView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     lookup_field = 'room_id'
 
-class ListMyRooms(generics.ListAPIView):
+class ListMyRoomsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = RoomSerializer
 
@@ -317,7 +328,7 @@ class ListMyRooms(generics.ListAPIView):
         serializer = RoomSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class ListPools(generics.ListAPIView):
+class ListPoolsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Pool.objects.all()
     serializer_class = PoolSerializer
@@ -327,7 +338,7 @@ class ListPools(generics.ListAPIView):
         serializer = PoolSerializer(queryset, many=True)
         return Response(serializer.data)
 
-class ListRoomsPool(APIView):
+class ListRoomsPoolView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -336,6 +347,14 @@ class ListRoomsPool(APIView):
         rooms = get_list_or_404(Room, pool__tournament=tournament)
         rooms_serializer = RoomSerializer(rooms, many=True)
         return Response(rooms_serializer.data, status=status.HTTP_200_OK)
+
+class ListTournamentHistoryView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        user = request.user
+        serializer = TournamentSerializer(user.tournaments, many=True)
+        return Response(serializer.data)
 
 """
 class ListWaitingTournamentView(generics.ListAPIView):
@@ -426,7 +445,7 @@ class CountFinishedTournamentView(generics.GenericAPIView):
 """
 # *********************** PUT / PATCH ************************ #
 
-class SetRoomResult(generics.UpdateAPIView):
+class SetRoomResultView(generics.UpdateAPIView):
     permission_classes = [IsRoom]
 
     def patch(self, request, room_id):
@@ -465,7 +484,7 @@ class DeleteTournamentView(APIView):
             tournament = Tournament.objects.get(users=user)
             # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
             # if user.is_staff or (user == tournament.owner and tournament.status != 'playing'):
-            if user == tournament.owner:# and tournament.status == 'waiting':
+            if user == tournament.owner and tournament.status == 'waiting':
                 ask_all_rooms_to_remove(tournament)
                 tournament.delete()
                 return Response({

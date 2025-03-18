@@ -12,12 +12,14 @@ class Game(models.Model):
         ('pause', 'Pause'),
         ('playing', 'Playing'),
         ('finished', 'Finished'),
+        ('deleted', 'Deleted'),
     ]
     
     room_id = models.CharField(max_length=100, unique=True)
     status = models.CharField(max_length=10, choices=GAME_STATUS_CHOICES, default='waiting')
     player1 = models.ForeignKey('UserProfile', related_name='game_player1', null=True, blank=True, on_delete=models.SET_NULL)
     player2 = models.ForeignKey('UserProfile', related_name='game_player2', null=True, blank=True, on_delete=models.SET_NULL)
+    from_tournament = models.BooleanField()
     
     def __str__(self):
         return f"Game {self.room_id} ({self.status})"

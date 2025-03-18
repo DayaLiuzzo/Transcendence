@@ -67,7 +67,6 @@ class TwoFactorSetupView(APIView):
         serializer.is_valid(raise_exception=True)
         if serializer.validated_data.get('enable'):
             user.otp_secret = pyotp.random_base32()
-            user.two_factor_enabled = True
             user.save()
             return Response(TwoFactorSetupSerializer(user).data, status=status.HTTP_200_OK)
         user.two_factor_enabled = False
@@ -134,16 +133,16 @@ class UpdateUserView(generics.UpdateAPIView):
             if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
                 raise ValidationError("Error updating user")
             user.username = new_username
-            if user.two_factor_enabled:
-                user.otp_secret = pyotp.random_base32()
+            # if user.two_factor_enabled:
+            #     user.otp_secret = pyotp.random_base32()
             user.save()
             token = CustomTokenObtainPairSerializer.get_token(user)
             access_token = str(token.access_token)
             refresh_token = str(token)
         except Exception as e:
             raise ValidationError(f"Error updating user : {str(e)}")
-        if user.two_factor_enabled:
-            return Response({"message": "Success", "otp": user.otp_secret, "access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
+        # if user.two_factor_enabled:
+        #     return Response({"message": "Success", "otp": user.otp_secret, "access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
         return Response({"message": 'Success', "access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
 
 class RetrieveUserView(generics.RetrieveAPIView):

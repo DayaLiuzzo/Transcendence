@@ -26,7 +26,7 @@ export default class Profile extends BaseView {
 
         return errorContainer;
     }
-    
+
     render() {
         return `
         <div>
@@ -58,13 +58,14 @@ export default class Profile extends BaseView {
                     <input type="text" id="friend-username" placeholder="Enter friend's username">
                     <button type="submit">Add Friend</button>
                 </form>
+            <button id="refresh">Refresh</button>
+            <button id="match-history">Match History</button>
             </div>
         </div>
         `;
     }
 
     async updateStatsField() {
-        console.log('Updating stats field');
         const statsField = document.getElementById("stats-field");
         if (!statsField){
             console.log('No stats field');
@@ -73,9 +74,6 @@ export default class Profile extends BaseView {
         const username = this.getUsername();
         const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
         if(response.success){
-            console.log(response.data);
-            console.log(response.data.wins);
-            console.log(response.data.losses);
             statsField.innerHTML = `
             <h3>Stats</h3>
             <p>Wins: ${response.data.wins}</p>
@@ -157,6 +155,10 @@ export default class Profile extends BaseView {
         this.navigateTo('/edit-profile');
     }
 
+    handleMatchHistoryClick() {
+        this.navigateTo('/match-history');
+    }
+
     handleFriendFormSubmit(event) {
         event.preventDefault();
         const friendUsername = document.getElementById("friend-username").value;
@@ -174,12 +176,25 @@ export default class Profile extends BaseView {
     handleLogoutClick() {
         this.logout();
     }
+    
+    handleRefreshClick() {
+        this.refreshToken();
+    }
 
     attachEvents() {
         console.log('Events attached (Profile)');
+        const refreshButton = document.getElementById("refresh");
+        if (refreshButton) {
+            refreshButton.addEventListener("click", this.handleRefreshClick.bind(this));
+        }
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));
+        }
+
+        const matchHistoryButton = document.getElementById("match-history");
+        if (matchHistoryButton) {
+            matchHistoryButton.addEventListener("click", this.handleMatchHistoryClick.bind(this));
         }
 
         const addFriendForm = document.getElementById("add-friend-form");
@@ -204,6 +219,7 @@ export default class Profile extends BaseView {
         friendsField.innerHTML = "";
         const friendsList = document.createElement("ul");
         users.forEach(user => {
+            // chaque nom user
             const friendItem = document.createElement("li");
             friendItem.classList.add("friend-item");
 
@@ -223,6 +239,7 @@ export default class Profile extends BaseView {
 
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
+            // ce que va supprimer le remove
             removeButton.setAttribute("data-username", user.username);
             removeButton.classList.add("remove-button");
 
@@ -240,8 +257,8 @@ export default class Profile extends BaseView {
             const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             this.renderFriends(users);
-            
-            const avatarUrl = await this.displayAvatar();            
+
+            const avatarUrl = await this.displayAvatar();
             const container = document.createElement("div");
             container.classList.add("username-container");
 
@@ -258,7 +275,7 @@ export default class Profile extends BaseView {
             container.appendChild(textContainer);
 
             document.getElementById("username-field").appendChild(container);
-            
+
             this.updateStatsField();
         }
         catch (error) {
