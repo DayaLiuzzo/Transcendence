@@ -40,6 +40,7 @@ export default class Profile extends BaseView {
                 <input type="text" id="friend-username" placeholder="Enter friend's username">
                 <button type="submit">Add Friend</button>
             </form>
+            <button id="refresh">Refresh</button>
             <button id="edit-profile">Edit Profile</button>
             <button id="logout">Logout</button>
             <button id="match-history">Match History</button>
@@ -142,9 +143,17 @@ export default class Profile extends BaseView {
     handleLogoutClick() {
         this.logout();
     }
+    
+    handleRefreshClick() {
+        this.refreshToken();
+    }
 
     attachEvents() {
         console.log('Events attached (Profile)');
+        const refreshButton = document.getElementById("refresh");
+        if (refreshButton) {
+            refreshButton.addEventListener("click", this.handleRefreshClick.bind(this));
+        }
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));

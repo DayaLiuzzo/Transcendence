@@ -134,6 +134,19 @@ export default class BaseView{
         }
     }
 
+    async refreshToken(){
+        const refresh_token = this.getRefreshToken();
+        const response = await this.sendPostRequest(this.API_URL+ 'refresh/', { refresh: refresh_token });
+        if (!response.success){
+            this.stopUpdatingLastSeen();
+            return;
+        }
+        let userSession = this.getUserSession();
+        userSession.access_token = response.data.access;
+        userSession.refresh_token = response.data.refresh;
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+    }
+    
     toggleMenu() {
         const closeIcon= document.querySelector(".closeIcon");
         const menuIcon = document.querySelector(".menuIcon");
@@ -233,6 +246,7 @@ export default class BaseView{
             return { success: false, error: { message: "Network error"}};
         }
     }
+    
 
     async sendPatchRequest(url, formData){
         try {
