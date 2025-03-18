@@ -12,6 +12,8 @@ export default class PlayTournamentMine extends BaseView{
         return `
         <div>
             <h2>My tournament (En cours !!!)</h2>
+            <p>[ ] Erreur delete?<\p>
+            <p>[ ] Erreur leave?<\p>
 
             <div id="tournament-info" hidden>
             <h3>Tournament information</h3>
@@ -46,7 +48,7 @@ export default class PlayTournamentMine extends BaseView{
            
             `;
         }
-        // <h4>Pour tous les user<h4>
+        // <h4>Une fois que le tournoi est lance<h4>
         // <button id="tournament-play-field">Play tournament</button>
         
         // <p>[ ] lister les current match et y acceder ??<\p>
