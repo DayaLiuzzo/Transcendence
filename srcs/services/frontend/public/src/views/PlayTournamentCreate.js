@@ -29,6 +29,7 @@ export default class PlayTournamentCreate extends BaseView{
         const createTournamentResponse = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'create_tournament/', formData);
         if (!createTournamentResponse.success){ return this.showError(createTournamentResponse.error); }
 
+        //add alerte avant redirection??
         this.navigateTo("/my-tournament");
     }
 
@@ -57,14 +58,17 @@ export default class PlayTournamentCreate extends BaseView{
         return `
         <div>
             <h2>Create Tournament (pret pour css)</h2>
-            <p>Add : you cannot create a tournament as you are already in a tournament<\p>
-            <p>Button : see my tournament page<\p>
+            <p>!!!To do : lier levent du bouton pour see my page!!!<\p>
+            <p>!!!To do : add nouveau endpoint de Pascal pour check si le tournoi exist avant de le rejoindre<\p>
+
             <form id="createTournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
                 <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
                 <button type="submit">Create tournament</button>
             </form>
+            <div id="tournament-create-field"></div>
 
+            <button id="tournament-mine-button" hidden>See my tournament page</button>
 
         </div>
         
@@ -77,9 +81,15 @@ export default class PlayTournamentCreate extends BaseView{
         try {
             const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
             if (checkIfInTournament.success) {
-                if (checkIfInTournament.data.in_tournament){ return this.navigateTo('/my-tournament') }
-                
+                if (checkIfInTournament.data.in_tournament){ 
+                    
+                    // return this.navigateTo('/my-tournament')
+                    document.getElementById("tournament-mine-button").removeAttribute("hidden"); 
+                    document.getElementById("tournament-create-field").innerText = "You cannot join a tournament since you are already part of one"; 
+                    return;
+                }
                 document.getElementById("createTournament-form").removeAttribute("hidden");
+            
                 }
             }
         catch (error) {

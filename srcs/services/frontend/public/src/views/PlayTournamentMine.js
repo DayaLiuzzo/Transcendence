@@ -62,6 +62,7 @@ export default class PlayTournamentMine extends BaseView{
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
         if (!response.success) {return this.showError(response.error, "tournament-leave-field");}
 
+        //add alerte avant redirection??
         this.navigateTo("/play-tournament");
     }
     
@@ -76,6 +77,7 @@ export default class PlayTournamentMine extends BaseView{
         const response = await this.sendDeleteRequest(this.API_URL_TOURNAMENT + "delete_tournament/", body);
         if (!response.success) {return this.showError(response.error, "tournament-delete-field"); }
         
+        //add alerte avant redirection??
         this.navigateTo("/play-tournament");
     }
     
@@ -89,6 +91,8 @@ export default class PlayTournamentMine extends BaseView{
             const body = {};
             const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
             if (!response.success) {return this.showError(response.error, "tournament-launch-field");}
+            
+            //add alerte avant redirection??
             // this.navigateTo("/play-tournament"); refresh?
         }
         

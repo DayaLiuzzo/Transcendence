@@ -32,6 +32,7 @@ export default class PlayTournamentList extends BaseView{
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
         if (!response.success) { return this.showError(response.error, "tournament-list-field"); }
 
+        //add alerte avant redirection??
         this.navigateTo("/my-tournament");
     }
     
