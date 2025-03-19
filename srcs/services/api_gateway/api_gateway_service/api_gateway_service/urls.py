@@ -49,7 +49,7 @@ def route_to_service(request, service_name, extra_path=''):
                 headers=headers,
                 data=request.body,
             )
-            logger.debug(f"===========================TEST============================\n{response.headers}\n\n")
+            #logger.debug(f"===========================TEST============================\n{response.headers}\n\n")
             logger.debug(f"Réponse du service {service_name}: {response.status_code} - {response.text[:10000]}")
             if (response.status_code == 204):
                 return(HttpResponse(status=204))

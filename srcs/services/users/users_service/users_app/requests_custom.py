@@ -10,7 +10,7 @@ def send_request(url:str, method:str, body={}, headers={}) -> int:
             'patch':requests.patch,
             }
     response = req_methods[method](url, json=body ,headers=headers)
-    print(f'Request at url {url} return {response.status_code}')
+    # print(f'Request at url {url} return {response.status_code}')
     return response.status_code
 
 def send_delete_requests(urls:list, body={}, headers={}) -> bool :
