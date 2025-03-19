@@ -329,7 +329,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         await send_results_to_rooms(self.final_game_data)
 
     async def update(self):
-        self.jeu._ball_hit()
+        if self.jeu._ball_hit():
+            await self.send_game_state({'state': 'COLLISION'})
         self.jeu.player1.update(self.jeu.delta)
         self.jeu.player2.update(self.jeu.delta)
         if self.jeu.game_started:
