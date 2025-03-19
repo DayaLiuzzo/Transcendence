@@ -41,8 +41,8 @@ class Router{
         this.routes = routes;
         this.currentView = null;
         this.init();
-        this.lastSeenInterval = null;
         this.API_URL_USERS = '/api/users/';
+        this.RerenderFriendsInterval = null;
     }
 
     getRoutes(){
@@ -160,9 +160,9 @@ class Router{
         }
     }
 
-    async updateLastSeen() {
+    async updateLastSeen(isOnline) {
         const username = this.getUsername();
-        const response = await this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {});
+        const response = await this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline});
         if (!response.success){
             this.stopUpdatingLastSeen();
             return;
@@ -171,18 +171,20 @@ class Router{
     }
 
     startUpdatingLastSeen() {
-        if (!this.lastSeenInterval) {
-            this.updateLastSeen();
-            this.lastSeenInterval = setInterval(() => this.updateLastSeen(), 30000);
-            console.log("⏳ Last seen tracking started...");
-        }
+        console.log("⏳ Last seen tracking started...");
+        const username = this.getUsername();
+        this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline: true});
     }
 
+
     stopUpdatingLastSeen() {
-        if (this.lastSeenInterval) {
-            clearInterval(this.lastSeenInterval);
-            this.lastSeenInterval = null;
-            console.log("🛑 Last seen tracking stopped...");
+        console.log("Stop tracking last seen");
+        const username = this.getUsername();
+        this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline: false});
+        if(this.RerenderFriendsInterval){
+            clearInterval(this.RerenderFriendsInterval);
+            this.RerenderFriendsInterval = null;
+            console.log("stopped rerenderFriends")
         }
     }
 
@@ -302,14 +304,6 @@ class Router{
                 }
 
                 await this.loadView(path);
-            }
-        });
-
-        window.addEventListener("storage", (event) => {
-            if (event.key === "logout") {
-                clearInterval(this.lastSeenInterval);
-                this.stopUpdatingLastSeen();
-                console.log("🛑 Logged out in another tab: Stopping interval...");
             }
         });
     }

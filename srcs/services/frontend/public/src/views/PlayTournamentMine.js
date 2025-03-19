@@ -24,7 +24,7 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-users-nb-max"></div>
                 <div id="tournament-status"></div>
                 <div id="tournament-winner"></div>
-                <p>[ ] Boucle pour update check si new user<\p>
+                <p>[ ] Boucle pour update check si new user</p>
                 
                 
                 <button id="tournament-leave-button" hidden>Leave</button>

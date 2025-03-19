@@ -6,14 +6,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
     biography = serializers.CharField(default="Default biography", required=False)
     class Meta:
         model = UserProfile
-        fields = ['username', 'biography', 'last_seen', 'wins', 'losses']
+        fields = ['username', 'biography', 'wins', 'losses', 'is_online']
 
 class FriendsSerializer(serializers.ModelSerializer):
-    is_online = serializers.SerializerMethodField()
-
     class Meta:
         model = UserProfile
         fields = ['username', 'biography', 'is_online']
-
-    def get_is_online(self, obj):
-        return obj.is_online() 
