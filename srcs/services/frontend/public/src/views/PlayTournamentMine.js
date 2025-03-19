@@ -44,7 +44,7 @@ export default class PlayTournamentMine extends BaseView{
             </div>
 
             <div id ="tournament-launched" hidden>Tournament started
-                <button id="access game">Access</button>
+                <button id="access-waiting-rooms-button">Access waiting room</button>
             </div>
             `;
         }
@@ -165,7 +165,20 @@ export default class PlayTournamentMine extends BaseView{
             document.getElementById("tournament-info").setAttribute("hidden", true);
         }
     }
+
     
+    // Acces waiting rooms tournament    
+    async waitingRoomTournament() {
+        //add alerte avant redirection??
+        this.navigateTo("/play-remote-tournament");
+    }
+    
+    handleWaitingRoomTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Access waiting room") {
+            this.waitingRoomTournament();
+        }
+    }
+
     attachEvents() {
         console.log('Events attached (Tournament Mine)');
 
@@ -200,7 +213,12 @@ export default class PlayTournamentMine extends BaseView{
         if (tournamentListField) {
             tournamentListField.addEventListener("click", this.handleListTournamentClick.bind(this));
         }
-        
+
+        const tournamentWaitingRoomField = document.getElementById("access-waiting-rooms-button");
+        if (tournamentWaitingRoomField) {
+            tournamentWaitingRoomField.addEventListener("click", this.handleWaitingRoomTournamentClick.bind(this));
+        }
+
     }
 
     formatField(type, value){
@@ -324,6 +342,11 @@ export default class PlayTournamentMine extends BaseView{
         const tournamentListField = document.getElementById("tournament-list-button");
         if (tournamentListField) {
             tournamentListField.removeEventListener("click", this.handleListTournamentClick);
+        }
+
+        const tournamentWaitingRoomField = document.getElementById("access-waiting-rooms-button");
+        if (tournamentWaitingRoomField) {
+            tournamentWaitingRoomField.removeEventListener("click", this.handleWaitingRoomTournamentClick);
         }
     }
 }

@@ -6,6 +6,7 @@ import Game from "./views/Game.js";
 import PlayMenu from "./views/PlayMenu.js";
 import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
+import PlayRemoteTournament from "./views/PlayRemoteTournament.js";
 import PlayTournament from "./views/PlayTournament.js";
 import PlayTournamentCreate from "./views/PlayTournamentCreate.js";
 import PlayTournamentList from "./views/PlayTournamentList.js";
@@ -32,6 +33,7 @@ const routes = [
     { path: '/join-tournament', view: PlayTournamentJoin, css: "styles/core.css", requiresAuth: true},
     { path: '/my-tournament', view: PlayTournamentMine, css: "styles/core.css", requiresAuth: true},
     { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
+    { path: '/play-remote-tournament', view: PlayRemoteTournament, css: "styles/core.css", requiresAuth: true},
     { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true }
 ];
 
