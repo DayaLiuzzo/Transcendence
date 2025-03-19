@@ -58,7 +58,7 @@ export default class Profile extends BaseView {
                     <button type="submit">Add Friend</button>
                 </form>
                 <div id="stats-field"></div>
-                <div id="match-history-field">"Match History"</div>
+                <div id="match-history-field"> <h3>Match History</h3> </div>
             <button id="refresh">Refresh</button>
             </div>
         </div>
@@ -111,11 +111,9 @@ export default class Profile extends BaseView {
                 match.player1_username === username 
                 matchElement.innerHTML = `
                 <h3>Game number ${index + 1}</h3>
-                <p>you: ${you_username}</p>
-                <p>opponent: ${opponent_username}</p>
-                <p>winner: ${winner}</p>
-                <p>you score: ${you_score}</p>
-                <p>opponent score: ${opponent_score}</p>
+                <p>You are ${you_username}</p>
+                <p>Your opponent was ${opponent_username}</p>
+                <p>${winner} won (winner - ${you_score} | ${opponent_score} - loser)</p>
                 
                 `;
                 matchHistoryField.appendChild(matchElement);
