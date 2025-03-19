@@ -222,23 +222,22 @@ export default class PlayTournamentMine extends BaseView{
         return formats[type] ? formats[type](value) : `${type.charAt(0).toUpperCase() + type.slice(1)}: ${value}`;
 
     }
-    
-    async mount() {
-        console.log('Mounting Play tournament Mine');
 
-        try {
-
-            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+    async renderTournamentInfo(){
+        const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
             if (checkIfInTournament.success) {
                     if (!checkIfInTournament.data.in_tournament){ 
                         document.getElementById("no-tournament").removeAttribute("hidden");
-                        return;
+                        // return this.navigateTo('/play-menu');
+                        return this.router.customClearInterval(this.router.RerenderTournamentInterval);
+
                     }
                 }
                 
                 const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
                 if (!getTournamentInfo.success) {
-                    return ;
+                    // return this.navigateTo('/play-menu');
+                    return this.router.customClearInterval(this.router.RerenderTournamentInterval);
                 }
                 
                 /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
@@ -283,7 +282,14 @@ export default class PlayTournamentMine extends BaseView{
                 const tournamentWinner= getTournamentInfo.data.winner;
                 document.getElementById("tournament-winner").innerHTML = this.formatField('winner', tournamentWinner);
             
+    }
+    
+    async mount() {
+        console.log('Mounting Play tournament Mine');
 
+        try {
+            this.renderTournamentInfo()
+            this.router.RerenderTournamentInterval = setInterval(() => {this.renderTournamentInfo();}, 5000);
         }
         catch (error) {
             console.error("Error in mount():", error);
@@ -325,5 +331,6 @@ export default class PlayTournamentMine extends BaseView{
         if (tournamentListField) {
             tournamentListField.removeEventListener("click", this.handleListTournamentClick);
         }
+        this.router.customClearInterval(this.router.RerenderTournamentInterval);
     }
 }

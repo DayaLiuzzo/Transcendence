@@ -42,6 +42,7 @@ class Router{
         this.init();
         this.API_URL_USERS = '/api/users/';
         this.RerenderFriendsInterval = null;
+        this.RerenderTournamentInterval = null;
     }
 
     getRoutes(){
@@ -180,12 +181,9 @@ class Router{
         console.log("Stop tracking last seen");
         const username = this.getUsername();
         this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline: false});
-        if(this.RerenderFriendsInterval){
-            clearInterval(this.RerenderFriendsInterval);
-            this.RerenderFriendsInterval = null;
-            console.log("stopped rerenderFriends")
-        }
+        this.customClearInterval(this.RerenderFriendsInterval);
     }
+
 
     getAccessToken(){
         const userSession = this.getUserSession();
@@ -215,7 +213,20 @@ class Router{
        return false;
     }
 
+    customClearInterval(interval){
+        if(interval){
+            clearInterval(interval);
+            interval = null;
+            console.log("stopped interval")
+        }
+    }
+
+    stopTournamentInforInterval(){
+        this.customClearInterval(this.RerenderTournamentInterval);
+    }
+
     async loadView(path){
+        this.customClearInterval(this.RerenderFriendsInterval);
         const route = this.getRoute(path);
         const ViewClass = route ? route.view : NotFound;
         if (!route) {
