@@ -230,8 +230,9 @@ export default class PlayTournamentMine extends BaseView{
                     if (!checkIfInTournament.data.in_tournament){ 
                         document.getElementById("no-tournament").removeAttribute("hidden");
                         this.router.customClearInterval(this.router.RerenderTournamentInterval);
-                        alert("The Host Terminated the party");
-                        return this.navigateTo('/play-menu');
+                        document.getElementById("tournament-info").setAttribute("hidden", true);
+                        // alert("The Host Terminated the party");
+                        // return this.navigateTo('/play-menu');
 
                     }
                 }
