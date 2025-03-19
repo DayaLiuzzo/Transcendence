@@ -1,16 +1,15 @@
 import BaseView from "./BaseView.js";
-import { cleanUpThree } from "../three/utils.js";
-
-let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
-let gameOver = false;
 export default class PlayCanva extends BaseView{
 	constructor(params) {
 		super(params);
 
+		this.ballVelocity = { x: 0.02, z: 0.02 };
+		this.speedIncrement = 1.05;
+		this.keys = { ArrowUp: false, ArrowDown: false, w: false, s:false};
+		this.gameOver = false;
+
 		this.scores = {
-			winner: null,
-			max_score: null,
-			looser: null,
+			max_score: 5,
 			player1_score: 0,
 			player2_score: 0,
 		};
@@ -25,33 +24,21 @@ export default class PlayCanva extends BaseView{
 		});
 
 		window.addEventListener("keydown", (event) => {
-			if (keys.hasOwnProperty(event.key)) {
-				keys[event.key] = true;
+			if (this.keys.hasOwnProperty(event.key)) {
+				this.keys[event.key] = true;
 			}
 		});
 
 		window.addEventListener("keyup", (event) => {
-			if (keys.hasOwnProperty(event.key)) {
-				keys[event.key] = false;
+			if (this.keys.hasOwnProperty(event.key)) {
+				this.keys[event.key] = false;
 			}
 		});
-
-		// window.addEventListener('beforeunload', (event) => {
-		// 	// Si vous avez une fonction `stopGame()` pour arrêter le jeu, vous pouvez l'appeler ici
-		// 	this.handleGameEnd(threeInstance());
-
-		// 	// Optionnel : Vous pouvez personnaliser un message d'avertissement avant de quitter la page
-		// 	const message = "Êtes-vous sûr de vouloir quitter la page ? Votre jeu en cours sera perdu.";
-		// 	event.returnValue = message;  // Pour certains navigateurs comme Chrome
-
-		// 	// Retourner le message pour les autres navigateurs
-		// 	return message;
-		// });
 	}
 
     handleGameEnd(winner, looser, winner_score, looser_score){
         console.log("game end")
-		gameOver = true;
+		this.gameOver = true;
 
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
@@ -74,8 +61,8 @@ export default class PlayCanva extends BaseView{
         `;
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-lobby").addEventListener("click", () => {
-			gameOver = false;
 			finalScreen.remove();
+			this.gameOver = false;
             this.navigateTo("/play-menu");
         });
     }
@@ -260,7 +247,6 @@ export default class PlayCanva extends BaseView{
 		window.threeInstance.scene.add(particles);
 
 		let activeParticles = [];
-		let ballVelocity = { x: 0.05, z: 0.02 };
 
 		this.resetScores();
 
@@ -300,37 +286,33 @@ export default class PlayCanva extends BaseView{
 			particles.geometry.attributes.position.needsUpdate = true;
 		}
 
-		function resetBall() {
-			meshBall.position.set(0, 0.2, 0);
-			ballVelocity = { x: 0, z: 0 };
-
-			setTimeout(() => {
-				ballVelocity = {
-					x: (Math.random() > 0.5 ? 1 : -1) * 0.05,
-					z: (Math.random() - 0.5) * 0.05,
-				};
-			}, 500);
-		}
+		// function resetBall() {
+		// 	meshBall.position.set(0, 0.2, 0);  // Réinitialise la position
+		// 	this.ballVelocity = {
+		// 		x: (Math.random() > 0.5 ? 1 : -1) * 0.05,  // Vitesse initiale sur l'axe X
+		// 		z: (Math.random() - 0.5) * 0.05,  // Vitesse initiale sur l'axe Z
+		// 	};
+		// }
 
 		const clock = new THREE.Clock();
 		const tick = () => {
-			 if (gameOver === true) {
+			 if (this.gameOver === true) {
 
 			return;
 			}
 			requestAnimationFrame(tick);
 
-			if (keys.w && meshPlayer1.position.z > -2)
+			if (this.keys.w && meshPlayer1.position.z > -2)
 				meshPlayer1.position.z -= 0.1;
-			if (keys.s && meshPlayer1.position.z < 2)
+			if (this.keys.s && meshPlayer1.position.z < 2)
 				meshPlayer1.position.z += 0.1;
-			if (keys.ArrowUp && meshPlayer2.position.z > -2)
+			if (this.keys.ArrowUp && meshPlayer2.position.z > -2)
 				meshPlayer2.position.z -= 0.1;
-			if (keys.ArrowDown && meshPlayer2.position.z < 2)
+			if (this.keys.ArrowDown && meshPlayer2.position.z < 2)
 				meshPlayer2.position.z += 0.1;
 
-			meshBall.position.x += ballVelocity.x;
-			meshBall.position.z += ballVelocity.z;
+			meshBall.position.x += this.ballVelocity.x;
+			meshBall.position.z += this.ballVelocity.z;
 
 			ballSpotlight.position.set(
 				meshBall.position.x,
@@ -340,7 +322,7 @@ export default class PlayCanva extends BaseView{
 			ballSpotlight.target.position.copy(meshBall.position);
 			updateParticles();
 			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
-				ballVelocity.z *= -1;
+				this.ballVelocity.z *= -1 * this.speedIncrement;
 				createCollisionParticles(meshBall.position);
 			}
 			if (
@@ -353,42 +335,30 @@ export default class PlayCanva extends BaseView{
 					Math.abs(meshBall.position.z - meshPlayer2.position.z) <
 						0.8)
 			) {
-				ballVelocity.x *= -1.1;
+				this.ballVelocity.x *= -1 * this.speedIncrement;
 				createCollisionParticles(meshBall.position);
 			}
 			if (meshBall.position.x > 4.5) {
 				this.scores.player1_score++;
 				console.log("SCORES:", this.scores.player1_score);
 				this.resetScores();
-				resetBall();
+				meshBall.position.set(0, 0.2, 0);
 			} else if (meshBall.position.x < -4.5) {
 				console.log("SCORES:", this.scores.player2_score);
 				this.scores.player2_score++;
 				this.resetScores();
-				resetBall();
+				meshBall.position.set(0, 0.2, 0);
 			}
 			window.addEventListener("resize", () => {
 				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
 				window.threeInstance.camera.updateProjectionMatrix();
 				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
 			});
-
-			window.addEventListener("resize", () => {
-				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
-				window.threeInstance.camera.updateProjectionMatrix();
-				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
-			});
-
-			document.addEventListener("visibilitychange", () => {
-				if (document.hidden) {
-					resetGame();
-				}
-			});
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
-		if (gameOver === false) {
-			resetBall();
+		if (this.gameOver === false) {
+			meshBall.position.set(0, 0.2, 0);
 			tick();
 		}
 	}
@@ -418,6 +388,8 @@ export default class PlayCanva extends BaseView{
 	attachEvents() {
 		console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
-		this.initGame();
+		if (this.gameOver === false) {
+			this.initGame();
+		}
 	}
 }
