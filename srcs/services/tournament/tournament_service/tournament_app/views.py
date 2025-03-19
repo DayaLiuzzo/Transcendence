@@ -371,12 +371,12 @@ class ListTournamentHistoryView(generics.ListAPIView):
         serializer = TournamentSerializer(user.tournaments, many=True)
         return Response(serializer.data)
 
-"""
 class ListWaitingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.filter(status='waiting')
     serializer_class = TournamentSerializer
 
+"""
 class ListPlayingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.filter(status='playing')
