@@ -283,6 +283,7 @@ export default class Profile extends BaseView {
     async renderFriends() {
         const username = this.getUsername();
         const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
+        if(!userFriends.success) return this.stopUpdatingLastSeen();
         const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
         const friendsField = document.getElementById("friends-field");
         if (!friendsField) return;
@@ -325,7 +326,7 @@ export default class Profile extends BaseView {
         try {
             const username = this.getUsername();
             this.renderFriends();
-            this.router.RerenderFriendsInterval = setInterval(() => {this.renderFriends();}, 1500);
+            this.router.RerenderFriendsInterval = setInterval(() => {this.renderFriends();}, 15000);
 
             const avatarUrl = await this.displayAvatar();
             const container = document.createElement("div");
