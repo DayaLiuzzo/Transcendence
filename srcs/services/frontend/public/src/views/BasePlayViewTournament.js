@@ -1,3 +1,4 @@
+import { cleanUpThree } from '../three/utils.js';
 import BaseView from './BaseView.js';
 import WebSocketService from './WebSocketService.js';
 
@@ -10,10 +11,34 @@ export default class BasePlayView extends BaseView{
     }
 
     async waitRoom() {
-        const result = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
-        if (result.success) {
-            console.log(result.success)
-            const data = result.data;
+        const my_tournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
+        if (!my_tournament.success) {
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+            return;
+        }
+
+        const tournament_id = my_tournament.data.tournament_id;
+        const tournament = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'result/',
+            {
+                "tournament_id": tournament_id
+            });
+
+        if (!tournament.success) {
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+            console.error(tournament_result.error);
+            return;
+        }
+    
+        const tournament_data = tournament.data;
+        if (tournament_data.status === 'finished' || tournament_data.result === 'lost') {
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+            return;
+        }
+        
+        const room = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
+        if (room.success) {
+            console.log(room.success)
+            const data = room.data;
             console.log(data)
             console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
             const rooms = data.filter((room) => room.status === "waiting");
@@ -49,7 +74,7 @@ export default class BasePlayView extends BaseView{
             <h1>Game Over</h1>
             <p>${winner} wins!</p>
             <p>score: ${winner} ${winner_score} - ${looser} ${looser_score}</p>
-            <button id="back-to-lobby">Back to Lobby</button>
+            <button id="back-to-waiting-rooms">Back to Waiting Rooms</button>
         `;
         finalScreen.style.cssText = `
             position: absolute;
@@ -64,9 +89,12 @@ export default class BasePlayView extends BaseView{
 
         `;
         document.body.appendChild(finalScreen);
-        document.getElementById("back-to-lobby").addEventListener("click", () => {
-            this.navigateTo("/play-menu");
-        }); 
+        document.getElementById("back-to-waiting-rooms").addEventListener("click", () => {
+            const finalScreen = document.getElementById("final-screen");
+            finalScreen.remove();
+            cleanUpThree();
+            this.mount();
+        });
     }
 
     checkStart(){
@@ -80,7 +108,7 @@ export default class BasePlayView extends BaseView{
 
     listenToKeyboard() {
         console.log("Listening to keyboard")
-        if (this.socketService.isplaying){
+        if (this.socketService && this.socketService.isplaying){
             console.log("wesh")
             window.addEventListener("keydown", (event) => {
                 if (event.key === "ArrowUp" || event.key === "ArrowDown") {
