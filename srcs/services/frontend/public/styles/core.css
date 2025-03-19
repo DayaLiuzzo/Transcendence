@@ -17,6 +17,7 @@ body {
     background-color: #ffffff;
     overflow-x: hidden;
     overflow-y: hidden;
+    font-family: 'Roboto', sans-serif;
 }
 
   #navbar {
@@ -455,9 +456,10 @@ body {
 .play-menu {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, auto);
+  grid-template-rows: auto auto;
   gap: 10px;
   padding-top: 16px;
+  font-family: 'SaolDisplay-LightItalic';
 }
 
 .play-option {
@@ -470,6 +472,10 @@ body {
   cursor: pointer;
   transition: background-color 0.3s;
   border: 3px solid #333;
+  font-family: 'SaolDisplay-LightItalic';
+}
+.play-option:nth-child(3) {
+  grid-column: span 2;
 }
 
 .loader {

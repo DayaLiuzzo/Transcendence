@@ -17,7 +17,6 @@ const routes = [
     { path: '/home', view: Home},
     { path: '/log-in', view: LogIn, requiresGuest: true },
     { path: '/sign-up', view: SignUp, requiresGuest:true },
-    // { path: '/game', view: Game, css: "styles/game.css" },
     { path: '/profile', view: Profile, css: "styles/profile.css", requiresAuth: true },
     { path: '/play-menu', view: PlayMenu, css: "styles/core.css", requiresAuth: true},
     { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: false},
@@ -140,17 +139,15 @@ class Router{
             console.warn(`Route for ${path} not found! Showing NotFound view.`);
         }
         if(this.currentView){
+            cleanUpThree();
             this.currentView.unmount();
         }
         this.currentView = new ViewClass(this);
-        cleanUpThree();
+
         document.getElementById("app").innerHTML = this.currentView.render();
         await this.currentView.updateNavbar();
         await this.currentView.mount();
         this.currentView.attachEvents();
-
-        // this.updateBodyClass(path);
-        // this.updateStylesheet(path);
         }
 
     async navigateTo(path){

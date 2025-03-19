@@ -7,6 +7,17 @@ export default class PlayCanva extends BasePlayView {
 	constructor(params) {
 		super(params);
 
+		window.threeInstance = {
+			scene,
+			camera,
+			renderer,
+			effect,
+			controls,
+			animationId: null,
+			canvas,
+			container,
+		};
+
 		this.player1 = { x: null, y: null, width: null, height: null };
 		this.player2 = { x: null, y: null, width: null, height: null };
 		this.ball = { x: null, y: null };
@@ -15,6 +26,7 @@ export default class PlayCanva extends BasePlayView {
 		this.scores = {
 			winner: null,
 			max_score: null,
+			looser: null,
 			player1_score: 0,
 			player2_score: 0,
 		};
@@ -109,8 +121,8 @@ export default class PlayCanva extends BasePlayView {
 		  emissiveIntensity: 0.4
 		});
 
-		this.meshPlayer1 = new THREE.Mesh(
-			new THREE.BoxGeometry(this.player1.width, 1, this.player1.height),
+		const meshPlayer1 = new THREE.Mesh(
+			new THREE.BoxGeometry(this.player1.width, this.player1.height, 10),
 			paddleMaterial
 		);
 		this.meshPlayer1.position.set(
@@ -120,8 +132,8 @@ export default class PlayCanva extends BasePlayView {
 		);
 		console.log("MESHPLAYER1", this.meshPlayer1);
 
-		this.meshPlayer2 = new THREE.Mesh(
-			new THREE.BoxGeometry(this.player2.width, 1, this.player2.height),
+		const meshPlayer2 = new THREE.Mesh(
+			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
 			paddleMaterial
 		);
 		this.meshPlayer2.position.set(
@@ -130,7 +142,11 @@ export default class PlayCanva extends BasePlayView {
 			20
 		);
 
-		this.meshBall = new THREE.Mesh(
+		//const meshBall = new THREE.Mesh(
+		// 	new THREE.SphereGeometry(this.ballRadius, 16, 16),
+		// 	paddleMaterial
+		// );
+		const meshBall = new THREE.Mesh(
 			new THREE.BoxGeometry(
 				this.ballRadius,
 				this.ballRadius,
@@ -178,50 +194,43 @@ export default class PlayCanva extends BasePlayView {
 		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
-		const light = new THREE.DirectionalLight(0xffffff, 1);
-		light.position.set(10, 10, 10);
-		light.castShadow = true;
-		light.shadow.mapSize.width = this.gameBoard.width;
-		light.shadow.mapSize.height = this.gameBoard.height;
-		scene.add(light);
+		function createCollisionParticles(position) {
+			for (let i = 0; i < particleCount; i++) {
+				activeParticles.push({
+					position: position.clone(),
+					velocity: new THREE.Vector3(
+						(Math.random() - 0.5) * 0.2,
+						Math.random() * 0.2,
+						(Math.random() - 0.5) * 0.2
+					),
+					life: 1.0,
+				});
+			}
+		}
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-		scene.add(ambientLight);
+		function updateParticles() {
+			activeParticles = activeParticles.filter((particle) => {
+				particle.position.add(particle.velocity);
+				particle.life -= 0.02;
+				return particle.life > 0;
+			});
 
-		const ballSpotlight = new THREE.SpotLight(0xffffff, 2);
-		ballSpotlight.angle = Math.PI / 6;
-		ballSpotlight.penumbra = 0.3;
-		ballSpotlight.decay = 1;
-		ballSpotlight.distance = 10;
-		ballSpotlight.castShadow = true;
-		scene.add(ballSpotlight);
-		scene.add(ballSpotlight.target);
+			const positions = new Float32Array(particleCount * 3);
+			for (let i = 0; i < activeParticles.length; i++) {
+				const particle = activeParticles[i];
+				positions[i * 3] = particle.position.x;
+				positions[i * 3 + 1] = particle.position.y;
+				positions[i * 3 + 2] = particle.position.z;
+			}
 
-		const aspectRatio = this.gameBoard.width / this.gameBoard.height;
-		const camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-		camera.position.set(0, 200, 200);
-		camera.lookAt(0, 0, 0);
-		scene.add(camera);
+			particles.geometry.setAttribute(
+				"position",
+				new THREE.BufferAttribute(positions, 3)
+			);
+			particles.geometry.attributes.position.needsUpdate = true;
+		}
 
-		const renderer = new THREE.WebGLRenderer({
-			canvas: canvas,
-			alpha: true,
-		});
-		renderer.setSize(window.innerWidth, window.innerHeight);
-		renderer.setPixelRatio(window.devicePixelRatio, 2);
-
-
-		//renderer.shadowMap.enabled = true;
-		//renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-		//document.body.appendChild(renderer.domElement);
-
-		renderer.domElement.style.cursor = "grab";
-		const controls = new THREE.OrbitControls(camera, renderer.domElement);
-		controls.enableDamping = true;
-		controls.enableZoom = true;
-		controls.maxPolarAngle = Math.PI / 2.1;
-		controls.minPolarAngle = Math.PI / 2.5;
-
+		// OUTILS POUR DEBUG
 		const axesHelper = new THREE.AxesHelper(5);
 		this.scene.add(axesHelper);
 

@@ -1,6 +1,7 @@
 
 
 export function cleanUpThree() {
+	console.log("in Cleanup");
 	if (!window.threeInstance) return;
 
 	console.log("Cleaning up Three.js");
@@ -9,7 +10,6 @@ export function cleanUpThree() {
 	window.removeEventListener("resize", window.threeInstance.resizeHandler);
 	window.removeEventListener("mousemove", window.threeInstance.mouseMoveHandler);
 
-	// On parcourt tous les objets de la scène pour les supprimer
 	window.threeInstance.scene.traverse((object) => {
 		if (object.geometry) object.geometry.dispose();
 		if (object.material) {
@@ -27,8 +27,23 @@ export function cleanUpThree() {
 	if (window.threeInstance.effect) {
 		window.threeInstance.effect.domElement.remove();
 		}
-		if (window.threeInstance.canvas) {
-			window.threeInstance.canvas.remove();
-		}
+	if (window.threeInstance.canvas) {
+		window.threeInstance.canvas.remove();
+	}
+	if (window.threeInstance.controls) {
+		window.threeInstance.controls.dispose();
+	}
+	if (window.threeInstance.camera) {
+		window.threeInstance.camera.remove();
+	}
+	if (window.threeInstance.scene) {
+		window.threeInstance.scene = null;
+	}
+	if (window.threeInstance.renderer) {
+		window.threeInstance.renderer = null;
+	}
+	if (window.threeInstance) {
+		//window.threeInstance.dispose();
 		window.threeInstance = null;
+	}
 	}

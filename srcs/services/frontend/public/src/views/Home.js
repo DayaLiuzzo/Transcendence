@@ -17,9 +17,9 @@ export default class Home extends BaseView {
 						</nav>
 					</div>
 					<div id="line"></div>
-					</div>          
-				</div>  
-			
+					</div>
+				</div>
+
 				<div id="test-text-container"><p>welcome to our</p> <p id="outstanding">outstanding </p><p id="test-text"> Pong
 						Game </p></div>
 					<div class="ascii-container">
@@ -43,8 +43,8 @@ export default class Home extends BaseView {
 						</nav>
 					</div>
 					<div id="line"></div>
-					</div>          
-				</div>          
+					</div>
+				</div>
 				<div id="test-text-container"><p>welcome to our</p> <p id="outstanding">outstanding </p><p id="test-text"> Pong
 						Game </p></div>
 					<div class="ascii-container">
@@ -108,24 +108,17 @@ export default class Home extends BaseView {
 		const light = new THREE.DirectionalLight(0xffffff, 1);
 		light.position.set(2, 2, 2);
 		scene.add(light);
-		// const mesh = new THREE.Mesh(
-		//     new THREE.BoxGeometry(1, 1, 1, 5, 5, 5),
-		//     new THREE.MeshLambertMaterial({ color: 0x000000 })
-		// );
 		const sizes = {
 			width: container.clientWidth,
 			height: container.clientHeight,
 		};
-		//scene.add(mesh);
-
-		// set le renderer de la scene 3d
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
 		});
 		renderer.setSize(sizes.width, sizes.height);
 		renderer.setPixelRatio(window.devicePixelRatio);
-		// ascii effect a appliquer sur le mesh
+
 		const asciiChar = " .:-+*=%@";
 		const effect = new THREE.AsciiEffect(renderer, asciiChar, {
 			invert: false,
@@ -136,12 +129,11 @@ export default class Home extends BaseView {
 		effect.domElement.style.color = "black";
 		effect.domElement.style.backgroundColor = "none";
 
-		// on cache le rendu de base pour laisser apparaitre le rendu ascii
 		effect.domElement.classList.add("ascii-effect");
 		effect.domElement.style.cursor = "grab";
 		document.querySelector("#ascii-output").appendChild(effect.domElement);
 		canvas.style.display = "none";
-		// camera perspective etc
+
 		const camera = new THREE.PerspectiveCamera(
 			75,
 			sizes.width / sizes.height
@@ -151,10 +143,8 @@ export default class Home extends BaseView {
 		camera.position.y = 3;
 
 		camera.lookAt(0, 0, 0);
-		//camera.lookAt(mesh.position);
 		scene.add(camera);
 
-		// controls for the camera
 		const controls = new THREE.OrbitControls(camera, effect.domElement);
 		controls.enableDamping = true;
 		controls.enableZoom = true;

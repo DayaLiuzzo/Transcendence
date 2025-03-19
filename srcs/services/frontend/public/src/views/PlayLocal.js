@@ -1,12 +1,19 @@
 import BaseView from "./BaseView.js";
+import { cleanUpThree } from "../three/utils.js";
 
 let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
 let gameOver = false;
-let isRunning = true;
-
-export default class PlayCanva extends BaseView {
+export default class PlayCanva extends BaseView{
 	constructor(params) {
 		super(params);
+
+		this.scores = {
+			winner: null,
+			max_score: null,
+			looser: null,
+			player1_score: 0,
+			player2_score: 0,
+		};
 	}
 
 	handlerEventsListeners() {
@@ -28,13 +35,107 @@ export default class PlayCanva extends BaseView {
 				keys[event.key] = false;
 			}
 		});
+
+		// window.addEventListener('beforeunload', (event) => {
+		// 	// Si vous avez une fonction `stopGame()` pour arrêter le jeu, vous pouvez l'appeler ici
+		// 	this.handleGameEnd(threeInstance());
+
+		// 	// Optionnel : Vous pouvez personnaliser un message d'avertissement avant de quitter la page
+		// 	const message = "Êtes-vous sûr de vouloir quitter la page ? Votre jeu en cours sera perdu.";
+		// 	event.returnValue = message;  // Pour certains navigateurs comme Chrome
+
+		// 	// Retourner le message pour les autres navigateurs
+		// 	return message;
+		// });
+	}
+
+    handleGameEnd(winner, looser, winner_score, looser_score){
+        console.log("game end")
+		gameOver = true;
+
+        const finalScreen = document.createElement("div");
+        finalScreen.id = "final-screen";
+        finalScreen.innerHTML = `
+            <h1>Game Over</h1>
+            <p>${winner} wins!</p>
+            <p>score: ${winner} ${winner_score} - ${looser} ${looser_score}</p>
+            <button id="back-to-lobby">Back to Lobby</button>
+        `;
+        finalScreen.style.cssText = `
+            position: absolute;
+            top: 5: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+
+        `;
+        document.body.appendChild(finalScreen);
+        document.getElementById("back-to-lobby").addEventListener("click", () => {
+			gameOver = false;
+			finalScreen.remove();
+            this.navigateTo("/play-menu");
+        });
+    }
+
+	resetScores() {
+		const fontLoader = new THREE.FontLoader();
+		fontLoader.load(
+			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+			(font) => {
+				const textMaterial = new THREE.MeshStandardMaterial({
+					color: 0x000000,
+					emissive: 0xffffff,
+					emissiveIntensity: 0.4,
+				});
+
+				const createScoreText = (score, position) => {
+					const geometry = new THREE.TextGeometry(score.toString(), {
+						font: font,
+						size: 0.5,
+						height: 0.1,
+					});
+					const mesh = new THREE.Mesh(geometry, textMaterial);
+					mesh.position.copy(position);
+					return mesh;
+				};
+
+				if (this.scores.player1_score_text) {
+					window.threeInstance.scene.remove(this.scores.player1_score_text);
+				}
+				if (this.scores.player2_score_text) {
+					window.threeInstance.scene.remove(this.scores.player2_score_text);
+				}
+
+				this.scores.player1_score_text = createScoreText(
+					this.scores.player1_score,
+					new THREE.Vector3(-2, 2, 0)
+				);
+				this.scores.player2_score_text = createScoreText(
+					this.scores.player2_score,
+					new THREE.Vector3(2, 2, 0)
+				);
+				window.threeInstance.scene.add(this.scores.player1_score_text);
+				window.threeInstance.scene.add(this.scores.player2_score_text);
+
+					if (this.scores.player1_score >= 1 || this.scores.player2_score >= 1) {
+						if (this.scores.player1_score >= 1) {
+							this.handleGameEnd("Player 1", "Player 2", this.scores.player1_score, this.scores.player2_score);
+						} else {
+							this.handleGameEnd("Player 2", "Player 1", this.scores.player2_score, this.scores.player1_score);
+						}
+					}
+				});
+
+
 	}
 
 	initGame() {
 		console.log("Game Loading...");
 
 		const canvas = document.querySelector("canvas.webgl");
-
 		const scene = new THREE.Scene();
 
 		const camera = new THREE.PerspectiveCamera(
@@ -59,15 +160,24 @@ export default class PlayCanva extends BaseView {
 		controls.maxPolarAngle = Math.PI / 2.1;
 		controls.minPolarAngle = Math.PI / 2.5;
 
+		window.threeInstance = {
+			scene,
+			camera,
+			renderer,
+			controls,
+			canvas,
+		};
+		console.log("THREE INSTANCE", window.threeInstance);
+
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 		directionalLight.position.set(5, 10, 5);
 		directionalLight.castShadow = true;
 		directionalLight.shadow.mapSize.width = 2048;
 		directionalLight.shadow.mapSize.height = 2048;
-		scene.add(directionalLight);
+		window.threeInstance.scene.add(directionalLight);
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-		scene.add(ambientLight);
+		window.threeInstance.scene.add(ambientLight);
 
 		const ballSpotlight = new THREE.SpotLight(0xffffff, 10);
 		ballSpotlight.angle = Math.PI / 6;
@@ -75,8 +185,8 @@ export default class PlayCanva extends BaseView {
 		ballSpotlight.decay = 1;
 		ballSpotlight.distance = 10;
 		ballSpotlight.castShadow = true;
-		scene.add(ballSpotlight);
-		scene.add(ballSpotlight.target);
+		window.threeInstance.scene.add(ballSpotlight);
+		window.threeInstance.scene.add(ballSpotlight.target);
 
 		const paddleMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffffff,
@@ -125,12 +235,12 @@ export default class PlayCanva extends BaseView {
 		);
 		boardLine.rotation.x = -Math.PI / 2;
 		boardLine.position.y = 0.01;
-		scene.add(boardLine);
 
-		scene.add(meshBoard);
-		scene.add(meshPlayer1);
-		scene.add(meshPlayer2);
-		scene.add(meshBall);
+		window.threeInstance.scene.add(boardLine);
+		window.threeInstance.scene.add(meshBoard);
+		window.threeInstance.scene.add(meshPlayer1);
+		window.threeInstance.scene.add(meshPlayer2);
+		window.threeInstance.scene.add(meshBall);
 
 		const particleCount = 100;
 		const particleGeometry = new THREE.BufferGeometry();
@@ -147,48 +257,12 @@ export default class PlayCanva extends BaseView {
 			new THREE.BufferAttribute(particlePositions, 3)
 		);
 		const particles = new THREE.Points(particleGeometry, particleMaterial);
-		scene.add(particles);
+		window.threeInstance.scene.add(particles);
 
 		let activeParticles = [];
-
-		let leftScoreText;
-		let rightScoreText;
-		const fontLoader = new THREE.FontLoader();
-		fontLoader.load(
-			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
-			function (font) {
-				const textMaterial = new THREE.MeshStandardMaterial({
-					color: 0x000000,
-					emissive: 0xffffff,
-					emissiveIntensity: 0.4,
-				});
-				const createScoreText = (score, position) => {
-					const geometry = new THREE.TextGeometry(score.toString(), {
-						font: font,
-						size: 0.5,
-						height: 0.1,
-					});
-					const mesh = new THREE.Mesh(geometry, textMaterial);
-					mesh.position.copy(position);
-					return mesh;
-				};
-				leftScoreText = createScoreText(
-					"0",
-					new THREE.Vector3(-2, 2, 0)
-				);
-				rightScoreText = createScoreText(
-					"0",
-					new THREE.Vector3(2, 2, 0)
-				);
-				scene.add(leftScoreText);
-				scene.add(rightScoreText);
-			}
-		);
-
 		let ballVelocity = { x: 0.05, z: 0.02 };
-		let scores = { left: 0, right: 0 };
-		const scoreElement = document.getElementById("score");
-		console.log(scoreElement);
+
+		this.resetScores();
 
 		function createCollisionParticles(position) {
 			for (let i = 0; i < particleCount; i++) {
@@ -238,92 +312,14 @@ export default class PlayCanva extends BaseView {
 			}, 500);
 		}
 
-		function updateScore() {
-			const fontLoader = new THREE.FontLoader();
-			fontLoader.load(
-				"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
-				function (font) {
-					const textMaterial = new THREE.MeshStandardMaterial({
-						color: 0x000000,
-						emissive: 0xffffff,
-						emissiveIntensity: 0.4,
-					});
-
-					if (leftScoreText && rightScoreText) {
-						scene.remove(leftScoreText);
-						scene.remove(rightScoreText);
-
-						const textMaterial = leftScoreText.material;
-						leftScoreText = new THREE.TextGeometry(
-							scores.left.toString(),
-							{
-								font: font,
-								size: 0.5,
-								height: 0.1,
-							}
-						);
-						rightScoreText = new THREE.TextGeometry(
-							scores.right.toString(),
-							{
-								font: font,
-								size: 0.5,
-								height: 0.1,
-							}
-						);
-
-						leftScoreText = new THREE.Mesh(
-							leftScoreText,
-							textMaterial
-						);
-						rightScoreText = new THREE.Mesh(
-							rightScoreText,
-							textMaterial
-						);
-
-						leftScoreText.position.set(-2, 2, 0);
-						rightScoreText.position.set(2, 2, 0);
-
-						scene.add(leftScoreText);
-						scene.add(rightScoreText);
-
-						if (scores.left >= 2 || scores.right >= 2) {
-							alert(
-								`Le joueur ${
-									scores.left >= 5 ? "1" : "2"
-								} a gagné !`
-							);
-							gameOver = true;
-						}
-					}
-				}
-			);
-		}
-
-		// function resetGame() {
-		// 	isRunning = false;
-		// 	scores.left = 0;
-		// 	scores.right = 0;
-		// 	updateScore();
-		// 	cancelAnimationFrame(tick);
-		// 	while (scene.children.length > 0) {
-		// 		scene.remove(scene.children[0]);
-		// 	}
-		// 	meshBall.position.set(0, 0, 0);
-		// 	meshPlayer1.position.set(-5, 0, 0);
-		// 	meshPlayer2.position.set(5, 0, 0);
-		// 	meshBall.position.set(0, 0, 0);
-		// 	return;
-		// }
-
 		const clock = new THREE.Clock();
 		const tick = () => {
-			if (gameOver === true) {
-				//resetGame();
-				return;
+			 if (gameOver === true) {
+
+			return;
 			}
 			requestAnimationFrame(tick);
 
-			// PADDLE POSITION UPDATE
 			if (keys.w && meshPlayer1.position.z > -2)
 				meshPlayer1.position.z -= 0.1;
 			if (keys.s && meshPlayer1.position.z < 2)
@@ -333,7 +329,6 @@ export default class PlayCanva extends BaseView {
 			if (keys.ArrowDown && meshPlayer2.position.z < 2)
 				meshPlayer2.position.z += 0.1;
 
-			// BALL POS UPDATE
 			meshBall.position.x += ballVelocity.x;
 			meshBall.position.z += ballVelocity.z;
 
@@ -362,40 +357,58 @@ export default class PlayCanva extends BaseView {
 				createCollisionParticles(meshBall.position);
 			}
 			if (meshBall.position.x > 4.5) {
-				scores.left++;
-				updateScore();
+				this.scores.player1_score++;
+				console.log("SCORES:", this.scores.player1_score);
+				this.resetScores();
 				resetBall();
 			} else if (meshBall.position.x < -4.5) {
-				scores.right++;
-				updateScore();
+				console.log("SCORES:", this.scores.player2_score);
+				this.scores.player2_score++;
+				this.resetScores();
 				resetBall();
 			}
 			window.addEventListener("resize", () => {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize(window.innerWidth, window.innerHeight);
+				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
+				window.threeInstance.camera.updateProjectionMatrix();
+				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
 			});
 			controls.update();
 
 			window.addEventListener("resize", () => {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize(window.innerWidth, window.innerHeight);
+				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
+				window.threeInstance.camera.updateProjectionMatrix();
+				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
 			});
+
 			document.addEventListener("visibilitychange", () => {
 				if (document.hidden) {
 					resetGame();
 				}
 			});
-
-			renderer.render(scene, camera);
+			window.threeInstance.controls.update();
+			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
-		resetBall();
-		tick();
+		if (gameOver === false) {
+			resetBall();
+			tick();
+		}
 	}
 
 	render() {
 		return `
+		        <div>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
         <div id="container-canvas">
             <canvas class="webgl"></canvas>
 			<div id="score"></div>
