@@ -170,8 +170,6 @@ class JoinRoomView(APIView):
 
         waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).exclude(player1=user).exclude(player2=user).first()
 
-        print(waiting_room)
-
         if waiting_room:
             return self.join_room(request, waiting_room, user)
         return self.create_room(request, user)

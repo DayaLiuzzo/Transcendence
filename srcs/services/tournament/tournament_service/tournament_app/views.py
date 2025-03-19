@@ -144,7 +144,6 @@ class LeaveTournamentView(APIView):
 
             tournament.users.remove(user)
             if tournament.users_count != 0:
-                print(tournament.owner, user)
                 if tournament.owner == user:
                     next_owner = tournament.users.first()
                     tournament.owner = next_owner
@@ -199,7 +198,6 @@ class LaunchTournamentView(APIView):
             tournament.status = 'playing'
             tournament.save()
 
-            print(tournament.pool_index)
             return Response({
                     'message': 'Tournament launched'
                 }, status=status.HTTP_200_OK)
