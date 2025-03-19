@@ -1,5 +1,3 @@
-//status : pas pret !!!
-
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentMine extends BaseView{
@@ -12,8 +10,19 @@ export default class PlayTournamentMine extends BaseView{
     render(){
         return `
         <div>
-            <h2>My tournament (En cours !!!)</h2>
-
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
+            <h2>My tournament</h2>
             <div id="tournament-info" hidden>
             <h3>Tournament information</h3>
                 <div id="tournament-name"></div>
@@ -24,7 +33,7 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-users-nb-max"></div>
                 <div id="tournament-status"></div>
                 <div id="tournament-winner"></div>
-                <p>[ ] Boucle pour update check si new user<\p>
+                <p>[ ] Boucle pour update check si new user</p>
                 
                 
                 <button id="tournament-leave-button" hidden>Leave</button>
@@ -37,7 +46,7 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-delete-field"></div>            
             </div>
 
-            <div id ="no-tournament" hidden>You are not part of any tournament
+            <div id ="no-tournament" hidden>You are not part of any tournament<br> <br>
                 <button id="tournament-create-button">Create</button>
                 <button id="tournament-join-button">Join</button>
                 <button id="tournament-list-button">List</button>
@@ -48,14 +57,6 @@ export default class PlayTournamentMine extends BaseView{
             </div>
             `;
         }
-        // <h4>Une fois que le tournoi est lance<h4>
-        // <button id="tournament-play-field">Play tournament</button>
-        
-        // <p>[ ] lister les current match et y acceder ??<\p>
-        // <p>[ ] voir les resultats??<\p>
-        // <br>
-        // </div>
-    
 
     /* Events et events attachement */
 
@@ -240,23 +241,24 @@ export default class PlayTournamentMine extends BaseView{
         return formats[type] ? formats[type](value) : `${type.charAt(0).toUpperCase() + type.slice(1)}: ${value}`;
 
     }
-    
-    async mount() {
-        console.log('Mounting Play tournament Mine');
 
-        try {
-
-            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+    async renderTournamentInfo(){
+        const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
             if (checkIfInTournament.success) {
                     if (!checkIfInTournament.data.in_tournament){ 
                         document.getElementById("no-tournament").removeAttribute("hidden");
-                        return;
+                        this.router.customClearInterval(this.router.RerenderTournamentInterval);
+                        document.getElementById("tournament-info").setAttribute("hidden", true);
+                        // alert("The Host Terminated the party");
+                        // return this.navigateTo('/play-menu');
+
                     }
                 }
                 
                 const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
                 if (!getTournamentInfo.success) {
-                    return ;
+                    // return this.navigateTo('/play-menu');
+                    return this.router.customClearInterval(this.router.RerenderTournamentInterval);
                 }
                 
                 /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
@@ -301,7 +303,14 @@ export default class PlayTournamentMine extends BaseView{
                 const tournamentWinner= getTournamentInfo.data.winner;
                 document.getElementById("tournament-winner").innerHTML = this.formatField('winner', tournamentWinner);
             
+    }
+    
+    async mount() {
+        console.log('Mounting Play tournament Mine');
 
+        try {
+            this.renderTournamentInfo()
+            this.router.RerenderTournamentInterval = setInterval(() => {this.renderTournamentInfo();}, 5000);
         }
         catch (error) {
             console.error("Error in mount():", error);
@@ -348,5 +357,6 @@ export default class PlayTournamentMine extends BaseView{
         if (tournamentWaitingRoomField) {
             tournamentWaitingRoomField.removeEventListener("click", this.handleWaitingRoomTournamentClick);
         }
+        this.router.customClearInterval(this.router.RerenderTournamentInterval);
     }
 }

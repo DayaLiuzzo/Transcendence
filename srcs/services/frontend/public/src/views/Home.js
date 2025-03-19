@@ -75,35 +75,29 @@ export default class Home extends BaseView {
 				letter.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${
 					(Math.random() - 0.5) * 30
 				}deg)`;
-				console.log("mouse over");
+
 			});
 		});
 		text.addEventListener("mouseleave", () => {
 			text.querySelectorAll("span").forEach((letter) => {
-				console.log(letter);
 				letter.style.transform = "translate(0,0) rotate(0)";
 			});
 		});
 
-		//event listener pour detecter mouse moves
 		const cursor = { x: 0, y: 0 };
 		window.addEventListener("mousemove", (event) => {
 			cursor.x = event.clientX / window.innerWidth - 0.5;
 			cursor.y = event.clientY / window.innerHeight - 0.5;
 		});
 
-		// Canvas pour le rendu 3D + creation objet box mesh attributs etc
 		const canvas = document.querySelector("canvas.webgl");
 		const container = document.querySelector(".ascii-container");
 		const scene = new THREE.Scene();
 
-    const gltfLoader = new THREE.GLTFLoader();
-    gltfLoader.load(
-      "../../assets/imac_C.gltf",
-      (gltf) => {
-        scene.add(gltf.scene);
-      }
-    )
+		const gltfLoader = new THREE.GLTFLoader();
+		gltfLoader.load("../../assets/imac_C.gltf", (gltf) => {
+			scene.add(gltf.scene);
+		});
 
 		const light = new THREE.DirectionalLight(0xffffff, 1);
 		light.position.set(2, 2, 2);
@@ -115,9 +109,10 @@ export default class Home extends BaseView {
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
+			antialias: true,
 		});
 		renderer.setSize(sizes.width, sizes.height);
-		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 		const asciiChar = " .:-+*=%@";
 		const effect = new THREE.AsciiEffect(renderer, asciiChar, {
@@ -136,18 +131,31 @@ export default class Home extends BaseView {
 
 		const camera = new THREE.PerspectiveCamera(
 			75,
-			sizes.width / sizes.height
+			sizes.width / sizes.height, 1, 10
 		);
 		camera.position.z = 1;
-		camera.position.x = -4;
-		camera.position.y = 3;
+		//camera.position.x = -5;
+		camera.position.y = 5;
 
 		camera.lookAt(0, 0, 0);
 		scene.add(camera);
 
 		const controls = new THREE.OrbitControls(camera, effect.domElement);
+		controls.enablePan = false;
 		controls.enableDamping = true;
 		controls.enableZoom = true;
+		controls.maxPolarAngle = Math.PI / 2.1;
+		controls.minPolarAngle = Math.PI / 2.5;
+		//controls.minAzimuthAngle = -Math.PI / 4;
+		//controls.maxAzimuthAngle = Math.PI / 4;
+		controls.enableRotate = true;
+		controls.minDistance = 5;
+		controls.maxDistance = 8;
+		controls.autoRotate = true;
+		controls.autoRotateSpeed = 1;
+
+
+		controls.target.set(2, 0, 0);
 		renderer.domElement.style.cursor = "grab";
 
 		window.threeInstance = {
@@ -165,7 +173,6 @@ export default class Home extends BaseView {
 
 		const tick = () => {
 			const elapsedTime = clock.getElapsedTime();
-			//mesh.rotation.y = elapsedTime * 0.5;
 
 			controls.update();
 			window.threeInstance.effect.render(scene, camera);
@@ -189,9 +196,5 @@ export default class Home extends BaseView {
 		});
 
 		tick();
-
-
 	}
 }
-
-

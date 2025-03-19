@@ -67,6 +67,10 @@ export default class WebSocketService {
             const event = new CustomEvent("updateScore", { detail: data.message});
             window.dispatchEvent(event);
         }
+        if (data.message.state === 'COLLISION') {
+            const event = new CustomEvent("handleCollision", { detail: data.message});
+            window.dispatchEvent(event);
+        }
         if (data.message.state === 'END') {
             const event = new CustomEvent("handleEndGame", { detail: data.message});
             window.dispatchEvent(event);

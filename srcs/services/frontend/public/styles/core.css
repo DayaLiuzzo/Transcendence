@@ -16,7 +16,6 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
-    overflow-y: hidden;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -254,7 +253,12 @@ body {
     line-height: 80px;
   }
 
-  #login-username, #login-password {
+  #login-username,
+  #login-password,
+  #createTournament-name,
+  #createTournament-maxuser,
+  #joinTournament-id
+  {
     width: 100%;
     height: 80px;
     outline: none;
@@ -297,7 +301,7 @@ body {
   #EditProfile-new_password2:focus,
   #EditProfile-new_password2:valid,
   #EditProfile-username:focus,
-  #EditProfile-username:valid,
+  #EditProfile-username:valid
   {
     border-color: #8dd4ab;
     font-family: 'Roboto', sans-serif;
@@ -316,6 +320,12 @@ body {
   }
 
 
+  #createTournament-name:focus,
+  #createTournament-name:valid,
+  #createTournament-maxuser:focus,
+  #createTournament-maxuser:valid,
+  #joinTournament-id:focus,
+  #joinTournament-id:valid,
   #login-username:focus,
   #login-username:valid,
   #login-password:focus,
@@ -338,6 +348,8 @@ body {
     font-family: 'Roboto', sans-serif;
   }
 
+  #create-tournament-form button,
+  #join-tournament-form button,
   #login-form button,
   #signup-form button
   {
@@ -353,6 +365,10 @@ body {
     transition: background-color 0.3s, color 0.3s;
   }
 
+  #tournament-info button,
+  #no-tournament button,
+  #tournament-mine-button,
+  #tournament-launched button,
   #add-friend-form button,
   #change-password-form button,
   #change-username-form button {
@@ -382,6 +398,7 @@ body {
     border: 1px solid black;
   }
 
+  /*  */
   .remove-button {
     cursor: pointer;
     background-color: white;
@@ -399,6 +416,24 @@ body {
       outline: none;
   }
 
+  /*  */
+  .joinButton {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 2px 4px;
+    margin-left: 16px;
+}
+
+  .joinButton:hover{
+    color: #46f436;
+  }
+
+  .joinButton:focus{
+      outline: none;
+  }
+  
   .friend-item {
     font-family: 'Roboto', sans-serif;
   }
@@ -426,6 +461,10 @@ body {
   #login-form button:hover,
   #signup-form button:hover,
   #upload-avatar-btn:hover,
+  #tournament-info button:hover,
+  #no-tournament button:hover,
+  #tournament-mine-button button:hover,
+  #tournament-launched button:hover,
   #add-friend-form button:hover,
   #change-password-form button:hover,
   #change-username-form button:hover
@@ -607,12 +646,14 @@ body {
     justify-content: center;
     background-color: transparent;
     background: none;
+    overflow-y: hidden;
   }
 
   #webgl canvas {
     cursor: grab;
     background-color: transparent;
     background: none;
+    overflow-y: hidden;
   }
 
 

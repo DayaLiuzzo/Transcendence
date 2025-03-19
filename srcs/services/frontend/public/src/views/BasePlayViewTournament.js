@@ -15,6 +15,7 @@ export default class BasePlayView extends BaseView{
             console.log(result.success)
             const data = result.data;
             console.log(data)
+            console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
             const rooms = data.filter((room) => room.status === "waiting");
             if (rooms.length === 0) {
                 document.getElementById("status").innerText = "Waiting for rooms";
@@ -127,9 +128,16 @@ export default class BasePlayView extends BaseView{
 
     async mount() {
         try {
-            await this.waitRoom();
+            this.router.RerenderTournamentIntervalPlay = setInterval(() => {this.waitRoom();}, 5000);
         } catch (error) {
             console.error("Error in mount():", error);
         }
     }
+    
+    unmount () {
+        
+        this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+    }
+    
+    
 }
