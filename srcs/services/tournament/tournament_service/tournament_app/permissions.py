@@ -50,4 +50,4 @@ class IsTournament(permissions.BasePermission):
     
 class IsRoom(permissions.BasePermission):
     def has_permission(self, request, view):
-        return IsService(request, 'room')
+        return IsService(request, 'rooms')

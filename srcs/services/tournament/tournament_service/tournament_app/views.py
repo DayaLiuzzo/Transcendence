@@ -61,7 +61,7 @@ def ask_all_rooms_to_remove(tournament):
             print(f'ERROR rooms to remove : {response.text}')
 
 def add_tournament_history_to_losers(pool):
-    losers = pool.users.exclude(pool.winner)
+    losers = pool.users.exclude(username=pool.winner.username)
     loss = pool.tournament.loss
     for loser in losers:
         loser.tournaments.add(loss)
@@ -80,7 +80,8 @@ class CreateTournamentView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         user = request.user
-        if Tournament.objects.filter(users=user).exists():
+        if Tournament.objects.filter(Q(users=user),
+                Q(status='waiting') | Q(status='playing')).exists():
             return Response({
                 'message': 'You already are in a tournament'
                 }, status=status.HTTP_400_BAD_REQUEST)
@@ -317,6 +318,51 @@ class DetailTournamentView(generics.RetrieveAPIView):
     serializer_class = TournamentSerializer
     lookup_field = 'tournament_id'
 
+class ResultTournamentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        data = request.data
+
+        if 'tournament_id' in data:
+            tournament_id = data['tournament_id']
+            tournament = get_object_or_404(Tournament, tournament_id=tournament_id)
+
+            if tournament.status == 'finished':
+                tournament_result = user.tournaments.get(tournament=tournament)
+                if tournament_result.result == 'win':
+                    return Response({
+                        'status': tournament.status,
+                        'result': 'win',
+                        'message': 'You won the tournament'
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        'status': tournament.status,
+                        'result': 'lost',
+                        'message': 'You lost the tournament'
+                    }, status=status.HTTP_200_OK)
+            else:
+                if user.tournaments.filter(tournament=tournament).exists():
+                    return Response({
+                        'status': 'not finished',
+                        'result': 'lost',
+                        'message': 'You lost the tournament'
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        'status': 'not finished',
+                        'result': None,
+                        'message': None
+                    }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'status': None,
+                'result': None,
+                'message': 'missing tournament_id'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
 class GetRoomResultView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Room.objects.all()
@@ -334,6 +380,17 @@ class ListMyRoomsView(generics.ListAPIView):
                 Q(status='waiting') | Q(status='standby'),
                 ~Q(pool__tournament__status='error'))
         if queryset.count() == 0:
+            tournament = Tournament.objects.filter(
+                    Q(users=user),
+                    Q(status='waiting') | Q(status='playing'))
+            if not tournament.exists():
+                return Response({
+                    'message': 'You don\'t belong to any tournament'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            if tournament.status == 'finished':
+                result = user.tournaments.get(tournament_id=tournament.tournament_id)
+
             return Response({
                 'message': 'You don\'t have any rooms'
                 }, status=status.HTTP_404_NOT_FOUND)
@@ -462,16 +519,22 @@ class SetRoomResultView(generics.UpdateAPIView):
     permission_classes = [IsRoom]
 
     def patch(self, request, room_id):
-        room = get_object_or_404(room_id=room_id)
+        room = get_object_or_404(Room, room_id=room_id)
         tournament = room.pool.tournament
         if tournament.status != 'error':
             serializer = RoomSerializerInternal(room, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save(status='finished')
             pool = room.pool
             if pool.all_rooms_finished():
                 pool.winner = pool.calculate_ranking()[0]['player']
                 add_tournament_history_to_losers(pool)
                 pool.save()
+                if tournament.get_current_pools().count() == 1:
+                    tournament.winner = pool.winner
+                    tournament.status = 'finished'
+                    tournament.save()
+                    tournament.winner.tournaments.add(tournament.win)
             elif pool.rooms_wave_finished():
                 pool.generate_rooms()
                 try:
@@ -480,11 +543,7 @@ class SetRoomResultView(generics.UpdateAPIView):
                     ask_all_rooms_to_remove(pool.tournament)
                     tournament.status = 'error'
                     tournament.save()
-            if tournament.get_current_pools().count() == 1:
-                tournament.winner = pool.winner
-                tournament.status = 'finished'
-                tournament.save()
-                tournament.winner.tournaments.add(tournament.win)
+        return Response({'message': 'You are not supposed to see this message'})
 
 # ************************** DELETE ************************** #
 
