@@ -23,10 +23,10 @@ class Tournament(models.Model):
     ]
 
     tournament_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)  # ID unique généré
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=64)
     status = models.CharField(max_length=16, choices=TOURNAMENT_STATUS_CHOICES, default='waiting')
     users = models.ManyToManyField(UserProfile, blank=True, related_name='list_users_in_tournament')  # Many-to-Many relation with UserProfile
-    max_users = models.IntegerField(default=10, validators=[MinValueValidator(2), MaxValueValidator(32)])  # Maximum d'utilisateurs dans un tournoi
+    max_users = models.IntegerField(default=10, validators=[MinValueValidator(3), MaxValueValidator(32)])  # Maximum d'utilisateurs dans un tournoi
     owner = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, blank=True, null=True, related_name='owner')
     # played_matches = models.IntegerField(default=0)
     # remaining_matches = models.IntegerField(default=0)

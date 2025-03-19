@@ -12,6 +12,7 @@ import PlayTournamentList from "./views/PlayTournamentList.js";
 import PlayTournamentJoin from "./views/PlayTournamentJoin.js";
 import PlayTournamentMine from "./views/PlayTournamentMine.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
+
 import { cleanUpThree } from "./three/utils.js";
 import EditProfile from "./views/EditProfile.js";
 import Profile from "./views/Profile.js";
@@ -59,6 +60,63 @@ class Router{
         return null;
     }
 
+    async refreshToken(){
+        const refresh_token = this.getRefreshToken();
+        const response = await this.sendPostRequest(this.API_URL+ 'refresh/', { refresh: refresh_token });
+        if (!response.success){
+            this.stopUpdatingLastSeen();
+            return false;
+        }
+        let userSession = this.getUserSession();
+        userSession.access_token = response.data.access;
+        userSession.refresh_token = response.data.refresh;
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+        return true;
+    }
+
+
+    async sendPostRequest(url, formData){
+        try {
+            let headers = {
+                'Content-Type': 'application/json',
+            };
+            if(this.getAccessToken()){
+                headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+            }
+
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(formData),
+            });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
+            const responseData = await response.json();
+            if (!response.ok) {
+                console.error("Error in sendPostRequest():", url)
+                return { success: false, error: responseData};
+            }
+            return { success: true, data: responseData};
+        }
+        catch (error) {
+            console.error("Network Error at ", url);
+            return { success: false, error: { message: "Network error"}};
+        }
+    }
+
     async sendPatchRequest(url, formData){
         try {
             let headers = {
@@ -68,11 +126,26 @@ class Router{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'PATCH',
                 headers: headers,
                 body: JSON.stringify(formData),
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'PATCH',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendPatchRequest():", url)

@@ -20,7 +20,7 @@ async def send_results_to_rooms(data):
     await sync_to_async(serializer.is_valid)(raise_exception=True)
     client = MicroserviceClient()
     url = f"http://rooms:8443/api/rooms/update_room/{data['room_id']}/"
-    print(serializer.data)
+    #print(serializer.data)
     await sync_to_async(client.send_internal_request)(url, 'patch', data=serializer.data)
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -93,7 +93,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
         if self.user == self.game.player1:
-            print(f'{self.user.username}')
             self.is_host = True
 
     async def authenticate_with_token(self, authorization_header):
@@ -178,7 +177,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.jeu_task = asyncio.create_task(self.jeu_loop())
 
     async def left(self, event):
-        print(f'{self.user.username} leftttt {self.is_host} {self.data_sent}')
         if self.is_host:
             if not self.data_sent:
                 player_disconnected = event['player_type']
@@ -217,7 +215,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 from_tournament = await sync_to_async(lambda: self.game.from_tournament)()
                 if not from_tournament:
                     self.data_sent = True
-            print("LEFT2")
 
 
     async def game_state(self, event):
@@ -248,7 +245,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         if self.is_host:
             await self.left({'player_type': player_type})
         else:
-            print(f'{self.user.username} left')
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {

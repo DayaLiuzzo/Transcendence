@@ -13,25 +13,15 @@ export default class PlayTournamentList extends BaseView{
         return `
         <div>
             <h2>List tournament</h2>
-
             <div id="tournament-list-field"></div>
+            <div id ="no-tournament" hidden>No tournament available
+            <button id="tournament-create-button">Create</button>
+            </div>
         </div>
         `;
     }
 
-    async joinTournament(tournamentId) {
-        const body = {};
-        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
-        if (!response.success) {
-            console.log("error join tournament")
-            this.showError(response.error);
-            return;
-        }
-        else
-            console.log("Fetch pour join le tournoi a marche")
-        this.navigateTo("/my-tournament");
-    }
-
+    
     handleJoinTournamentClick(event) {
         if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
             const tournamentId = event.target.getAttribute("data-tournamentID");
@@ -39,47 +29,103 @@ export default class PlayTournamentList extends BaseView{
         }
     }
 
+    async joinTournament(tournamentId) {
+        const body = {};
+        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
+        if (!response.success) { return this.showError(response.error, "tournament-list-field"); }
+
+        //add alerte avant redirection??
+        this.navigateTo("/my-tournament");
+    }
+    
+    
+    async createTournament() {
+        const body = {};
+
+        //add alerte avant redirection??
+        this.navigateTo("/create-tournament");
+    }
+    
+    handleCreateTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create") {
+            this.createTournament();
+        }
+    }
+
     attachEvents() {
         console.log('Events attached (Tournament list)');
-
 
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
             tournamentListField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
         }
+    
+        const tournamentCreateMineField = document.getElementById("tournament-create-button");
+        if (tournamentCreateMineField) {
+            tournamentCreateMineField.addEventListener("click", this.handleCreateTournamentClick.bind(this));
+        }
 
+        
     }
 
-    renderTournamentList(tournaments) {
+    getErrorContainer() {
+        let errorContainer = document.getElementById("list-tournament-error-container");
+
+        if (!errorContainer) {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "list-tournament-error-container";  // Set a unique ID
+            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
+            document.getElementById("tournament-list-field").insertBefore(errorContainer, document.getElementById("tournament-list-field").firstChild);
+        }
+
+        return errorContainer;
+    }
+
+    renderTournamentList(tournaments, userIsIntournament) {
         const tournamentListField = document.getElementById("tournament-list-field");
         if (!tournamentListField) return;
+        if (!tournaments.length){
+            // tournamentListField.innerHTML = "No available tournament";
+            document.getElementById("no-tournament").removeAttribute("hidden");
+            // rediriger vers create tournament 
+            return;
+        }
+        console.log("User in tournament? ", userIsIntournament);
         tournamentListField.innerHTML = "";
         const tournamentList = document.createElement("ul");
         tournaments.forEach(tournament => {
             const tournamentItem = document.createElement("li");
             tournamentItem.textContent = tournament.name;
-            const joinButton = document.createElement("button");
-            joinButton.textContent = "Join";
-            joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
-            tournamentItem.appendChild(joinButton);
+            if (!userIsIntournament){
+                const joinButton = document.createElement("button");
+                joinButton.id = "joinButton"
+                joinButton.textContent = "Join";
+                joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
+                tournamentItem.appendChild(joinButton);
+            }
             tournamentList.appendChild(tournamentItem);
         });
         tournamentListField.appendChild(tournamentList);
     }
-tournament_id
+
     async mount() {
+        console.log('Mounting Play tournament List');
         try {
-            const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/');
-            if (!getTournamentList.success){
-                console.log("Erreur fetch get tournament list")
-                return
-            }
-            console.log("Success fetch get tournament list")
-            console.log(getTournamentList.data)
+            const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/waiting/');
+            if (!getTournamentList.success) { return this.showError(response.error, "tournament-list-field"); }
             
             const tournaments = Array.isArray(getTournamentList.data) ? getTournamentList.data : [getTournamentList.data];
-            console.log("tournament --> ", tournaments)
-            this.renderTournamentList(tournaments);
+            
+            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+            let userIsIntournament = false;
+            if (checkIfInTournament.success) {
+                if (checkIfInTournament.data.in_tournament){
+                    userIsIntournament = true;
+                } 
+            }
+            else
+                return;
+            this.renderTournamentList(tournaments, userIsIntournament);
         }
         catch (error) {
             console.error("Error in mount():", error);
@@ -87,12 +133,18 @@ tournament_id
     }
 
     unmount() {
-        console.log('Unmounting Profile');
+        console.log('Unmounting Play tournament List');
         
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
-            tournamentListField.removeEventListener("click", this.handleRemoveFriendClick);
+            tournamentListField.removeEventListener("click", this.handleJoinTournamentClick);
         }
+
+        const tournamentCreateMineField = document.getElementById("tournament-create-button");
+        if (tournamentCreateMineField) {
+            tournamentCreateMineField.removeEventListener("click", this.handleCreateTournamentClick);
+        }
+
     }
 
 }

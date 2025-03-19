@@ -15,8 +15,8 @@ urlpatterns = [
 
     path('detail/<uuid:tournament_id>/', views.DetailTournamentView().as_view(), name='detail-tournament'),
     path('my_tournament/', views.MyTournamentView().as_view(), name='my-tournament'),
-
-    #path('<uuid:tournament_id>/ranking/', views.TournamentStatsView.as_view(), name='tournament_stats'),
+    path('is_in_tournament/', views.IsInTournamentView().as_view(), name='is-in-tournament'),
+    path('tournament_exists/', views.TournamentExistsView().as_view(), name='tournament-exists'),
     path('list/', views.ListAllTournamentView.as_view(), name='list_all_tournament'),
 
     path('room_result/<str:room_id>/', views.SetRoomResultView.as_view(), name='set-room-result'),
@@ -25,7 +25,7 @@ urlpatterns = [
     path('list_pools/<uuid:tournament_id>/', views.ListPoolsView.as_view(), name='list-pools'),
     path('list_rooms_pool/', views.ListRoomsPoolView.as_view(), name='list-rooms-pool'),
     path('list_history/', views.ListTournamentHistoryView.as_view(), name='list-tournament-history'),
-    #path('list/waiting/', views.ListWaitingTournamentView.as_view(), name='list_waiting_tournament'),
+    path('list/waiting/', views.ListWaitingTournamentView.as_view(), name='list_waiting_tournament'),
     #path('list/playing/', views.ListPlayingTournamentView.as_view(), name='list_playing_tournament'),
     #path('list/finished/', views.ListFinishedTournamentView.as_view(), name='list_finished_tournament'),
     #path('count/', views.CountAllTournamentView.as_view(), name='count_all_tournament'),

@@ -51,7 +51,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['username'] = user.username
-        token.payload['exp'] = datetime.utcnow() + timedelta(hours=12)
         user.last_log = now()
         user.save()
         return token
@@ -97,7 +96,7 @@ class TwoFactorSetupSerializer(serializers.Serializer):
             issuer_name="auth_app"
         )
         return {
-            "message": "2FA enabled. Use this secret to configure your authenticator app.",
+            "message": "Use this secret to configure your authenticator app.",
             "otp_secret": otp_secret,
             "qr_code_url": otp_uri
         }

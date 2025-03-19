@@ -143,6 +143,20 @@ export default class BaseView{
         return true;
     }
 
+    async refreshToken(){
+        const refresh_token = this.getRefreshToken();
+        const response = await this.sendPostRequest(this.API_URL+ 'refresh/', { refresh: refresh_token });
+        if (!response.success){
+            this.stopUpdatingLastSeen();
+            return false;
+        }
+        let userSession = this.getUserSession();
+        userSession.access_token = response.data.access;
+        userSession.refresh_token = response.data.refresh;
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+        return true;
+    }
+
     toggleMenu() {
         const closeIcon= document.querySelector(".closeIcon");
         const menuIcon = document.querySelector(".menuIcon");
@@ -239,10 +253,24 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'GET',
                 headers: headers,
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'GET',
+                        headers: headers,
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendGetRequest():", url)
@@ -266,11 +294,26 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'PATCH',
                 headers: headers,
                 body: JSON.stringify(formData),
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'PATCH',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendPatchRequest():", url)
@@ -294,11 +337,26 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'DELETE',
                 headers: headers,
                 body: JSON.stringify(formData),
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'DELETE',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendDeleteRequest():", url)
@@ -321,11 +379,26 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(formData),
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendPostRequest():", url)
@@ -371,7 +444,6 @@ export default class BaseView{
         }
         localStorage.removeItem("userSession");
         this.navigateTo("/log-in");
-        // this.sendPostRequest(this.API_URL + 'logout/', {});
     }
 
 

@@ -57,7 +57,7 @@ def ask_all_rooms_to_remove(tournament):
     for room in rooms:
         url = f'http://rooms:8443/api/rooms/delete_room/{room.room_id}/'
         response = client.send_internal_request(url, method)
-        if response.status_code != 204:
+        if response.status_code != 200:
             print(f'ERROR rooms to remove : {response.text}')
 
 def add_tournament_history_to_losers(pool):
@@ -144,7 +144,6 @@ class LeaveTournamentView(APIView):
 
             tournament.users.remove(user)
             if tournament.users_count != 0:
-                print(tournament.owner, user)
                 if tournament.owner == user:
                     next_owner = tournament.users.first()
                     tournament.owner = next_owner
@@ -199,7 +198,6 @@ class LaunchTournamentView(APIView):
             tournament.status = 'playing'
             tournament.save()
 
-            print(tournament.pool_index)
             return Response({
                     'message': 'Tournament launched'
                 }, status=status.HTTP_200_OK)
@@ -298,6 +296,21 @@ class MyTournamentView(generics.RetrieveAPIView):
         serializer = TournamentSerializer(tournament)
         return Response(serializer.data)
 
+class IsInTournamentView(APIView):
+    def get(self, request):
+        user = request.user
+        tournament = Tournament.objects.filter(Q(users=user), Q(status='waiting') | Q(status='playing'))
+        return Response({'in_tournament': tournament.exists()})
+
+class TournamentExistsView(APIView):
+    def post(self, request):
+        try:
+            tournament_id = request.data.get('tournament_id')
+            tournament = Tournament.objects.get(tournament_id=tournament_id)
+            return Response({'exists': True})
+        except:
+            return Response({'exists': False})
+
 class DetailTournamentView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.all()
@@ -356,12 +369,12 @@ class ListTournamentHistoryView(generics.ListAPIView):
         serializer = TournamentSerializer(user.tournaments, many=True)
         return Response(serializer.data)
 
-"""
 class ListWaitingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.filter(status='waiting')
     serializer_class = TournamentSerializer
 
+"""
 class ListPlayingTournamentView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Tournament.objects.filter(status='playing')
@@ -489,7 +502,7 @@ class DeleteTournamentView(APIView):
                 tournament.delete()
                 return Response({
                     "message": "Tournament deleted successfully"
-                    }, status=status.HTTP_204_NO_CONTENT)
+                    }, status=status.HTTP_200_OK)
             else:
                 if tournament.status != 'waiting':
                     return Response({

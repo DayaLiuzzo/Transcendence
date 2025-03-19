@@ -23,7 +23,6 @@ export default class Profile extends BaseView {
             errorContainer.classList.add("error-container");  // Optional: Add a class for styling
             document.getElementById("add-friend-form").insertBefore(errorContainer, document.getElementById("add-friend-form").firstChild); // Insert at the top of the form
         }
-
         return errorContainer;
     }
 
@@ -58,13 +57,85 @@ export default class Profile extends BaseView {
                     <input type="text" id="friend-username" placeholder="Enter friend's username">
                     <button type="submit">Add Friend</button>
                 </form>
+                <div id="stats-field"></div>
+                <div id="match-history-field">"Match History"</div>
+            <button id="refresh">Refresh</button>
             </div>
         </div>
         `;
     }
 
+    async updateMatchHistoryField(){
+        const matchHistoryField = document.getElementById("match-history-field");
+        if(!matchHistoryField){
+            console.log('No match history field');
+            return;
+        }
+        const response = await this.sendGetRequest(this.API_URL_ROOMS + 'list_my_finished_rooms/');
+        if(response.success){
+            const username = this.getUsername();
+            response.data.forEach((match, index) => {
+                let you_id;
+                let you_username;
+                let opponent_id;
+                let opponent_username;
+                let winner;
+                let you_score;
+                let opponent_score;
+                let matchElement = document.createElement('div');
+                matchElement.classList.add('match-history-item');
+                matchElement.id = `matchHistory${index + 1}`;
+
+                if(match.player1_username === username){
+                    you_id = match.player1;
+                    you_score = match.score_player1;
+                    you_username = match.player1_username;
+                    opponent_id = match.player2;
+                    opponent_username = match.player2_username;
+                    opponent_score = match.score_player2;
+                }
+                else{
+                    you_id = match.player2;
+                    you_username = match.player2_username;
+                    you_score = match.score_player2;
+                    opponent_id = match.player1;
+                    opponent_username = match.player1_username;
+                    opponent_score = match.score_player1;
+                }
+                if(match.winner = you_id){
+                    winner = you_username;
+                }
+                else{
+                    winner = opponent_username;
+                }
+                match.player1_username === username 
+                matchElement.innerHTML = `
+                <h3>Game number ${index + 1}</h3>
+                <p>you: ${you_username}</p>
+                <p>opponent: ${opponent_username}</p>
+                <p>winner: ${winner}</p>
+                <p>you score: ${you_score}</p>
+                <p>opponent score: ${opponent_score}</p>
+                
+                `;
+                matchHistoryField.appendChild(matchElement);
+            });
+        }
+        else {
+        console.log('No match history found');
+            matchHistoryField.innerHTML = `
+                <h3>game {default} history</h3>
+                <p>username: default</p>
+                <p>personnal score: default</p>
+                <p>opp username: default</p>
+                <p>opp score: default</p>
+                <p>Draws: default</p>
+                <p>date: default</p>
+                `;
+        }
+    }
+
     async updateStatsField() {
-        console.log('Updating stats field');
         const statsField = document.getElementById("stats-field");
         if (!statsField){
             console.log('No stats field');
@@ -73,9 +144,6 @@ export default class Profile extends BaseView {
         const username = this.getUsername();
         const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
         if(response.success){
-            console.log(response.data);
-            console.log(response.data.wins);
-            console.log(response.data.losses);
             statsField.innerHTML = `
             <h3>Stats</h3>
             <p>Wins: ${response.data.wins}</p>
@@ -108,13 +176,29 @@ export default class Profile extends BaseView {
         const friendsField = document.getElementById("friends-field");
         if (friendsField) {
             const newFriendItem = document.createElement("li");
+            newFriendItem.classList.add("friend-item");
             newFriendItem.textContent = friendUsername;
+
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
+            
+            const isConnected = this.sendGetRequest(this.API_URL_USERS + 'status/' + friendUsername + '/')
+            const statusIndicator = document.createElement("span");
+            statusIndicator.classList.add("status-indicator");
+            if (isConnected) {
+                statusIndicator.textContent = "connected";
+                statusIndicator.classList.add("connected");
+            } else {
+                statusIndicator.textContent = "disconnected";
+                statusIndicator.classList.add("disconnected");
+            }
 
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             removeButton.setAttribute("data-username", friendUsername);
+            removeButton.classList.add("remove-button");
 
+            
+            newFriendItem.appendChild(statusIndicator);
             newFriendItem.appendChild(removeButton);
             friendsField.querySelector("ul").appendChild(newFriendItem);
         }
@@ -141,6 +225,10 @@ export default class Profile extends BaseView {
         this.navigateTo('/edit-profile');
     }
 
+    handleMatchHistoryClick() {
+        this.navigateTo('/match-history');
+    }
+
     handleFriendFormSubmit(event) {
         event.preventDefault();
         const friendUsername = document.getElementById("friend-username").value;
@@ -158,12 +246,25 @@ export default class Profile extends BaseView {
     handleLogoutClick() {
         this.logout();
     }
+    
+    handleRefreshClick() {
+        this.refreshToken();
+    }
 
     attachEvents() {
         console.log('Events attached (Profile)');
+        const refreshButton = document.getElementById("refresh");
+        if (refreshButton) {
+            refreshButton.addEventListener("click", this.handleRefreshClick.bind(this));
+        }
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));
+        }
+
+        const matchHistoryButton = document.getElementById("match-history");
+        if (matchHistoryButton) {
+            matchHistoryButton.addEventListener("click", this.handleMatchHistoryClick.bind(this));
         }
 
         const addFriendForm = document.getElementById("add-friend-form");
@@ -190,12 +291,30 @@ export default class Profile extends BaseView {
         users.forEach(user => {
             // chaque nom user
             const friendItem = document.createElement("li");
-            friendItem.textContent = user.username;
-            // creer une autre div avec on ou off icon selon isOnline()  response
+            friendItem.classList.add("friend-item");
+
+            const usernameSpan = document.createElement("span");
+            usernameSpan.textContent = user.username;
+            usernameSpan.classList.add("username");
+
+            const statusIndicator = document.createElement("span");
+            statusIndicator.classList.add("status-indicator");
+            if (user.is_online) {
+                statusIndicator.textContent = "connected";
+                statusIndicator.classList.add("connected");
+            } else {
+                statusIndicator.textContent = "disconnected";
+                statusIndicator.classList.add("disconnected");
+            }
+
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             // ce que va supprimer le remove
             removeButton.setAttribute("data-username", user.username);
+            removeButton.classList.add("remove-button");
+
+            friendItem.appendChild(usernameSpan);
+            friendItem.appendChild(statusIndicator);
             friendItem.appendChild(removeButton);
             friendsList.appendChild(friendItem);
         });
@@ -226,8 +345,8 @@ export default class Profile extends BaseView {
             container.appendChild(textContainer);
 
             document.getElementById("username-field").appendChild(container);
-
             this.updateStatsField();
+            this.updateMatchHistoryField();
         }
         catch (error) {
             console.error("Error in mount():", error);
