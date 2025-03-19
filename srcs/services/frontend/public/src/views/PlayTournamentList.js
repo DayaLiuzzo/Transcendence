@@ -111,7 +111,7 @@ export default class PlayTournamentList extends BaseView{
     async mount() {
         console.log('Mounting Play tournament List');
         try {
-            const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/');
+            const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/waiting/');
             if (!getTournamentList.success) { return this.showError(response.error, "tournament-list-field"); }
             
             const tournaments = Array.isArray(getTournamentList.data) ? getTournamentList.data : [getTournamentList.data];
