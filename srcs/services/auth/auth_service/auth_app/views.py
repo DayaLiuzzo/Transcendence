@@ -102,7 +102,8 @@ class SignUpView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
-        req_urls = [ 'http://users:8443/api/users/create/',
+        req_urls = [
+                    'http://users:8443/api/users/create/',
                     'http://game:8443/api/game/create/',
                     'http://rooms:8443/api/rooms/create/',
                     'http://tournament:8443/api/tournament/create/',
@@ -157,22 +158,6 @@ class ChangePasswordView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = ChangePasswordSerializer
     lookup_field = 'username'
-
-class DeleteUserView (generics.DestroyAPIView):
-    permission_classes = [IsOwner]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    lookup_field = 'username'
-
-    def perform_destroy(self, instance):
-        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
-                    f'http://game:8443/api/game/delete/{instance.username}/',
-                    f'http://rooms:8443/api/rooms/delete/{instance.username}/',
-                    f'http://tournament:8443/api/tournament/delete/{instance.username}/'
-                    ]
-        if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
-            raise ValidationError("Error deleting user")
-        instance.delete()
 
 # ================================================
 # =============== SERVICE VIEWS ==================

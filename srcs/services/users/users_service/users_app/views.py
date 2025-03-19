@@ -33,12 +33,6 @@ class CreateUserProfileView(generics.CreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-class DeleteUserProfileView(generics.DestroyAPIView):
-    permission_classes = [IsAuth]
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    lookup_field = "username"
-
 class RetrieveUserProfile(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
     queryset = UserProfile.objects.all()
@@ -66,16 +60,25 @@ class UpdateLastSeenView(APIView):
     lookup_field = "username"
     def patch(self, request, username):
         user_profile = get_object_or_404(UserProfile, username=username)
-        user_profile.last_seen = timezone.now()
+        isOnline = request.data.get("isOnline")
+        status_string = "default"
+        if isOnline == True:
+            status_string = "isOnline"
+            user_profile.is_online = True
+        if isOnline == False:
+            status_string = "isOffline"
+            user_profile.is_online = False        
         user_profile.save()
-        return Response({"message": "Last seen updated successfully"}, status=HTTP_200_OK)
+        return Response({"message": f"{username} {isOnline} {status_string}"},
+                        status=HTTP_200_OK)
+    
 
 class UserStatusView(APIView):
     permission_classes = [IsOwner]
     lookup_field = "username"
     def get(self, request, username):
         user_profile = get_object_or_404(UserProfile, username=username)
-        return Response({"message": f"{username} is online" if user_profile.is_online() else f"{username} is offline"},
+        return Response({"isOnline": True if user_profile.is_online else False},
                         status=HTTP_200_OK)
 
 #================================================

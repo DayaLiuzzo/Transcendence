@@ -162,7 +162,6 @@ export default class Profile extends BaseView {
 
     async addFriend(friendUsername) {
         const username = this.getUsername();
-        const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
         const body = {};
         if (username === friendUsername) {
             this.showError("You cannot add yourself as a friend"), "add-friend-form";
@@ -178,13 +177,11 @@ export default class Profile extends BaseView {
             const newFriendItem = document.createElement("li");
             newFriendItem.classList.add("friend-item");
             newFriendItem.textContent = friendUsername;
-
-            const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             
-            const isConnected = this.sendGetRequest(this.API_URL_USERS + 'status/' + friendUsername + '/')
+            const status = await this.sendGetRequest(this.API_URL_USERS + 'status/' + friendUsername + '/')
             const statusIndicator = document.createElement("span");
             statusIndicator.classList.add("status-indicator");
-            if (isConnected) {
+            if (status.data.isOnline) {
                 statusIndicator.textContent = "connected";
                 statusIndicator.classList.add("connected");
             } else {
@@ -283,7 +280,11 @@ export default class Profile extends BaseView {
         }
     }
 
-    renderFriends(users) {
+    async renderFriends() {
+        const username = this.getUsername();
+        const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
+        if(!userFriends.success) return this.stopUpdatingLastSeen();
+        const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
         const friendsField = document.getElementById("friends-field");
         if (!friendsField) return;
         friendsField.innerHTML = "";
@@ -324,9 +325,8 @@ export default class Profile extends BaseView {
     async mount() {
         try {
             const username = this.getUsername();
-            const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
-            const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
-            this.renderFriends(users);
+            this.renderFriends();
+            this.router.RerenderFriendsInterval = setInterval(() => {this.renderFriends();}, 15000);
 
             const avatarUrl = await this.displayAvatar();
             const container = document.createElement("div");

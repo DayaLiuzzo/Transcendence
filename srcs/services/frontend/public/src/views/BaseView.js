@@ -16,7 +16,6 @@ export default class BaseView{
         this.API_URL_LOGIN = '/api/auth/token/';
         this.API_URL_GAME = '/api/game/';
         this.API_URL_TOURNAMENT = '/api/tournament/';
-        this.lastSeenInterval = null;
 
         this.app = document.getElementById('app');
         if (!this.app) {
@@ -41,10 +40,6 @@ export default class BaseView{
         }
         return response.data.online;
 
-    }
-
-    async updateLastSeen() {
-        this.router.updateLastSeen();
     }
 
     startUpdatingLastSeen() {
@@ -183,6 +178,7 @@ export default class BaseView{
     }
 
     async updateNavbar() {
+        console.log("updating navbar");
         const navbar = document.getElementById("navbar");
 
         if (navbar) {
@@ -438,7 +434,6 @@ export default class BaseView{
     logout() {
         const refresh_token = this.getRefreshToken();
         if (refresh_token) {
-            localStorage.setItem("logout", Date.now());
             this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
             this.stopUpdatingLastSeen();
         }
