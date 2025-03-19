@@ -26,10 +26,10 @@ export default class PlayMenu extends BaseView{
             <div id="container">
                 <h2>Play Tournament Menu</h2>
                 <div class="play-menu">
-                    <div class="play-option" id="create-tournament">Create a tournament</div>
-                    <div class="play-option" id="join-tournament">Join a tournament</div>
-                    <div class="play-option" id="list-tournament">List a tournament</div>
-                    <div class="play-option" id="my-tournament">My tournament</div>
+                    <div class="play-option" id="create-tournament-button">Create a new tournament</div>
+                    <div class="play-option" id="join-tournament-button">Join a tournament with ID</div>
+                    <div class="play-option" id="list-tournament-button">List available tournaments</div>
+                    <div class="play-option" id="my-tournament-button">See my tournament page</div>
                 </div>
             </div>
         </div>
@@ -39,28 +39,28 @@ export default class PlayMenu extends BaseView{
     attachEvents(){
         console.log('Events attached (Play-Menu)');
 
-        const createTournamentButton = document.getElementById("create-tournament");
+        const createTournamentButton = document.getElementById("create-tournament-button");
         if (createTournamentButton) {
             createTournamentButton.addEventListener("click", async () => {
                 this.navigateTo('/create-tournament');
             });
         }
 
-        const joinTournamentButton = document.getElementById("join-tournament");
+        const joinTournamentButton = document.getElementById("join-tournament-button");
         if (joinTournamentButton) {
             joinTournamentButton.addEventListener("click", async () => {
                 this.navigateTo('/join-tournament');
             });
         }
 
-        const listTournamentButton = document.getElementById("list-tournament");
+        const listTournamentButton = document.getElementById("list-tournament-button");
         if (listTournamentButton) {
             listTournamentButton.addEventListener("click", async () => {
                 this.navigateTo('/list-tournament');
             });
         }
         
-        const myTournamentButton = document.getElementById("my-tournament");
+        const myTournamentButton = document.getElementById("my-tournament-button");
         if (myTournamentButton) {
             myTournamentButton.addEventListener("click", async () => {
                 this.navigateTo('/my-tournament');
