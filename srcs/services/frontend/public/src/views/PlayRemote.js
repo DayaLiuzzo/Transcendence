@@ -117,17 +117,12 @@ export default class PlayCanva extends BasePlayView {
 		directionalLight.shadow.mapSize.height = 2048;
 		window.threeInstance.scene.add(directionalLight);
 
+		this.ballSpotlight = this.createSpotlight(scene);
+		this.player1Spotlight = this.createSpotlight(scene);
+		this.player2Spotlight = this.createSpotlight(scene);
+
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
-
-		const ballSpotlight = new THREE.SpotLight(0xffffff, 10);
-		ballSpotlight.angle = Math.PI / 6;
-		ballSpotlight.penumbra = 0.3;
-		ballSpotlight.decay = 1;
-		ballSpotlight.distance = 10;
-		ballSpotlight.castShadow = true;
-		window.threeInstance.scene.add(ballSpotlight);
-		window.threeInstance.scene.add(ballSpotlight.target);
 
 		const paddleMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffffff,
@@ -208,23 +203,10 @@ export default class PlayCanva extends BasePlayView {
 		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
-		// OUTILS POUR DEBUG
-		// const axesHelper = new THREE.AxesHelper(5);
-		// window.threeInstance.scene.add(axesHelper);
-
-		// const gridHelper = new THREE.GridHelper(this.gameBoard.width, 10);
-		// window.threeInstance.scene.add(gridHelper);
-
 		const tick = () => {
 			if (isRunning === false) return;
 			requestAnimationFrame(tick);
 
-			ballSpotlight.position.set(
-				this.meshBall.position.x,
-				3,
-				this.meshBall.position.z
-			);
-			ballSpotlight.target.position.copy(this.meshBall.position);
 
 			window.addEventListener("resize", () => {
 				const newWidth = window.innerWidth;
@@ -275,6 +257,25 @@ export default class PlayCanva extends BasePlayView {
     `;
 	}
 
+	updateSpotlight(spotlight, targetMesh) {
+		spotlight.position.set(targetMesh.position.x, 3, targetMesh.position.z);
+		spotlight.target.position.copy(targetMesh.position);
+	}
+
+	createSpotlight(scene, intensity = 10) {
+		const spotlight = new THREE.SpotLight(0xffffff, intensity);
+		spotlight.angle = Math.PI / 6;
+		spotlight.penumbra = 0.3;
+		spotlight.decay = 1;
+		spotlight.distance = 10;
+		spotlight.castShadow = true;
+
+		scene.add(spotlight);
+		scene.add(spotlight.target);
+
+		return spotlight;
+	}
+
 	setDataObjects(data) {
 		this.gameBoard.height = data.height;
 		this.gameBoard.width = data.width;
@@ -304,6 +305,9 @@ export default class PlayCanva extends BasePlayView {
 			this.meshPlayer2.position.y = data.player2_y - this.centerY;
 			this.meshBall.position.y = data.ball.y - this.centerY;
 			this.meshBall.position.x = data.ball.x - this.centerX;
+			this.updateSpotlight(this.ballSpotlight, this.meshBall);
+			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
+			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
 		}
 	}
 
@@ -326,7 +330,7 @@ export default class PlayCanva extends BasePlayView {
 			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
 			(font) => {
 				const textMaterial = new THREE.MeshStandardMaterial({
-					color: 0xffffff,
+					color: 0x000000,
 					emissive: 0xffffff,
 					emissiveIntensity: 0.4,
 				});
@@ -394,7 +398,6 @@ export default class PlayCanva extends BasePlayView {
 				life: 1.0,
 			});
 		}
-
 	}
 
 	attachEvents() {

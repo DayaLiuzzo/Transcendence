@@ -5,7 +5,7 @@ export default class PlayCanva extends BaseView{
 		super(params);
 
 		this.ballVelocity = { x: 0.02, z: 0.02 };
-		this.speedIncrement = 1.05;
+		this.speedIncrement = 1;
 		this.keys = { ArrowUp: false, ArrowDown: false, w: false, s:false};
 		this.gameOver = false;
 
@@ -167,12 +167,20 @@ export default class PlayCanva extends BaseView{
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+
 		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enablePan = false;
 		controls.enableDamping = true;
 		controls.enableZoom = true;
 		controls.maxPolarAngle = Math.PI / 2.1;
 		controls.minPolarAngle = Math.PI / 2.5;
+		controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
+		controls.maxAzimuthAngle = Math.PI / 4;
+		controls.enableRotate = true;
+		controls.minDistance = 5;
+		controls.maxDistance = 8;
+		//controls.autoRotate = true;
+		//controls.autoRotateSpeed = 1;
 
 		window.threeInstance = {
 			scene,
@@ -332,7 +340,7 @@ export default class PlayCanva extends BaseView{
 
 			updateParticles();
 			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
-				this.ballVelocity.z *= -1 * this.speedIncrement;
+				this.ballVelocity.z *= -1;
 				createCollisionParticles(meshBall.position);
 			}
 			if (
@@ -345,7 +353,7 @@ export default class PlayCanva extends BaseView{
 					Math.abs(meshBall.position.z - meshPlayer2.position.z) <
 						0.8)
 			) {
-				this.ballVelocity.x *= -1 * this.speedIncrement;
+				this.ballVelocity.x *= -1;
 				createCollisionParticles(meshBall.position);
 			}
 			if (meshBall.position.x > 4.5) {
@@ -366,6 +374,7 @@ export default class PlayCanva extends BaseView{
 				window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			});
 			window.threeInstance.controls.update();
+			// this.updateAutoRotateDirection();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
 		if (this.gameOver === false) {
