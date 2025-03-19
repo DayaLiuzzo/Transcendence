@@ -7,18 +7,13 @@ class UserProfile(models.Model):
     friends = models.ManyToManyField("self", blank=True, symmetrical=False)
     avatar_default_path = '/media/default_avatars/default_00.jpg'
     avatar = models.URLField(default='/media/default_avatars/default_00.jpg')
-    last_seen = models.DateTimeField(null=True, blank=True)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
+    is_online = models.BooleanField(default=False)
     
     @property
     def is_authenticated(self):
         return True
-
-    def is_online(self):
-        if self.last_seen:
-            return (timezone.now() - self.last_seen).seconds < 31
-        return False
     
     def add_friend(self, friend_profile):
         if friend_profile != self and not self.friends.filter(pk=friend_profile.pk).exists():
