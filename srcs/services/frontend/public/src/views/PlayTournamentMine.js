@@ -40,6 +40,7 @@ export default class PlayTournamentMine extends BaseView{
             <div id ="no-tournament" hidden>You are not part of any tournament
                 <button id="tournament-create-button">Create</button>
                 <button id="tournament-join-button">Join</button>
+                <button id="tournament-list-button">List</button>
             </div>
 
             <div id ="tournament-launched" hidden>Tournament started
@@ -86,6 +87,20 @@ export default class PlayTournamentMine extends BaseView{
         }
     }
 
+    // List tournament    
+    async listTournament() {
+        const body = {};
+
+        //add alerte avant redirection??
+        this.navigateTo("/list-tournament");
+    }
+    
+    handleListTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "List") {
+            this.listTournament();
+        }
+    }
+
     // Leave tournament    
     async leaveTournament() {
         const body = {};
@@ -122,7 +137,7 @@ export default class PlayTournamentMine extends BaseView{
     async launchTournament() {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
-        if (!response.success) { return /*this.navigateTo("/my-tournament"),*/ this.showError(response.error, "tournament-launch-field");}
+        if (!response.success) { return this.showError(response.error, "tournament-launch-field");}
         this.status = "playing";
         const event = new CustomEvent('statusChanged', { detail: { newStatus: this.status } });
         document.dispatchEvent(event);
@@ -144,10 +159,10 @@ export default class PlayTournamentMine extends BaseView{
         if (newStatus === 'playing') {
             alert("Le tournoi est maintenant en cours !");
             document.getElementById("tournament-launched").removeAttribute("hidden");
-
-            document.getElementById("launch-button").setAttribute("hidden");
-            document.getElementById("delete-button").setAttribute("hidden");
-            document.getElementById("leave-button").setAttribute("hidden");
+            document.getElementById("tournament-launch-button").setAttribute("hidden", true);
+            document.getElementById("tournament-delete-button").setAttribute("hidden", true);
+            document.getElementById("tournament-leave-button").setAttribute("hidden", true);
+            document.getElementById("tournament-info").setAttribute("hidden", true);
         }
     }
     
@@ -181,6 +196,11 @@ export default class PlayTournamentMine extends BaseView{
             tournamentJoinField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
         }
 
+        const tournamentListField = document.getElementById("tournament-list-button");
+        if (tournamentListField) {
+            tournamentListField.addEventListener("click", this.handleListTournamentClick.bind(this));
+        }
+        
     }
 
     formatField(type, value){
@@ -243,9 +263,11 @@ export default class PlayTournamentMine extends BaseView{
                 const tournamentStatus = getTournamentInfo.data.status;
                 document.getElementById("tournament-status").innerHTML = this.formatField('status', tournamentStatus);
                 
-                if (tournamentStatus === "playing")
+                if (tournamentStatus === "playing"){
                     this.status = "playing"
-                
+                    document.getElementById("tournament-launched").removeAttribute("hidden");
+                }
+
                 if (this.status === "waiting")
                     document.getElementById("tournament-info").removeAttribute("hidden");
                 //a deplacer maybe
@@ -297,6 +319,11 @@ export default class PlayTournamentMine extends BaseView{
         const tournamentJoinField = document.getElementById("tournament-join-button");
         if (tournamentJoinField) {
             tournamentJoinField.removeEventListener("click", this.handleJoinTournamentClick);
+        }
+
+        const tournamentListField = document.getElementById("tournament-list-button");
+        if (tournamentListField) {
+            tournamentListField.removeEventListener("click", this.handleListTournamentClick);
         }
     }
 }
