@@ -173,9 +173,9 @@ class LaunchTournamentView(APIView):
                         'message': 'Tournament cannot be launched, you are not the owner'
                     }, status=status.HTTP_403_FORBIDDEN)
 
-            if tournament.users_count < 2:
+            if tournament.users_count < 3:
                 return Response({
-                        'message': 'Cannot launch tournament alone'
+                        'message': 'Tournament cannot be launched, you need to be at least 3 players'
                     }, status=status.HTTP_400_BAD_REQUEST)
 
             if tournament.status != 'waiting':
