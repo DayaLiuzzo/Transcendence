@@ -5,7 +5,8 @@ import BaseView from './BaseView.js';
 export default class PlayTournamentMine extends BaseView{
     
     constructor(params){
-        super(params);
+        super(params);// a remove ??
+        this.status = "waiting";
     }
     
     render(){
@@ -41,7 +42,9 @@ export default class PlayTournamentMine extends BaseView{
                 <button id="tournament-join-button">Join</button>
             </div>
 
-           
+            <div id ="tournament-launched" hidden>Tournament started
+                <button id="access game">Access</button>
+            </div>
             `;
         }
         // <h4>Une fois que le tournoi est lance<h4>
@@ -53,33 +56,37 @@ export default class PlayTournamentMine extends BaseView{
         // </div>
     
 
-        async createTournament() {
-            const body = {};
-    
-            //add alerte avant redirection??
-            this.navigateTo("/create-tournament");
-        }
-        
-        handleCreateTournamentClick(event) {
-            if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create") {
-                this.createTournament();
-            }
-        }
+    /* Events et events attachement */
 
-        
-        async joinTournament() {
-            const body = {};
-    
-            //add alerte avant redirection??
-            this.navigateTo("/join-tournament");
-        }
-        
-        handleJoinTournamentClick(event) {
-            if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
-                this.joinTournament();
-            }
-        }
+    // Create tournament    
+    async createTournament() {
+        const body = {};
 
+        //add alerte avant redirection??
+        this.navigateTo("/create-tournament");
+    }
+    
+    handleCreateTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create") {
+            this.createTournament();
+        }
+    }
+
+    // Join tournament    
+    async joinTournament() {
+        const body = {};
+
+        //add alerte avant redirection??
+        this.navigateTo("/join-tournament");
+    }
+    
+    handleJoinTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
+            this.joinTournament();
+        }
+    }
+
+    // Leave tournament    
     async leaveTournament() {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "leave/", body);
@@ -95,6 +102,7 @@ export default class PlayTournamentMine extends BaseView{
         }
     }
 
+    // Delete tournament    
     async deleteTournament() {
         const body = {};
         const response = await this.sendDeleteRequest(this.API_URL_TOURNAMENT + "delete_tournament/", body);
@@ -110,23 +118,43 @@ export default class PlayTournamentMine extends BaseView{
         }
     }
 
-        async launchTournament() {
-            const body = {};
-            const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
-            if (!response.success) {return this.showError(response.error, "tournament-launch-field");}
-            
-            //add alerte avant refresh??
-            this.navigateTo("/my-tournament");
-        }
-        
-        handleLaunchTournamentClick(event) {
-            if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Launch") {
-                this.launchTournament();
-            }
-        }
+    // Launch tournament
+    async launchTournament() {
+        const body = {};
+        const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
+        if (!response.success) { return /*this.navigateTo("/my-tournament"),*/ this.showError(response.error, "tournament-launch-field");}
+        this.status = "playing";
+        const event = new CustomEvent('statusChanged', { detail: { newStatus: this.status } });
+        document.dispatchEvent(event);
 
+        //add alerte avant refresh??
+        // this.navigateTo("/my-tournament");
+    }
+        
+    handleLaunchTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Launch") {
+            this.launchTournament();
+        }
+    }
+
+    handleStatusChange(event) {
+        const newStatus = event.detail.newStatus;
+        console.log("Le statut du tournoi a changé : ", newStatus);
+    
+        if (newStatus === 'playing') {
+            alert("Le tournoi est maintenant en cours !");
+            document.getElementById("tournament-launched").removeAttribute("hidden");
+
+            document.getElementById("launch-button").setAttribute("hidden");
+            document.getElementById("delete-button").setAttribute("hidden");
+            document.getElementById("leave-button").setAttribute("hidden");
+        }
+    }
+    
     attachEvents() {
         console.log('Events attached (Tournament Mine)');
+
+        document.addEventListener('statusChanged', this.handleStatusChange.bind(this));
 
         const tournamentLeaveField = document.getElementById("tournament-leave-button");
         if (tournamentLeaveField) {
@@ -187,47 +215,52 @@ export default class PlayTournamentMine extends BaseView{
                         return;
                     }
                 }
+                
+                const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
+                if (!getTournamentInfo.success) {
+                    return ;
+                }
+                
+                /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
+                const tournamentName = getTournamentInfo.data.name;
+                document.getElementById("tournament-name").innerHTML = this.formatField('name', tournamentName);
+                
+                const tournamentID = getTournamentInfo.data.tournament_id;
+                document.getElementById("tournament-id").innerHTML = this.formatField('id', tournamentID);
+                
+                const tournamentOwner = getTournamentInfo.data.owner;
+                document.getElementById("tournament-owner").innerHTML = this.formatField('owner', tournamentOwner);
+                
+                const tournamentUsersList = getTournamentInfo.data.users;
+                document.getElementById("tournament-users-list").innerHTML = this.formatField('users', tournamentUsersList);
+                
+                const tournamentUsersNbCurrent = getTournamentInfo.data.users_count;
+                document.getElementById("tournament-users-nb-current").innerHTML = this.formatField('users_count', tournamentUsersNbCurrent);
+                
+                const tournamentUsersNbMax = getTournamentInfo.data.max_users;
+                document.getElementById("tournament-users-nb-max").innerHTML = this.formatField('max_users', tournamentUsersNbMax);
+                
+                const tournamentStatus = getTournamentInfo.data.status;
+                document.getElementById("tournament-status").innerHTML = this.formatField('status', tournamentStatus);
+                
+                if (tournamentStatus === "playing")
+                    this.status = "playing"
+                
+                if (this.status === "waiting")
+                    document.getElementById("tournament-info").removeAttribute("hidden");
+                //a deplacer maybe
 
-            const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
-            if (!getTournamentInfo.success) {
-                return ;
-            }
-
-            /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
-            const tournamentName = getTournamentInfo.data.name;
-            document.getElementById("tournament-name").innerHTML = this.formatField('name', tournamentName);
-
-            const tournamentID = getTournamentInfo.data.tournament_id;
-            document.getElementById("tournament-id").innerHTML = this.formatField('id', tournamentID);
-           
-            const tournamentOwner = getTournamentInfo.data.owner;
-            document.getElementById("tournament-owner").innerHTML = this.formatField('owner', tournamentOwner);
-
-            const tournamentUsersList = getTournamentInfo.data.users;
-            document.getElementById("tournament-users-list").innerHTML = this.formatField('users', tournamentUsersList);
+                if (this.status === "waiting" && tournamentOwner != this.getUsername())
+                    document.getElementById("tournament-leave-button").removeAttribute("hidden");
+                
+                if (this.status === "waiting" && tournamentOwner === this.getUsername()){
+                    document.getElementById("tournament-delete-button").removeAttribute("hidden");
+                    document.getElementById("tournament-launch-button").removeAttribute("hidden");
+                }
+                
+                const tournamentWinner= getTournamentInfo.data.winner;
+                document.getElementById("tournament-winner").innerHTML = this.formatField('winner', tournamentWinner);
             
-            const tournamentUsersNbCurrent = getTournamentInfo.data.users_count;
-            document.getElementById("tournament-users-nb-current").innerHTML = this.formatField('users_count', tournamentUsersNbCurrent);
-            
-            const tournamentUsersNbMax = getTournamentInfo.data.max_users;
-            document.getElementById("tournament-users-nb-max").innerHTML = this.formatField('max_users', tournamentUsersNbMax);
-            
-            const tournamentStatus = getTournamentInfo.data.status;
-            document.getElementById("tournament-status").innerHTML = this.formatField('status', tournamentStatus);
-            
-            //a deplacer maybe
-            if (tournamentStatus === "waiting" && tournamentOwner != this.getUsername())// add not owner
-                document.getElementById("tournament-leave-button").removeAttribute("hidden");
-            
-            if (tournamentStatus === "waiting" && tournamentOwner === this.getUsername()){// add  owner
-                document.getElementById("tournament-delete-button").removeAttribute("hidden");
-                document.getElementById("tournament-launch-button").removeAttribute("hidden");
-            }
-
-            const tournamentWinner= getTournamentInfo.data.winner;
-            document.getElementById("tournament-winner").innerHTML = this.formatField('winner', tournamentWinner);
-            
-            document.getElementById("tournament-info").removeAttribute("hidden");
 
         }
         catch (error) {
@@ -238,6 +271,8 @@ export default class PlayTournamentMine extends BaseView{
     unmount() {
         console.log('Unmounting Profile');
         
+        document.removeEventListener('statusChanged', this.handleStatusChange.bind(this));
+
         const tournamentLeaveField = document.getElementById("tournament-leave-button");
         if (tournamentLeaveField) {
             tournamentLeaveField.removeEventListener("click", this.handleLeaveTournamentClick);
