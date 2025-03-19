@@ -111,6 +111,7 @@ export default class PlayTournamentList extends BaseView{
                 joinButton.id = "joinButton"
                 joinButton.textContent = "Join";
                 joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
+                joinButton.classList.add("joinButton");
                 tournamentItem.appendChild(joinButton);
             }
             tournamentList.appendChild(tournamentItem);
