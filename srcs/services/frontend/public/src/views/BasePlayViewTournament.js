@@ -20,6 +20,7 @@ export default class BasePlayView extends BaseView{
             if (rooms.length === 0) {
                 document.getElementById("status").innerText = "Waiting for rooms";
             } else {
+                this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
                 const room = rooms[0];
                 console.log(room);
                 document.getElementById("room-id").innerText = room.room_id;
