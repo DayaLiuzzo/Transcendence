@@ -167,7 +167,7 @@ class LaunchTournamentView(APIView):
     def post(self, request):
         try:
             user = request.user
-            tournament = Tournament.objects.get(users=user, status='waiting')
+            tournament = Tournament.objects.get(Q(users=user), Q(status='waiting'))
 
             if user != tournament.owner:
                 return Response({
@@ -378,19 +378,8 @@ class ListMyRoomsView(generics.ListAPIView):
         queryset = Room.objects.filter(
                 Q(player1=user) | Q(player2=user),
                 Q(status='waiting') | Q(status='standby'),
-                ~Q(pool__tournament__status='error'))
+                Q(pool__tournament__status='playing'))
         if queryset.count() == 0:
-            tournament = Tournament.objects.filter(
-                    Q(users=user),
-                    Q(status='waiting') | Q(status='playing'))
-            if not tournament.exists():
-                return Response({
-                    'message': 'You don\'t belong to any tournament'
-                }, status=status.HTTP_404_NOT_FOUND)
-
-            if tournament.status == 'finished':
-                result = user.tournaments.get(tournament_id=tournament.tournament_id)
-
             return Response({
                 'message': 'You don\'t have any rooms'
                 }, status=status.HTTP_404_NOT_FOUND)
