@@ -229,8 +229,9 @@ export default class PlayTournamentMine extends BaseView{
             if (checkIfInTournament.success) {
                     if (!checkIfInTournament.data.in_tournament){ 
                         document.getElementById("no-tournament").removeAttribute("hidden");
-                        // return this.navigateTo('/play-menu');
-                        return this.router.customClearInterval(this.router.RerenderTournamentInterval);
+                        this.router.customClearInterval(this.router.RerenderTournamentInterval);
+                        alert("The Host Terminated the party");
+                        return this.navigateTo('/play-menu');
 
                     }
                 }
