@@ -93,14 +93,26 @@ class Game:
     def get_game_end(self):
         if self.winner == self.player1:
             winner = 'player1'
+            loser = 'player2'
+            score_winner = self.player1.score
+            score_loser = self.player2.score
         elif self.winner == self.player2:
             winner = 'player2'
+            loser = 'player1'
+            score_winner = self.player2.score
+            score_loser = self.player1.score
         else:
             winner = None
+            loser = None
+            score_winner = self.player1.score
+            score_loser = self.player2.score
 
         data = {
             'state': 'END',
-            'winner': winner
+            'winner': winner,
+            'loser': loser,
+            'score_winner': score_winner,
+            'score_loser': score_loser
         }
         return data
 
