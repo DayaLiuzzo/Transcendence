@@ -167,7 +167,7 @@ class LaunchTournamentView(APIView):
     def post(self, request):
         try:
             user = request.user
-            tournament = Tournament.objects.get(users=user)
+            tournament = Tournament.objects.get(users=user, status='waiting')
 
             if user != tournament.owner:
                 return Response({
