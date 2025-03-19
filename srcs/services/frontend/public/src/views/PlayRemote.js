@@ -1,22 +1,13 @@
 import BasePlayView from "./BasePlayView.js";
+import { cleanUpThree } from "../three/utils.js";
 
 let keys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
 let isRunning = false;
+let gameOver = false;
 
 export default class PlayCanva extends BasePlayView {
 	constructor(params) {
 		super(params);
-
-		window.threeInstance = {
-			scene,
-			camera,
-			renderer,
-			effect,
-			controls,
-			animationId: null,
-			canvas,
-			container,
-		};
 
 		this.player1 = { x: null, y: null, width: null, height: null };
 		this.player2 = { x: null, y: null, width: null, height: null };
@@ -33,9 +24,16 @@ export default class PlayCanva extends BasePlayView {
 		this.centerX = null;
 		this.centerY = null;
 
-		this.scene = null;
 		this.renderer = null;
 		this.camera = null;
+	}
+
+	unmount() {
+		console.log("Unmounted PlayCanva REMOTE");
+		document.getElementById("final-screen")?.remove();
+		isRunning = false;
+		this.socketService.closeConnection();
+		cleanUpThree();
 	}
 
 	showError(message) {
@@ -60,33 +58,43 @@ export default class PlayCanva extends BasePlayView {
 		});
 		window.addEventListener("handleEndGame", (event) => {
 			isRunning = false;
-			this.endGame(event.detail);
+			this.handleGameEnd(
+				event.detail.winner,
+				event.detail.loser,
+				event.detail.score_winner,
+				event.detail.score_loser
+			);
 		});
+		// window.addEventListener("handleCollision", (event) => {
+		// 	this.handleCollision(event.detail);
+		// });
 	}
 
 	initGame() {
 		console.log("Game Loading...");
 		const canvas = document.querySelector("canvas.webgl");
-		this.scene = new THREE.Scene();
-		this.camera = new THREE.PerspectiveCamera(
+		const scene = new THREE.Scene();
+		const camera = new THREE.PerspectiveCamera(
 			75,
 			this.gameBoard.width / this.gameBoard.height,
 			1,
 			50000
 		);
-		this.camera.position.z = 900;
-		this.camera.up = new THREE.Vector3(0, 0, -1);
-		this.scene.add(this.camera);
+		camera.position.z = 900;
+		camera.up = new THREE.Vector3(0, 0, -1);
+		scene.add(camera);
 
-		this.renderer = new THREE.WebGLRenderer({
+		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
+			antialias: true,
 		});
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 		const controls = new THREE.OrbitControls(
-			this.camera,
-			this.renderer.domElement
+			camera,
+			renderer.domElement
 		);
 		controls.enablePan = false;
 		controls.enableDamping = true;
@@ -94,15 +102,23 @@ export default class PlayCanva extends BasePlayView {
 		controls.maxPolarAngle = Math.PI / 2.1;
 		controls.minPolarAngle = Math.PI / 2.5;
 
+		window.threeInstance = {
+			scene,
+			camera,
+			renderer,
+			controls,
+			canvas,
+		};
+
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 		directionalLight.position.set(5, 10, 5);
 		directionalLight.castShadow = true;
 		directionalLight.shadow.mapSize.width = 2048;
 		directionalLight.shadow.mapSize.height = 2048;
-		this.scene.add(directionalLight);
+		window.threeInstance.scene.add(directionalLight);
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-		this.scene.add(ambientLight);
+		window.threeInstance.scene.add(ambientLight);
 
 		const ballSpotlight = new THREE.SpotLight(0xffffff, 10);
 		ballSpotlight.angle = Math.PI / 6;
@@ -110,8 +126,8 @@ export default class PlayCanva extends BasePlayView {
 		ballSpotlight.decay = 1;
 		ballSpotlight.distance = 10;
 		ballSpotlight.castShadow = true;
-		this.scene.add(ballSpotlight);
-		this.scene.add(ballSpotlight.target);
+		window.threeInstance.scene.add(ballSpotlight);
+		window.threeInstance.scene.add(ballSpotlight.target);
 
 		const paddleMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffffff,
@@ -121,7 +137,7 @@ export default class PlayCanva extends BasePlayView {
 			emissiveIntensity: 0.4,
 		});
 
-		const meshPlayer1 = new THREE.Mesh(
+		this.meshPlayer1 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player1.width, this.player1.height, 10),
 			paddleMaterial
 		);
@@ -132,7 +148,7 @@ export default class PlayCanva extends BasePlayView {
 		);
 		console.log("MESHPLAYER1", this.meshPlayer1);
 
-		const meshPlayer2 = new THREE.Mesh(
+		this.meshPlayer2 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
 			paddleMaterial
 		);
@@ -146,7 +162,7 @@ export default class PlayCanva extends BasePlayView {
 		// 	new THREE.SphereGeometry(this.ballRadius, 16, 16),
 		// 	paddleMaterial
 		// );
-		const meshBall = new THREE.Mesh(
+		this.meshBall = new THREE.Mesh(
 			new THREE.BoxGeometry(
 				this.ballRadius,
 				this.ballRadius,
@@ -160,21 +176,19 @@ export default class PlayCanva extends BasePlayView {
 			this.ball.y - this.centerY,
 			16
 		);
-
+		const boardColor = new THREE.Color(0xD3D3D3);
 		const meshBoard = new THREE.Mesh(
-			new THREE.PlaneGeometry(
-				this.gameBoard.width,
-				this.gameBoard.height
-			),
+			new THREE.PlaneGeometry(this.gameBoard.width, this.gameBoard.height),
 			new THREE.MeshStandardMaterial({
-				color: 0x000000,
-				roughness: 0.7,
-				metalness: 0.3,
+				color: boardColor,
+				roughness: 0.6,
+				metalness: 0.2,
 			})
 		);
 		meshBoard.rotation.x -= Math.PI;
 		meshBoard.position.z = 35;
 		meshBoard.receiveShadow = true;
+		scene.add(meshBoard);
 
 		const boardLine = new THREE.Mesh(
 			new THREE.PlaneGeometry(10, this.gameBoard.height),
@@ -186,56 +200,20 @@ export default class PlayCanva extends BasePlayView {
 		);
 		boardLine.position.z = 34;
 
-		this.scene.add(boardLine);
-		this.scene.add(meshBoard);
-		this.scene.add(this.meshPlayer1);
-		this.scene.add(this.meshPlayer2);
-		this.scene.add(this.meshBall);
+		window.threeInstance.scene.add(boardLine);
+		window.threeInstance.scene.add(meshBoard);
+		window.threeInstance.scene.add(this.meshPlayer1);
+		window.threeInstance.scene.add(this.meshPlayer2);
+		window.threeInstance.scene.add(this.meshBall);
 		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
-		function createCollisionParticles(position) {
-			for (let i = 0; i < particleCount; i++) {
-				activeParticles.push({
-					position: position.clone(),
-					velocity: new THREE.Vector3(
-						(Math.random() - 0.5) * 0.2,
-						Math.random() * 0.2,
-						(Math.random() - 0.5) * 0.2
-					),
-					life: 1.0,
-				});
-			}
-		}
-
-		function updateParticles() {
-			activeParticles = activeParticles.filter((particle) => {
-				particle.position.add(particle.velocity);
-				particle.life -= 0.02;
-				return particle.life > 0;
-			});
-
-			const positions = new Float32Array(particleCount * 3);
-			for (let i = 0; i < activeParticles.length; i++) {
-				const particle = activeParticles[i];
-				positions[i * 3] = particle.position.x;
-				positions[i * 3 + 1] = particle.position.y;
-				positions[i * 3 + 2] = particle.position.z;
-			}
-
-			particles.geometry.setAttribute(
-				"position",
-				new THREE.BufferAttribute(positions, 3)
-			);
-			particles.geometry.attributes.position.needsUpdate = true;
-		}
-
 		// OUTILS POUR DEBUG
-		const axesHelper = new THREE.AxesHelper(5);
-		this.scene.add(axesHelper);
+		// const axesHelper = new THREE.AxesHelper(5);
+		// window.threeInstance.scene.add(axesHelper);
 
-		const gridHelper = new THREE.GridHelper(this.gameBoard.width, 10);
-		this.scene.add(gridHelper);
+		// const gridHelper = new THREE.GridHelper(this.gameBoard.width, 10);
+		// window.threeInstance.scene.add(gridHelper);
 
 		const tick = () => {
 			if (isRunning === false) return;
@@ -253,15 +231,18 @@ export default class PlayCanva extends BasePlayView {
 				const newHeight = window.innerHeight;
 				const newAspect = newWidth / newHeight;
 
-				this.camera.aspect = newAspect;
-				this.camera.updateProjectionMatrix();
-				this.renderer.setSize(newWidth, newHeight);
+				window.threeInstance.camera.aspect = newAspect;
+				window.threeInstance.camera.updateProjectionMatrix();
+				window.threeInstance.renderer.setSize(newWidth, newHeight);
+				window.threeInstance.renderer.setPixelRatio(
+					Math.min(window.devicePixelRatio, 2)
+				);
 			});
-			controls.update();
-			this.renderer.render(this.scene, this.camera);
+			window.threeInstance.controls.update();
+			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
-
-		tick();
+		if (gameOver === false)
+			tick();
 	}
 
 	render() {
@@ -296,7 +277,6 @@ export default class PlayCanva extends BasePlayView {
 
 	setDataObjects(data) {
 		this.gameBoard.height = data.height;
-		console.log("UPDATED HEIGHT:", this.gameBoard.height);
 		this.gameBoard.width = data.width;
 		this.centerY = data.height / 2;
 		this.centerX = data.width / 2;
@@ -313,7 +293,6 @@ export default class PlayCanva extends BasePlayView {
 		this.player2.height = data.player_height;
 		this.ball.x = data.ball.x ;
 		this.ball.y = data.ball.y;
-
 
 		isRunning = true;
 		this.initGame();
@@ -336,10 +315,10 @@ export default class PlayCanva extends BasePlayView {
 
 	updateScoreMesh() {
 		if (this.meshPlayer1Score) {
-			this.scene.remove(this.meshPlayer1Score);
+			window.threeInstance.scene.remove(this.meshPlayer1Score);
 		}
 		if (this.meshPlayer2Score) {
-			this.scene.remove(this.meshPlayer2Score);
+			window.threeInstance.scene.remove(this.meshPlayer2Score);
 		}
 
 		const fontLoader = new THREE.FontLoader();
@@ -377,14 +356,45 @@ export default class PlayCanva extends BasePlayView {
 				this.meshPlayer1Score.position.set(-this.centerX + 100, 20, -50);
 				this.meshPlayer2Score.position.set(this.centerX - 100, 20, -80);
 
-				this.scene.add(this.meshPlayer1Score);
-				this.scene.add(this.meshPlayer2Score);
+				window.threeInstance.scene.add(this.meshPlayer1Score);
+				window.threeInstance.scene.add(this.meshPlayer2Score);
 			}
 		);
 	}
 
-	endGame(data) {
-		// tout reset 0 + afficher winner + scoress + renvoyer bouton pour play menu
+	updateParticles() {
+		activeParticles = activeParticles.filter((particle) => {
+			particle.position.add(particle.velocity);
+			particle.life -= 0.02;
+			return particle.life > 0;
+		});
+
+		const positions = new Float32Array(particleCount * 3);
+		for (let i = 0; i < activeParticles.length; i++) {
+			const particle = activeParticles[i];
+			positions[i * 3] = particle.position.x;
+			positions[i * 3 + 1] = particle.position.y;
+			positions[i * 3 + 2] = particle.position.z;
+		}
+
+		particles.geometry.setAttribute(
+			"position",
+			new THREE.BufferAttribute(positions, 3)
+		);
+		particles.geometry.attributes.position.needsUpdate = true;
+	}
+
+	handleCollision(data) {
+		const position = new THREE.Vector3(data.x, data.y, 0);
+		for (let i = 0; i < particleCount; i++) {
+			activeParticles.push({
+			position: position.clone(),
+			velocity: new THREE.Vector3(
+				(Math.random() - 0.5) * 0.2, Math.random() * 0.2,(Math.random() - 0.5) * 0.2),
+				life: 1.0,
+			});
+		}
+
 	}
 
 	attachEvents() {

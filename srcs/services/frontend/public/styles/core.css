@@ -16,7 +16,6 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
-    overflow-y: hidden;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -647,12 +646,14 @@ body {
     justify-content: center;
     background-color: transparent;
     background: none;
+    overflow-y: hidden;
   }
 
   #webgl canvas {
     cursor: grab;
     background-color: transparent;
     background: none;
+    overflow-y: hidden;
   }
 
 

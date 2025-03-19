@@ -1,19 +1,26 @@
-import BaseView from "./BaseView.js";
 import { cleanUpThree } from "../three/utils.js";
-
-let keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
-let gameOver = false;
+import BaseView from "./BaseView.js";
 export default class PlayCanva extends BaseView{
 	constructor(params) {
 		super(params);
 
+		this.ballVelocity = { x: 0.02, z: 0.02 };
+		this.speedIncrement = 1.05;
+		this.keys = { ArrowUp: false, ArrowDown: false, w: false, s:false};
+		this.gameOver = false;
+
 		this.scores = {
-			winner: null,
-			max_score: null,
-			looser: null,
+			max_score: 5,
 			player1_score: 0,
 			player2_score: 0,
 		};
+	}
+
+	unmount() {
+		console.log("Unmounted PlayCanva LOCAL");
+		document.getElementById("final-screen")?.remove();
+		this.gameOver = true;
+		cleanUpThree();
 	}
 
 	handlerEventsListeners() {
@@ -25,33 +32,21 @@ export default class PlayCanva extends BaseView{
 		});
 
 		window.addEventListener("keydown", (event) => {
-			if (keys.hasOwnProperty(event.key)) {
-				keys[event.key] = true;
+			if (this.keys.hasOwnProperty(event.key)) {
+				this.keys[event.key] = true;
 			}
 		});
 
 		window.addEventListener("keyup", (event) => {
-			if (keys.hasOwnProperty(event.key)) {
-				keys[event.key] = false;
+			if (this.keys.hasOwnProperty(event.key)) {
+				this.keys[event.key] = false;
 			}
 		});
-
-		// window.addEventListener('beforeunload', (event) => {
-		// 	// Si vous avez une fonction `stopGame()` pour arrêter le jeu, vous pouvez l'appeler ici
-		// 	this.handleGameEnd(threeInstance());
-
-		// 	// Optionnel : Vous pouvez personnaliser un message d'avertissement avant de quitter la page
-		// 	const message = "Êtes-vous sûr de vouloir quitter la page ? Votre jeu en cours sera perdu.";
-		// 	event.returnValue = message;  // Pour certains navigateurs comme Chrome
-
-		// 	// Retourner le message pour les autres navigateurs
-		// 	return message;
-		// });
 	}
 
     handleGameEnd(winner, looser, winner_score, looser_score){
         console.log("game end")
-		gameOver = true;
+		this.gameOver = true;
 
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
@@ -74,11 +69,11 @@ export default class PlayCanva extends BaseView{
         `;
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-lobby").addEventListener("click", () => {
-			gameOver = false;
-			finalScreen.remove();
+			document.body.removeChild(finalScreen);
+			this.gameOver = false;
             this.navigateTo("/play-menu");
         });
-    }
+	}
 
 	resetScores() {
 		const fontLoader = new THREE.FontLoader();
@@ -120,7 +115,7 @@ export default class PlayCanva extends BaseView{
 				window.threeInstance.scene.add(this.scores.player1_score_text);
 				window.threeInstance.scene.add(this.scores.player2_score_text);
 
-					if (this.scores.player1_score >= 1 || this.scores.player2_score >= 1) {
+					if (this.scores.player1_score >= 2 || this.scores.player2_score >= 2) {
 						if (this.scores.player1_score >= 1) {
 							this.handleGameEnd("Player 1", "Player 2", this.scores.player1_score, this.scores.player2_score);
 						} else {
@@ -128,8 +123,25 @@ export default class PlayCanva extends BaseView{
 						}
 					}
 				});
+	}
 
+	updateSpotlight(spotlight, targetMesh) {
+		spotlight.position.set(targetMesh.position.x, 3, targetMesh.position.z);
+		spotlight.target.position.copy(targetMesh.position);
+	}
 
+	createSpotlight(scene, intensity = 10) {
+		const spotlight = new THREE.SpotLight(0xffffff, intensity);
+		spotlight.angle = Math.PI / 6;
+		spotlight.penumbra = 0.3;
+		spotlight.decay = 1;
+		spotlight.distance = 10;
+		spotlight.castShadow = true;
+
+		scene.add(spotlight);
+		scene.add(spotlight.target);
+
+		return spotlight;
 	}
 
 	initGame() {
@@ -150,8 +162,10 @@ export default class PlayCanva extends BaseView{
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
+			antialias: true
 		});
 		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enablePan = false;
@@ -167,7 +181,6 @@ export default class PlayCanva extends BaseView{
 			controls,
 			canvas,
 		};
-		console.log("THREE INSTANCE", window.threeInstance);
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 		directionalLight.position.set(5, 10, 5);
@@ -179,14 +192,9 @@ export default class PlayCanva extends BaseView{
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
 
-		const ballSpotlight = new THREE.SpotLight(0xffffff, 10);
-		ballSpotlight.angle = Math.PI / 6;
-		ballSpotlight.penumbra = 0.3;
-		ballSpotlight.decay = 1;
-		ballSpotlight.distance = 10;
-		ballSpotlight.castShadow = true;
-		window.threeInstance.scene.add(ballSpotlight);
-		window.threeInstance.scene.add(ballSpotlight.target);
+		const ballSpotlight = this.createSpotlight(scene);
+		const player1Spotlight = this.createSpotlight(scene);
+		const player2Spotlight = this.createSpotlight(scene);
 
 		const paddleMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffffff,
@@ -260,7 +268,6 @@ export default class PlayCanva extends BaseView{
 		window.threeInstance.scene.add(particles);
 
 		let activeParticles = [];
-		let ballVelocity = { x: 0.05, z: 0.02 };
 
 		this.resetScores();
 
@@ -300,47 +307,32 @@ export default class PlayCanva extends BaseView{
 			particles.geometry.attributes.position.needsUpdate = true;
 		}
 
-		function resetBall() {
-			meshBall.position.set(0, 0.2, 0);
-			ballVelocity = { x: 0, z: 0 };
-
-			setTimeout(() => {
-				ballVelocity = {
-					x: (Math.random() > 0.5 ? 1 : -1) * 0.05,
-					z: (Math.random() - 0.5) * 0.05,
-				};
-			}, 500);
-		}
-
-		const clock = new THREE.Clock();
 		const tick = () => {
-			 if (gameOver === true) {
+			 if (this.gameOver === true) {
 
 			return;
 			}
 			requestAnimationFrame(tick);
 
-			if (keys.w && meshPlayer1.position.z > -2)
+			if (this.keys.w && meshPlayer1.position.z > -2)
 				meshPlayer1.position.z -= 0.1;
-			if (keys.s && meshPlayer1.position.z < 2)
+			if (this.keys.s && meshPlayer1.position.z < 2)
 				meshPlayer1.position.z += 0.1;
-			if (keys.ArrowUp && meshPlayer2.position.z > -2)
+			if (this.keys.ArrowUp && meshPlayer2.position.z > -2)
 				meshPlayer2.position.z -= 0.1;
-			if (keys.ArrowDown && meshPlayer2.position.z < 2)
+			if (this.keys.ArrowDown && meshPlayer2.position.z < 2)
 				meshPlayer2.position.z += 0.1;
 
-			meshBall.position.x += ballVelocity.x;
-			meshBall.position.z += ballVelocity.z;
+			meshBall.position.x += this.ballVelocity.x;
+			meshBall.position.z += this.ballVelocity.z;
 
-			ballSpotlight.position.set(
-				meshBall.position.x,
-				3,
-				meshBall.position.z
-			);
-			ballSpotlight.target.position.copy(meshBall.position);
+			this.updateSpotlight(ballSpotlight, meshBall);
+			this.updateSpotlight(player1Spotlight, meshPlayer1);
+			this.updateSpotlight(player2Spotlight, meshPlayer2);
+
 			updateParticles();
 			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
-				ballVelocity.z *= -1;
+				this.ballVelocity.z *= -1 * this.speedIncrement;
 				createCollisionParticles(meshBall.position);
 			}
 			if (
@@ -353,42 +345,31 @@ export default class PlayCanva extends BaseView{
 					Math.abs(meshBall.position.z - meshPlayer2.position.z) <
 						0.8)
 			) {
-				ballVelocity.x *= -1.1;
+				this.ballVelocity.x *= -1 * this.speedIncrement;
 				createCollisionParticles(meshBall.position);
 			}
 			if (meshBall.position.x > 4.5) {
 				this.scores.player1_score++;
 				console.log("SCORES:", this.scores.player1_score);
 				this.resetScores();
-				resetBall();
+				meshBall.position.set(0, 0.2, 0);
 			} else if (meshBall.position.x < -4.5) {
 				console.log("SCORES:", this.scores.player2_score);
 				this.scores.player2_score++;
 				this.resetScores();
-				resetBall();
+				meshBall.position.set(0, 0.2, 0);
 			}
 			window.addEventListener("resize", () => {
 				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
 				window.threeInstance.camera.updateProjectionMatrix();
 				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
-			});
-
-			window.addEventListener("resize", () => {
-				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
-				window.threeInstance.camera.updateProjectionMatrix();
-				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
-			});
-
-			document.addEventListener("visibilitychange", () => {
-				if (document.hidden) {
-					resetGame();
-				}
+				window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			});
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
-		if (gameOver === false) {
-			resetBall();
+		if (this.gameOver === false) {
+			meshBall.position.set(0, 0.2, 0);
 			tick();
 		}
 	}
@@ -418,6 +399,8 @@ export default class PlayCanva extends BaseView{
 	attachEvents() {
 		console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
-		this.initGame();
+		if (this.gameOver === false) {
+			this.initGame();
+		}
 	}
 }
