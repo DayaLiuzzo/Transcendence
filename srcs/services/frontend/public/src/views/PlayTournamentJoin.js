@@ -1,5 +1,3 @@
-//status : pas pret !!!
-
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentJoin extends BaseView{
@@ -59,9 +57,20 @@ export default class PlayTournamentJoin extends BaseView{
     render(){
         return `
         <div>
-            <h2>Join Tournament (Pas pret !!!!)</h2>
-
-            <form id="joinTournament-form" hidden>
+        <div id="header">
+        <div>
+        <button id="button-nav">
+        <i class="menuIcon material-icons">menu</i>
+        <i class="closeIcon material-icons" style="display: none;" >close</i>
+        </button>
+        <nav id="navbar">
+        </nav>
+        </div>
+        <div id="line"></div>
+        </div>
+        </div>
+            <h2>Join Tournament</h2>
+            <form id="join-tournament-form" hidden>
                 <input type="text" id="joinTournament-id" placeholder="Tournament id" required>
                 <button type="submit">Join tournament</button>
             </form>
@@ -87,7 +96,7 @@ export default class PlayTournamentJoin extends BaseView{
                     return;
                 }
                 
-                document.getElementById("joinTournament-form").removeAttribute("hidden");
+                document.getElementById("join-tournament-form").removeAttribute("hidden");
                 }
             }
         catch (error) {
@@ -97,7 +106,7 @@ export default class PlayTournamentJoin extends BaseView{
 
     unmount(){
         console.log('unmounting join tournament');
-        document.getElementById("joinTournament-form")?.removeEventListener("submit", this.handleJoinTournamentSubmit);
+        document.getElementById("join-tournament-form")?.removeEventListener("submit", this.handleJoinTournamentSubmit);
    
         const tournamentSeeMineField = document.getElementById("tournament-mine-button");
         if (tournamentSeeMineField) {
@@ -107,7 +116,7 @@ export default class PlayTournamentJoin extends BaseView{
 
     attachEvents(){
         console.log('Events attached (join tournament)');
-        document.getElementById("joinTournament-form")?.addEventListener("submit", this.handleJoinTournamentSubmit);
+        document.getElementById("join-tournament-form")?.addEventListener("submit", this.handleJoinTournamentSubmit);
     
         
         const tournamentSeeMineField = document.getElementById("tournament-mine-button");

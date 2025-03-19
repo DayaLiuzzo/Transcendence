@@ -1,5 +1,3 @@
-//status : pas pret !!!
-
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentMine extends BaseView{
@@ -12,8 +10,19 @@ export default class PlayTournamentMine extends BaseView{
     render(){
         return `
         <div>
-            <h2>My tournament (En cours !!!)</h2>
-
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
+            <h2>My tournament</h2>
             <div id="tournament-info" hidden>
             <h3>Tournament information</h3>
                 <div id="tournament-name"></div>
@@ -37,7 +46,7 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-delete-field"></div>            
             </div>
 
-            <div id ="no-tournament" hidden>You are not part of any tournament
+            <div id ="no-tournament" hidden>You are not part of any tournament<br> <br>
                 <button id="tournament-create-button">Create</button>
                 <button id="tournament-join-button">Join</button>
                 <button id="tournament-list-button">List</button>
@@ -48,14 +57,6 @@ export default class PlayTournamentMine extends BaseView{
             </div>
             `;
         }
-        // <h4>Une fois que le tournoi est lance<h4>
-        // <button id="tournament-play-field">Play tournament</button>
-        
-        // <p>[ ] lister les current match et y acceder ??<\p>
-        // <p>[ ] voir les resultats??<\p>
-        // <br>
-        // </div>
-    
 
     /* Events et events attachement */
 
