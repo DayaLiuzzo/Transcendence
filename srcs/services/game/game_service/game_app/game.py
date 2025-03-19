@@ -37,6 +37,9 @@ class Game:
                 self.ball.new_direction(self.player2)
                 self.ball.accelerate()
                 self.ball.last_player = self.player2
+            else:
+                return False
+            return True
         else:
             if score == 'left':
                 self.player2.score += 1
@@ -53,6 +56,7 @@ class Game:
             self.pause = True
             self.player1.reset_pos()
             self.player2.reset_pos()
+            return False
 
     def get_game_start(self):
         data = {

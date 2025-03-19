@@ -114,11 +114,11 @@ export default class PlayCanva extends BasePlayView {
 		this.scene.add(ballSpotlight.target);
 
 		const paddleMaterial = new THREE.MeshStandardMaterial({
-		  color: 0xffffff,
-		  roughness: 0.2,
-		  metalness: 1.5,
-		  emissive: 0xffffff,
-		  emissiveIntensity: 0.4
+			color: 0xffffff,
+			roughness: 0.2,
+			metalness: 1.5,
+			emissive: 0xffffff,
+			emissiveIntensity: 0.4,
 		});
 
 		const meshPlayer1 = new THREE.Mesh(
@@ -296,6 +296,7 @@ export default class PlayCanva extends BasePlayView {
 
 	setDataObjects(data) {
 		this.gameBoard.height = data.height;
+		console.log("UPDATED HEIGHT:", this.gameBoard.height);
 		this.gameBoard.width = data.width;
 		this.centerY = data.height / 2;
 		this.centerX = data.width / 2;
@@ -306,11 +307,11 @@ export default class PlayCanva extends BasePlayView {
 		this.player1.y = data.player1.y;
 		this.player1.width = data.player_width;
 		this.player1.height = data.player_height;
-		this.player2.x = data.player2.x;
-		this.player2.y = data.player2.y;
-		this.player2.width = data.player_width;
+		this.player2.x = data.player2.x ;
+		this.player2.y = data.player2.y ;
+		this.player2.width = data.player_width ;
 		this.player2.height = data.player_height;
-		this.ball.x = data.ball.x;
+		this.ball.x = data.ball.x ;
 		this.ball.y = data.ball.y;
 
 

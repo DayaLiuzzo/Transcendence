@@ -7,6 +7,10 @@ import PlayMenu from "./views/PlayMenu.js";
 import PlayLocal from "./views/PlayLocal.js";
 import PlayRemote from "./views/PlayRemote.js";
 import PlayTournament from "./views/PlayTournament.js";
+import PlayTournamentCreate from "./views/PlayTournamentCreate.js";
+import PlayTournamentList from "./views/PlayTournamentList.js";
+import PlayTournamentJoin from "./views/PlayTournamentJoin.js";
+import PlayTournamentMine from "./views/PlayTournamentMine.js";
 import PlayWithFriends from "./views/PlayWithFriends.js";
 import { cleanUpThree } from "./three/utils.js";
 import EditProfile from "./views/EditProfile.js";
@@ -22,6 +26,10 @@ const routes = [
     { path: '/play-local', view: PlayLocal, css: "styles/core.css", requiresAuth: false},
     { path: '/play-remote', view: PlayRemote, css: "styles/core.css", requiresAuth: true},
     { path: '/play-tournament', view: PlayTournament, css: "styles/core.css", requiresAuth: true},
+    { path: '/create-tournament', view: PlayTournamentCreate, css: "styles/core.css", requiresAuth: true},
+    { path: '/list-tournament', view: PlayTournamentList, css: "styles/core.css", requiresAuth: true},
+    { path: '/join-tournament', view: PlayTournamentJoin, css: "styles/core.css", requiresAuth: true},
+    { path: '/my-tournament', view: PlayTournamentMine, css: "styles/core.css", requiresAuth: true},
     { path: '/play-with-friends', view: PlayWithFriends, css: "styles/core.css", requiresAuth: true},
     { path: '/edit-profile', view: EditProfile, css: "styles/edit-profile.css", requiresAuth: true }
 ];

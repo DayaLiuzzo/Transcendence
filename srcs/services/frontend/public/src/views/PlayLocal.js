@@ -372,7 +372,6 @@ export default class PlayCanva extends BaseView{
 				window.threeInstance.camera.updateProjectionMatrix();
 				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
 			});
-			controls.update();
 
 			window.addEventListener("resize", () => {
 				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;

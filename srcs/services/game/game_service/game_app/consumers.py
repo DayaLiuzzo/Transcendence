@@ -34,6 +34,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.jeu = None
         self.is_host = False
         self.data_sent = False
+        self.player_count = 0
         self.final_game_data = {
         }
         await self.accept()
@@ -86,13 +87,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'send_message',
-                'message': f'{self.user.username} has joined the room.',
-            }
-        )
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
                 'type': 'joined',
                 'username': self.user.username,
             }
@@ -125,21 +119,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         
         text_data_json = json.loads(text_data)
         movement = text_data_json.get('message', {})
-
-        if movement == "up":
-            action_message = f"{self.user.username} has moved up."
-        elif movement == "down":
-            action_message = f"{self.user.username} has moved down."
         
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'send_message',
-                'message': action_message,  # this is the message to broadcast
-            }
-        )
-
-        if movement == 'down' or movement == 'up':
+        if movement == 'down' or movement == 'up' or movement == 'idle':
             if self.is_host:
                 identity = 1
             else:
@@ -172,16 +153,20 @@ class GameConsumer(AsyncWebsocketConsumer):
         is_allowed = self.user == player1 or self.user == player2
         return is_allowed
 
-    async def send_message(self, event):
-        message = event['message']
-        print(self.user.username, ':', message)
-        await self.send(text_data=json.dumps({'message': message}))
-
     async def joined(self, event):
+        self.player_count += 1
+        if self.player_count >= 2:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {'type': 'launch_game'}
+            )
+
+    async def launch_game(self, event):
         from .models import Game
-        self.game = await sync_to_async(get_object_or_404)(Game, room_id=self.room_name)
-        if self.is_host and event['username'] != self.user.username:
+
+        if self.is_host:
             self.jeu = Jeu()
+            self.game = await sync_to_async(get_object_or_404)(Game, room_id=self.room_name)
             player1 = await sync_to_async(lambda: self.game.player1)()
             player2 = await sync_to_async(lambda: self.game.player2)()
             self.final_game_data = {
@@ -344,7 +329,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         await send_results_to_rooms(self.final_game_data)
 
     async def update(self):
-        self.jeu._ball_hit()
+        if self.jeu._ball_hit():
+            await self.send_game_state({'state': 'COLLISION'})
         self.jeu.player1.update(self.jeu.delta)
         self.jeu.player2.update(self.jeu.delta)
         if self.jeu.game_started:

@@ -26,7 +26,7 @@ export default class Profile extends BaseView {
 
         return errorContainer;
     }
-    
+
     render() {
         return `
         <div>
@@ -188,11 +188,13 @@ export default class Profile extends BaseView {
         friendsField.innerHTML = "";
         const friendsList = document.createElement("ul");
         users.forEach(user => {
+            // chaque nom user
             const friendItem = document.createElement("li");
             friendItem.textContent = user.username;
-
+            // creer une autre div avec on ou off icon selon isOnline()  response
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
+            // ce que va supprimer le remove
             removeButton.setAttribute("data-username", user.username);
             friendItem.appendChild(removeButton);
             friendsList.appendChild(friendItem);
@@ -206,8 +208,8 @@ export default class Profile extends BaseView {
             const userFriends = await this.sendGetRequest(this.API_URL_USERS + username + '/friends/');
             const users = Array.isArray(userFriends.data) ? userFriends.data : [userFriends.data];
             this.renderFriends(users);
-            
-            const avatarUrl = await this.displayAvatar();            
+
+            const avatarUrl = await this.displayAvatar();
             const container = document.createElement("div");
             container.classList.add("username-container");
 
@@ -224,7 +226,7 @@ export default class Profile extends BaseView {
             container.appendChild(textContainer);
 
             document.getElementById("username-field").appendChild(container);
-            
+
             this.updateStatsField();
         }
         catch (error) {

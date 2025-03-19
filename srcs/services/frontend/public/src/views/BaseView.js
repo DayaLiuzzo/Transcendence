@@ -203,7 +203,6 @@ export default class BaseView{
                 <a href="/home">Home</a>
                 <a href="/play-menu">Play</a>
                 <a href="/profile">Profile</a>
-                <a href="/logout">Logout</a>
                 `;
 
             } else {
