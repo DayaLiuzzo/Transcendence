@@ -1,5 +1,3 @@
-//status : pas pret !!!
-
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentList extends BaseView{
@@ -26,7 +24,7 @@ export default class PlayTournamentList extends BaseView{
             </div>
             <h2>List tournament</h2>
             <div id="tournament-list-field"></div>
-            <div id ="no-tournament" hidden>No tournament available
+            <div id ="no-tournament" hidden>No tournament available <br> <br>
             <button id="tournament-create-button">Create</button>
             </div>
         </div>

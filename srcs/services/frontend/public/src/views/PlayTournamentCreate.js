@@ -1,5 +1,3 @@
-//status : pret pour css
-
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentCreate extends BaseView{
@@ -62,7 +60,7 @@ export default class PlayTournamentCreate extends BaseView{
             errorContainer = document.createElement("div");
             errorContainer.id = "createTournament-error-container";  // Set a unique ID
             errorContainer.classList.add("error-container");  // Optional: Add a class for styling
-            document.getElementById("createTournament-form").insertBefore(errorContainer, document.getElementById("createTournament-form").firstChild); // Insert at the top of the form
+            document.getElementById("create-tournament-form").insertBefore(errorContainer, document.getElementById("create-tournament-form").firstChild); // Insert at the top of the form
         }
 
         return errorContainer;
@@ -83,9 +81,9 @@ export default class PlayTournamentCreate extends BaseView{
                 <div id="line"></div>
                 </div>
             </div>
-            <h2>Create Tournament (pret pour css)</h2>
+            <h2>Create Tournament</h2>
 
-            <form id="createTournament-form" hidden>
+            <form id="create-tournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
                 <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
                 <button type="submit">Create tournament</button>
@@ -112,7 +110,7 @@ export default class PlayTournamentCreate extends BaseView{
                     document.getElementById("tournament-create-field").innerText = "You cannot join a tournament since you are already part of one"; 
                     return;
                 }
-                document.getElementById("createTournament-form").removeAttribute("hidden");
+                document.getElementById("create-tournament-form").removeAttribute("hidden");
             
                 }
             }
@@ -123,7 +121,7 @@ export default class PlayTournamentCreate extends BaseView{
 
     unmount(){
         console.log('unmounting create tournament');
-        document.getElementById("createTournament-form")?.removeEventListener("submit", this.handleCreateTournamentSubmit);
+        document.getElementById("create-tournament-form")?.removeEventListener("submit", this.handleCreateTournamentSubmit);
 
         const tournamentSeeMineField = document.getElementById("tournament-mine-button");
         if (tournamentSeeMineField) {
@@ -134,7 +132,7 @@ export default class PlayTournamentCreate extends BaseView{
 
     attachEvents(){
         console.log('Events attached (create tournament)');
-        document.getElementById("createTournament-form")?.addEventListener("submit", this.handleCreateTournamentSubmit);
+        document.getElementById("create-tournament-form")?.addEventListener("submit", this.handleCreateTournamentSubmit);
     
         const tournamentSeeMineField = document.getElementById("tournament-mine-button");
         if (tournamentSeeMineField) {

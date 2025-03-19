@@ -1,5 +1,3 @@
-//status pret pour integration du css
-
 import BaseView from './BaseView.js';
 
 export default class PlayMenu extends BaseView{
