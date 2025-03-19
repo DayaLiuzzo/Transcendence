@@ -12,6 +12,18 @@ export default class PlayTournamentList extends BaseView{
     render() {
         return `
         <div>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
             <h2>List tournament</h2>
             <div id="tournament-list-field"></div>
             <div id ="no-tournament" hidden>No tournament available

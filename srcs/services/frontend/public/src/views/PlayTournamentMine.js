@@ -12,8 +12,19 @@ export default class PlayTournamentMine extends BaseView{
     render(){
         return `
         <div>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
             <h2>My tournament (En cours !!!)</h2>
-
             <div id="tournament-info" hidden>
             <h3>Tournament information</h3>
                 <div id="tournament-name"></div>

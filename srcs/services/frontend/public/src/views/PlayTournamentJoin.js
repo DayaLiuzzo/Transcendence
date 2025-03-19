@@ -59,8 +59,19 @@ export default class PlayTournamentJoin extends BaseView{
     render(){
         return `
         <div>
+        <div id="header">
+        <div>
+        <button id="button-nav">
+        <i class="menuIcon material-icons">menu</i>
+        <i class="closeIcon material-icons" style="display: none;" >close</i>
+        </button>
+        <nav id="navbar">
+        </nav>
+        </div>
+        <div id="line"></div>
+        </div>
+        </div>
             <h2>Join Tournament (Pas pret !!!!)</h2>
-
             <form id="joinTournament-form" hidden>
                 <input type="text" id="joinTournament-id" placeholder="Tournament id" required>
                 <button type="submit">Join tournament</button>
