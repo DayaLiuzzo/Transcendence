@@ -7,6 +7,17 @@ export default class PlayCanva extends BasePlayView {
 	constructor(params) {
 		super(params);
 
+		window.threeInstance = {
+			scene,
+			camera,
+			renderer,
+			effect,
+			controls,
+			animationId: null,
+			canvas,
+			container,
+		};
+
 		this.player1 = { x: null, y: null, width: null, height: null };
 		this.player2 = { x: null, y: null, width: null, height: null };
 		this.ball = { x: null, y: null };
@@ -15,6 +26,7 @@ export default class PlayCanva extends BasePlayView {
 		this.scores = {
 			winner: null,
 			max_score: null,
+			looser: null,
 			player1_score: 0,
 			player2_score: 0,
 		};
@@ -109,7 +121,7 @@ export default class PlayCanva extends BasePlayView {
 			emissiveIntensity: 0.4,
 		});
 
-		this.meshPlayer1 = new THREE.Mesh(
+		const meshPlayer1 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player1.width, this.player1.height, 10),
 			paddleMaterial
 		);
@@ -120,7 +132,7 @@ export default class PlayCanva extends BasePlayView {
 		);
 		console.log("MESHPLAYER1", this.meshPlayer1);
 
-		this.meshPlayer2 = new THREE.Mesh(
+		const meshPlayer2 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
 			paddleMaterial
 		);
@@ -130,11 +142,11 @@ export default class PlayCanva extends BasePlayView {
 			20
 		);
 
-		// this.meshBall = new THREE.Mesh(
+		//const meshBall = new THREE.Mesh(
 		// 	new THREE.SphereGeometry(this.ballRadius, 16, 16),
 		// 	paddleMaterial
 		// );
-		this.meshBall = new THREE.Mesh(
+		const meshBall = new THREE.Mesh(
 			new THREE.BoxGeometry(
 				this.ballRadius,
 				this.ballRadius,
@@ -181,6 +193,42 @@ export default class PlayCanva extends BasePlayView {
 		this.scene.add(this.meshBall);
 		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
+
+		function createCollisionParticles(position) {
+			for (let i = 0; i < particleCount; i++) {
+				activeParticles.push({
+					position: position.clone(),
+					velocity: new THREE.Vector3(
+						(Math.random() - 0.5) * 0.2,
+						Math.random() * 0.2,
+						(Math.random() - 0.5) * 0.2
+					),
+					life: 1.0,
+				});
+			}
+		}
+
+		function updateParticles() {
+			activeParticles = activeParticles.filter((particle) => {
+				particle.position.add(particle.velocity);
+				particle.life -= 0.02;
+				return particle.life > 0;
+			});
+
+			const positions = new Float32Array(particleCount * 3);
+			for (let i = 0; i < activeParticles.length; i++) {
+				const particle = activeParticles[i];
+				positions[i * 3] = particle.position.x;
+				positions[i * 3 + 1] = particle.position.y;
+				positions[i * 3 + 2] = particle.position.z;
+			}
+
+			particles.geometry.setAttribute(
+				"position",
+				new THREE.BufferAttribute(positions, 3)
+			);
+			particles.geometry.attributes.position.needsUpdate = true;
+		}
 
 		// OUTILS POUR DEBUG
 		const axesHelper = new THREE.AxesHelper(5);
