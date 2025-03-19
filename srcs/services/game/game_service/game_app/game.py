@@ -6,7 +6,7 @@ from .settings import WIDTH, HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 
 class Game:
     def __init__(self):
-        self.score_limit = 3
+        self.score_limit = 1
         self.winner = None
         self.direction = [None, None]
         self.started = False

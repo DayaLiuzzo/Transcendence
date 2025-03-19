@@ -321,11 +321,8 @@ class UpdateRoomView(APIView):
             client = MicroserviceClient()
             url = f'http://tournament:8443/api/tournament/room_result/{room.room_id}/'
             client = MicroserviceClient()
-            response = client.send_internal_request(join_game_url, 'patch', data=serializer.data)
+            client.send_internal_request(url, 'patch', True, data=serializer.data)
             
-            if response.status_code != 200: #a changer si besoin en fonction
-                print(f"ERROR communication between tournament and rooms service : {response.status_code}")
-
         else:
             if request.data['status'] == 'deleted':
                 room.delete()

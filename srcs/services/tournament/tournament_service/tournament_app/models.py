@@ -149,11 +149,11 @@ class Pool(models.Model):
         ranking = []
 
         for player in players:
-            wins = rooms.filter(winner=player).count()
-            wins += rooms.filter(winner__isnull=True, loser=player).count()
-            losses = rooms.filter(loser=player).count()
-            draws = rooms.filter(winner__isnull=True, player1=player).exclude(loser=player).count()
-            draws += rooms.filter(winner__isnull=True, player2=player).exclude(loser=player).count()
+            wins = self.rooms.filter(winner=player).count()
+            wins += self.rooms.filter(winner__isnull=True, loser=player).count()
+            losses = self.rooms.filter(loser=player).count()
+            draws = self.rooms.filter(winner__isnull=True, player1=player).exclude(loser=player).count()
+            draws += self.rooms.filter(winner__isnull=True, player2=player).exclude(loser=player).count()
             points = wins * 3 + draws  # 3 points pour chaque victoire, 1 pour chaque match nul
             ranking.append({
                 'player': player,
@@ -168,10 +168,10 @@ class Pool(models.Model):
         return ranking
 
     def all_rooms_finished(self):
-        return all(room.status == 'finished' for room in self.rooms)
+        return all(room.status == 'finished' for room in self.get_rooms())
 
     def rooms_wave_finished(self):
-        return all(room.status != 'waiting' and room.status != 'playing' for room in self.rooms)
+        return all(room.status != 'waiting' and room.status != 'playing' for room in self.get_rooms())
 
 class Room(models.Model):
     STATUS_CHOICES = [
