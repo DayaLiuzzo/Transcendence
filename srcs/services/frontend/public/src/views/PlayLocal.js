@@ -1,3 +1,4 @@
+import { cleanUpThree } from "../three/utils.js";
 import BaseView from "./BaseView.js";
 export default class PlayCanva extends BaseView{
 	constructor(params) {
@@ -13,6 +14,13 @@ export default class PlayCanva extends BaseView{
 			player1_score: 0,
 			player2_score: 0,
 		};
+	}
+
+	unmount() {
+		console.log("Unmounted PlayCanva LOCAL");
+		document.getElementById("final-screen")?.remove();
+		this.gameOver = true;
+		cleanUpThree();
 	}
 
 	handlerEventsListeners() {
@@ -61,11 +69,11 @@ export default class PlayCanva extends BaseView{
         `;
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-lobby").addEventListener("click", () => {
-			finalScreen.remove();
+			document.body.removeChild(finalScreen);
 			this.gameOver = false;
             this.navigateTo("/play-menu");
         });
-    }
+	}
 
 	resetScores() {
 		const fontLoader = new THREE.FontLoader();
@@ -107,7 +115,7 @@ export default class PlayCanva extends BaseView{
 				window.threeInstance.scene.add(this.scores.player1_score_text);
 				window.threeInstance.scene.add(this.scores.player2_score_text);
 
-					if (this.scores.player1_score >= 1 || this.scores.player2_score >= 1) {
+					if (this.scores.player1_score >= 2 || this.scores.player2_score >= 2) {
 						if (this.scores.player1_score >= 1) {
 							this.handleGameEnd("Player 1", "Player 2", this.scores.player1_score, this.scores.player2_score);
 						} else {
@@ -115,8 +123,25 @@ export default class PlayCanva extends BaseView{
 						}
 					}
 				});
+	}
 
+	updateSpotlight(spotlight, targetMesh) {
+		spotlight.position.set(targetMesh.position.x, 3, targetMesh.position.z);
+		spotlight.target.position.copy(targetMesh.position);
+	}
 
+	createSpotlight(scene, intensity = 10) {
+		const spotlight = new THREE.SpotLight(0xffffff, intensity);
+		spotlight.angle = Math.PI / 6;
+		spotlight.penumbra = 0.3;
+		spotlight.decay = 1;
+		spotlight.distance = 10;
+		spotlight.castShadow = true;
+
+		scene.add(spotlight);
+		scene.add(spotlight.target);
+
+		return spotlight;
 	}
 
 	initGame() {
@@ -137,8 +162,10 @@ export default class PlayCanva extends BaseView{
 		const renderer = new THREE.WebGLRenderer({
 			canvas: canvas,
 			alpha: true,
+			antialias: true
 		});
 		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enablePan = false;
@@ -154,7 +181,6 @@ export default class PlayCanva extends BaseView{
 			controls,
 			canvas,
 		};
-		console.log("THREE INSTANCE", window.threeInstance);
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 		directionalLight.position.set(5, 10, 5);
@@ -166,14 +192,9 @@ export default class PlayCanva extends BaseView{
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
 
-		const ballSpotlight = new THREE.SpotLight(0xffffff, 10);
-		ballSpotlight.angle = Math.PI / 6;
-		ballSpotlight.penumbra = 0.3;
-		ballSpotlight.decay = 1;
-		ballSpotlight.distance = 10;
-		ballSpotlight.castShadow = true;
-		window.threeInstance.scene.add(ballSpotlight);
-		window.threeInstance.scene.add(ballSpotlight.target);
+		const ballSpotlight = this.createSpotlight(scene);
+		const player1Spotlight = this.createSpotlight(scene);
+		const player2Spotlight = this.createSpotlight(scene);
 
 		const paddleMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffffff,
@@ -286,15 +307,6 @@ export default class PlayCanva extends BaseView{
 			particles.geometry.attributes.position.needsUpdate = true;
 		}
 
-		// function resetBall() {
-		// 	meshBall.position.set(0, 0.2, 0);  // Réinitialise la position
-		// 	this.ballVelocity = {
-		// 		x: (Math.random() > 0.5 ? 1 : -1) * 0.05,  // Vitesse initiale sur l'axe X
-		// 		z: (Math.random() - 0.5) * 0.05,  // Vitesse initiale sur l'axe Z
-		// 	};
-		// }
-
-		const clock = new THREE.Clock();
 		const tick = () => {
 			 if (this.gameOver === true) {
 
@@ -314,12 +326,10 @@ export default class PlayCanva extends BaseView{
 			meshBall.position.x += this.ballVelocity.x;
 			meshBall.position.z += this.ballVelocity.z;
 
-			ballSpotlight.position.set(
-				meshBall.position.x,
-				3,
-				meshBall.position.z
-			);
-			ballSpotlight.target.position.copy(meshBall.position);
+			this.updateSpotlight(ballSpotlight, meshBall);
+			this.updateSpotlight(player1Spotlight, meshPlayer1);
+			this.updateSpotlight(player2Spotlight, meshPlayer2);
+
 			updateParticles();
 			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
 				this.ballVelocity.z *= -1 * this.speedIncrement;
@@ -353,6 +363,7 @@ export default class PlayCanva extends BaseView{
 				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
 				window.threeInstance.camera.updateProjectionMatrix();
 				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
+				window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			});
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);

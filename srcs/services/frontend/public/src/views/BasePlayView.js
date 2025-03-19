@@ -31,7 +31,7 @@ export default class BasePlayView extends BaseView{
 
     handleGameEnd(winner, looser, winner_score, looser_score){
         console.log("game end")
-        
+
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
@@ -54,8 +54,9 @@ export default class BasePlayView extends BaseView{
         `;
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-lobby").addEventListener("click", () => {
+            document.body.removeChild(finalScreen);
             this.navigateTo("/play-menu");
-        }); 
+        });
     }
 
     checkStart(){
@@ -123,4 +124,13 @@ export default class BasePlayView extends BaseView{
             console.error("Error in mount():", error);
         }
     }
+
+    // async unmount() {
+    //     console.log('Unmounting Play');
+    //     if (this.socketService) {
+    //         this.socketService.closeConnection();
+    //         this.socketService = null;
+    //     }
+    // }
 }
+
