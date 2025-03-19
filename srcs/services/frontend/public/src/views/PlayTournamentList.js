@@ -1,5 +1,3 @@
-//status : pas pret !!!
-
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentList extends BaseView{
@@ -12,9 +10,21 @@ export default class PlayTournamentList extends BaseView{
     render() {
         return `
         <div>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
             <h2>List tournament</h2>
             <div id="tournament-list-field"></div>
-            <div id ="no-tournament" hidden>No tournament available
+            <div id ="no-tournament" hidden>No tournament available <br> <br>
             <button id="tournament-create-button">Create</button>
             </div>
         </div>
@@ -101,6 +111,7 @@ export default class PlayTournamentList extends BaseView{
                 joinButton.id = "joinButton"
                 joinButton.textContent = "Join";
                 joinButton.setAttribute("data-tournamentID", tournament.tournament_id);
+                joinButton.classList.add("joinButton");
                 tournamentItem.appendChild(joinButton);
             }
             tournamentList.appendChild(tournamentItem);
