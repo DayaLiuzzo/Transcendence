@@ -26,6 +26,26 @@ export default class PlayCanva extends BasePlayView {
 
 		this.renderer = null;
 		this.camera = null;
+
+		this.initSettings = (event) => {
+			this.setDataObjects(event.detail);
+		};
+		this.updateGame = (event) => {
+			this.updateGameObjects(event.detail);
+		};
+		this.updateScore = (event) => {
+			this.updateScore(event.detail);
+		};
+		this.endGame = (event) => {
+			isRunning = false;
+			console.log("================================");
+			console.log(window.threeInstance);
+			this.handleGameEnd(
+				event.detail,
+				this.player1,
+				this.player2
+			);
+		};
 	}
 
 	unmount() {
@@ -37,6 +57,10 @@ export default class PlayCanva extends BasePlayView {
 			this.socketService = null;
 			cleanUpThree();
 		}
+		window.removeEventListener("initSettingsGame", this.initSettings);
+		window.removeEventListener("updateGame", this.updateGame);
+		window.removeEventListener("updateScore", this.updateScore);
+		window.removeEventListener("handleEndGame", this.endGame);
 	}
 
 	showError(message) {
@@ -49,25 +73,10 @@ export default class PlayCanva extends BasePlayView {
 			cursor.x = event.clientX / window.innerWidth - 0.5;
 			cursor.y = -(event.clientY / window.innerHeight - 0.5);
 		});
-		window.addEventListener("initSettingsGame", (event) => {
-			this.setDataObjects(event.detail);
-		});
-		window.addEventListener("updateGame", (event) => {
-			this.updateGameObjects(event.detail);
-		});
-		window.addEventListener("updateScore", (event) => {
-			this.updateScore(event.detail);
-		});
-		window.addEventListener("handleEndGame", (event) => {
-			isRunning = false;
-			console.log("================================");
-			console.log(window.threeInstance);
-			this.handleGameEnd(
-				event.detail,
-				this.player1,
-				this.player2
-			);
-		});
+		window.addEventListener("initSettingsGame", this.initSettings);
+		window.addEventListener("updateGame", this.updateGame);
+		window.addEventListener("updateScore", this.updateScore);
+		window.addEventListener("handleEndGame", this.endGame);
 		// window.addEventListener("handleCollision", (event) => {
 		// 	this.handleCollision(event.detail);
 		// });
