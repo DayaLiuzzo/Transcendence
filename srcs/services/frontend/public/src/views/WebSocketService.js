@@ -7,7 +7,19 @@ export default class WebSocketService {
         this.token = this.getAccessToken();
         this.isplaying = false;
         this.name = "pas init"
-    }
+		this.handleKeyDown = (event) => {
+			if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+				const movement = event.key === "ArrowUp" ? "up" : "down";
+				this.sendMessage(movement);
+			}
+		};
+		this.handleKeyUp = (event) => {
+			if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+				const movement = "idle";
+				this.sendMessage(movement);
+				}
+			}
+		};
 
     connect() {
         const url = `${this.WS_GAME_URL}${this.roomName}/`;
@@ -19,15 +31,12 @@ export default class WebSocketService {
             if (this.token) {
                 this.sendMessage({ Authorization: `Bearer ${this.token}`});
             }
+			this.listenToKeyboard();
         };
 
         this.socket.onmessage = (event) => {
             if (this.isplaying == false){
                 this.handleStart(event);
-
-                const e = new CustomEvent("gameStarted");
-
-                window.dispatchEvent(e);
             }
             else {
                 this.handleMessage(event);
@@ -36,19 +45,23 @@ export default class WebSocketService {
 
         this.socket.onclose = (event) => {
             this.isConnected = false;
+			this.unlistenToKeyboard();
             console.log("Connexion WebSocket fermée", event);
         };
 
         this.socket.onerror = (error) => {
             console.error("Erreur WebSocket: ", error);
         };
+
+		return this.isConnected;
     }
 
     handleStart(event) {
         const data = JSON.parse(event.data);
         console.log("Message reçu:", data);
-        if (data.message.state === 'START')
+        if (data.message && data.message.state === 'START')
         {
+            document.querySelector("canvas.webgl").innerText = "Playing...";
             this.isplaying = true;
             const event = new CustomEvent("initSettingsGame", { detail: data.message});
             window.dispatchEvent(event);
@@ -106,5 +119,17 @@ export default class WebSocketService {
             return userSession.access_token;
         }
         return null;
+    }
+
+    listenToKeyboard() {
+        console.log("Listening to keyboard")
+		window.addEventListener("keydown", this.handleKeyDown);
+		window.addEventListener("keyup", this.handleKeyUp);
+    }
+
+    unlistenToKeyboard() {
+        console.log("Unlistening to keyboard")
+		window.removeEventListener("keydown", this.handleKeyDown);
+		window.removeEventListener("keyup", this.handleKeyUp);
     }
 }
