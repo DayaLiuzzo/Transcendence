@@ -59,7 +59,6 @@ export default class Profile extends BaseView {
                 </form>
                 <div id="stats-field"></div>
                 <div id="match-history-field"> <h3>Match History</h3> </div>
-            <button id="refresh">Refresh</button>
             </div>
         </div>
         `;
@@ -242,16 +241,8 @@ export default class Profile extends BaseView {
         this.logout();
     }
     
-    handleRefreshClick() {
-        this.refreshToken();
-    }
-
     attachEvents() {
         console.log('Events attached (Profile)');
-        const refreshButton = document.getElementById("refresh");
-        if (refreshButton) {
-            refreshButton.addEventListener("click", this.handleRefreshClick.bind(this));
-        }
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));
