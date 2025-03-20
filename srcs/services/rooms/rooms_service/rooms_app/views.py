@@ -168,7 +168,10 @@ class JoinRoomView(APIView):
 
         user = request.user
 
-        waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).exclude(player1=user).exclude(player2=user).first()
+        waiting_room = Room.objects.filter(Q(status='waiting'), Q(player1=user) | Q(player2=user)).first()
+        if waiting_room:
+            return Response({'message': 'You are already in a room', 'room_id': waiting_room.room_id})
+        waiting_room = Room.objects.filter(status='waiting', players_count__lt=2).first()
 
         if waiting_room:
             return self.join_room(request, waiting_room, user)
@@ -398,6 +401,19 @@ class CountLockedRoomsView(APIView):
             {"locked_room_count": locked_room_count},
             status=status.HTTP_200_OK
         )
+    
+
+class UserStats(APIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        wins = Room.objects.filter(winner=user).count()
+        losses = Room.objects.filter(loser=user).count()
+        return Response({
+            'wins': wins,
+            'losses': losses
+        })
+
 
 # ************************** DELETE ************************** #
 

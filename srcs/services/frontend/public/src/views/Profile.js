@@ -59,7 +59,6 @@ export default class Profile extends BaseView {
                 </form>
                 <div id="stats-field"></div>
                 <div id="match-history-field"> <h3>Match History</h3> </div>
-            <button id="refresh">Refresh</button>
             </div>
         </div>
         `;
@@ -140,7 +139,7 @@ export default class Profile extends BaseView {
             return;
         }
         const username = this.getUsername();
-        const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
+        const response = await this.sendGetRequest(this.API_URL_ROOMS + 'user_stats/');
         if(response.success){
             statsField.innerHTML = `
             <h3>Stats</h3>
@@ -159,10 +158,12 @@ export default class Profile extends BaseView {
     }
 
     async addFriend(friendUsername) {
+        const errorContainer = this.getErrorContainer("add-friend-error-container");
+        errorContainer.innerHTML = '';
         const username = this.getUsername();
         const body = {};
         if (username === friendUsername) {
-            this.showError("You cannot add yourself as a friend"), "add-friend-form";
+            this.showError("You cannot add yourself as a friend", "add-friend-form");
             return;
         }
         const response = await this.sendPatchRequest(this.API_URL_USERS + username + "/friends/add/" + friendUsername + "/", body);
@@ -242,16 +243,8 @@ export default class Profile extends BaseView {
         this.logout();
     }
     
-    handleRefreshClick() {
-        this.refreshToken();
-    }
-
     attachEvents() {
         console.log('Events attached (Profile)');
-        const refreshButton = document.getElementById("refresh");
-        if (refreshButton) {
-            refreshButton.addEventListener("click", this.handleRefreshClick.bind(this));
-        }
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));

@@ -194,7 +194,6 @@ export default class BasePlayView extends BaseView{
     }
 
     unmount () {
-
         this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
     }
 
