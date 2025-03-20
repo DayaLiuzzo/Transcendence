@@ -8,19 +8,13 @@ export default class BasePlayView extends BaseView{
         this.socketService = null;
         this.handleGameEnd = this.handleGameEnd.bind(this);
         this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
+		this.tournament_id = null;
     }
 
     async waitRoom() {
-        const my_tournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
-        if (!my_tournament.success) {
-            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
-            return;
-        }
-
-        const tournament_id = my_tournament.data.tournament_id;
         const tournament = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'result/',
             {
-                "tournament_id": tournament_id
+                "tournament_id": this.tournament_id
             });
 
         if (!tournament.success) {
@@ -30,22 +24,58 @@ export default class BasePlayView extends BaseView{
         }
 
         const tournament_data = tournament.data;
+		console.log(tournament.data)
         if (tournament_data.status === 'finished' || tournament_data.result === 'lost') {
-            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+			if (tournament_data.status !== 'finished') {
+                document.getElementById("status").innerText = "You lost the tournament, waiting for the tournament to end...";
+			} else {
+				this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+				this.handleTournamentGameEnd(tournament_data.result)
+			}
             return;
         }
-
-        const room = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
-        if (room.success) {
-            console.log(room.success)
-            const data = room.data;
+        
+        const rooms_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
+        if (rooms_data.success) {
+            console.log(rooms_data.success)
+            const data = rooms_data.data;
             console.log(data)
-            console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
             const rooms = data.filter((room) => room.status === "waiting");
             if (rooms.length === 0) {
-                document.getElementById("status").innerText = "Waiting for rooms";
+				const pools_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_pools/' + this.tournament_id + '/');
+				if (pools_data.success) {
+				const data = pools_data.data;
+				const pool_section = document.createElement("div");
+				pool_section.id = "pool_section";
+
+				data.forEach((pool) => {
+					const pool_name = document.createElement("h3");
+					pool_name.id = "pool_name";
+					pool_name.innerText = pool.name;
+
+					const list_rooms = document.createElement("ul");
+					list_rooms.id = "list_rooms";
+					const rooms = pool.rooms;
+					rooms.forEach((room) => {
+						const room_section = document.createElement("li");
+						room_section.id = "room_section";
+						room_section.innerText = `${room.player1} vs ${room.player2} - ${room.status}`;
+						list_rooms.appendChild(room_section);
+					});
+
+					pool_section.appendChild(pool_name);
+					pool_section.appendChild(list_rooms);
+				});
+
+				const status = document.getElementById("status");
+				status.innerHTML = "Waiting for the rooms of the pools to be finished...";
+				status.appendChild(pool_section);
+                document.getElementById("room-id").innerText = "";
+                document.querySelector("canvas.webgl").innerText = "";
+                document.getElementById("user-2").innerText = "";
+				}
             } else {
-                this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+				this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
                 const room = rooms[0];
                 console.log(room);
                 document.getElementById("room-id").innerText = room.room_id;
@@ -53,14 +83,28 @@ export default class BasePlayView extends BaseView{
                 document.querySelector("canvas.webgl").innerText = "Loading...";
                 document.getElementById("user-2").innerText = "Waiting for opponent...";
                 this.openWebSocket(room.room_id);
-                window.addEventListener("gameStarted", () => this.checkStart());
             }
-        } else {
-            document.getElementById("room-id").innerText = "No room found, please reload";
         }
     }
 
-    async handleTournamentGameEnd(){
+    async handleTournamentGameEnd(result) {
+		cleanUpThree();
+		console.log("tournament ended");
+		document.getElementById("room-id").innerText = "";
+		document.querySelector("canvas.webgl").innerText = "";
+		document.getElementById("user-2").innerText = "";
+		const status = document.getElementById("status");
+		status.innerHTML = `<p>The tournament ended.</p>`;
+		const tournament_detail = await this.sendGetRequest(this.API_URL_TOURNAMENT + "detail/" + this.tournament_id + "/");
+		if (tournament_detail.success) {
+			const data = tournament_detail.data;
+			status.innerHTML += `<p>You ${result}!</p>`;
+			status.innerHTML += `<p>The winner is ${data.winner}!</p>`;
+			status.innerHTML += `<button id="back-to-lobby">Back to Lobby</button>`;
+		}
+		document.getElementById("back-to-lobby").addEventListener("click", () => {
+			this.navigateTo("/play-menu");
+		});
     }
 
     handleGameEnd(data, player1, player2){
@@ -78,8 +122,7 @@ export default class BasePlayView extends BaseView{
 			winner_username = player2.username;
 			loser_username = player1.username;
 		}
-        console.log("game end")
-
+        
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
@@ -100,61 +143,27 @@ export default class BasePlayView extends BaseView{
             text-align: center;
 
         `;
+		console.log("waiting_rooms");
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-waiting-rooms").addEventListener("click", () => {
+			console.log("waiting_rooms clicked");
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
             cleanUpThreeTournament();
-            this.mount();
+
+			try {
+				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
+			} catch (error) {
+				console.error("Error in mount():", error);
+			}
         });
-    }
-
-    checkStart(){
-        console.log(this.socketService);
-        if (this.socketService.isplaying){
-            document.querySelector("canvas.webgl").innerText = "Playing...";
-            this.listenToKeyboard();
-            window.addEventListener("keyboard", () => this.listenToKeyboard());
-        }
-    }
-
-    listenToKeyboard() {
-        console.log("Listening to keyboard")
-        if (this.socketService && this.socketService.isplaying){
-            console.log("wesh")
-            window.addEventListener("keydown", (event) => {
-                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-                    const movement = event.key === "ArrowUp" ? "up" : "down";
-                    this.sendMovementToWebSocket(movement);
-                }
-
-            });
-            window.addEventListener("keyup", (event) => {
-                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-                    const movement = "idle";
-                    this.sendMovementToWebSocket(movement);
-                }
-            });
-
-        }
-    }
-
-    sendMovementToWebSocket(movement) {
-        // Si la connexion WebSocket est active et le jeu a commencé, envoyer le mouvement
-        //add condition pour checker que la websocket est ok
-        this.socketService.sendMessage(movement);
-
     }
 
     // Ouvrir une WebSocket pour cette salle
     openWebSocket(roomId) {
-        if (!this.socketService) {
-            this.socketService = new WebSocketService(roomId);
-            this.socketService.name = "init"
-        }
-        //try puis mettre this.socketservice a null si fail
-        this.socketService.connect();
-        this.socketService.name = "after connexion"
+		this.socketService = new WebSocketService(roomId);
+		this.socketService.name = "init";
+		this.socketService.connect();
     }
 
     async test(){
@@ -168,12 +177,20 @@ export default class BasePlayView extends BaseView{
     }
 
     async mount() {
-		this.waitRoom();
-        try {
-            this.router.RerenderTournamentIntervalPlay = setInterval(this.waitRoom, 5000);
-        } catch (error) {
-            console.error("Error in mount():", error);
+        const my_tournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
+        if (!my_tournament.success) {
+			alert("You are not in a tournament");
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+			this.navigateTo("/play-menu");
+            return;
         }
+        this.tournament_id = my_tournament.data.tournament_id;
+
+		try {
+			this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
+		} catch (error) {
+			console.error("Error in mount():", error);
+		}
     }
 
     unmount () {
