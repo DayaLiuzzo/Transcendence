@@ -80,6 +80,8 @@ export default class BaseView{
             errorContainer = document.createElement("div");
             errorContainer.id = formId+ "-error-container";
             errorContainer.classList.add("error-container");
+            console.log(formId);
+            
             document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
 
