@@ -89,6 +89,8 @@ class Tournament(models.Model):
             
             # Ajoute les joueurs dans la poule
             pool.users.set(players[i*4:(i+1)*4])
+            if pool.users.count() == 1:
+                pool.winner = pool.users[0]
             pool.save()
             
             # Génère les matchs pour cette poule
