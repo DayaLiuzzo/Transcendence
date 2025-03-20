@@ -442,13 +442,13 @@ body {
     margin-left: 16px;
 }
 
-  .joinButton:hover{
+   .joinButton:hover{
     color: #46f436;
   }
 
   .joinButton:focus{
       outline: none;
-  }
+  }  */
 
   .friend-item {
     font-family: 'Roboto', sans-serif;
