@@ -269,7 +269,7 @@ export default class BaseView{
                     avatarImg.className = "navbar-avatar";
 
                     const welcomeText = document.createElement("span");
-                    welcomeText.textContent = "Welcome";
+                    welcomeText.textContent = "Welcome " + this.getUsername();
                     welcomeText.className = "welcome-text";
 
                     const flexContainer = document.createElement("div");

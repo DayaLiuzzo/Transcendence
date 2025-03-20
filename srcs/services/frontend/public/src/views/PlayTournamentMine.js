@@ -284,11 +284,11 @@ export default class PlayTournamentMine extends BaseView{
                 if (tournamentStatus === "playing"){
                     this.status = "playing"
                     document.getElementById("tournament-launched").removeAttribute("hidden");
+                    document.getElementById("tournament-info").setAttribute("hidden", true);
                 }
 
                 if (this.status === "waiting")
                     document.getElementById("tournament-info").removeAttribute("hidden");
-                //a deplacer maybe
 
                 if (this.status === "waiting" && tournamentOwner != this.getUsername())
                     document.getElementById("tournament-leave-button").removeAttribute("hidden");
