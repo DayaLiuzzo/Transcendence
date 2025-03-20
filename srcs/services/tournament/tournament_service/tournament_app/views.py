@@ -379,11 +379,6 @@ class ListMyRoomsView(generics.ListAPIView):
                 Q(player1=user) | Q(player2=user),
                 Q(status='waiting') | Q(status='standby'),
                 Q(pool__tournament__status='playing'))
-        if queryset.count() == 0:
-            return Response({
-                'message': 'You don\'t have any rooms'
-                }, status=status.HTTP_404_NOT_FOUND)
-
         serializer = RoomSerializer(queryset, many=True)
         return Response(serializer.data)
 

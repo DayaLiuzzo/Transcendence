@@ -78,6 +78,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             return
 
         await self.get_game()
+        status = await sync_to_async(lambda: self.game.status)()
+
+        if status == 'finished':
+            await self.send_error_message("Game already finished.")
+            await self.close()
+            return
 
         if not await self.user_is_allowed():
             await self.send_error_message("User not allowed in room.")
@@ -86,6 +92,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_add(self.room_group_name,self.channel_name)
         self.authenticated = True
+        self.player_count += 1
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -155,7 +162,10 @@ class GameConsumer(AsyncWebsocketConsumer):
         return is_allowed
 
     async def joined(self, event):
-        self.player_count += 1
+        username = event['username']
+        if self.user.username != username:
+            self.player_count += 1
+
         if self.player_count >= 2:
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -182,8 +192,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         if self.is_host:
             if not self.data_sent:
                 player_disconnected = event['player_type']
-                self.game.status = 'finished'
-                await sync_to_async(self.game.save)()
 
                 if self.jeu:
                     if self.jeu.game_end:
@@ -199,6 +207,9 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                         await self.update_final_game_data()
                     await self.send_game_state(self.jeu.get_game_end())
+                    await send_results_to_rooms(self.final_game_data)
+                    self.data_sent = True
+                    await sync_to_async(self.game.delete)()
                 else:
                     from_tournament = await sync_to_async(lambda: self.game.from_tournament)()
                     if not from_tournament:
@@ -213,9 +224,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                         }
                         await send_results_to_rooms(self.final_game_data)
                         self.data_sent = True
+                        await sync_to_async(self.game.delete)()
                     else:
                         return
-            await sync_to_async(self.game.delete)()
 
 
 

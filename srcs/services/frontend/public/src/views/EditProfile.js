@@ -100,6 +100,7 @@ export default class EditProfile extends BaseView {
                     <div id="line"></div>
                     </div>
                 </div>
+                <div id="placeholder"></div>
                 <div id="container">
                     <h2>Edit Profile</h2>
                     <h3>Change Password</h3>
@@ -117,7 +118,7 @@ export default class EditProfile extends BaseView {
                             <button type="submit">Change Username</button>
                         </form>
                         <button id="toggle-2fa-button">Enable 2FA</button>
-                        <div class="avatar-container">
+                        <div class="avatar-container" id="avatar-container">
                             <input type="file" id="avatar-upload" accept="image/*" />                         
                             <button id="upload-avatar-btn">Upload Avatar</button>
                         </div>
@@ -236,11 +237,13 @@ export default class EditProfile extends BaseView {
     }
 
     async handleUploadAvatar() {
+        const errorContainer = this.getErrorContainer("avatar-container");
+        errorContainer.innerHTML = '';
         const fileInput = document.getElementById("avatar-upload");
         const file = fileInput.files[0];
 
         if (!file) {
-            this.showError("missing file", "app");
+            this.showError("missing file", "avatar-container");
             return;
         }
 
@@ -249,15 +252,39 @@ export default class EditProfile extends BaseView {
         const response = await this.uploadAvatar(this.API_URL_AVATAR, formData);
 
         if (!response.success) {
-            this.showError(response.error, "app");
+            this.showError(response.error, "avatar-container");
             return;
         }
+
+
+        console.log("Avatar uploaded successfully");
+        const avatarUrl = await this.displayAvatar();
+        const avatarImg = document.createElement("img");
+        avatarImg.src = avatarUrl;
+        avatarImg.alt = "User Avatar";
+        avatarImg.classList.add("avatar-img");
+
+        const container = document.createElement("div");
+        container.appendChild(avatarImg);
+        let avatarContainer = document.getElementById("placeholder");
+        avatarContainer.replaceChildren(container);
 
     }
 
     async mount() {
         try {
             const username = this.getUsername();
+
+            const avatarUrl = await this.displayAvatar();
+            const avatarImg = document.createElement("img");
+            avatarImg.src = avatarUrl;
+            avatarImg.alt = "User Avatar";
+            avatarImg.classList.add("avatar-img");
+
+            const container = document.createElement("div");
+            container.appendChild(avatarImg);
+            document.getElementById("placeholder").appendChild(container);
+
             this.updateFieldContent("username-field", this.formatField("username", username));
             const userData = await this.sendGetRequest(this.API_URL + username + '/');
             if (userData.data.two_factor_enabled) document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
