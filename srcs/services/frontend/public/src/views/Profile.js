@@ -373,7 +373,7 @@ export default class Profile extends BaseView {
         if (logoutButton) {
             logoutButton.removeEventListener("click", this.handleLogoutClick);
         }
-
+        this.router.customClearInterval(this.router.RerenderFriendsInterval);
     }
 
 }

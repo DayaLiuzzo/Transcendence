@@ -46,7 +46,7 @@ export default class WebSocketService {
 
     handleStart(event) {
         const data = JSON.parse(event.data);
-        console.log("Message reçu:", data.message);
+        console.log("Message reçu:", data);
         if (data.message.state === 'START')
         {
             this.isplaying = true;

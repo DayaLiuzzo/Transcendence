@@ -23,7 +23,7 @@ class RoomSerializer(serializers.ModelSerializer):
 class RoomSerializerInternal(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ['player1', 'player2', 'winner', 'loser', 'status', 'score_player1', 'score_player2']
+        fields = ['player1', 'player2', 'winner', 'loser', 'status', 'score_player1', 'score_player2', 'date_played']
 
 class PoolSerializer(serializers.ModelSerializer):
     users = serializers.StringRelatedField(many=True)

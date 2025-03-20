@@ -53,7 +53,7 @@ export default class PlayTournamentMine extends BaseView{
             </div>
 
             <div id ="tournament-launched" hidden>Tournament started
-                <button id="access game">Access</button>
+                <button id="access-waiting-rooms-button">Access waiting room</button>
             </div>
             `;
         }
@@ -166,7 +166,20 @@ export default class PlayTournamentMine extends BaseView{
             document.getElementById("tournament-info").setAttribute("hidden", true);
         }
     }
+
     
+    // Acces waiting rooms tournament    
+    async waitingRoomTournament() {
+        //add alerte avant redirection??
+        this.navigateTo("/play-remote-tournament");
+    }
+    
+    handleWaitingRoomTournamentClick(event) {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Access waiting room") {
+            this.waitingRoomTournament();
+        }
+    }
+
     attachEvents() {
         console.log('Events attached (Tournament Mine)');
 
@@ -201,7 +214,12 @@ export default class PlayTournamentMine extends BaseView{
         if (tournamentListField) {
             tournamentListField.addEventListener("click", this.handleListTournamentClick.bind(this));
         }
-        
+
+        const tournamentWaitingRoomField = document.getElementById("access-waiting-rooms-button");
+        if (tournamentWaitingRoomField) {
+            tournamentWaitingRoomField.addEventListener("click", this.handleWaitingRoomTournamentClick.bind(this));
+        }
+
     }
 
     formatField(type, value){
@@ -223,23 +241,24 @@ export default class PlayTournamentMine extends BaseView{
         return formats[type] ? formats[type](value) : `${type.charAt(0).toUpperCase() + type.slice(1)}: ${value}`;
 
     }
-    
-    async mount() {
-        console.log('Mounting Play tournament Mine');
 
-        try {
-
-            const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
+    async renderTournamentInfo(){
+        const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
             if (checkIfInTournament.success) {
                     if (!checkIfInTournament.data.in_tournament){ 
                         document.getElementById("no-tournament").removeAttribute("hidden");
-                        return;
+                        this.router.customClearInterval(this.router.RerenderTournamentInterval);
+                        document.getElementById("tournament-info").setAttribute("hidden", true);
+                        // alert("The Host Terminated the party");
+                        // return this.navigateTo('/play-menu');
+
                     }
                 }
                 
                 const getTournamentInfo = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
                 if (!getTournamentInfo.success) {
-                    return ;
+                    // return this.navigateTo('/play-menu');
+                    return this.router.customClearInterval(this.router.RerenderTournamentInterval);
                 }
                 
                 /* C'est pas du debug, c'est pour afficher les donnes du tournoi en cours */
@@ -284,7 +303,14 @@ export default class PlayTournamentMine extends BaseView{
                 const tournamentWinner= getTournamentInfo.data.winner;
                 document.getElementById("tournament-winner").innerHTML = this.formatField('winner', tournamentWinner);
             
+    }
+    
+    async mount() {
+        console.log('Mounting Play tournament Mine');
 
+        try {
+            this.renderTournamentInfo()
+            this.router.RerenderTournamentInterval = setInterval(() => {this.renderTournamentInfo();}, 5000);
         }
         catch (error) {
             console.error("Error in mount():", error);
@@ -326,5 +352,11 @@ export default class PlayTournamentMine extends BaseView{
         if (tournamentListField) {
             tournamentListField.removeEventListener("click", this.handleListTournamentClick);
         }
+
+        const tournamentWaitingRoomField = document.getElementById("access-waiting-rooms-button");
+        if (tournamentWaitingRoomField) {
+            tournamentWaitingRoomField.removeEventListener("click", this.handleWaitingRoomTournamentClick);
+        }
+        this.router.customClearInterval(this.router.RerenderTournamentInterval);
     }
 }

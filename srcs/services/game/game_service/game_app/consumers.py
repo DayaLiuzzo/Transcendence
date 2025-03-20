@@ -20,7 +20,9 @@ async def send_results_to_rooms(data):
     await sync_to_async(serializer.is_valid)(raise_exception=True)
     client = MicroserviceClient()
     url = f"http://rooms:8443/api/rooms/update_room/{data['room_id']}/"
-    #print(serializer.data)
+    print('==========================')
+    print(serializer.data)
+    print('==========================')
     await sync_to_async(client.send_internal_request)(url, 'patch', data=serializer.data)
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -198,23 +200,23 @@ class GameConsumer(AsyncWebsocketConsumer):
                         await self.update_final_game_data()
                     await self.send_game_state(self.jeu.get_game_end())
                 else:
-                    self.final_game_data = {
-                        'room_id': self.room_name,
-                        'status': 'deleted',
-                        'winner': None,
-                        'loser': None,
-                        'score_player1': 0,
-                        'score_player2': 0,
-                        'date_played': None
-                    }
-                await send_results_to_rooms(self.final_game_data)
+                    from_tournament = await sync_to_async(lambda: self.game.from_tournament)()
+                    if not from_tournament:
+                        self.final_game_data = {
+                            'room_id': self.room_name,
+                            'status': 'deleted',
+                            'winner': None,
+                            'loser': None,
+                            'score_player1': 0,
+                            'score_player2': 0,
+                            'date_played': None
+                        }
+                        await send_results_to_rooms(self.final_game_data)
+                        self.data_sent = True
+                    else:
+                        return
+            await sync_to_async(self.game.delete)()
 
-                self.data_sent = True
-                await sync_to_async(self.game.delete)()
-            else:
-                from_tournament = await sync_to_async(lambda: self.game.from_tournament)()
-                if not from_tournament:
-                    self.data_sent = True
 
 
     async def game_state(self, event):
@@ -240,18 +242,19 @@ class GameConsumer(AsyncWebsocketConsumer):
             except asyncio.CancelledError:
                 pass
 
-        player1 = await sync_to_async(lambda: self.game.player1)()
-        player_type = '1' if self.user == player1 else '2'
-        if self.is_host:
-            await self.left({'player_type': player_type})
-        else:
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'left',
-                    'player_type': player_type,
-                }
-            )
+        if self.game:
+            player1 = await sync_to_async(lambda: self.game.player1)()
+            player_type = '1' if self.user == player1 else '2'
+            if self.is_host:
+                await self.left({'player_type': player_type})
+            else:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'left',
+                        'player_type': player_type,
+                    }
+                )
 
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -321,8 +324,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.game.status = 'finished'
         await sync_to_async(self.game.save)()
         await self.update_final_game_data()
-        await self.send_game_state(self.jeu.get_game_end())
         await send_results_to_rooms(self.final_game_data)
+        await self.send_game_state(self.jeu.get_game_end())
 
     async def update(self):
         if self.jeu._ball_hit():

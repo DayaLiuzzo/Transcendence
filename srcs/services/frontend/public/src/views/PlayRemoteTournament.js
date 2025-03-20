@@ -1,4 +1,4 @@
-import BasePlayView from "./BasePlayView.js";
+import BasePlayView from "./BasePlayViewTournament.js";
 import { cleanUpThree } from "../three/utils.js";
 
 let keys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
@@ -32,8 +32,10 @@ export default class PlayCanva extends BasePlayView {
 		console.log("Unmounted PlayCanva REMOTE");
 		document.getElementById("final-screen")?.remove();
 		isRunning = false;
-		this.socketService.closeConnection();
-		cleanUpThree();
+		if (this.socketService) {
+			this.socketService.closeConnection();
+			cleanUpThree();
+		}
 	}
 
 	showError(message) {
@@ -62,6 +64,10 @@ export default class PlayCanva extends BasePlayView {
 				event.detail,
 				this.player1,
 				this.player2
+				//event.detail.winner,
+				//event.detail.loser,
+				//event.detail.score_winner,
+				//event.detail.score_loser
 			);
 		});
 		// window.addEventListener("handleCollision", (event) => {
@@ -242,6 +248,7 @@ export default class PlayCanva extends BasePlayView {
 		</div>
 		<div id="container">
 			<h2>Play remote</h2>
+			<div id="status"></div>
 			<div id="room-id"></div>
 			<div id="user-1"></div>
 			<div id="user-2"></div>
@@ -283,18 +290,13 @@ export default class PlayCanva extends BasePlayView {
 		this.ballRadius = data.ball_radius;
 		this.scores.max_scores = data.max_scores;
 		this.scores.winner = false;
-		//this.player1.x = data.player1.x;
-		//this.player1.y = data.player1.y;
 		this.player1 = data.player1;
 		this.player1.width = data.player_width;
 		this.player1.height = data.player_height;
-		//this.player2.x = data.player2.x ;
-		//this.player2.y = data.player2.y ;
 		this.player2 = data.player2;
 		this.player2.width = data.player_width ;
 		this.player2.height = data.player_height;
-		this.ball.x = data.ball.x ;
-		this.ball.y = data.ball.y;
+		this.ball = data.ball;
 
 		isRunning = true;
 		this.initGame();

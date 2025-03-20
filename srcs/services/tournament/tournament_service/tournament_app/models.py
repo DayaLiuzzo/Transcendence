@@ -77,7 +77,7 @@ class Tournament(models.Model):
             num_pools = (len(players) + 4 - reminder) // 4  # Divise les joueurs en groupes de 4 (poules de 4 joueurs), on ajoute 4 - reminder car la division entiere arrondie vers le bas mais nous voulons l'arrondir vers le haut
         else:
             players = []
-            for pool in self.pools.all():
+            for pool in self.pools.filter(pool_index=self.pool_index-1):
                 players.append(pool.winner)
             reminder = len(players) % 4
             num_pools = (len(players) + 4 - reminder) // 4  # Divise les joueurs en groupes de 4 (poules de 4 joueurs), on ajoute 4 - reminder car la division entiere arrondie vers le bas mais nous voulons l'arrondir vers le haut
@@ -89,6 +89,8 @@ class Tournament(models.Model):
             
             # Ajoute les joueurs dans la poule
             pool.users.set(players[i*4:(i+1)*4])
+            if pool.users.count() == 1:
+                pool.winner = pool.users[0]
             pool.save()
             
             # Génère les matchs pour cette poule
@@ -96,6 +98,9 @@ class Tournament(models.Model):
             self.pools.add(pool)
 
         self.pool_index += 1
+
+    def all_pool_finished(self):
+        return all(pool.winner for pool in self.pools.filter(pool_index=self.pool_index-1))
 
 class Pool(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
@@ -149,11 +154,11 @@ class Pool(models.Model):
         ranking = []
 
         for player in players:
-            wins = rooms.filter(winner=player).count()
-            wins += rooms.filter(winner__isnull=True, loser=player).count()
-            losses = rooms.filter(loser=player).count()
-            draws = rooms.filter(winner__isnull=True, player1=player).exclude(loser=player).count()
-            draws += rooms.filter(winner__isnull=True, player2=player).exclude(loser=player).count()
+            wins = self.rooms.filter(winner=player).count()
+            wins += self.rooms.filter(winner__isnull=True, loser=player).count()
+            losses = self.rooms.filter(loser=player).count()
+            draws = self.rooms.filter(winner__isnull=True, player1=player).exclude(loser=player).count()
+            draws += self.rooms.filter(winner__isnull=True, player2=player).exclude(loser=player).count()
             points = wins * 3 + draws  # 3 points pour chaque victoire, 1 pour chaque match nul
             ranking.append({
                 'player': player,
@@ -168,10 +173,10 @@ class Pool(models.Model):
         return ranking
 
     def all_rooms_finished(self):
-        return all(room.status == 'finished' for room in self.rooms)
+        return all(room.status == 'finished' for room in self.get_rooms())
 
     def rooms_wave_finished(self):
-        return all(room.status != 'waiting' and room.status != 'playing' for room in self.rooms)
+        return all(room.status != 'waiting' and room.status != 'playing' for room in self.get_rooms())
 
 class Room(models.Model):
     STATUS_CHOICES = [

@@ -1,3 +1,4 @@
+import { cleanUpThree } from '../three/utils.js';
 import BaseView from './BaseView.js';
 import WebSocketService from './WebSocketService.js';
 
@@ -9,18 +10,51 @@ export default class BasePlayView extends BaseView{
         this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
     }
 
-    async joinRoom() {
-        const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
-        if (result.success) {
-            console.log(result.success)
-            console.log(result.data)
+    async waitRoom() {
+        const my_tournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
+        if (!my_tournament.success) {
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+            return;
+        }
 
-            document.getElementById("room-id").innerText = result.data.room_id;
-            // document.getElementById("user-1").innerText = this.getUsername();
-            document.getElementById("user-2").innerText = "Looking for opponent...";
-            document.querySelector("canvas.webgl").innerText = "Loading...";
-            this.openWebSocket(result.data.room_id);
-            window.addEventListener("gameStarted", () => this.checkStart());
+        const tournament_id = my_tournament.data.tournament_id;
+        const tournament = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'result/',
+            {
+                "tournament_id": tournament_id
+            });
+
+        if (!tournament.success) {
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+            console.error(tournament_result.error);
+            return;
+        }
+    
+        const tournament_data = tournament.data;
+        if (tournament_data.status === 'finished' || tournament_data.result === 'lost') {
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+            return;
+        }
+        
+        const room = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
+        if (room.success) {
+            console.log(room.success)
+            const data = room.data;
+            console.log(data)
+            console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+            const rooms = data.filter((room) => room.status === "waiting");
+            if (rooms.length === 0) {
+                document.getElementById("status").innerText = "Waiting for rooms";
+            } else {
+                this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+                const room = rooms[0];
+                console.log(room);
+                document.getElementById("room-id").innerText = room.room_id;
+                document.getElementById("status").innerText = "Room available";
+                document.querySelector("canvas.webgl").innerText = "Loading...";
+                document.getElementById("user-2").innerText = "Waiting for opponent...";
+                this.openWebSocket(room.room_id);
+                window.addEventListener("gameStarted", () => this.checkStart());
+            }
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
@@ -32,8 +66,8 @@ export default class BasePlayView extends BaseView{
     handleGameEnd(data, player1, player2){
 		const winner = data.winner;
 		const loser = data.loser;
-		const score_winner = data.score_winner;
-		const score_loser = data.score_loser;
+		const winner_score = data.score_winner;
+		const loser_score = data.score_loser;
 
 		let winner_username;
 		let loser_username;
@@ -44,16 +78,15 @@ export default class BasePlayView extends BaseView{
 			winner_username = player2.username;
 			loser_username = player1.username;
 		}
-
         console.log("game end")
-
+        
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
             <h1>Game Over</h1>
             <p>${winner_username} won!</p>
-            <p>score: ${winner_username} ${score_winner} - ${loser_username} ${score_loser}</p>
-            <button id="back-to-lobby">Back to Lobby</button>
+            <p>score: ${winner_username} ${winner_score} - ${loser_username} ${loser_score}</p>
+            <button id="back-to-waiting-rooms">Back to Waiting Rooms</button>
         `;
         finalScreen.style.cssText = `
             position: absolute;
@@ -68,9 +101,11 @@ export default class BasePlayView extends BaseView{
 
         `;
         document.body.appendChild(finalScreen);
-        document.getElementById("back-to-lobby").addEventListener("click", () => {
-            document.body.removeChild(finalScreen);
-            this.navigateTo("/play-menu");
+        document.getElementById("back-to-waiting-rooms").addEventListener("click", () => {
+            const finalScreen = document.getElementById("final-screen");
+            finalScreen.remove();
+            cleanUpThree();
+            this.mount();
         });
     }
 
@@ -85,7 +120,7 @@ export default class BasePlayView extends BaseView{
 
     listenToKeyboard() {
         console.log("Listening to keyboard")
-        if (this.socketService.isplaying){
+        if (this.socketService && this.socketService.isplaying){
             console.log("wesh")
             window.addEventListener("keydown", (event) => {
                 if (event.key === "ArrowUp" || event.key === "ArrowDown") {
@@ -133,19 +168,18 @@ export default class BasePlayView extends BaseView{
     }
 
     async mount() {
+		this.waitRoom();
         try {
-            await this.joinRoom();
+            this.router.RerenderTournamentIntervalPlay = setInterval(this.waitRoom, 5000);
         } catch (error) {
             console.error("Error in mount():", error);
         }
     }
-
-    // async unmount() {
-    //     console.log('Unmounting Play');
-    //     if (this.socketService) {
-    //         this.socketService.closeConnection();
-    //         this.socketService = null;
-    //     }
-    // }
+    
+    unmount () {
+        
+        this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+    }
+    
+    
 }
-
