@@ -22,7 +22,7 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="line"></div>
                 </div>
             </div>
-            <h2>My tournament</h2>
+            <h2>My tournament page</h2> <br>
             <div id="tournament-info" hidden>
             <h3>Tournament information</h3>
                 <div id="tournament-name"></div>
@@ -46,10 +46,10 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-delete-field"></div>            
             </div>
 
-            <div id ="no-tournament" hidden>You are not part of any tournament<br> <br>
-                <button id="tournament-create-button">Create</button>
-                <button id="tournament-join-button">Join</button>
-                <button id="tournament-list-button">List</button>
+            <div id ="no-tournament" hidden>You are currently not part of any tournament. <br>
+                <button id="tournament-create-button">Create a new tournament</button>
+                <button id="tournament-join-button">Join an available tournament with its ID</button>
+                <button id="tournament-list-button">List available tournaments you can join</button>
             </div>
 
             <div id ="tournament-launched" hidden>Tournament started
@@ -69,7 +69,7 @@ export default class PlayTournamentMine extends BaseView{
     }
     
     handleCreateTournamentClick(event) {
-        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create") {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create a new tournament") {
             this.createTournament();
         }
     }
@@ -83,12 +83,12 @@ export default class PlayTournamentMine extends BaseView{
     }
     
     handleJoinTournamentClick(event) {
-        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join") {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Join an available tournament with its ID") {
             this.joinTournament();
         }
     }
 
-    // List tournament    
+    // Liste tournament    
     async listTournament() {
         const body = {};
 
@@ -97,7 +97,7 @@ export default class PlayTournamentMine extends BaseView{
     }
     
     handleListTournamentClick(event) {
-        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "List") {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "List available tournaments you can join") {
             this.listTournament();
         }
     }

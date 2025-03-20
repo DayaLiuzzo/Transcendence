@@ -69,10 +69,10 @@ export default class PlayTournamentJoin extends BaseView{
         <div id="line"></div>
         </div>
         </div>
-            <h2>Join Tournament</h2>
+            <h2>Join a tournament with its ID</h2>
             <form id="join-tournament-form" hidden>
-                <input type="text" id="joinTournament-id" placeholder="Tournament id" required>
-                <button type="submit">Join tournament</button>
+                <input type="text" id="joinTournament-id" placeholder="Tournament ID" required>
+                <button type="submit">Join this tournament</button>
             </form>
             <div id="tournament-join-field"></div>
 

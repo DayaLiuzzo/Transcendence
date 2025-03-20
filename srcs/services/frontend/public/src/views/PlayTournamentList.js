@@ -22,10 +22,11 @@ export default class PlayTournamentList extends BaseView{
                 <div id="line"></div>
                 </div>
             </div>
-            <h2>List tournament</h2>
+            <h2>Available tournaments</h2>
+            <br> 
             <div id="tournament-list-field"></div>
-            <div id ="no-tournament" hidden>No tournament available <br> <br>
-            <button id="tournament-create-button">Create</button>
+            <div id ="no-tournament" hidden>Unfortunately, there is no tournament available for the moment.<br>
+            <button id="tournament-create-button">Create a new tournament</button>
             </div>
         </div>
         `;
@@ -57,7 +58,7 @@ export default class PlayTournamentList extends BaseView{
     }
     
     handleCreateTournamentClick(event) {
-        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create") {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create a new tournament a new tournament") {
             this.createTournament();
         }
     }
