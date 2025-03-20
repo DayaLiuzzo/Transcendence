@@ -127,9 +127,9 @@ export default class PlayCanva extends BasePlayView {
 		directionalLight.shadow.mapSize.height = 2048;
 		window.threeInstance.scene.add(directionalLight);
 
-		this.ballSpotlight = this.createSpotlight(window.threeInstance.scene);
-		this.player1Spotlight = this.createSpotlight(window.threeInstance.scene);
-		this.player2Spotlight = this.createSpotlight(window.threeInstance.scene);
+		this.ballSpotlight = this.createSpotlight();
+		this.player1Spotlight = this.createSpotlight();
+		this.player2Spotlight = this.createSpotlight();
 		window.threeInstance.scene.add(this.ballSpotlight);
 		window.threeInstance.scene.add(this.ballSpotlight.target);
 		window.threeInstance.scene.add(this.player1Spotlight);
@@ -183,11 +183,10 @@ export default class PlayCanva extends BasePlayView {
 			this.ball.y - this.centerY,
 			16
 		);
-		const boardColor = new THREE.Color(0xD3D3D3);
 		const meshBoard = new THREE.Mesh(
 			new THREE.PlaneGeometry(this.gameBoard.width, this.gameBoard.height),
 			new THREE.MeshStandardMaterial({
-				color: boardColor,
+				color: 0x000000,
 				roughness: 0.6,
 				metalness: 0.2,
 			})
@@ -266,8 +265,8 @@ export default class PlayCanva extends BasePlayView {
 		spotlight.target.position.copy(targetMesh.position);
 	}
 
-	createSpotlight(scene, intensity = 10) {
-		const spotlight = new THREE.SpotLight(0xffffff, intensity);
+	createSpotlight(intensity = 10) {
+		const spotlight = new THREE.SpotLight(0x000000, intensity);
 		spotlight.angle = Math.PI / 6;
 		spotlight.penumbra = 0.3;
 		spotlight.decay = 1;
@@ -298,7 +297,8 @@ export default class PlayCanva extends BasePlayView {
 		this.ball.x = data.ball.x ;
 		this.ball.y = data.ball.y;
 
-
+		this.scores.player1_score = 0;
+		this.scores.player2_score = 0;
 		this.initGame();
 	}
 
@@ -369,39 +369,6 @@ export default class PlayCanva extends BasePlayView {
 		);
 	}
 
-	updateParticles() {
-		activeParticles = activeParticles.filter((particle) => {
-			particle.position.add(particle.velocity);
-			particle.life -= 0.02;
-			return particle.life > 0;
-		});
-
-		const positions = new Float32Array(particleCount * 3);
-		for (let i = 0; i < activeParticles.length; i++) {
-			const particle = activeParticles[i];
-			positions[i * 3] = particle.position.x;
-			positions[i * 3 + 1] = particle.position.y;
-			positions[i * 3 + 2] = particle.position.z;
-		}
-
-		particles.geometry.setAttribute(
-			"position",
-			new THREE.BufferAttribute(positions, 3)
-		);
-		particles.geometry.attributes.position.needsUpdate = true;
-	}
-
-	handleCollision(data) {
-		const position = new THREE.Vector3(data.x, data.y, 0);
-		for (let i = 0; i < particleCount; i++) {
-			activeParticles.push({
-			position: position.clone(),
-			velocity: new THREE.Vector3(
-				(Math.random() - 0.5) * 0.2, Math.random() * 0.2,(Math.random() - 0.5) * 0.2),
-				life: 1.0,
-			});
-		}
-	}
 
 	attachEvents() {
 		console.log("Events attached (PlayCanva)");

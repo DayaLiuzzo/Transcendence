@@ -6,7 +6,7 @@ export default class BasePlayView extends BaseView{
     constructor(params){
         super(params);
         this.socketService = null;
-        this.handleGameEnd = this.handleGameEnd.bind(this);
+        this.handleGameEnd = this.handle.bind(this);
         this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
 		this.tournament_id = null;
     }
@@ -34,7 +34,7 @@ export default class BasePlayView extends BaseView{
 			}
             return;
         }
-        
+
         const rooms_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
         if (rooms_data.success) {
             console.log(rooms_data.success)
@@ -122,7 +122,7 @@ export default class BasePlayView extends BaseView{
 			winner_username = player2.username;
 			loser_username = player1.username;
 		}
-        
+
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `

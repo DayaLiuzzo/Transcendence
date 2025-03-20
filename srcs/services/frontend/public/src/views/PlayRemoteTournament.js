@@ -66,9 +66,6 @@ export default class PlayCanva extends BasePlayView {
 				this.player2
 			);
 		});
-		// window.addEventListener("handleCollision", (event) => {
-		// 	this.handleCollision(event.detail);
-		// });
 	}
 
 	initGame() {
@@ -113,7 +110,6 @@ export default class PlayCanva extends BasePlayView {
 			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
 			window.threeInstance.effect.setSize(sizes.width, sizes.height);
 		}
-
 
 		window.threeInstance = {
 			scene,

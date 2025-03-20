@@ -18,7 +18,6 @@ export default class PlayCanva extends BaseView{
 	}
 
 	unmount() {
-		console.log("Unmounted PlayCanva LOCAL");
 		document.getElementById("final-screen")?.remove();
 		this.gameOver = true;
 		cleanUpThree();
@@ -157,7 +156,6 @@ export default class PlayCanva extends BaseView{
 			0.1,
 			1000
 		);
-		//camera.position.set(0, 5, 10);
 		camera.lookAt(0, 0, 0);
 
 		const renderer = new THREE.WebGLRenderer({
@@ -168,25 +166,18 @@ export default class PlayCanva extends BaseView{
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-
 		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enablePan = false;
 		controls.enableDamping = true;
 		controls.enableZoom = true;
-		//
 		controls.maxPolarAngle = Math.PI / 4;
 		controls.minPolarAngle = Math.PI / 3.8;
-		//controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
-		//controls.maxAzimuthAngle = Math.PI / 4;
 		controls.enableRotate = true;
 		controls.minDistance = 5;
 		controls.maxDistance = 10;
 		camera.position.set(0, 10, 8);
-		controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
+		controls.minAzimuthAngle = -Math.PI / 4;
 		controls.maxAzimuthAngle = Math.PI / 4;
-		//controls.autoRotate = true;
-		//controls.autoRotateSpeed = 1;
-
 
 		function resizeHandler() {
 			const sizes = {
@@ -294,9 +285,7 @@ export default class PlayCanva extends BaseView{
 		);
 		const particles = new THREE.Points(particleGeometry, particleMaterial);
 		window.threeInstance.scene.add(particles);
-
 		let activeParticles = [];
-
 		this.resetScores();
 
 		function createCollisionParticles(position) {
@@ -375,11 +364,9 @@ export default class PlayCanva extends BaseView{
 			}
 			if (meshBall.position.x > 4.5) {
 				this.scores.player1_score++;
-				console.log("SCORES:", this.scores.player1_score);
 				this.resetScores();
 				meshBall.position.set(0, 0.2, 0);
 			} else if (meshBall.position.x < -4.5) {
-				console.log("SCORES:", this.scores.player2_score);
 				this.scores.player2_score++;
 				this.resetScores();
 				meshBall.position.set(0, 0.2, 0);
@@ -417,7 +404,6 @@ export default class PlayCanva extends BaseView{
 	}
 
 	attachEvents() {
-		console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
 		if (this.gameOver === false) {
 			this.initGame();
