@@ -225,12 +225,12 @@ export default class PlayTournamentMine extends BaseView{
         if (!value) return `${type.charAt(0).toUpperCase() + type.slice(1)}: No information available.`; 
 
         const formats = {
-            name: (val) => `Tournament Name: ${val}`,
+            name: (val) => `Tournament's name: ${val}`,
             id: (val) => `Tournament ID: ${val}`,
-            owner: (val) => `Tournament Owner: ${val}`,
+            owner: (val) => `Tournament owner: ${val}`,
             users: (val) => `Users: ${val}`,
-            users_count: (val) => `Current Users: ${val}`,
-            max_users: (val) => `Max Users: ${val}`,
+            users_count: (val) => `Current number of users: ${val}`,
+            max_users: (val) => `Maximum number of users allowed in this tournament: ${val}`,
             status: (val) => `Status: ${val}`,
             winner: (val) => `Winner: ${val}`,
         };
