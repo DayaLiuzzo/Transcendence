@@ -158,10 +158,12 @@ export default class Profile extends BaseView {
     }
 
     async addFriend(friendUsername) {
+        const errorContainer = this.getErrorContainer("add-friend-error-container");
+        errorContainer.innerHTML = '';
         const username = this.getUsername();
         const body = {};
         if (username === friendUsername) {
-            this.showError("You cannot add yourself as a friend"), "add-friend-form";
+            this.showError("You cannot add yourself as a friend", "add-friend-form");
             return;
         }
         const response = await this.sendPatchRequest(this.API_URL_USERS + username + "/friends/add/" + friendUsername + "/", body);
