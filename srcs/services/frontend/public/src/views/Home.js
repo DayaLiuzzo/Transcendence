@@ -166,7 +166,7 @@ export default class Home extends BaseView {
 		controls.autoRotateSpeed = 1;
 		controls.target.set(2, 0, 0);
 		renderer.domElement.style.cursor = "grab";
-		
+
 		function resizeHandler() {
 
 			sizes.width = container.clientWidth;
@@ -198,9 +198,6 @@ export default class Home extends BaseView {
 			controls.update();
 			window.threeInstance.effect.render(scene, camera);
 			window.threeInstance.animationId = requestAnimationFrame(tick);
-
-			console.log("tick")
-
 			window.addEventListener("resize", window.threeInstance.resizeHandler);
 		};
 

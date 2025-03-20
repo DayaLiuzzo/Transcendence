@@ -6,7 +6,7 @@ export default class PlayCanva extends BaseView{
 		super(params);
 
 		this.ballVelocity = { x: 0.02, z: 0.02 };
-		this.speedIncrement = 1;
+		this.speedIncrement = 1.8;
 		this.keys = { ArrowUp: false, ArrowDown: false, w: false, s:false};
 		this.gameOver = false;
 
@@ -116,8 +116,8 @@ export default class PlayCanva extends BaseView{
 				window.threeInstance.scene.add(this.scores.player1_score_text);
 				window.threeInstance.scene.add(this.scores.player2_score_text);
 
-					if (this.scores.player1_score >= 2 || this.scores.player2_score >= 2) {
-						if (this.scores.player1_score >= 1) {
+					if (this.scores.player1_score >= 3 || this.scores.player2_score >= 3) {
+						if (this.scores.player1_score >= 3) {
 							this.handleGameEnd("Player 1", "Player 2", this.scores.player1_score, this.scores.player2_score);
 						} else {
 							this.handleGameEnd("Player 2", "Player 1", this.scores.player2_score, this.scores.player1_score);
@@ -157,7 +157,7 @@ export default class PlayCanva extends BaseView{
 			0.1,
 			1000
 		);
-		camera.position.set(0, 5, 10);
+		//camera.position.set(0, 5, 10);
 		camera.lookAt(0, 0, 0);
 
 		const renderer = new THREE.WebGLRenderer({
@@ -173,16 +173,21 @@ export default class PlayCanva extends BaseView{
 		controls.enablePan = false;
 		controls.enableDamping = true;
 		controls.enableZoom = true;
-		controls.maxPolarAngle = Math.PI / 2.1;
-		controls.minPolarAngle = Math.PI / 2.5;
-		controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
-		controls.maxAzimuthAngle = Math.PI / 4;
+		//
+		controls.maxPolarAngle = Math.PI / 4;
+		controls.minPolarAngle = Math.PI / 3.8;
+		//controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
+		//controls.maxAzimuthAngle = Math.PI / 4;
 		controls.enableRotate = true;
 		controls.minDistance = 5;
-		controls.maxDistance = 8;
+		controls.maxDistance = 10;
+		camera.position.set(0, 10, 8);
+		controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
+		controls.maxAzimuthAngle = Math.PI / 4;
 		//controls.autoRotate = true;
 		//controls.autoRotateSpeed = 1;
-		
+
+
 		function resizeHandler() {
 			const sizes = {
 				width: window.innerWidth,
@@ -259,7 +264,7 @@ export default class PlayCanva extends BaseView{
 		const boardLine = new THREE.Mesh(
 			new THREE.PlaneGeometry(0.05, 6),
 			new THREE.MeshStandardMaterial({
-				color: 0xffffff,
+				color: 0x000000,
 				emissive: 0xffffff,
 				emissiveIntensity: 0.2,
 			})
@@ -343,8 +348,8 @@ export default class PlayCanva extends BaseView{
 			if (this.keys.ArrowDown && meshPlayer2.position.z < 2)
 				meshPlayer2.position.z += 0.1;
 
-			meshBall.position.x += this.ballVelocity.x;
-			meshBall.position.z += this.ballVelocity.z;
+			meshBall.position.x += this.ballVelocity.x * this.speedIncrement;
+			meshBall.position.z += this.ballVelocity.z * this.speedIncrement;
 
 			this.updateSpotlight(ballSpotlight, meshBall);
 			this.updateSpotlight(player1Spotlight, meshPlayer1);
