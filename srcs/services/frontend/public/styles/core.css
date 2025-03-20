@@ -16,6 +16,7 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
+    overflow-y: hidden;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -431,7 +432,7 @@ body {
       outline: none;
   }
 
-  
+
   /* .joinButton {
     cursor: pointer;
     background-color: white;
@@ -441,14 +442,14 @@ body {
     margin-left: 16px;
 }
 
-  .joinButton:hover{
+   .joinButton:hover{
     color: #46f436;
   }
 
   .joinButton:focus{
       outline: none;
-  } */
-  
+  }  */
+
   .friend-item {
     font-family: 'Roboto', sans-serif;
   }
@@ -482,7 +483,7 @@ body {
   {
     color: #4CAF50;
   }
-  
+
   #tournament-info button:hover,
   #no-tournament button:hover,
   #tournament-launched button:hover,

@@ -1,9 +1,19 @@
+import { cleanUpThree } from "../three/utils.js";
 import BaseView from "./BaseView.js";
+
+let isRunning = true;
 
 export default class Home extends BaseView {
 	constructor(router, params) {
 		super(router, params);
 	}
+
+	unmount () {
+		isRunning = false;
+		console.log ("UNMONTING HOME");
+		cleanUpThree()
+	}
+
 	render() {
 		if (this.isAuthenticated()) {
 			return `
@@ -58,8 +68,10 @@ export default class Home extends BaseView {
               `;
 		}
 	}
+
 	attachEvents() {
-		console.log("Events attached (Home)");
+		isRunning = true;
+		console.log("Events attached (Home)", isRunning);
 		const text = document.getElementById("test-text");
 		const originalText = text.textContent;
 
@@ -134,7 +146,6 @@ export default class Home extends BaseView {
 			sizes.width / sizes.height, 1, 10
 		);
 		camera.position.z = 1;
-		//camera.position.x = -5;
 		camera.position.y = 5;
 
 		camera.lookAt(0, 0, 0);
@@ -153,10 +164,21 @@ export default class Home extends BaseView {
 		controls.maxDistance = 8;
 		controls.autoRotate = true;
 		controls.autoRotateSpeed = 1;
-
-
 		controls.target.set(2, 0, 0);
 		renderer.domElement.style.cursor = "grab";
+		
+		function resizeHandler() {
+
+			sizes.width = container.clientWidth;
+			sizes.height = container.clientHeight;
+
+			window.threeInstance.camera.aspect = sizes.width / sizes.height;
+			window.threeInstance.camera.updateProjectionMatrix();
+
+			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
+			window.threeInstance.effect.setSize(sizes.width, sizes.height);
+		}
+
 
 		window.threeInstance = {
 			scene,
@@ -167,34 +189,24 @@ export default class Home extends BaseView {
 			animationId: null,
 			canvas,
 			container,
+			resizeHandler
 		};
 
-		const clock = new THREE.Clock();
 
 		const tick = () => {
-			const elapsedTime = clock.getElapsedTime();
 
 			controls.update();
 			window.threeInstance.effect.render(scene, camera);
 			window.threeInstance.animationId = requestAnimationFrame(tick);
+
+			console.log("tick")
+
+			window.addEventListener("resize", window.threeInstance.resizeHandler);
 		};
 
-		window.addEventListener("resize", () => {
-			const rect = container.getBoundingClientRect();
-
-			sizes.width = rect.width;
-			sizes.height = rect.height;
-
-			camera.aspect = sizes.width / sizes.height;
-			camera.updateProjectionMatrix();
-
-			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
-			window.threeInstance.effect.setSize(sizes.width, sizes.height);
-			window.threeInstance.renderer.setPixelRatio(
-				Math.min(window.devicePixelRatio, 2)
-			);
-		});
-
-		tick();
+		if (isRunning == true){
+			console.log("isRunning is true")
+			tick();
+		}
 	}
 }
