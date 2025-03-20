@@ -398,6 +398,19 @@ class CountLockedRoomsView(APIView):
             {"locked_room_count": locked_room_count},
             status=status.HTTP_200_OK
         )
+    
+
+class UserStats(APIView):
+    permission_classes = [IsOwnerAndAuthenticated]
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        wins = Room.objects.filter(winner=user).count()
+        losses = Room.objects.filter(loser=user).count()
+        return Response({
+            'wins': wins,
+            'losses': losses
+        })
+
 
 # ************************** DELETE ************************** #
 

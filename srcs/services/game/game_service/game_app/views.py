@@ -162,6 +162,7 @@ class JoinGame(APIView):
 
 # *************************** READ *************************** #
 
+
 class GameListAPIView(generics.ListAPIView):
     # permission_classes = [IsGame]
     queryset = Game.objects.all()

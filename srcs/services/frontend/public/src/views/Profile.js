@@ -140,7 +140,7 @@ export default class Profile extends BaseView {
             return;
         }
         const username = this.getUsername();
-        const response = await this.sendGetRequest(this.API_URL_USERS + username + '/');
+        const response = await this.sendGetRequest(this.API_URL_ROOMS + 'user_stats/');
         if(response.success){
             statsField.innerHTML = `
             <h3>Stats</h3>
