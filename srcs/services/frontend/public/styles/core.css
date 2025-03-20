@@ -16,6 +16,7 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
+    overflow-y: hidden;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -433,7 +434,7 @@ body {
   .joinButton:focus{
       outline: none;
   }
-  
+
   .friend-item {
     font-family: 'Roboto', sans-serif;
   }

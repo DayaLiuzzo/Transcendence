@@ -1,5 +1,6 @@
 import { cleanUpThree } from "../three/utils.js";
 import BaseView from "./BaseView.js";
+
 export default class PlayCanva extends BaseView{
 	constructor(params) {
 		super(params);
@@ -181,6 +182,18 @@ export default class PlayCanva extends BaseView{
 		controls.maxDistance = 8;
 		//controls.autoRotate = true;
 		//controls.autoRotateSpeed = 1;
+		
+		function resizeHandler() {
+			const sizes = {
+				width: window.innerWidth,
+				height: window.innerHeight,
+			};
+
+			window.threeInstance.camera.aspect = sizes.width / sizes.height;
+			window.threeInstance.camera.updateProjectionMatrix();
+			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
+			window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		}
 
 		window.threeInstance = {
 			scene,
@@ -188,6 +201,8 @@ export default class PlayCanva extends BaseView{
 			renderer,
 			controls,
 			canvas,
+			resizeHandler,
+			animationId: null,
 		};
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -316,10 +331,7 @@ export default class PlayCanva extends BaseView{
 		}
 
 		const tick = () => {
-			 if (this.gameOver === true) {
-
-			return;
-			}
+			 if (this.gameOver === true) return;
 			requestAnimationFrame(tick);
 
 			if (this.keys.w && meshPlayer1.position.z > -2)
@@ -367,14 +379,8 @@ export default class PlayCanva extends BaseView{
 				this.resetScores();
 				meshBall.position.set(0, 0.2, 0);
 			}
-			window.addEventListener("resize", () => {
-				window.threeInstance.camera.aspect = window.innerWidth / window.innerHeight;
-				window.threeInstance.camera.updateProjectionMatrix();
-				window.threeInstance.renderer.setSize(window.innerWidth, window.innerHeight);
-				window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-			});
+			window.addEventListener("resize", window.threeInstance.resizeHandler);
 			window.threeInstance.controls.update();
-			// this.updateAutoRotateDirection();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
 		if (this.gameOver === false) {

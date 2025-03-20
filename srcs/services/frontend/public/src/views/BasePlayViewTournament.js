@@ -1,4 +1,4 @@
-import { cleanUpThree } from '../three/utils.js';
+import { cleanUpThree, cleanUpThreeTournament } from '../three/utils.js';
 import BaseView from './BaseView.js';
 import WebSocketService from './WebSocketService.js';
 
@@ -28,13 +28,13 @@ export default class BasePlayView extends BaseView{
             console.error(tournament_result.error);
             return;
         }
-    
+
         const tournament_data = tournament.data;
         if (tournament_data.status === 'finished' || tournament_data.result === 'lost') {
             this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
             return;
         }
-        
+
         const room = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
         if (room.success) {
             console.log(room.success)
@@ -79,7 +79,7 @@ export default class BasePlayView extends BaseView{
 			loser_username = player1.username;
 		}
         console.log("game end")
-        
+
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
@@ -104,7 +104,7 @@ export default class BasePlayView extends BaseView{
         document.getElementById("back-to-waiting-rooms").addEventListener("click", () => {
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
-            cleanUpThree();
+            cleanUpThreeTournament();
             this.mount();
         });
     }
@@ -175,11 +175,11 @@ export default class BasePlayView extends BaseView{
             console.error("Error in mount():", error);
         }
     }
-    
+
     unmount () {
-        
+
         this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
     }
-    
-    
+
+
 }
