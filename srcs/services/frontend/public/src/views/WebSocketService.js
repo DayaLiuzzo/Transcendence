@@ -52,8 +52,6 @@ export default class WebSocketService {
         this.socket.onerror = (error) => {
             console.error("Erreur WebSocket: ", error);
         };
-
-		return this.isConnected;
     }
 
     handleStart(event) {
@@ -76,15 +74,15 @@ export default class WebSocketService {
             const event = new CustomEvent("updateGame", { detail: data.message});
             window.dispatchEvent(event);
         }
-        if (data.message.state === 'SCORE') {
+		else if (data.message.state === 'SCORE') {
             const event = new CustomEvent("updateScore", { detail: data.message});
             window.dispatchEvent(event);
         }
-        if (data.message.state === 'COLLISION') {
+		else if (data.message.state === 'COLLISION') {
             const event = new CustomEvent("handleCollision", { detail: data.message});
             window.dispatchEvent(event);
         }
-        if (data.message.state === 'END') {
+		else if (data.message.state === 'END') {
             const event = new CustomEvent("handleEndGame", { detail: data.message});
             window.dispatchEvent(event);
         }

@@ -75,22 +75,20 @@ export default class BasePlayView extends BaseView{
                 document.getElementById("user-2").innerText = "";
 				}
             } else {
+				this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
                 const room = rooms[0];
                 console.log(room);
                 document.getElementById("room-id").innerText = room.room_id;
                 document.getElementById("status").innerText = "Room available";
                 document.querySelector("canvas.webgl").innerText = "Loading...";
                 document.getElementById("user-2").innerText = "Waiting for opponent...";
-                if (this.openWebSocket(room.room_id)) {
-					this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
-					return true;
-				}
+                this.openWebSocket(room.room_id);
             }
         }
-		return false;
     }
 
     async handleTournamentGameEnd(result) {
+		cleanUpThree();
 		console.log("tournament ended");
 		document.getElementById("room-id").innerText = "";
 		document.querySelector("canvas.webgl").innerText = "";
@@ -109,7 +107,7 @@ export default class BasePlayView extends BaseView{
 		});
     }
 
-    async handleGameEnd(data, player1, player2){
+    handleGameEnd(data, player1, player2){
 		const winner = data.winner;
 		const loser = data.loser;
 		const winner_score = data.score_winner;
@@ -153,13 +151,10 @@ export default class BasePlayView extends BaseView{
             finalScreen.remove();
             cleanUpThreeTournament();
 
-			const room_found = await this.waitRoom()
-			if (!room_found) {
-				try {
-					this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
-				} catch (error) {
-					console.error("Error in mount():", error);
-				}
+			try {
+				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
+			} catch (error) {
+				console.error("Error in mount():", error);
 			}
         });
     }
@@ -168,11 +163,7 @@ export default class BasePlayView extends BaseView{
     openWebSocket(roomId) {
 		this.socketService = new WebSocketService(roomId);
 		this.socketService.name = "init";
-        if (!this.socketService.connect()) {
-			this.socketService = null;
-			return false;
-		}
-		return true;
+		this.socketService.connect();
     }
 
     async test(){
@@ -195,13 +186,10 @@ export default class BasePlayView extends BaseView{
         }
         this.tournament_id = my_tournament.data.tournament_id;
 
-		const room_found = await this.waitRoom()
-		if (!room_found) {
-			try {
-				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
-			} catch (error) {
-				console.error("Error in mount():", error);
-			}
+		try {
+			this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
+		} catch (error) {
+			console.error("Error in mount():", error);
 		}
     }
 

@@ -192,8 +192,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         if self.is_host:
             if not self.data_sent:
                 player_disconnected = event['player_type']
-                self.game.status = 'finished'
-                await sync_to_async(self.game.save)()
 
                 if self.jeu:
                     if self.jeu.game_end:
