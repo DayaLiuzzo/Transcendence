@@ -18,7 +18,7 @@ class RoomSerializer(serializers.ModelSerializer):
     loser = serializers.StringRelatedField()
     class Meta:
         model = Room
-        fields = ['room_id', 'player1', 'player2', 'winner', 'loser', 'status', 'score_player1', 'score_player2']
+        fields = ['room_id', 'player1', 'player2', 'winner', 'loser', 'status', 'score_player1', 'score_player2', 'status']
 
 class RoomSerializerInternal(serializers.ModelSerializer):
     class Meta:

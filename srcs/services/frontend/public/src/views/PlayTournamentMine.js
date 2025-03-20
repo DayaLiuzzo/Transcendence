@@ -32,7 +32,7 @@ export default class PlayTournamentMine extends BaseView{
                 <div id="tournament-users-nb-current"></div>
                 <div id="tournament-users-nb-max"></div>
                 <div id="tournament-status"></div>
-                <div id="tournament-winner"></div>                
+                <div id="tournament-winner"></div>
                 
                 <button id="tournament-leave-button" hidden>Leave</button>
                 <div id="tournament-leave-field"></div>
