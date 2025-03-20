@@ -60,6 +60,8 @@ export default class PlayCanva extends BasePlayView {
 		});
 		window.addEventListener("handleEndGame", (event) => {
 			isRunning = false;
+			console.log("================================");
+			console.log(window.threeInstance);
 			this.handleGameEnd(
 				event.detail,
 				this.player1,
@@ -247,9 +249,6 @@ export default class PlayCanva extends BasePlayView {
 			<div id="user-2"></div>
 			<div id="container-canvas">
 				<canvas class="webgl"></canvas>
-				<div id="scores"></div>
-			</div>
-				<div id="response-result"></div>
 			</div>
 		</div>
     `;
