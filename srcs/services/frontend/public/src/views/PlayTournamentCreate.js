@@ -106,7 +106,7 @@ export default class PlayTournamentCreate extends BaseView{
                     
                     // return this.navigateTo('/my-tournament')
                     document.getElementById("tournament-mine-button").removeAttribute("hidden"); 
-                    document.getElementById("tournament-create-field").innerText = "You cannot join a tournament since you are already part of one"; 
+                    document.getElementById("tournament-create-field").innerText = "You cannot create a tournament since you are already part of one"; 
                     return;
                 }
                 document.getElementById("create-tournament-form").removeAttribute("hidden");
