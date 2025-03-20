@@ -199,6 +199,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                         await self.update_final_game_data()
                     await self.send_game_state(self.jeu.get_game_end())
+                    self.data_sent = True
                 else:
                     from_tournament = await sync_to_async(lambda: self.game.from_tournament)()
                     if not from_tournament:
