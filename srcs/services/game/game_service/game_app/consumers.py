@@ -213,6 +213,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                         }
                         await send_results_to_rooms(self.final_game_data)
                         self.data_sent = True
+                    else:
+                        return
             await sync_to_async(self.game.delete)()
 
 
