@@ -46,7 +46,6 @@ export default class PlayCanva extends BasePlayView {
 			cursor.x = event.clientX / window.innerWidth - 0.5;
 			cursor.y = -(event.clientY / window.innerHeight - 0.5);
 		});
-		this.listenToKeyboard();
 		window.addEventListener("initSettingsGame", (event) => {
 			this.setDataObjects(event.detail);
 		});
@@ -63,14 +62,13 @@ export default class PlayCanva extends BasePlayView {
 				this.player1,
 				this.player2
 			);
-		});
-		// window.addEventListener("handleCollision", (event) => {
-		// 	this.handleCollision(event.detail);
-		// });
+		})
 	}
 
 	initGame() {
 		console.log("Game Loading...");
+		isRunning = true;
+		console.log("Is running ?", isRunning);
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
 		const camera = new THREE.PerspectiveCamera(
@@ -101,12 +99,25 @@ export default class PlayCanva extends BasePlayView {
 		controls.maxPolarAngle = Math.PI / 2.1;
 		controls.minPolarAngle = Math.PI / 2.5;
 
+		function resizeHandler() {
+			const sizes = {
+				width: window.innerWidth,
+				height: window.innerHeight,
+			};
+
+			window.threeInstance.camera.aspect = sizes.width / sizes.height;
+			window.threeInstance.camera.updateProjectionMatrix();
+			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
+			window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		}
+
 		window.threeInstance = {
 			scene,
 			camera,
 			renderer,
 			controls,
 			canvas,
+			resizeHandler
 		};
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -116,9 +127,17 @@ export default class PlayCanva extends BasePlayView {
 		directionalLight.shadow.mapSize.height = 2048;
 		window.threeInstance.scene.add(directionalLight);
 
-		this.ballSpotlight = this.createSpotlight(scene);
-		this.player1Spotlight = this.createSpotlight(scene);
-		this.player2Spotlight = this.createSpotlight(scene);
+		this.ballSpotlight = this.createSpotlight(window.threeInstance.scene);
+		this.player1Spotlight = this.createSpotlight(window.threeInstance.scene);
+		this.player2Spotlight = this.createSpotlight(window.threeInstance.scene);
+		window.threeInstance.scene.add(this.ballSpotlight);
+		window.threeInstance.scene.add(this.ballSpotlight.target);
+		window.threeInstance.scene.add(this.player1Spotlight);
+		window.threeInstance.scene.add(this.player1Spotlight.target);
+		window.threeInstance.scene.add(this.player2Spotlight);
+		window.threeInstance.scene.add(this.player2Spotlight.target);
+		console.log(this.ballSpotlight);
+
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
@@ -140,8 +159,6 @@ export default class PlayCanva extends BasePlayView {
 			this.player1.y - this.centerY,
 			20
 		);
-		console.log("MESHPLAYER1", this.meshPlayer1);
-
 		this.meshPlayer2 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
 			paddleMaterial
@@ -152,10 +169,6 @@ export default class PlayCanva extends BasePlayView {
 			20
 		);
 
-		//const meshBall = new THREE.Mesh(
-		// 	new THREE.SphereGeometry(this.ballRadius, 16, 16),
-		// 	paddleMaterial
-		// );
 		this.meshBall = new THREE.Mesh(
 			new THREE.BoxGeometry(
 				this.ballRadius,
@@ -199,26 +212,18 @@ export default class PlayCanva extends BasePlayView {
 		window.threeInstance.scene.add(this.meshPlayer1);
 		window.threeInstance.scene.add(this.meshPlayer2);
 		window.threeInstance.scene.add(this.meshBall);
-		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
 		const tick = () => {
 			if (isRunning === false) return;
 			requestAnimationFrame(tick);
 
+			this.updateSpotlight(this.ballSpotlight, this.meshBall);
+			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
+			console.log(this.player2Spotlight);
 
-			window.addEventListener("resize", () => {
-				const newWidth = window.innerWidth;
-				const newHeight = window.innerHeight;
-				const newAspect = newWidth / newHeight;
-
-				window.threeInstance.camera.aspect = newAspect;
-				window.threeInstance.camera.updateProjectionMatrix();
-				window.threeInstance.renderer.setSize(newWidth, newHeight);
-				window.threeInstance.renderer.setPixelRatio(
-					Math.min(window.devicePixelRatio, 2)
-				);
-			});
+			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
+			window.addEventListener("resize", window.threeInstance.resizeHandler);
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
@@ -269,9 +274,6 @@ export default class PlayCanva extends BasePlayView {
 		spotlight.distance = 10;
 		spotlight.castShadow = true;
 
-		scene.add(spotlight);
-		scene.add(spotlight.target);
-
 		return spotlight;
 	}
 
@@ -283,20 +285,20 @@ export default class PlayCanva extends BasePlayView {
 		this.ballRadius = data.ball_radius;
 		this.scores.max_scores = data.max_scores;
 		this.scores.winner = false;
-		//this.player1.x = data.player1.x;
-		//this.player1.y = data.player1.y;
+		this.player1.x = data.player1.x;
+		this.player1.y = data.player1.y;
 		this.player1 = data.player1;
 		this.player1.width = data.player_width;
 		this.player1.height = data.player_height;
-		//this.player2.x = data.player2.x ;
-		//this.player2.y = data.player2.y ;
+		this.player2.x = data.player2.x ;
+		this.player2.y = data.player2.y ;
 		this.player2 = data.player2;
 		this.player2.width = data.player_width ;
 		this.player2.height = data.player_height;
 		this.ball.x = data.ball.x ;
 		this.ball.y = data.ball.y;
 
-		isRunning = true;
+
 		this.initGame();
 	}
 

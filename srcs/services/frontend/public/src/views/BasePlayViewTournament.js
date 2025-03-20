@@ -1,4 +1,4 @@
-import { cleanUpThree } from '../three/utils.js';
+import { cleanUpThree, cleanUpThreeTournament } from '../three/utils.js';
 import BaseView from './BaseView.js';
 import WebSocketService from './WebSocketService.js';
 
@@ -22,7 +22,7 @@ export default class BasePlayView extends BaseView{
             console.error(tournament_result.error);
             return;
         }
-    
+
         const tournament_data = tournament.data;
 		console.log(tournament.data)
         if (tournament_data.status === 'finished' || tournament_data.result === 'lost') {
@@ -109,7 +109,7 @@ export default class BasePlayView extends BaseView{
 		});
     }
 
-    handleGameEnd(data, player1, player2){
+    async handleGameEnd(data, player1, player2){
 		const winner = data.winner;
 		const loser = data.loser;
 		const winner_score = data.score_winner;
@@ -151,7 +151,7 @@ export default class BasePlayView extends BaseView{
 			console.log("waiting_rooms clicked");
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
-            cleanUpThree();
+            cleanUpThreeTournament();
 
 			const room_found = await this.waitRoom()
 			if (!room_found) {
@@ -204,11 +204,11 @@ export default class BasePlayView extends BaseView{
 			}
 		}
     }
-    
+
     unmount () {
-        
+
         this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
     }
-    
-    
+
+
 }

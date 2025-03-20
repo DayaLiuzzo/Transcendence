@@ -103,12 +103,25 @@ export default class PlayCanva extends BasePlayView {
 		controls.maxPolarAngle = Math.PI / 2.1;
 		controls.minPolarAngle = Math.PI / 2.5;
 
+		function resizeHandler() {
+			sizes.width = container.clientWidth;
+			sizes.height = container.clientHeight;
+
+			window.threeInstance.camera.aspect = sizes.width / sizes.height;
+			window.threeInstance.camera.updateProjectionMatrix();
+
+			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
+			window.threeInstance.effect.setSize(sizes.width, sizes.height);
+		}
+
+
 		window.threeInstance = {
 			scene,
 			camera,
 			renderer,
 			controls,
 			canvas,
+			resizeHandler
 		};
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -154,10 +167,6 @@ export default class PlayCanva extends BasePlayView {
 			20
 		);
 
-		//const meshBall = new THREE.Mesh(
-		// 	new THREE.SphereGeometry(this.ballRadius, 16, 16),
-		// 	paddleMaterial
-		// );
 		this.meshBall = new THREE.Mesh(
 			new THREE.BoxGeometry(
 				this.ballRadius,
@@ -208,19 +217,7 @@ export default class PlayCanva extends BasePlayView {
 			if (isRunning === false) return;
 			requestAnimationFrame(tick);
 
-
-			window.addEventListener("resize", () => {
-				const newWidth = window.innerWidth;
-				const newHeight = window.innerHeight;
-				const newAspect = newWidth / newHeight;
-
-				window.threeInstance.camera.aspect = newAspect;
-				window.threeInstance.camera.updateProjectionMatrix();
-				window.threeInstance.renderer.setSize(newWidth, newHeight);
-				window.threeInstance.renderer.setPixelRatio(
-					Math.min(window.devicePixelRatio, 2)
-				);
-			});
+			window.addEventListener("resize", window.threeInstance.resizeHandler);
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
 		};
@@ -250,7 +247,6 @@ export default class PlayCanva extends BasePlayView {
 			<div id="user-2"></div>
 			<div id="container-canvas">
 				<canvas class="webgl"></canvas>
-				<div id="ascii-output"></div>
 				<div id="scores"></div>
 			</div>
 				<div id="response-result"></div>

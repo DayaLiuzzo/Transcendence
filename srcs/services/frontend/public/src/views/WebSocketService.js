@@ -99,9 +99,20 @@ export default class WebSocketService {
         }
     }
 
+    sendMovementToWebSocket(movement) {
+        // Si la connexion WebSocket est active et le jeu a commencé, envoyer le mouvement
+        //add condition pour checker que la websocket est ok
+        this.socketService.sendMessage(movement);
+
+    }
+
     closeConnection() {
         if (this.isConnected && this.socket) {
+            console.log("HELLLOOOOOOOOOOO");
             this.socket.close();
+            this.socket = null;
+            this.isConnected = false;
+            this.isplaying = false;
         }
     }
 

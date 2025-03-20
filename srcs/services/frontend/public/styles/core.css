@@ -16,6 +16,7 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
+    overflow-y: hidden;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -367,8 +368,23 @@ body {
 
   #tournament-info button,
   #no-tournament button,
-  #tournament-mine-button,
   #tournament-launched button,
+  #tournament-mine-button,
+  #joinButton
+  {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    /* border: none; */
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+
   #add-friend-form button,
   #change-password-form button,
   #change-username-form button {
@@ -416,8 +432,8 @@ body {
       outline: none;
   }
 
-  /*  */
-  .joinButton {
+
+  /* .joinButton {
     cursor: pointer;
     background-color: white;
     color: black;
@@ -426,14 +442,14 @@ body {
     margin-left: 16px;
 }
 
-  .joinButton:hover{
+   .joinButton:hover{
     color: #46f436;
   }
 
   .joinButton:focus{
       outline: none;
-  }
-  
+  }  */
+
   .friend-item {
     font-family: 'Roboto', sans-serif;
   }
@@ -461,15 +477,20 @@ body {
   #login-form button:hover,
   #signup-form button:hover,
   #upload-avatar-btn:hover,
-  #tournament-info button:hover,
-  #no-tournament button:hover,
-  #tournament-mine-button button:hover,
-  #tournament-launched button:hover,
   #add-friend-form button:hover,
   #change-password-form button:hover,
   #change-username-form button:hover
   {
     color: #4CAF50;
+  }
+
+  #tournament-info button:hover,
+  #no-tournament button:hover,
+  #tournament-launched button:hover,
+  #tournament-mine-button:hover,
+  #joinButton:hover
+  {
+    color: #a0a0a0;
   }
 
   #username-form {
