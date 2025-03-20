@@ -368,7 +368,21 @@ body {
   #tournament-info button,
   #no-tournament button,
   #tournament-mine-button,
-  #tournament-launched button,
+  #tournament-launched button
+  {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    /* border: none; */
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+
   #add-friend-form button,
   #change-password-form button,
   #change-username-form button {
@@ -461,15 +475,19 @@ body {
   #login-form button:hover,
   #signup-form button:hover,
   #upload-avatar-btn:hover,
-  #tournament-info button:hover,
-  #no-tournament button:hover,
-  #tournament-mine-button button:hover,
-  #tournament-launched button:hover,
   #add-friend-form button:hover,
   #change-password-form button:hover,
   #change-username-form button:hover
   {
     color: #4CAF50;
+  }
+  
+  #tournament-info button:hover,
+  #no-tournament button:hover,
+  #tournament-mine-button button:hover,
+  #tournament-launched button:hover
+  {
+    color: #a0a0a0;
   }
 
   #username-form {
