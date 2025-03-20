@@ -32,23 +32,26 @@ export default class EditProfile extends BaseView {
     async changePassword(formData) {
         const error = this.validateInputs(formData);
         if (error) {
-            this.showError(error, "change-password-form");
+            // this.showError(error, "change-password-form");
+            this.customAlert(error);
             return;
         }
         const username = this.getUsername();
         const response = await this.sendPatchRequest(this.API_URL + "change-password/" + username + "/", formData);
         if (response.error) {
-            this.showError(response.error, "change-password-form");
+            // this.showError(response.error, "change-password-form");
+            this.customAlert(response.error);
             return;
         }
-        alert("Password changed successfully");
+        this.customAlert("Password changed successfully");
         this.navigateTo("/profile");
     }
 
     async changeUsername(formData) {
         const error = this.validateUsername(formData);
         if (error) {
-            this.showError(error, "change-username-form");
+            // this.showError(error, "change-username-form");
+            this.customAlert(error);
             return;
         }
         const username = this.getUsername();
@@ -59,10 +62,11 @@ export default class EditProfile extends BaseView {
         };
         const response = await this.sendPatchRequest(this.API_URL + "update/" + username + "/", body);
         if (!response.success) {
-            this.showError(response.error, "change-username-form");
+            // this.showError(response.error, "change-username-form");
+            this.customAlert(response.error);
             return;
         }
-        alert(response.data.message);
+        this.customAlert(response.data.message);
         let userSession = JSON.parse(localStorage.getItem("userSession"));
         userSession.username = formData.username;
         userSession.access_token = response.data.access;
@@ -199,6 +203,7 @@ export default class EditProfile extends BaseView {
             let userSession = this.getUserSession();
             userSession.two_factor_enabled = true;
             localStorage.setItem("userSession", JSON.stringify(userSession));
+            this.customAlert("2FA enabled successfully");
             otpPopup.remove();
             let twofaButton = document.getElementById("toggle-2fa-button");
             twofaButton.textContent = "Disable 2FA";
@@ -220,7 +225,8 @@ export default class EditProfile extends BaseView {
         const response = await this.sendPostRequest(this.API_URL + "2fa/setup/", body);
         
         if (response.error) {
-            this.showError(response.error, "toggle-2fa-button");
+            this.customAlert(response.error);
+            // this.showError(response.error, "toggle-2fa-button");
             return;
         }
         if (body.enable) {
@@ -228,6 +234,7 @@ export default class EditProfile extends BaseView {
         }
         else {
             console.log("2FA disabled");
+            this.customAlert("2FA disabled successfully");
             button.textContent = "Enable 2FA";
             let userSession = this.getUserSession();
             userSession.two_factor_enabled = false;
@@ -243,7 +250,7 @@ export default class EditProfile extends BaseView {
         const file = fileInput.files[0];
 
         if (!file) {
-            this.showError("missing file", "avatar-container");
+            this.customAlert("missing file");
             return;
         }
 
@@ -251,13 +258,18 @@ export default class EditProfile extends BaseView {
         formData.append("avatar", file);
         const response = await this.uploadAvatar(this.API_URL_AVATAR, formData);
 
+        if(fileInput && fileInput.value) {
+            fileInput.value = "";
+        }
+        
         if (!response.success) {
-            this.showError(response.error, "avatar-container");
+            // this.showError(response.error, "avatar-container");
+            this.customAlert(response.error.message);
             return;
         }
 
 
-        console.log("Avatar uploaded successfully");
+        this.customAlert("Avatar uploaded successfully");
         const avatarUrl = await this.displayAvatar();
         const avatarImg = document.createElement("img");
         avatarImg.src = avatarUrl;

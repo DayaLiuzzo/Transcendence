@@ -73,6 +73,80 @@ export default class BaseView{
 
     }
 
+    showAlert(message){
+        console.log(message);
+        const alertOverlay = document.createElement("div");
+        alertOverlay.id = "dynamic-alert";
+        alertOverlay.style.position = "fixed";
+        alertOverlay.style.top = "0";
+        alertOverlay.style.left = "0";
+        alertOverlay.style.width = "100%";
+        alertOverlay.style.height = "100%";
+        alertOverlay.style.background = "rgba(0, 0, 0, 0.6)";
+        alertOverlay.style.display = "flex";
+        alertOverlay.style.alignItems = "center";
+        alertOverlay.style.justifyContent = "center";
+        alertOverlay.style.zIndex = "1000";
+
+        const alertBox = document.createElement("div");
+        alertBox.style.background = "white";
+        alertBox.style.padding = "20px";
+        alertBox.style.borderRadius = "10px";
+        alertBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+        alertBox.style.textAlign = "center";
+        alertBox.style.width = "300px";
+        alertBox.style.fontFamily = "Arial, sans-serif";
+
+        const alertMessage = document.createElement("p");
+        alertMessage.textContent = message;
+        alertMessage.style.marginBottom = "15px";
+
+        const closeButton = document.createElement("button");
+        closeButton.textContent = "OK";
+        closeButton.style.background = "#007bff";
+        closeButton.style.color = "white";
+        closeButton.style.border = "none";
+        closeButton.style.padding = "10px 20px";
+        closeButton.style.borderRadius = "5px";
+        closeButton.style.cursor = "pointer";
+        closeButton.style.fontSize = "16px";
+
+        closeButton.onmouseover = () => (closeButton.style.background = "#0056b3");
+        closeButton.onmouseleave = () => (closeButton.style.background = "#007bff");
+
+        closeButton.onclick = () => alertOverlay.remove();
+
+        alertBox.appendChild(alertMessage);
+        alertBox.appendChild(closeButton);
+        alertOverlay.appendChild(alertBox);
+        document.body.appendChild(alertOverlay);
+
+    }
+    
+    customAlert(message){
+        let displayMessage = ""; 
+
+        if (typeof message === "string") {
+            displayMessage = message;
+        } else if (typeof message === "object" && message !== null) {
+            // Handle object with error arrays
+            const firstKey = Object.keys(message)[0]; 
+            if (Array.isArray(message[firstKey])) {
+                displayMessage = message[firstKey][0]; 
+            } else {
+                displayMessage = JSON.stringify(message); 
+            }
+        } else if (Array.isArray(message)) {
+            displayMessage = message.join("\n"); 
+        } else if (typeof message === "number" || typeof message === "boolean") {
+            displayMessage = message.toString();
+        } else {
+            displayMessage = "An unknown error occurred.";
+        }
+
+        this.showAlert(displayMessage);
+    }
+
     getErrorContainer(formId) {
         let errorContainer = document.getElementById(formId+ "-error-container");
 
