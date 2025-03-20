@@ -19,15 +19,15 @@ export default class PlayMenu extends BaseView{
                     </nav>
                 </div>
                 <div id="line"></div>
-                </div>          
+                </div>
             </div>
             <div id="container">
                 <h2>Play Tournament Menu</h2>
-                <div class="play-menu">
-                    <div class="play-option" id="create-tournament-button">Create a new tournament</div>
-                    <div class="play-option" id="join-tournament-button">Join a tournament with ID</div>
-                    <div class="play-option" id="list-tournament-button">List available tournaments</div>
-                    <div class="play-option" id="my-tournament-button">See my tournament page</div>
+                <div class="tournament-menu">
+                    <div class="tournament-option" id="create-tournament-button">Create a new tournament</div>
+                    <div class="tournament-option" id="join-tournament-button">Join a tournament with ID</div>
+                    <div class="tournament-option" id="list-tournament-button">List available tournaments</div>
+                    <div class="tournament-option" id="my-tournament-button">See my tournament page</div>
                 </div>
             </div>
         </div>
