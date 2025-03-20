@@ -9,8 +9,8 @@ export default class PlayCanva extends BasePlayView {
 	constructor(params) {
 		super(params);
 
-		this.player1 = { x: null, y: null, width: null, height: null };
-		this.player2 = { x: null, y: null, width: null, height: null };
+		this.player1 = { x: null, y: null, width: null, height: null, username: null };
+		this.player2 = { x: null, y: null, width: null, height: null, username: null };
 		this.ball = { x: null, y: null };
 		this.gameBoard = { width: null, height: null };
 		this.ballRadius = null;
@@ -32,8 +32,10 @@ export default class PlayCanva extends BasePlayView {
 		console.log("Unmounted PlayCanva REMOTE");
 		document.getElementById("final-screen")?.remove();
 		isRunning = false;
-		this.socketService.closeConnection();
-		cleanUpThree();
+		if (this.socketService) {
+			this.socketService.closeConnection();
+			cleanUpThree();
+		}
 	}
 
 	showError(message) {
@@ -59,10 +61,13 @@ export default class PlayCanva extends BasePlayView {
 		window.addEventListener("handleEndGame", (event) => {
 			isRunning = false;
 			this.handleGameEnd(
-				event.detail.winner,
-				event.detail.loser,
-				event.detail.score_winner,
-				event.detail.score_loser
+				event.detail,
+				this.player1,
+				this.player2
+				//event.detail.winner,
+				//event.detail.loser,
+				//event.detail.score_winner,
+				//event.detail.score_loser
 			);
 		});
 		// window.addEventListener("handleCollision", (event) => {
@@ -72,7 +77,7 @@ export default class PlayCanva extends BasePlayView {
 
 	initGame() {
 		console.log("Game Loading...");
-		const canvas = document.querySelector("");
+		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
 		const camera = new THREE.PerspectiveCamera(
 			75,
@@ -285,16 +290,13 @@ export default class PlayCanva extends BasePlayView {
 		this.ballRadius = data.ball_radius;
 		this.scores.max_scores = data.max_scores;
 		this.scores.winner = false;
-		this.player1.x = data.player1.x;
-		this.player1.y = data.player1.y;
+		this.player1 = data.player1;
 		this.player1.width = data.player_width;
 		this.player1.height = data.player_height;
-		this.player2.x = data.player2.x ;
-		this.player2.y = data.player2.y ;
+		this.player2 = data.player2;
 		this.player2.width = data.player_width ;
 		this.player2.height = data.player_height;
-		this.ball.x = data.ball.x ;
-		this.ball.y = data.ball.y;
+		this.ball = data.ball;
 
 		isRunning = true;
 		this.initGame();

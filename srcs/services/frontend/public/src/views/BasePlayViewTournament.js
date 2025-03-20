@@ -55,8 +55,6 @@ export default class BasePlayView extends BaseView{
                 this.openWebSocket(room.room_id);
                 window.addEventListener("gameStarted", () => this.checkStart());
             }
-
-            // document.getElementById("user-1").innerText = this.getUsername();
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
@@ -65,15 +63,29 @@ export default class BasePlayView extends BaseView{
     async handleTournamentGameEnd(){
     }
 
-    handleGameEnd(winner, looser, winner_score, looser_score){
+    handleGameEnd(data, player1, player2){
+		const winner = data.winner;
+		const loser = data.loser;
+		const winner_score = data.score_winner;
+		const loser_score = data.score_loser;
+
+		let winner_username;
+		let loser_username;
+		if (winner === 'player1') {
+			winner_username = player1.username;
+			loser_username = player2.username;
+		} else {
+			winner_username = player2.username;
+			loser_username = player1.username;
+		}
         console.log("game end")
         
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
             <h1>Game Over</h1>
-            <p>${winner} wins!</p>
-            <p>score: ${winner} ${winner_score} - ${looser} ${looser_score}</p>
+            <p>${winner_username} won!</p>
+            <p>score: ${winner_username} ${winner_score} - ${loser_username} ${loser_score}</p>
             <button id="back-to-waiting-rooms">Back to Waiting Rooms</button>
         `;
         finalScreen.style.cssText = `
@@ -156,8 +168,9 @@ export default class BasePlayView extends BaseView{
     }
 
     async mount() {
+		this.waitRoom();
         try {
-            this.router.RerenderTournamentIntervalPlay = setInterval(() => {this.waitRoom();}, 5000);
+            this.router.RerenderTournamentIntervalPlay = setInterval(this.waitRoom, 5000);
         } catch (error) {
             console.error("Error in mount():", error);
         }

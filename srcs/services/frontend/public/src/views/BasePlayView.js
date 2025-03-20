@@ -29,15 +29,30 @@ export default class BasePlayView extends BaseView{
     async handleTournamentGameEnd(){
     }
 
-    handleGameEnd(winner, looser, winner_score, looser_score){
+    handleGameEnd(data, player1, player2){
+		const winner = data.winner;
+		const loser = data.loser;
+		const score_winner = data.score_winner;
+		const score_loser = data.score_loser;
+
+		let winner_username;
+		let loser_username;
+		if (winner === 'player1') {
+			winner_username = player1.username;
+			loser_username = player2.username;
+		} else {
+			winner_username = player2.username;
+			loser_username = player1.username;
+		}
+
         console.log("game end")
 
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
             <h1>Game Over</h1>
-            <p>${winner} wins!</p>
-            <p>score: ${winner} ${winner_score} - ${looser} ${looser_score}</p>
+            <p>${winner_username} won!</p>
+            <p>score: ${winner_username} ${score_winner} - ${loser_username} ${score_loser}</p>
             <button id="back-to-lobby">Back to Lobby</button>
         `;
         finalScreen.style.cssText = `
