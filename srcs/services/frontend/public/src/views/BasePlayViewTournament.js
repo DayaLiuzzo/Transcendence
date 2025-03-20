@@ -8,19 +8,13 @@ export default class BasePlayView extends BaseView{
         this.socketService = null;
         this.handleGameEnd = this.handleGameEnd.bind(this);
         this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
+		this.tournament_id = null;
     }
 
     async waitRoom() {
-        const my_tournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
-        if (!my_tournament.success) {
-            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
-            return;
-        }
-
-        const tournament_id = my_tournament.data.tournament_id;
         const tournament = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'result/',
             {
-                "tournament_id": tournament_id
+                "tournament_id": this.tournament_id
             });
 
         if (!tournament.success) {
@@ -31,16 +25,21 @@ export default class BasePlayView extends BaseView{
     
         const tournament_data = tournament.data;
         if (tournament_data.status === 'finished' || tournament_data.result === 'lost') {
-            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+			if (tournament_data.status !== 'finished') {
+                document.getElementById("status").innerText = "You lost the tournament, waiting for the tournament to end...";
+			} else {
+				this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+				console.log("tournament ended");
+				this.handleTournamentGameEnd()
+			}
             return;
         }
         
-        const room = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
-        if (room.success) {
-            console.log(room.success)
-            const data = room.data;
+        const rooms_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
+        if (rooms_data.success) {
+            console.log(rooms_data.success)
+            const data = rooms_data.data;
             console.log(data)
-            console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
             const rooms = data.filter((room) => room.status === "waiting");
             if (rooms.length === 0) {
                 document.getElementById("status").innerText = "Waiting for rooms";
@@ -56,7 +55,10 @@ export default class BasePlayView extends BaseView{
                 window.addEventListener("gameStarted", () => this.checkStart());
             }
         } else {
-            document.getElementById("room-id").innerText = "No room found, please reload";
+			const pools_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_pools/' + this.tournament_id + '/');
+			if (pools_data.success) {
+				document.getElementById("status").innerText = pools_data.data;
+			}
         }
     }
 
@@ -105,7 +107,12 @@ export default class BasePlayView extends BaseView{
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
             cleanUpThree();
-            this.mount();
+			this.waitRoom();
+			try {
+				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
+			} catch (error) {
+				console.error("Error in mount():", error);
+			}
         });
     }
 
@@ -148,10 +155,8 @@ export default class BasePlayView extends BaseView{
 
     // Ouvrir une WebSocket pour cette salle
     openWebSocket(roomId) {
-        if (!this.socketService) {
-            this.socketService = new WebSocketService(roomId);
-            this.socketService.name = "init"
-        }
+		this.socketService = new WebSocketService(roomId);
+		this.socketService.name = "init"
         //try puis mettre this.socketservice a null si fail
         this.socketService.connect();
         this.socketService.name = "after connexion"
@@ -168,9 +173,18 @@ export default class BasePlayView extends BaseView{
     }
 
     async mount() {
+        const my_tournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
+        if (!my_tournament.success) {
+			alert("You are not in a tournament");
+            this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+			this.navigateTo("/play-menu");
+            return;
+        }
+        this.tournament_id = my_tournament.data.tournament_id;
+
 		this.waitRoom();
         try {
-            this.router.RerenderTournamentIntervalPlay = setInterval(this.waitRoom, 5000);
+            this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
         } catch (error) {
             console.error("Error in mount():", error);
         }

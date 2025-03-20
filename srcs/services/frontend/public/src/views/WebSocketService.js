@@ -58,7 +58,7 @@ export default class WebSocketService {
 
     handleMessage(event) {
         const data = JSON.parse(event.data);
-        console.log("Message reçu:", data.message);
+        console.log("Msg reçu:", data.message);
         if (data.message.state === 'INFO') {
             const event = new CustomEvent("updateGame", { detail: data.message});
             window.dispatchEvent(event);
