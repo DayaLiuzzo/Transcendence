@@ -88,7 +88,6 @@ export default class BasePlayView extends BaseView{
     }
 
     async handleTournamentGameEnd(result) {
-		cleanUpThree();
 		console.log("tournament ended");
 		document.getElementById("room-id").innerText = "";
 		document.querySelector("canvas.webgl").innerText = "";
@@ -144,13 +143,14 @@ export default class BasePlayView extends BaseView{
 
         `;
 		console.log("waiting_rooms");
+		cleanUpThree();
+		const container_canvas = document.getElementById("container-canvas");
+		container_canvas.innerHTML = `<canvas class="webgl"></canvas>`
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-waiting-rooms").addEventListener("click", () => {
 			console.log("waiting_rooms clicked");
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
-            cleanUpThreeTournament();
-
 			try {
 				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
 			} catch (error) {

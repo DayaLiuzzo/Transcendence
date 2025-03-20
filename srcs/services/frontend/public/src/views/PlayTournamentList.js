@@ -58,7 +58,7 @@ export default class PlayTournamentList extends BaseView{
     }
     
     handleCreateTournamentClick(event) {
-        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create a new tournament a new tournament") {
+        if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "Create a new tournament") {
             this.createTournament();
         }
     }
