@@ -81,12 +81,11 @@ export default class PlayTournamentCreate extends BaseView{
                 <div id="line"></div>
                 </div>
             </div>
-            <h2>Create Tournament</h2>
-
+            <h2>Create a new tournament</h2>
             <form id="create-tournament-form" hidden>
                 <input type="text" id="createTournament-name" placeholder="Tournament name" required>
                 <input type="number" min="3" max="32" id="createTournament-maxuser" placeholder="Maximum number of users in tournament" required>
-                <button type="submit">Create tournament</button>
+                <button type="submit">Create a tournament</button>
             </form>
             <div id="tournament-create-field"></div>
 
@@ -107,7 +106,7 @@ export default class PlayTournamentCreate extends BaseView{
                     
                     // return this.navigateTo('/my-tournament')
                     document.getElementById("tournament-mine-button").removeAttribute("hidden"); 
-                    document.getElementById("tournament-create-field").innerText = "You cannot join a tournament since you are already part of one"; 
+                    document.getElementById("tournament-create-field").innerText = "You cannot create a tournament since you are already part of one"; 
                     return;
                 }
                 document.getElementById("create-tournament-form").removeAttribute("hidden");
