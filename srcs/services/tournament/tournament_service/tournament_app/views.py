@@ -524,6 +524,19 @@ class SetRoomResultView(generics.UpdateAPIView):
                     tournament.status = 'finished'
                     tournament.save()
                     tournament.winner.tournaments.add(tournament.win)
+                elif tournament.all_pool_finished():
+                    tournament.generate_pools()
+                    pools = tournament.pools.filter(pool_index=tournament.pool_index - 1)
+
+                    try:
+                        for pool in pools:
+                            ask_room_to_generate(pool)
+                    except MicroserviceError as e:
+                        tournament.status = 'error'
+                        ask_all_rooms_to_remove(tournament)
+                        tournament.save()
+                        return Response(e.message, e.response_text, e.status_code)
+
             elif pool.rooms_wave_finished():
                 pool.generate_rooms()
                 try:
