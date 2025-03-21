@@ -12,10 +12,14 @@ export default class BasePlayView extends BaseView{
     }
 
     async waitRoom() {
+		if (this.socketService) {
+			if (this.socketService.isConnected) {
+				this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
+				return;
+			}
+		}
         const tournament = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'result/',
-            {
-                "tournament_id": this.tournament_id
-            });
+            { "tournament_id": this.tournament_id });
 
         if (!tournament.success) {
             this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
@@ -24,7 +28,6 @@ export default class BasePlayView extends BaseView{
         }
 
         const tournament_data = tournament.data;
-		console.log(tournament.data)
         if (tournament_data.status === 'finished' || tournament_data.result === 'lost') {
 			if (tournament_data.status !== 'finished') {
                 document.getElementById("status").innerText = "You lost the tournament, waiting for the tournament to end...";
@@ -37,9 +40,7 @@ export default class BasePlayView extends BaseView{
         
         const rooms_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
         if (rooms_data.success) {
-            console.log(rooms_data.success)
             const data = rooms_data.data;
-            console.log(data)
             const rooms = data.filter((room) => room.status === "waiting");
             if (rooms.length === 0) {
 				const pools_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_pools/' + this.tournament_id + '/');
@@ -75,14 +76,15 @@ export default class BasePlayView extends BaseView{
                 document.getElementById("user-2").innerText = "";
 				}
             } else {
-				this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
                 const room = rooms[0];
                 console.log(room);
                 document.getElementById("room-id").innerText = room.room_id;
                 document.getElementById("status").innerText = "Room available";
                 document.querySelector("canvas.webgl").innerText = "Loading...";
                 document.getElementById("user-2").innerText = "Waiting for opponent...";
-                this.openWebSocket(room.room_id);
+				if (!this.socketService || !this.socketService.isConnected) {
+					this.openWebSocket(room.room_id);
+				}
             }
         }
     }
@@ -147,10 +149,13 @@ export default class BasePlayView extends BaseView{
 		const container_canvas = document.getElementById("container-canvas");
 		container_canvas.innerHTML = `<canvas class="webgl"></canvas>`
         document.body.appendChild(finalScreen);
-        document.getElementById("back-to-waiting-rooms").addEventListener("click", () => {
+        document.getElementById("back-to-waiting-rooms").addEventListener("click", async () => {
 			console.log("waiting_rooms clicked");
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
+
+			await this.waitRoom();
+
 			try {
 				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
 			} catch (error) {
@@ -186,6 +191,7 @@ export default class BasePlayView extends BaseView{
         }
         this.tournament_id = my_tournament.data.tournament_id;
 
+		await this.waitRoom();
 		try {
 			this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
 		} catch (error) {
