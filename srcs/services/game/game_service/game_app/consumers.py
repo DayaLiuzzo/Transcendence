@@ -236,7 +236,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.close()
 
     async def action_message(self, event):
-        if self.is_host:
+        if self.is_host and self.jeu:
             if event['identity'] == 1:
                 self.jeu.update_player1_direction(event['action'])
             else:
