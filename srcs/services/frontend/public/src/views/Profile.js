@@ -198,7 +198,7 @@ export default class Profile extends BaseView {
             newFriendItem.appendChild(removeButton);
             friendsField.querySelector("ul").appendChild(newFriendItem);
         }
-        alert(response.data.message);
+        this.customAlert(response.data.message);
     }
 
     async removeFriend(friendUsername, friendItem) {
@@ -214,7 +214,7 @@ export default class Profile extends BaseView {
             return;
         }
         friendItem.remove();
-        alert(response.data.message);
+        this.customAlert(response.data.message);
     }
 
     handleEditProfileClick() {

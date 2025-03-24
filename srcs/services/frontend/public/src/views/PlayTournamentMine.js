@@ -156,7 +156,7 @@ export default class PlayTournamentMine extends BaseView{
         console.log("Le statut du tournoi a changé : ", newStatus);
     
         if (newStatus === 'playing') {
-            alert("Le tournoi est maintenant en cours !");
+            this.customAlert("Le tournoi est maintenant en cours !");
             document.getElementById("tournament-launched").removeAttribute("hidden");
             document.getElementById("tournament-launch-button").setAttribute("hidden", true);
             document.getElementById("tournament-delete-button").setAttribute("hidden", true);

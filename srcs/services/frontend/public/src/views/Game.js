@@ -9,7 +9,7 @@ export default class Game extends BaseView{
     }
 
     showError(message){
-        alert(message);
+        this.customAlert(message);
     }
 
     async fetchRoomInfo(){

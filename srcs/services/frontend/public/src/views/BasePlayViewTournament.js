@@ -23,7 +23,7 @@ export default class BasePlayView extends BaseView{
 
         if (!tournament.success) {
             this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
-            console.error(tournament_result.error);
+            this.showError(tournament_result.error, "tournament-waiting-room");
             return;
         }
 
@@ -184,7 +184,7 @@ export default class BasePlayView extends BaseView{
     async mount() {
         const my_tournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'my_tournament/');
         if (!my_tournament.success) {
-			alert("You are not in a tournament");
+			this.customAlert("You are not in a tournament");
             this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
 			this.navigateTo("/play-menu");
             return;

@@ -62,7 +62,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	showError(message) {
-		alert(message);
+		this.customAlert(message);
 	}
 
 	handlerEventsListeners() {
