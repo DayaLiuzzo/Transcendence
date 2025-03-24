@@ -103,7 +103,7 @@ export default class BaseView{
 
         const closeButton = document.createElement("button");
         closeButton.textContent = "OK";
-        closeButton.style.background = "#007bff";
+        closeButton.style.background = "#101010";
         closeButton.style.color = "white";
         closeButton.style.border = "none";
         closeButton.style.padding = "10px 20px";
@@ -111,8 +111,8 @@ export default class BaseView{
         closeButton.style.cursor = "pointer";
         closeButton.style.fontSize = "16px";
 
-        closeButton.onmouseover = () => (closeButton.style.background = "#0056b3");
-        closeButton.onmouseleave = () => (closeButton.style.background = "#007bff");
+        closeButton.onmouseover = () => (closeButton.style.background = "#808080");
+        closeButton.onmouseleave = () => (closeButton.style.background = "#101010");
 
         closeButton.onclick = () => alertOverlay.remove();
 

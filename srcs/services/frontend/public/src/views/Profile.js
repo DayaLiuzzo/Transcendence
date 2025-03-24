@@ -58,7 +58,8 @@ export default class Profile extends BaseView {
                     <button type="submit">Add Friend</button>
                 </form>
                 <div id="stats-field"></div>
-                <div id="match-history-field"> <h3>Match History</h3> </div>
+                <h3>Match History</h3>
+                <div id="match-history-field"></div>
             </div>
         </div>
         `;

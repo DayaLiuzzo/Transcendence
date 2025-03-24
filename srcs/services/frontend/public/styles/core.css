@@ -20,6 +20,14 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+#match-history-field {
+  /* width: 600px; */
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+}
+
   #navbar {
     position: fixed;
     background-color: transparent;
