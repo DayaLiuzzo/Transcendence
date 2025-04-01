@@ -301,7 +301,7 @@ export default class EditProfile extends BaseView {
             const userData = await this.sendGetRequest(this.API_URL + username + '/');
             if (userData.data.two_factor_enabled) document.getElementById("toggle-2fa-button").textContent = "Disable 2FA";
         } catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 
@@ -319,12 +319,12 @@ export default class EditProfile extends BaseView {
             });
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in uploadAvatar():", url);
+                // console.error("Error in uploadAvatar():", url);
                 return { success: false, error: responseData };
             }
             return { success: true, data: responseData };
         } catch (error) {
-            console.error("Invalid Image", url);
+            // console.error("Invalid Image", url);
             return { success: false, error: { message: "Bad image (must be under 2mb)" } };
         }
     }

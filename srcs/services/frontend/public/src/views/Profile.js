@@ -164,12 +164,12 @@ export default class Profile extends BaseView {
         const username = this.getUsername();
         const body = {};
         if (username === friendUsername) {
-            this.showError("You cannot add yourself as a friend", "add-friend-form");
+            this.customAlert("You cannot add yourself as a friend");
             return;
         }
         const response = await this.sendPatchRequest(this.API_URL_USERS + username + "/friends/add/" + friendUsername + "/", body);
         if (!response.success) {
-            this.showError((response.error?.detail || response.error?.message), "add-friend-form");
+            this.customAlert((response.error?.detail || response.error?.message));
             return;
         }
         const friendsField = document.getElementById("friends-field");
@@ -206,12 +206,12 @@ export default class Profile extends BaseView {
         const username = this.getUsername();
         const body = {};
         if (username === friendUsername) {
-            this.showError("You cannot remove yourself as a friend", "friends-field");
+            this.customAlert("You cannot remove yourself as a friend", "friends-field");
             return;
         }
         const response = await this.sendDeleteRequest(this.API_URL_USERS + username + "/friends/remove/" + friendUsername + "/", body);
         if (!response.success) {
-            this.showError(response.error.detail, "friends-field");
+            this.customAlert(response.error.detail);
             return;
         }
         friendItem.remove();
@@ -341,7 +341,7 @@ export default class Profile extends BaseView {
             this.updateMatchHistoryField();
         }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 

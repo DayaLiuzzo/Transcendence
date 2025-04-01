@@ -22,10 +22,10 @@ export default class PlayTournamentCreate extends BaseView{
 
     async createTournament(formData) {
         const errorMessage = this.validateInputs(formData);
-        if (errorMessage){ return this.showError(errorMessage); }
+        if (errorMessage){ return this.customAlert(errorMessage); }
         
         const createTournamentResponse = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'create_tournament/', formData);
-        if (!createTournamentResponse.success){ return this.showError(createTournamentResponse.error); }
+        if (!createTournamentResponse.success){ return this.customAlert(createTournamentResponse.error); }
 
         //add alerte avant redirection??
         this.navigateTo("/my-tournament");
@@ -114,7 +114,7 @@ export default class PlayTournamentCreate extends BaseView{
                 }
             }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 

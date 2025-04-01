@@ -23,7 +23,7 @@ export default class BasePlayView extends BaseView{
 
         if (!tournament.success) {
             this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
-            this.showError(tournament_result.error, "tournament-waiting-room");
+            this.customAlert(tournament_result.error);
             return;
         }
 
@@ -159,7 +159,7 @@ export default class BasePlayView extends BaseView{
 			try {
 				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
 			} catch (error) {
-				console.error("Error in mount():", error);
+				// console.error("Error in mount():", error);
 			}
         });
     }
@@ -195,7 +195,7 @@ export default class BasePlayView extends BaseView{
 		try {
 			this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
 		} catch (error) {
-			console.error("Error in mount():", error);
+			// console.error("Error in mount():", error);
 		}
     }
 

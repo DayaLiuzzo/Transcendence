@@ -24,12 +24,12 @@ export default class PlayTournamentJoin extends BaseView{
        const checkIfTournamentExists = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'tournament_exists/', body);
        if (checkIfTournamentExists.success) {
             if (!checkIfTournamentExists.data.exists) {
-                this.showError("Invalid tournament ID, please retry", "tournament-join-field"); 
+                this.customAlert("Invalid tournament ID, please retry"); 
                 return
             }
     
             const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", {});
-            if (!response.success) { return this.showError(response.error, "tournament-join-field"); }
+            if (!response.success) { return this.customAlert(response.error); }
     
             this.navigateTo("/my-tournament");
         }
@@ -100,7 +100,7 @@ export default class PlayTournamentJoin extends BaseView{
                 }
             }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 

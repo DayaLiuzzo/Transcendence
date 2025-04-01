@@ -30,9 +30,9 @@ export default class SignUp extends BaseView{
 
     async signup(formData) {
         const errorMessage = this.validateInputs(formData);
-        if (errorMessage) return this.showError(errorMessage);
+        if (errorMessage) return this.customAlert(errorMessage);
         const signUpResponse = await this.sendPostRequest(this.API_URL_SIGNUP, formData);
-        if (!signUpResponse.success) return this.showError(signUpResponse.error);
+        if (!signUpResponse.success) return this.customAlert(signUpResponse.error);
         this.navigateTo("/log-in");
     }
 

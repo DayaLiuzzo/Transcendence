@@ -19,7 +19,7 @@ export default class BaseView{
 
         this.app = document.getElementById('app');
         if (!this.app) {
-            console.error("Error: Element with id 'app' not found in document");
+            // console.error("Error: Element with id 'app' not found in document");
         }
     }
     //RENDER THE VIEW WITH THE STATIC HTML
@@ -35,7 +35,7 @@ export default class BaseView{
     async isOnline(username){
         const response = await this.sendGetRequest(this.API_URL_USERS + "/status/" + username + "/");
         if (!response.success) {
-            this.showError(response.error, "app");
+            this.customAlert(response.error);
             return;
         }
         return response.data.online;
@@ -192,7 +192,7 @@ export default class BaseView{
     async displayAvatar(){
         const avatarResponse = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + "/avatar/");
         if (!avatarResponse.success) {
-            this.showError(avatarResponse.error, "app");
+            this.customAlert(avatarResponse.error);
             return;
         }
         else{
@@ -345,13 +345,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendGetRequest():", url)
+                // console.error("Error in sendGetRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -388,13 +388,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPatchRequest():", url)
+                // console.error("Error in sendPatchRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -431,13 +431,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendDeleteRequest():", url)
+                // console.error("Error in sendDeleteRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -473,13 +473,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPostRequest():", url)
+                // console.error("Error in sendPostRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }

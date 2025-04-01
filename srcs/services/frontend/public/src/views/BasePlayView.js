@@ -124,7 +124,7 @@ export default class BasePlayView extends BaseView{
         try {
             await this.joinRoom();
         } catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 

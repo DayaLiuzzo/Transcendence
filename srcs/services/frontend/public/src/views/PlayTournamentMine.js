@@ -311,7 +311,7 @@ export default class PlayTournamentMine extends BaseView{
             this.router.RerenderTournamentInterval = setInterval(() => {this.renderTournamentInfo();}, 5000);
         }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 

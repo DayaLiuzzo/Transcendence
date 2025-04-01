@@ -50,7 +50,7 @@ export default class WebSocketService {
         };
 
         this.socket.onerror = (error) => {
-            console.error("Erreur WebSocket: ", error);
+            // console.error("Erreur WebSocket: ", error);
         };
     }
 
@@ -93,7 +93,7 @@ export default class WebSocketService {
             this.socket.send(JSON.stringify({message}));
             // console.log("Message envoyé:", message);
         } else {
-            console.error("La connexion WebSocket n'est pas établie.");
+            // console.error("La connexion WebSocket n'est pas établie.");
         }
     }
 

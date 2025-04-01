@@ -110,13 +110,13 @@ class Router{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPostRequest():", url)
+                // console.error("Error in sendPostRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -152,13 +152,13 @@ class Router{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPatchRequest():", url)
+                // console.error("Error in sendPatchRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
