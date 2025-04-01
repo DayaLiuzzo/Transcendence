@@ -1,7 +1,6 @@
 import BasePlayView from "./BasePlayViewTournament.js";
 import { cleanUpThree } from "../three/utils.js";
 
-let keys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
 let isRunning = false;
 let gameOver = false;
 
@@ -47,7 +46,6 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	unmount() {
-		console.log("Unmounted PlayCanva REMOTE");
 		document.getElementById("final-screen")?.remove();
 		isRunning = false;
 		if (this.socketService) {
@@ -81,7 +79,6 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	initGame() {
-		console.log("Game Loading...");
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
 		const camera = new THREE.PerspectiveCamera(
@@ -133,7 +130,7 @@ export default class PlayCanva extends BasePlayView {
 		};
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-		directionalLight.position.set(5, 10, 5);
+		directionalLight.position.set(0, 0, -1);
 		directionalLight.castShadow = true;
 		directionalLight.shadow.mapSize.width = 2048;
 		directionalLight.shadow.mapSize.height = 2048;
@@ -163,7 +160,6 @@ export default class PlayCanva extends BasePlayView {
 			this.player1.y,
 			20
 		);
-		console.log("MESHPLAYER1", this.meshPlayer1);
 
 		this.meshPlayer2 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
@@ -213,12 +209,12 @@ export default class PlayCanva extends BasePlayView {
 		);
 		boardLine.position.z = 34;
 
+		this.createNameMesh();
 		window.threeInstance.scene.add(boardLine);
 		window.threeInstance.scene.add(meshBoard);
 		window.threeInstance.scene.add(this.meshPlayer1);
 		window.threeInstance.scene.add(this.meshPlayer2);
 		window.threeInstance.scene.add(this.meshBall);
-		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
 		const tick = () => {
@@ -320,7 +316,6 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	updateScore(data) {
-		console.log(this.scores);
 		this.scores.player1_score = data.player1;
 		this.scores.player2_score = data.player2;
 		this.updateScoreMesh();
@@ -375,42 +370,47 @@ export default class PlayCanva extends BasePlayView {
 		);
 	}
 
-	updateParticles() {
-		activeParticles = activeParticles.filter((particle) => {
-			particle.position.add(particle.velocity);
-			particle.life -= 0.02;
-			return particle.life > 0;
-		});
+	createNameMesh() {
+		const fontLoader = new THREE.FontLoader();
+		fontLoader.load(
+			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+			(font) => {
+				const textMaterial = new THREE.MeshStandardMaterial({
+					color: 0x000000,
+					emissive: 0xffffff,
+					emissiveIntensity: 0.4,
+				});
 
-		const positions = new Float32Array(particleCount * 3);
-		for (let i = 0; i < activeParticles.length; i++) {
-			const particle = activeParticles[i];
-			positions[i * 3] = particle.position.x;
-			positions[i * 3 + 1] = particle.position.y;
-			positions[i * 3 + 2] = particle.position.z;
-		}
+				const createNameText = (name, position) => {
+					const geometry = new THREE.TextGeometry(name, {
+						font: font,
+						size: 50,
+						height: 0.1,
+					});
+					const mesh = new THREE.Mesh(geometry, textMaterial);
+					mesh.position.copy(position);
+					mesh.castShadow = true;
+					mesh.rotation.x = - Math.PI / 2;
+					mesh.rotation.z = 0;
+					return mesh;
+				};
 
-		particles.geometry.setAttribute(
-			"position",
-			new THREE.BufferAttribute(positions, 3)
+				this.meshPlayer1Name = createNameText(
+					this.player1.username,
+					new THREE.Vector3(-this.centerX + 100, 20, -150)
+				);
+				this.meshPlayer2Name = createNameText(
+					this.player2.username,
+					new THREE.Vector3(this.centerX - 100, 20, -150)
+				);
+
+				window.threeInstance.scene.add(this.meshPlayer1Name);
+				window.threeInstance.scene.add(this.meshPlayer2Name);
+			}
 		);
-		particles.geometry.attributes.position.needsUpdate = true;
-	}
-
-	handleCollision(data) {
-		const position = new THREE.Vector3(data.x, data.y, 0);
-		for (let i = 0; i < particleCount; i++) {
-			activeParticles.push({
-			position: position.clone(),
-			velocity: new THREE.Vector3(
-				(Math.random() - 0.5) * 0.2, Math.random() * 0.2,(Math.random() - 0.5) * 0.2),
-				life: 1.0,
-			});
-		}
 	}
 
 	attachEvents() {
-		console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
 	}
 }

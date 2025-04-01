@@ -11,7 +11,7 @@ export default class PlayCanva extends BaseView{
 		this.gameOver = false;
 
 		this.scores = {
-			max_score: 5,
+			max_score: 3,
 			player1_score: 0,
 			player2_score: 0,
 		};
@@ -45,7 +45,7 @@ export default class PlayCanva extends BaseView{
 	}
 
     handleGameEnd(winner, looser, winner_score, looser_score){
-        console.log("game end")
+
 		this.gameOver = true;
 
         const finalScreen = document.createElement("div");
@@ -145,7 +145,7 @@ export default class PlayCanva extends BaseView{
 	}
 
 	initGame() {
-		console.log("Game Loading...");
+
 
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();

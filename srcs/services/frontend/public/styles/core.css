@@ -233,7 +233,7 @@ body {
   }
 
   #follow-scroll-elements {
-    cursor: grab;
+    /* cursor: grab; */
     font-family: 'SaolDisplay-LightItalic';
     position: absolute;
     bottom: 10px;

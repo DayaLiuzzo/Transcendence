@@ -12,9 +12,6 @@ export default class BasePlayView extends BaseView{
     async joinRoom() {
         const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
         if (result.success) {
-            console.log(result.success)
-            console.log(result.data)
-
             document.getElementById("room-id").innerText = result.data.room_id;
             // document.getElementById("user-1").innerText = this.getUsername();
             document.getElementById("user-2").innerText = "Looking for opponent...";
