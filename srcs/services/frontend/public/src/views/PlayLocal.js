@@ -141,6 +141,7 @@ export default class PlayCanva extends BaseView{
 		scene.add(spotlight);
 		scene.add(spotlight.target);
 
+
 		return spotlight;
 	}
 
