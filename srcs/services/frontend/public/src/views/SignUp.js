@@ -90,12 +90,12 @@ export default class SignUp extends BaseView{
     }
 
     unmount(){
-        console.log('unmounting signup');
+        // console.log('unmounting signup');
         document.getElementById("signup-form")?.removeEventListener("submit", this.handleSignupSubmit);
     }
 
     attachEvents(){
-        console.log('Events attached (signup)');
+        // console.log('Events attached (signup)');
         document.getElementById("signup-form")?.addEventListener("submit", this.handleSignupSubmit);
     }
 

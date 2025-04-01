@@ -77,7 +77,7 @@ export default class BasePlayView extends BaseView{
 				}
             } else {
                 const room = rooms[0];
-                console.log(room);
+                // console.log(room);
                 document.getElementById("room-id").innerText = room.room_id;
                 document.getElementById("status").innerText = "Room available";
                 document.querySelector("canvas.webgl").innerText = "Loading...";
@@ -90,7 +90,7 @@ export default class BasePlayView extends BaseView{
     }
 
     async handleTournamentGameEnd(result) {
-		console.log("tournament ended");
+		// console.log("tournament ended");
 		document.getElementById("room-id").innerText = "";
 		document.querySelector("canvas.webgl").innerText = "";
 		document.getElementById("user-2").innerText = "";
@@ -144,13 +144,13 @@ export default class BasePlayView extends BaseView{
             text-align: center;
 
         `;
-		console.log("waiting_rooms");
+		// console.log("waiting_rooms");
 		cleanUpThree();
 		const container_canvas = document.getElementById("container-canvas");
 		container_canvas.innerHTML = `<canvas class="webgl"></canvas>`
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-waiting-rooms").addEventListener("click", async () => {
-			console.log("waiting_rooms clicked");
+			// console.log("waiting_rooms clicked");
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
 

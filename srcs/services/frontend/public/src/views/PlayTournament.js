@@ -35,7 +35,7 @@ export default class PlayMenu extends BaseView{
     }
 
     attachEvents(){
-        console.log('Events attached (Play-Menu)');
+        // console.log('Events attached (Play-Menu)');
 
         const createTournamentButton = document.getElementById("create-tournament-button");
         if (createTournamentButton) {

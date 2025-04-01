@@ -153,7 +153,7 @@ export default class PlayTournamentMine extends BaseView{
 
     handleStatusChange(event) {
         const newStatus = event.detail.newStatus;
-        console.log("Le statut du tournoi a changé : ", newStatus);
+        // console.log("Le statut du tournoi a changé : ", newStatus);
     
         if (newStatus === 'playing') {
             this.customAlert("Le tournoi est maintenant en cours !");
@@ -179,7 +179,7 @@ export default class PlayTournamentMine extends BaseView{
     }
 
     attachEvents() {
-        console.log('Events attached (Tournament Mine)');
+        // console.log('Events attached (Tournament Mine)');
 
         document.addEventListener('statusChanged', this.handleStatusChange.bind(this));
 
@@ -304,7 +304,7 @@ export default class PlayTournamentMine extends BaseView{
     }
     
     async mount() {
-        console.log('Mounting Play tournament Mine');
+        // console.log('Mounting Play tournament Mine');
 
         try {
             this.renderTournamentInfo()
@@ -316,7 +316,7 @@ export default class PlayTournamentMine extends BaseView{
     }
 
     unmount() {
-        console.log('Unmounting Profile');
+        // console.log('Unmounting Profile');
         
         document.removeEventListener('statusChanged', this.handleStatusChange.bind(this));
 

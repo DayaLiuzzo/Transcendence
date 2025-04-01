@@ -12,8 +12,6 @@ export default class BasePlayView extends BaseView{
     async joinRoom() {
         const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
         if (result.success) {
-            console.log(result.success)
-            console.log(result.data)
 
             document.getElementById("room-id").innerText = result.data.room_id;
             // document.getElementById("user-1").innerText = this.getUsername();
@@ -45,7 +43,7 @@ export default class BasePlayView extends BaseView{
 			loser_username = player1.username;
 		}
 
-        console.log("game end")
+        // console.log("game end")
 
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
@@ -55,18 +53,6 @@ export default class BasePlayView extends BaseView{
             <p>score: ${winner_username} ${score_winner} - ${loser_username} ${score_loser}</p>
             <button id="back-to-lobby">Back to Lobby</button>
         `;
-        finalScreen.style.cssText = `
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-
-        `;
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-lobby").addEventListener("click", () => {
             document.body.removeChild(finalScreen);
@@ -75,18 +61,20 @@ export default class BasePlayView extends BaseView{
     }
 
     checkStart(){
-        console.log(this.socketService);
+        // console.log(this.socketService);
         if (this.socketService.isplaying){
+            document.querySelector("container").innerHTML = ""
             document.querySelector("canvas.webgl").innerText = "Playing...";
+        
             this.listenToKeyboard();
             window.addEventListener("keyboard", () => this.listenToKeyboard());
         }
     }
 
     listenToKeyboard() {
-        console.log("Listening to keyboard")
+        // console.log("Listening to keyboard")
         if (this.socketService.isplaying){
-            console.log("wesh")
+
             window.addEventListener("keydown", (event) => {
                 if (event.key === "ArrowUp" || event.key === "ArrowDown") {
                     const movement = event.key === "ArrowUp" ? "up" : "down";

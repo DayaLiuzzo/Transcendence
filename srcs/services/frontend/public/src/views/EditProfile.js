@@ -133,7 +133,7 @@ export default class EditProfile extends BaseView {
     }
 
     attachEvents() {
-        console.log('Events attached (EditProfile)');
+        // console.log('Events attached (EditProfile)');
         document.getElementById("change-password-form").addEventListener("submit", this.handleSubmitPassword.bind(this));
         document.getElementById("change-username-form").addEventListener("submit", this.handleSubmitUsername.bind(this));
         document.getElementById("toggle-2fa-button").addEventListener("click", this.handleToggle2FA.bind(this));
@@ -233,7 +233,7 @@ export default class EditProfile extends BaseView {
             this.verify2FA(response.data.qr_code_url)
         }
         else {
-            console.log("2FA disabled");
+            // console.log("2FA disabled");
             this.customAlert("2FA disabled successfully");
             button.textContent = "Enable 2FA";
             let userSession = this.getUserSession();

@@ -64,7 +64,7 @@ export default class PlayTournamentList extends BaseView{
     }
 
     attachEvents() {
-        console.log('Events attached (Tournament list)');
+        // console.log('Events attached (Tournament list)');
 
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
@@ -101,7 +101,7 @@ export default class PlayTournamentList extends BaseView{
             // rediriger vers create tournament 
             return;
         }
-        console.log("User in tournament? ", userIsIntournament);
+        // console.log("User in tournament? ", userIsIntournament);
         tournamentListField.innerHTML = "";
         const tournamentList = document.createElement("ul");
         tournaments.forEach(tournament => {
@@ -124,7 +124,7 @@ export default class PlayTournamentList extends BaseView{
     }
 
     async mount() {
-        console.log('Mounting Play tournament List');
+        // console.log('Mounting Play tournament List');
         try {
             const getTournamentList = await this.sendGetRequest(this.API_URL_TOURNAMENT + '/list/waiting/');
             if (!getTournamentList.success) { return this.showError(response.error, "tournament-list-field"); }
@@ -148,7 +148,7 @@ export default class PlayTournamentList extends BaseView{
     }
 
     unmount() {
-        console.log('Unmounting Play tournament List');
+        // console.log('Unmounting Play tournament List');
         
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {

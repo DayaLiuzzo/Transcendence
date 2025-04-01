@@ -83,7 +83,7 @@ export default class PlayTournamentJoin extends BaseView{
     }
 
     async mount() {
-        console.log('Mounting Play tournament Join');
+        // console.log('Mounting Play tournament Join');
 
         try {
             const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
@@ -105,7 +105,7 @@ export default class PlayTournamentJoin extends BaseView{
     }
 
     unmount(){
-        console.log('unmounting join tournament');
+        // console.log('unmounting join tournament');
         document.getElementById("join-tournament-form")?.removeEventListener("submit", this.handleJoinTournamentSubmit);
    
         const tournamentSeeMineField = document.getElementById("tournament-mine-button");
@@ -115,7 +115,7 @@ export default class PlayTournamentJoin extends BaseView{
     }
 
     attachEvents(){
-        console.log('Events attached (join tournament)');
+        // console.log('Events attached (join tournament)');
         document.getElementById("join-tournament-form")?.addEventListener("submit", this.handleJoinTournamentSubmit);
     
         

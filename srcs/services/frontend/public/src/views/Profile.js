@@ -68,7 +68,7 @@ export default class Profile extends BaseView {
     async updateMatchHistoryField(){
         const matchHistoryField = document.getElementById("match-history-field");
         if(!matchHistoryField){
-            console.log('No match history field');
+            // console.log('No match history field');
             return;
         }
         const response = await this.sendGetRequest(this.API_URL_ROOMS + 'list_my_finished_rooms/');
@@ -120,7 +120,7 @@ export default class Profile extends BaseView {
             });
         }
         else {
-        console.log('No match history found');
+        // console.log('No match history found');
             matchHistoryField.innerHTML = `
                 <h3>game {default} history</h3>
                 <p>username: default</p>
@@ -136,7 +136,7 @@ export default class Profile extends BaseView {
     async updateStatsField() {
         const statsField = document.getElementById("stats-field");
         if (!statsField){
-            console.log('No stats field');
+            // console.log('No stats field');
             return;
         }
         const username = this.getUsername();
@@ -245,7 +245,7 @@ export default class Profile extends BaseView {
     }
     
     attachEvents() {
-        console.log('Events attached (Profile)');
+        // console.log('Events attached (Profile)');
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));
@@ -346,7 +346,7 @@ export default class Profile extends BaseView {
     }
 
     unmount() {
-        console.log('Unmounting Profile');
+        // console.log('Unmounting Profile');
 
         const addFriendForm = document.getElementById("add-friend-form");
         if (addFriendForm) {

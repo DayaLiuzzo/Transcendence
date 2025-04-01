@@ -47,7 +47,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	unmount() {
-		console.log("Unmounted PlayCanva REMOTE");
+		// console.log("Unmounted PlayCanva REMOTE");
 		document.getElementById("final-screen")?.remove();
 		isRunning = false;
 		if (this.socketService) {
@@ -79,9 +79,9 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	initGame() {
-		console.log("Game Loading...");
+		// console.log("Game Loading...");
 		isRunning = true;
-		console.log("Is running ?", isRunning);
+		// console.log("Is running ?", isRunning);
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
 		const camera = new THREE.PerspectiveCamera(
@@ -149,7 +149,7 @@ export default class PlayCanva extends BasePlayView {
 		window.threeInstance.scene.add(this.player1Spotlight.target);
 		window.threeInstance.scene.add(this.player2Spotlight);
 		window.threeInstance.scene.add(this.player2Spotlight.target);
-		console.log(this.ballSpotlight);
+		// console.log(this.ballSpotlight);
 
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
@@ -233,7 +233,7 @@ export default class PlayCanva extends BasePlayView {
 
 			this.updateSpotlight(this.ballSpotlight, this.meshBall);
 			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
-			console.log(this.player2Spotlight);
+			// console.log(this.player2Spotlight);
 
 			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
 			window.addEventListener("resize", window.threeInstance.resizeHandler);
@@ -417,7 +417,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	attachEvents() {
-		console.log("Events attached (PlayCanva)");
+		// console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
 	}
 }

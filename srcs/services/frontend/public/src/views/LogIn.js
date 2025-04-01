@@ -142,13 +142,13 @@ export default class LogIn extends BaseView{
     }
 
     unmount(){
-        console.log('unmounting login');
+        // console.log('unmounting login');
         document.getElementById("login-form")?.removeEventListener("submit", this.handleLoginSubmit);
     
     }
 
     attachEvents(){
-        console.log('Events attached (LogIn)');
+        // console.log('Events attached (LogIn)');
         document.getElementById("login-form")?.addEventListener("submit", this.handleLoginSubmit);
     }
 }

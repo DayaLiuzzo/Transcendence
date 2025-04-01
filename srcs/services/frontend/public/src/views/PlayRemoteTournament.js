@@ -47,7 +47,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	unmount() {
-		console.log("Unmounted PlayCanva REMOTE");
+		// console.log("Unmounted PlayCanva REMOTE");
 		document.getElementById("final-screen")?.remove();
 		isRunning = false;
 		if (this.socketService) {
@@ -81,7 +81,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	initGame() {
-		console.log("Game Loading...");
+		// console.log("Game Loading...");
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
 		const camera = new THREE.PerspectiveCamera(
@@ -164,7 +164,7 @@ export default class PlayCanva extends BasePlayView {
 			this.player1.y,
 			20
 		);
-		console.log("MESHPLAYER1", this.meshPlayer1);
+		// console.log("MESHPLAYER1", this.meshPlayer1);
 
 		this.meshPlayer2 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
@@ -219,7 +219,7 @@ export default class PlayCanva extends BasePlayView {
 		window.threeInstance.scene.add(this.meshPlayer1);
 		window.threeInstance.scene.add(this.meshPlayer2);
 		window.threeInstance.scene.add(this.meshBall);
-		console.log("SCOOOOOORE:", this.scores.player1_score)
+		// console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
 		const tick = () => {
@@ -321,7 +321,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	updateScore(data) {
-		console.log(this.scores);
+		// console.log(this.scores);
 		this.scores.player1_score = data.player1;
 		this.scores.player2_score = data.player2;
 		this.updateScoreMesh();
@@ -411,7 +411,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	attachEvents() {
-		console.log("Events attached (PlayCanva)");
+		// console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
 	}
 }

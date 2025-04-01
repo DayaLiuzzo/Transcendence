@@ -18,7 +18,7 @@ export default class PlayCanva extends BaseView{
 	}
 
 	unmount() {
-		console.log("Unmounted PlayCanva LOCAL");
+		// console.log("Unmounted PlayCanva LOCAL");
 		document.getElementById("final-screen")?.remove();
 		this.gameOver = true;
 		cleanUpThree();
@@ -46,7 +46,7 @@ export default class PlayCanva extends BaseView{
 	}
 
     handleGameEnd(winner, looser, winner_score, looser_score){
-        console.log("game end")
+        // console.log("game end")
 		this.gameOver = true;
 
         const finalScreen = document.createElement("div");
@@ -146,7 +146,7 @@ export default class PlayCanva extends BaseView{
 	}
 
 	initGame() {
-		console.log("Game Loading...");
+		// console.log("Game Loading...");
 
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
@@ -370,11 +370,11 @@ export default class PlayCanva extends BaseView{
 			}
 			if (meshBall.position.x > 4.5) {
 				this.scores.player1_score++;
-				console.log("SCORES:", this.scores.player1_score);
+				// console.log("SCORES:", this.scores.player1_score);
 				this.resetScores();
 				meshBall.position.set(0, 0.2, 0);
 			} else if (meshBall.position.x < -4.5) {
-				console.log("SCORES:", this.scores.player2_score);
+				// console.log("SCORES:", this.scores.player2_score);
 				this.scores.player2_score++;
 				this.resetScores();
 				meshBall.position.set(0, 0.2, 0);
@@ -412,7 +412,7 @@ export default class PlayCanva extends BaseView{
 	}
 
 	attachEvents() {
-		console.log("Events attached (PlayCanva)");
+		// console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
 		if (this.gameOver === false) {
 			this.initGame();

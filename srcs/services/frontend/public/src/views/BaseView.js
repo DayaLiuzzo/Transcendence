@@ -29,7 +29,7 @@ export default class BaseView{
 
     //UPDATE THE HTML CONTENT WITH DYNAMIC DATA AND THEN ATTACH EVENTS
     async mount(){
-        console.log("BaseView mounted");
+        // console.log("BaseView mounted");
     }
 
     async isOnline(username){
@@ -74,7 +74,7 @@ export default class BaseView{
     }
 
     showAlert(message){
-        console.log(message);
+        // console.log(message);
         const alertOverlay = document.createElement("div");
         alertOverlay.id = "dynamic-alert";
         alertOverlay.style.position = "fixed";
@@ -154,7 +154,7 @@ export default class BaseView{
             errorContainer = document.createElement("div");
             errorContainer.id = formId+ "-error-container";
             errorContainer.classList.add("error-container");
-            console.log(formId);
+            // console.log(formId);
             
             document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
@@ -254,14 +254,14 @@ export default class BaseView{
     }
 
     async updateNavbar() {
-        console.log("updating navbar");
+        // console.log("updating navbar");
         const navbar = document.getElementById("navbar");
 
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
                 const avatarUrl = await this.displayAvatar();
-                console.log(avatarUrl)
+                // console.log(avatarUrl)
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
@@ -313,7 +313,7 @@ export default class BaseView{
     }
 
     unmount(){
-        console.log("BaseView unmounted");
+        // console.log("BaseView unmounted");
     }
 
     async sendGetRequest(url){
@@ -485,7 +485,7 @@ export default class BaseView{
     }
 
     attachEvents(){
-        console.log('Events attached');
+        // console.log('Events attached');
     }
 
     updateFieldContent(fieldId, content){

@@ -61,10 +61,10 @@ export function cleanUpThree() {
 
 
 	export function cleanUpThreeTournament() {
-		console.log("in Cleanup For Tournament");
+		// console.log("in Cleanup For Tournament");
 		if (!window.threeInstance) return;
 
-		console.log("Cleaning up Three.js");
+		// console.log("Cleaning up Three.js");
 		if (window.threeInstance.animationId) {
 			cancelAnimationFrame(window.threeInstance.animationId);
 		}

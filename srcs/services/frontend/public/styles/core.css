@@ -20,6 +20,55 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+
+/* Styles pour l'écran final */
+#final-screen {
+  position: absolute;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  width: 300px;
+  background-color: #ffffff; /* Fond blanc */
+  color: #000000; /* Texte noir */
+  font-family:  'Roboto', sans-serif; /* Police simple et lisible */
+  text-align: center;
+  border: 2px solid #000000; /* Bordure noire pour délimiter la div */
+  border-radius: 10px; /* Coins arrondis pour un look plus doux */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre pour un effet de profondeur */
+}
+
+#final-screen h1 {
+  font-size: 3em;
+  margin-bottom: 0.5em;
+}
+
+#final-screen p {
+  font-size: 1.5em;
+  margin: 0.5em 0;
+}
+
+#final-screen button {
+  margin-top: 2em;
+  padding: 1em 2em;
+  font-size: 1em;
+  background-color: #000000; /* Bouton noir */
+  color: #ffffff; /* Texte blanc */
+  border: 2px solid #000000; /* Bordure noire */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+#final-screen button:hover {
+  background-color: #333333; /* Couleur gris foncé au survol */
+  transform: scale(1.05); /* Légère augmentation de la taille au survol */
+  border-color: #ffffff; /* Bordure blanche pour un contraste accru */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre pour un effet de profondeur */
+}
+
+
+
 #match-history-field {
   /* width: 600px; */
   height: 300px;
@@ -472,6 +521,7 @@ body {
     color: white;
     font-size: 0.8em;
     margin-left: 12px;
+    font-family: 'Roboto', sans-serif;
   }
 
   .connected {

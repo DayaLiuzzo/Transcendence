@@ -10,7 +10,7 @@ export default class Home extends BaseView {
 
 	unmount () {
 		isRunning = false;
-		console.log ("UNMONTING HOME");
+		// console.log ("UNMONTING HOME");
 		cleanUpThree()
 	}
 
@@ -71,7 +71,7 @@ export default class Home extends BaseView {
 
 	attachEvents() {
 		isRunning = true;
-		console.log("Events attached (Home)", isRunning);
+		// console.log("Events attached (Home)", isRunning);
 		const text = document.getElementById("test-text");
 		const originalText = text.textContent;
 
@@ -199,13 +199,10 @@ export default class Home extends BaseView {
 			window.threeInstance.effect.render(scene, camera);
 			window.threeInstance.animationId = requestAnimationFrame(tick);
 
-			console.log("tick")
-
 			window.addEventListener("resize", window.threeInstance.resizeHandler);
 		};
 
 		if (isRunning == true){
-			console.log("isRunning is true")
 			tick();
 		}
 	}
