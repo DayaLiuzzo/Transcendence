@@ -209,6 +209,11 @@ clean_migration:
 	rm -rf srcs/services/avatar_media/users_avatars/*
 	@echo "Cleanup completed."
 
+clean_avatar:
+	@echo "Cleaning Avatar."
+	rm -rf srcs/services/avatar_media/users_avatar/*
+	@echo "Cleanup completed."
+
 clean_images:
 	@echo "Cleaning Images."
 	@-if [ "$$(docker images -q)" != "" ]; then \
@@ -254,7 +259,7 @@ clean_certs:
 	rm -rf srcs/services/avatar/certs
 	docker builder prune -af
 
-clean: down clean_images clean_migration clean_cache clean_volumes clean_containers clean_network clean_certs
+clean: down clean_images clean_avatar clean_migration clean_cache clean_volumes clean_containers clean_network clean_certs
 
 re: clean all
 

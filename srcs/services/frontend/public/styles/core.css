@@ -20,6 +20,14 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+#match-history-field {
+  /* width: 600px; */
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+}
+
   #navbar {
     position: fixed;
     background-color: transparent;
@@ -555,7 +563,7 @@ body {
 }
 
 
-.play-menu {
+.play-menu, .tournament-menu {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto auto;
@@ -564,7 +572,7 @@ body {
   font-family: 'SaolDisplay-LightItalic';
 }
 
-.play-option {
+.play-option, .tournament-option {
   padding: 20px;
   font-size: 18px;
   height: 20vh;
@@ -576,6 +584,7 @@ body {
   border: 3px solid #333;
   font-family: 'SaolDisplay-LightItalic';
 }
+
 .play-option:nth-child(3) {
   grid-column: span 2;
 }
@@ -614,7 +623,7 @@ body {
   font-weight: bold;
 }
 
-.play-option:hover {
+.play-option:hover .tournament-option:hover{
   background-color: black;
   opacity: 0.5;
   color: white;

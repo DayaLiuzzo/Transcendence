@@ -58,7 +58,8 @@ export default class Profile extends BaseView {
                     <button type="submit">Add Friend</button>
                 </form>
                 <div id="stats-field"></div>
-                <div id="match-history-field"> <h3>Match History</h3> </div>
+                <h3>Match History</h3>
+                <div id="match-history-field"></div>
             </div>
         </div>
         `;
@@ -198,7 +199,7 @@ export default class Profile extends BaseView {
             newFriendItem.appendChild(removeButton);
             friendsField.querySelector("ul").appendChild(newFriendItem);
         }
-        alert(response.data.message);
+        this.customAlert(response.data.message);
     }
 
     async removeFriend(friendUsername, friendItem) {
@@ -214,7 +215,7 @@ export default class Profile extends BaseView {
             return;
         }
         friendItem.remove();
-        alert(response.data.message);
+        this.customAlert(response.data.message);
     }
 
     handleEditProfileClick() {

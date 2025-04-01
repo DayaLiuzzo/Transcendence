@@ -33,8 +33,7 @@ export default class PlayCanva extends BasePlayView {
 		this.updateGame = (event) => {
 			this.updateGameObjects(event.detail);
 		};
-		this.updateScore = (event) => {
-			console.log(event);
+		this.updateScoreBoard = (event) => {
 			this.updateScore(event.detail);
 		};
 		this.gameEnd = (event) => {
@@ -58,12 +57,12 @@ export default class PlayCanva extends BasePlayView {
 		}
 		window.removeEventListener("initSettingsGame", this.initSettings);
 		window.removeEventListener("updateGame", this.updateGame);
-		window.removeEventListener("updateScore", this.updateScore);
+		window.removeEventListener("updateScore", this.updateScoreBoard);
 		window.removeEventListener("handleEndGame", this.gameEnd);
 	}
 
 	showError(message) {
-		alert(message);
+		this.customAlert(message);
 	}
 
 	handlerEventsListeners() {
@@ -75,7 +74,7 @@ export default class PlayCanva extends BasePlayView {
 
 		window.addEventListener("initSettingsGame", this.initSettings);
 		window.addEventListener("updateGame", this.updateGame);
-		window.addEventListener("updateScore", this.updateScore);
+		window.addEventListener("updateScore", this.updateScoreBoard);
 		window.addEventListener("handleEndGame", this.gameEnd);
 	}
 

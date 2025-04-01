@@ -7,7 +7,7 @@ export default class NotFound extends BaseView{
     }
 
     showError(message){
-        alert(message);
+        this.customAlert(message);
     }
 
     
