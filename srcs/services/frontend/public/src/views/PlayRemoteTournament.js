@@ -59,6 +59,7 @@ export default class PlayCanva extends BasePlayView {
 		window.removeEventListener("updateGame", this.updateGame);
 		window.removeEventListener("updateScore", this.updateScoreBoard);
 		window.removeEventListener("handleEndGame", this.endGame);
+        this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
 	}
 
 	showError(message) {
