@@ -4,12 +4,10 @@ import BaseView from "./BaseView.js";
 export default class PlayCanva extends BaseView{
 	constructor(params) {
 		super(params);
-
 		this.ballVelocity = { x: 0.02, z: 0.02 };
 		this.speedIncrement = 1.8;
 		this.keys = { ArrowUp: false, ArrowDown: false, w: false, s:false};
 		this.gameOver = false;
-
 		this.scores = {
 			max_score: 3,
 			player1_score: 0,
@@ -47,7 +45,6 @@ export default class PlayCanva extends BaseView{
     handleGameEnd(winner, looser, winner_score, looser_score){
 
 		this.gameOver = true;
-
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
@@ -76,13 +73,14 @@ export default class PlayCanva extends BaseView{
 	}
 
 	resetScores() {
+		const colorText = new THREE.Color( 0x163f38 );
 		const fontLoader = new THREE.FontLoader();
 		fontLoader.load(
 			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
 			(font) => {
 				const textMaterial = new THREE.MeshStandardMaterial({
-					color: 0x000000,
-					emissive: 0xffffff,
+					color: colorText,
+					emissive: colorText,
 					emissiveIntensity: 0.4,
 				});
 
@@ -130,27 +128,22 @@ export default class PlayCanva extends BaseView{
 		spotlight.target.position.copy(targetMesh.position);
 	}
 
-	createSpotlight(scene, intensity = 10) {
-		const spotlight = new THREE.SpotLight(0xffffff, intensity);
+	createSpotlight(scene, intensity = 1) {
+		const spotlight = new THREE.SpotLight(0x98b6b0, intensity);
 		spotlight.angle = Math.PI / 6;
 		spotlight.penumbra = 0.3;
-		spotlight.decay = 1;
+		spotlight.decay = 2;
 		spotlight.distance = 10;
+		spotlight.intensity = 1;
 		spotlight.castShadow = true;
-
 		scene.add(spotlight);
 		scene.add(spotlight.target);
-
-
 		return spotlight;
 	}
 
 	initGame() {
-
-
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
-
 		const camera = new THREE.PerspectiveCamera(
 			75,
 			window.innerWidth / window.innerHeight,
@@ -212,7 +205,7 @@ export default class PlayCanva extends BaseView{
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
 
-		const ballSpotlight = this.createSpotlight(scene);
+		//const ballSpotlight = this.createSpotlight(scene);
 		const player1Spotlight = this.createSpotlight(scene);
 		const player2Spotlight = this.createSpotlight(scene);
 
@@ -242,12 +235,13 @@ export default class PlayCanva extends BaseView{
 		);
 		meshBall.position.set(0, 0.2, 0);
 
+		const colorBoard = new THREE.Color( 0x7da17e );
 		const meshBoard = new THREE.Mesh(
 			new THREE.PlaneGeometry(10, 6),
 			new THREE.MeshStandardMaterial({
-				color: 0x000000,
-				roughness: 0.7,
-				metalness: 0.3,
+				color: colorBoard,
+				roughness: 0.6,
+				metalness: 0.2,
 			})
 		);
 		meshBoard.rotation.x = -Math.PI / 2;
@@ -256,8 +250,8 @@ export default class PlayCanva extends BaseView{
 		const boardLine = new THREE.Mesh(
 			new THREE.PlaneGeometry(0.05, 6),
 			new THREE.MeshStandardMaterial({
-				color: 0x000000,
-				emissive: 0xffffff,
+				color: 0x98b6b0,
+				emissive: 0x98b6b0,
 				emissiveIntensity: 0.2,
 			})
 		);
@@ -341,7 +335,7 @@ export default class PlayCanva extends BaseView{
 			meshBall.position.x += this.ballVelocity.x * this.speedIncrement;
 			meshBall.position.z += this.ballVelocity.z * this.speedIncrement;
 
-			this.updateSpotlight(ballSpotlight, meshBall);
+			//this.updateSpotlight(ballSpotlight, meshBall);
 			this.updateSpotlight(player1Spotlight, meshPlayer1);
 			this.updateSpotlight(player2Spotlight, meshPlayer2);
 
