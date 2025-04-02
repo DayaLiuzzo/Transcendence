@@ -21,7 +21,93 @@ body {
 }
 
 
-/* Styles pour l'écran final */
+#waitingGameContainer{
+  position:absolute;
+  height: 80%;
+  background-color: #000014;
+  font-family: 'Courier New', Courier, monospace;
+  color: #00BFFF;
+  border: none;
+  border-radius: 15px;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 10px rgba(0, 191, 255, 0.5),
+  0 4px 8px rgba(0, 0, 255, 0.5); 
+  width: 80%;
+  overflow: hidden;
+  perspective: 2000px;
+  image-rendering: pixelated; /
+  filter: blur(1px);
+  transform: translateZ(50px);
+  background-image: repeating-linear-gradient(
+        0deg,
+        rgba(5,34,43,255),
+        rgba(0,3,4,255)10px,
+        rgba(0, 0, 0, 0) 10px,
+        rgba(0, 0, 0, 0) 20px
+  );  
+  background-size: 8px 7px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  }
+
+  #progressBar{
+    display: flex;
+    border: 1px solid #00BFFF;
+    height: 10%;
+    width: 85%;
+    z-index: 9999;
+  }
+
+  #gameScreen{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 70%;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .number{
+    display: flex;
+    width: 75px;
+        /* border: 1px solid #00BFFF; */
+    height: 75px;
+    color: #b8e6ec;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    text-shadow:
+    1px 1px 2px #2b70bf,  /* Adds a subtle shadow with the contrast color */
+    -1px -1px 2px #2b70bf;
+
+  }
+  
+  @keyframes shake {
+    0%, 100% {
+        transform: translate(0);
+    }
+    25% {
+        transform: translate(-2px, -2px);
+    }
+    50% {
+        transform: translate(2px, 2px);
+    }
+    75% {
+        transform: translate(-2px, 2px);
+    }
+}
+  
+  #gameBoxes{
+    position: relative;
+    height: 30%;
+    width: 100%;
+    top: 70%;
+  }
+
 #final-screen {
   position: absolute;
   flex-direction: column;

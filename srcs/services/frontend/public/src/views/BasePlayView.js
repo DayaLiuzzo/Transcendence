@@ -9,20 +9,104 @@ export default class BasePlayView extends BaseView{
         this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
     }
 
+    createContainer(containerName){
+        const container = document.createElement("div");
+        container.id = containerName;
+        return container;
+    }
+    
+    createWaitingGameContainer(result){
+        
+        const container = document.getElementById("container");
+        const waitingGameContainer = document.createElement("div");
+        waitingGameContainer.id = "waitingGameContainer";
+
+        const progressBar = this.createContainer("progressBar");
+        const gameScreen = this.createContainer("gameScreen");
+        const gameBoxes = this.createContainer("gameBoxes");
+        const numbers = [];
+        for(let i = 1; i <= 114; i++){
+            const numberValue = i;
+            const number = document.createElement("div");
+            number.className = "number";
+            number.id = `number-${i}`;
+            number.innerHTML = numberValue;
+            numbers.push(number);
+            gameScreen.appendChild(number);
+        }
+
+        gameScreen.addEventListener("mousemove", (e) => {
+            numbers.forEach(number => {
+                const rect = number.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const deltaX = Math.abs(centerX - e.clientX);
+                const deltaY = Math.abs(centerY - e.clientY);
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                const maxDistance = Math.sqrt(rect.width * rect.width + rect.height * rect.height) / 2;
+                const scale = Math.max(0, 1 - distance / (maxDistance * 4));
+                const shakeIntensity = Math.max(0, 1 - distance / (maxDistance * 2));
+    
+                if (distance < maxDistance * 4) {
+                    number.style.fontSize = `${1 + scale * 2}em`; // Increase the scale factor for more dramatic effect
+                    number.style.animation = `shake ${0.1 + shakeIntensity * 0.2}s infinite`; // Adjust shake intensity
+                } else {
+                    number.style.fontSize = "1em"; // Reset font size if out of range
+                    number.style.animation = "none"; // Stop shake animation if out of range
+                }
+            });
+        });
+
+        gameScreen.addEventListener("mouseleave", () => {
+            numbers.forEach(number => {
+                number.style.fontSize = "1em"; // Reset font size on mouse leave
+                number.style.animation = "none"; // Stop shake animation
+            });
+        });
+
+        
+        waitingGameContainer.appendChild(progressBar);
+        waitingGameContainer.appendChild(gameScreen);
+        waitingGameContainer.appendChild(gameBoxes);
+        
+        const child = document.getElementById("container-canvas");
+        container.insertBefore(waitingGameContainer, child);
+        return waitingGameContainer;
+
+    }
+
+    displayWaitingGame(result){
+        const waitingCanvas = this.createWaitingGameContainer(result);
+        
+    }
+
     async joinRoom() {
         const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
         if (result.success) {
-
-            document.getElementById("room-id").innerText = result.data.room_id;
-            // document.getElementById("user-1").innerText = this.getUsername();
-            document.getElementById("user-2").innerText = "Looking for opponent...";
-            document.querySelector("canvas.webgl").innerText = "Loading...";
+            this.displayWaitingGame(result.data.room_id);
             this.openWebSocket(result.data.room_id);
             window.addEventListener("gameStarted", () => this.checkStart());
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
     }
+
+
+
+    // async joinRoom() {
+    //     const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
+    //     if (result.success) {
+
+    //         document.getElementById("room-id").innerText = result.data.room_id;
+    //         // document.getElementById("user-1").innerText = this.getUsername();
+    //         document.getElementById("user-2").innerText = "Looking for opponent...";
+    //         document.querySelector("canvas.webgl").innerText = "Loading...";
+    //         this.openWebSocket(result.data.room_id);
+    //         window.addEventListener("gameStarted", () => this.checkStart());
+    //     } else {
+    //         document.getElementById("room-id").innerText = "No room found, please reload";
+    //     }
+    // }
 
     async handleTournamentGameEnd(){
     }
@@ -63,9 +147,7 @@ export default class BasePlayView extends BaseView{
     checkStart(){
         // console.log(this.socketService);
         if (this.socketService.isplaying){
-            document.querySelector("container").innerHTML = ""
             document.querySelector("canvas.webgl").innerText = "Playing...";
-        
             this.listenToKeyboard();
             window.addEventListener("keyboard", () => this.listenToKeyboard());
         }
