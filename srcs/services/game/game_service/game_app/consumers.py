@@ -337,6 +337,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.update_final_game_data()
         await send_results_to_rooms(self.final_game_data)
         await self.send_game_state(self.jeu.get_game_end())
+        self.data_sent = True
 
     async def update(self):
         if self.jeu._ball_hit():
