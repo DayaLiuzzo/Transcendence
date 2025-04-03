@@ -25,7 +25,7 @@ body {
   position:absolute;
   height: 80%;
   background-color: #000014;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Helvetica', monospace;
   color: #00BFFF;
   border: none;
   border-radius: 15px;
@@ -35,59 +35,77 @@ body {
   0 4px 8px rgba(0, 0, 255, 0.5); 
   width: 80%;
   overflow: hidden;
-  perspective: 2000px;
-  image-rendering: pixelated; /
-  filter: blur(1px);
-  transform: translateZ(50px);
+  image-rendering: pixelated;
+  filter: contrast(1.2) saturate(1.1) blur(0.5px);
   background-image: repeating-linear-gradient(
-        0deg,
-        rgba(5,34,43,255),
-        rgba(0,3,4,255)10px,
-        rgba(0, 0, 0, 0) 10px,
-        rgba(0, 0, 0, 0) 20px
-  );  
+    0deg, rgba(0, 25, 54, 0.98) 0px, rgba(0,3,4,255) 10px, 
+    rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px
+  ), repeating-linear-gradient(
+    90deg, rgba(0, 25, 54, 0.98) 0px, rgba(0,3,4,255) 10px, 
+    rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px
+  );
   background-size: 8px 7px; 
   display: flex;
   flex-direction: column;
   align-items: center;
+
   
   }
 
-  #progressBar{
-    display: flex;
-    border: 1px solid #00BFFF;
-    height: 10%;
-    width: 85%;
-    z-index: 9999;
-  }
 
-  #gameScreen{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    height: 70%;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .number{
-    display: flex;
-    width: 75px;
-        /* border: 1px solid #00BFFF; */
-    height: 75px;
-    color: #b8e6ec;
-    align-items: center;
-    justify-content: center;
+    #progressBar{
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction:column;
+      align-items: center;
+      font-size: 2em;
+      font-family: 'Helvetica', monospace;
+      font-weight: 900;
+      justify-content: center;
+      color: #b8e6ec;
+      border: 4px solid #c5fbffef;
+      height: 10%;
+      width: 85%;
+      /* z-index: 9999; */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-    cursor: pointer;
-    text-shadow:
-    1px 1px 2px #2b70bf,  /* Adds a subtle shadow with the contrast color */
-    -1px -1px 2px #2b70bf;
+    .logoLumon{
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+    }
 
-  }
-  
-  @keyframes shake {
-    0%, 100% {
+    #gameScreen{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-bottom: 2px solid #c5fbffef;
+      height: 70%;
+      width: 100%;
+      overflow: auto;
+      scrollbar-width: none;
+    }
+    
+    .number{
+      display: flex;
+      width: 75px;
+          /* border: 1px solid #00BFFF; */
+      height: 75px;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #b8e6ec;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+      text-shadow:
+      100px 100px 200px #001936fa,  /* Adds a subtle shadow with the contrast color */
+      -100px -100px 200px #001936fa;
+    }
+
+    @keyframes emphasize {
+      0%, 100% {
         transform: translate(0);
     }
     25% {
@@ -99,14 +117,55 @@ body {
     75% {
         transform: translate(-2px, 2px);
     }
-}
-  
-  #gameBoxes{
-    position: relative;
-    height: 30%;
-    width: 100%;
-    top: 70%;
+    }
+    
+    /* Class to apply the effect */
+    .emphasized {
+      animation: emphasize 2s ease-in-out infinite alternate;
+      color:#4CAF50;
+    }
+
+    @keyframes shake {
+      0%, 100% {
+          transform: translate(0);
+      }
+      25% {
+          transform: translate(-2px, -2px);
+      }
+      50% {
+          transform: translate(2px, 2px);
+      }
+      75% {
+          transform: translate(-2px, 2px);
+      }
   }
+    
+    #gameBoxes{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      font-family: 'Helvetica New', monospace;
+      justify-content: center;
+      font-size: 3em;
+      color: #b8e6ec;
+      top:25%;
+      height: 30%;
+      width: 100%;
+      border-top: 2px solid #c5fbffef;
+      border-bottom: 2px solid #c5fbffef;
+      gap: 10px;
+      top: 70%;
+    }
+
+    .gameBox{
+      display: flex;
+      height: 50%;
+      width: 20%;
+      
+      border: 3px solid #c5fbffef;
+      align-items: center;
+      justify-content: center;
+    }
 
 #final-screen {
   position: absolute;

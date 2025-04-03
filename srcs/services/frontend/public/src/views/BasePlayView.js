@@ -14,7 +14,8 @@ export default class BasePlayView extends BaseView{
         container.id = containerName;
         return container;
     }
-    
+
+
     createWaitingGameContainer(result){
         
         const container = document.getElementById("container");
@@ -25,8 +26,8 @@ export default class BasePlayView extends BaseView{
         const gameScreen = this.createContainer("gameScreen");
         const gameBoxes = this.createContainer("gameBoxes");
         const numbers = [];
-        for(let i = 1; i <= 114; i++){
-            const numberValue = i;
+        for(let i = 1; i <= 78; i++){
+            const numberValue = Math.floor(Math.random() * 10);
             const number = document.createElement("div");
             number.className = "number";
             number.id = `number-${i}`;
@@ -44,28 +45,42 @@ export default class BasePlayView extends BaseView{
                 const deltaY = Math.abs(centerY - e.clientY);
                 const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
                 const maxDistance = Math.sqrt(rect.width * rect.width + rect.height * rect.height) / 2;
-                const scale = Math.max(0, 1 - distance / (maxDistance * 4));
-                const shakeIntensity = Math.max(0, 1 - distance / (maxDistance * 2));
+                const scale = Math.max(0, 1 - distance / (maxDistance * 1.5));
+                const shakeIntensity = Math.max(0, 1 - distance / (maxDistance * 1.5));
     
-                if (distance < maxDistance * 4) {
-                    number.style.fontSize = `${1 + scale * 2}em`; // Increase the scale factor for more dramatic effect
-                    number.style.animation = `shake ${0.1 + shakeIntensity * 0.2}s infinite`; // Adjust shake intensity
+                if (distance < maxDistance * 2 ) {
+                    number.style.fontSize = `${1.5 + scale * 2.5}em`; // Increase the scale factor for more dramatic effect
+                    number.style.animation = `shake ${1 + shakeIntensity * 1}s infinite`; // Adjust shake intensity
                 } else {
-                    number.style.fontSize = "1em"; // Reset font size if out of range
-                    number.style.animation = "none"; // Stop shake animation if out of range
+                    if(number.classList.contains('emphasized')){
+                        console.log(number.innerHTML);
+                    }
+                    else{
+                        console.log(number.innerHTML);
+                        number.style.fontSize = "1.5em"; 
+                        number.style.animation = "none";
+                    }
                 }
             });
         });
 
-        gameScreen.addEventListener("mouseleave", () => {
-            numbers.forEach(number => {
-                number.style.fontSize = "1em"; // Reset font size on mouse leave
-                number.style.animation = "none"; // Stop shake animation
-            });
-        });
+        const names = ["WO", "FC", "DR", "MA"];
+        for (let i = 0; i < 4; i++){
+            const gameBox = document.createElement("div");
+            gameBox.className = "gameBox";
+            gameBox.id = `gameBox-${i}`;
+            gameBox.innerHTML = names[i];
+            gameBoxes.appendChild(gameBox);
+        }
+        const logoLumon = document.createElement("img");
+        logoLumon.src = "/media/lumonLogo.svg";
+        logoLumon.alt = "logo";
+        logoLumon.className = "logoLumon"
 
+        progressBar.innerHTML = "Cold Harbour_____________57% Completed";
         
         waitingGameContainer.appendChild(progressBar);
+        progressBar.appendChild(logoLumon);
         waitingGameContainer.appendChild(gameScreen);
         waitingGameContainer.appendChild(gameBoxes);
         
