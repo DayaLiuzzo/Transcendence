@@ -26,7 +26,7 @@ class RoomSerializerInternal(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ['room_id', 'status', 'player1', 'player2', 'winner', 'loser', 'score_player1', 'score_player2', 'date_played']
+        fields = ['room_id', 'status', 'players_count', 'player1', 'player2', 'winner', 'loser', 'score_player1', 'score_player2', 'date_played']
         extra_kwargs = {
                 'room_id': {'required': False},
             }

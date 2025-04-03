@@ -138,8 +138,7 @@ export default class PlayTournamentMine extends BaseView{
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "launch/", body);
         if (!response.success) { return this.showError(response.error, "tournament-launch-field");}
         this.status = "playing";
-        const event = new CustomEvent('statusChanged', { detail: { newStatus: this.status } });
-        document.dispatchEvent(event);
+		this.handleStatusChange(this.status)
 
         //add alerte avant refresh??
         // this.navigateTo("/my-tournament");
@@ -151,8 +150,7 @@ export default class PlayTournamentMine extends BaseView{
         }
     }
 
-    handleStatusChange(event) {
-        const newStatus = event.detail.newStatus;
+    handleStatusChange(newStatus) {
         console.log("Le statut du tournoi a changé : ", newStatus);
     
         if (newStatus === 'playing') {
@@ -180,8 +178,6 @@ export default class PlayTournamentMine extends BaseView{
 
     attachEvents() {
         console.log('Events attached (Tournament Mine)');
-
-        document.addEventListener('statusChanged', this.handleStatusChange.bind(this));
 
         const tournamentLeaveField = document.getElementById("tournament-leave-button");
         if (tournamentLeaveField) {
@@ -318,8 +314,6 @@ export default class PlayTournamentMine extends BaseView{
     unmount() {
         console.log('Unmounting Profile');
         
-        document.removeEventListener('statusChanged', this.handleStatusChange.bind(this));
-
         const tournamentLeaveField = document.getElementById("tournament-leave-button");
         if (tournamentLeaveField) {
             tournamentLeaveField.removeEventListener("click", this.handleLeaveTournamentClick);
