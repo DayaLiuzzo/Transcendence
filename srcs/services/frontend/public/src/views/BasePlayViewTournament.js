@@ -6,7 +6,7 @@ export default class BasePlayView extends BaseView{
     constructor(params){
         super(params);
         this.socketService = null;
-        this.handleGameEnd = this.handle.bind(this);
+        this.handleGameEnd = this.handleGameEnd.bind(this);
         this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
 		this.tournament_id = null;
     }

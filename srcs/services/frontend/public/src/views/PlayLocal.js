@@ -205,7 +205,6 @@ export default class PlayCanva extends BaseView{
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
 
-		//const ballSpotlight = this.createSpotlight(scene);
 		const player1Spotlight = this.createSpotlight(scene);
 		const player2Spotlight = this.createSpotlight(scene);
 
@@ -281,6 +280,7 @@ export default class PlayCanva extends BaseView{
 		const particles = new THREE.Points(particleGeometry, particleMaterial);
 		window.threeInstance.scene.add(particles);
 		let activeParticles = [];
+
 		this.resetScores();
 
 		function createCollisionParticles(position) {
@@ -335,11 +335,10 @@ export default class PlayCanva extends BaseView{
 			meshBall.position.x += this.ballVelocity.x * this.speedIncrement;
 			meshBall.position.z += this.ballVelocity.z * this.speedIncrement;
 
-			//this.updateSpotlight(ballSpotlight, meshBall);
 			this.updateSpotlight(player1Spotlight, meshPlayer1);
 			this.updateSpotlight(player2Spotlight, meshPlayer2);
-
 			updateParticles();
+
 			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
 				this.ballVelocity.z *= -1;
 				createCollisionParticles(meshBall.position);

@@ -35,6 +35,9 @@ export default class PlayCanva extends BasePlayView {
 		this.updateScoreBoard = (event) => {
 			this.updateScore(event.detail);
 		};
+		// this.handleCollision = (event) => {
+		// 	this.handleCollisionEffect(event.detail);
+		// };
 		this.gameEnd = (event) => {
 			isRunning = false;
 			this.handleGameEnd(
@@ -57,6 +60,7 @@ export default class PlayCanva extends BasePlayView {
 		window.removeEventListener("updateGame", this.updateGame);
 		window.removeEventListener("updateScore", this.updateScoreBoard);
 		window.removeEventListener("handleEndGame", this.gameEnd);
+		window.removeEventListener("handleCollision", this.handleCollision);
 	}
 
 	showError(message) {
@@ -69,11 +73,11 @@ export default class PlayCanva extends BasePlayView {
 			cursor.x = event.clientX / window.innerWidth - 0.5;
 			cursor.y = -(event.clientY / window.innerHeight - 0.5);
 		});
-
 		window.addEventListener("initSettingsGame", this.initSettings);
 		window.addEventListener("updateGame", this.updateGame);
 		window.addEventListener("updateScore", this.updateScoreBoard);
 		window.addEventListener("handleEndGame", this.gameEnd);
+		window.addEventListener("handleCollision", this.handleCollision);
 	}
 
 	initGame() {
@@ -88,7 +92,6 @@ export default class PlayCanva extends BasePlayView {
 		);
 		camera.position.z = 900;
 		camera.up = new THREE.Vector3(0, 0, -1);
-
 		scene.add(camera);
 
 		const renderer = new THREE.WebGLRenderer({
@@ -109,14 +112,11 @@ export default class PlayCanva extends BasePlayView {
 		controls.maxPolarAngle = Math.PI / 2.5;
 		controls.minPolarAngle = Math.PI / 3;
 
-
-
 		function resizeHandler() {
 			const sizes = {
 				width: window.innerWidth,
 				height: window.innerHeight,
 			};
-
 			window.threeInstance.camera.aspect = sizes.width / sizes.height;
 			window.threeInstance.camera.updateProjectionMatrix();
 			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
@@ -132,24 +132,21 @@ export default class PlayCanva extends BasePlayView {
 			resizeHandler
 		};
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 		directionalLight.position.set(0, 0, -1);
 		directionalLight.castShadow = true;
 		directionalLight.shadow.mapSize.width = 2048;
 		directionalLight.shadow.mapSize.height = 2048;
 		window.threeInstance.scene.add(directionalLight);
 
-		//this.ballSpotlight = this.createSpotlight();
 		this.player1Spotlight = this.createSpotlight();
 		this.player2Spotlight = this.createSpotlight();
-		//window.threeInstance.scene.add(this.ballSpotlight.target);
-		//window.threeInstance.scene.add(this.ballSpotlight);
 		window.threeInstance.scene.add(this.player1Spotlight);
 		window.threeInstance.scene.add(this.player1Spotlight.target);
 		window.threeInstance.scene.add(this.player2Spotlight);
 		window.threeInstance.scene.add(this.player2Spotlight.target);
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 		window.threeInstance.scene.add(ambientLight);
 
 		const paddleMaterial = new THREE.MeshStandardMaterial({
@@ -233,10 +230,9 @@ export default class PlayCanva extends BasePlayView {
 		const tick = () => {
 			if (isRunning === false) return;
 			requestAnimationFrame(tick);
-
-			//this.updateSpotlight(this.ballSpotlight, this.meshBall);
 			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
 			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
+		//	this.updateParticles();
 			window.addEventListener("resize", window.threeInstance.resizeHandler);
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
@@ -275,6 +271,63 @@ export default class PlayCanva extends BasePlayView {
     `;
 	}
 
+	// handleCollisionEffect(data) {
+	// 	console.log("COLLISION EFFECT EN COURS")
+	// 	this.particleCount = 100;
+	// 	this.particleGeometry = new THREE.BufferGeometry();
+	// 	this.particleMaterial = new THREE.PointsMaterial({
+	// 		color: 0xff82ff,
+	// 		size: 10,
+	// 		transparent: true,
+	// 		opacity: 0.8,
+	// 	});
+	// 	this.particlePositions = new Float32Array(this.particleCount * 3);
+	// 	this.particleGeometry.setAttribute(
+	// 		"position",
+	// 		new THREE.BufferAttribute(this.particlePositions, 3)
+	// 	);
+	// 	this.particles = new THREE.Points(this.particleGeometry, this.particleMaterial);
+	// 	window.threeInstance.scene.add(this.particles);
+	// 	this.activeParticles = [];
+
+	// 	const position = {x: this.ball.x, y: this.ball.y}
+
+	// 	for (let i = 0; i < this.particleCount; i++) {
+	// 		this.activeParticles.push({
+	// 			position: position,
+	// 			velocity: new THREE.Vector3(
+	// 				(Math.random() - 0.5) * 0.2,
+	// 				Math.random() * 0.2,
+	// 				(Math.random() - 0.5) * 0.2
+	// 			),
+	// 			life: 1.0,
+	// 		});
+	// 	}
+	// 	console.log(this.activeParticles)
+
+	// 	this.activeParticles = this.activeParticles.filter((particle) => {
+	// 		particle.position.add(particle.velocity);
+	// 		particle.life -= 0.02;
+	// 		return particle.life > 0;
+	// 	});
+
+	// 	const positions = new Float32Array(this.particleCount * 3);
+	// 	for (let i = 0; i < this.activeParticles.length; i++) {
+	// 		const particle = this.activeParticles[i];
+	// 		positions[i * 3] = particle.position.x;
+	// 		positions[i * 3 + 1] = particle.position.y;
+	// 		positions[i * 3 + 2] = particle.position.z;
+	// 	}
+
+	// 	this.particles.geometry.setAttribute(
+	// 		"position",
+	// 		new THREE.BufferAttribute(positions, 3)
+	// 	);
+	// 	this.particles.geometry.attributes.position.needsUpdate = true;
+	// 	console.log("COLLISION EFFECT DONE")
+	// }
+
+
 	updateSpotlight(spotlight, targetMesh) {
 		spotlight.position.set(
 			targetMesh.position.x,
@@ -294,8 +347,6 @@ export default class PlayCanva extends BasePlayView {
 		spotlight.distance = -5;
 		spotlight.target.position.set(0, 0, 0);
 		spotlight.position.set(0, 0, -600);
-		const spotlightHelper = new THREE.SpotLightHelper(spotlight);
-		window.threeInstance.scene.add(spotlightHelper);
 		return spotlight;
 	}
 
@@ -331,7 +382,6 @@ export default class PlayCanva extends BasePlayView {
 			this.meshPlayer2.position.y = data.player2_y - this.centerY + this.player2.height / 2;
 			this.meshBall.position.y = data.ball.y - this.centerY + this.ballRadius / 2;
 			this.meshBall.position.x = data.ball.x - this.centerX + this.ballRadius / 2;
-			this.updateSpotlight(this.ballSpotlight, this.meshBall);
 			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
 			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
 		}

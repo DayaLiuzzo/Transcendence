@@ -35,6 +35,9 @@ export default class PlayCanva extends BasePlayView {
 		this.updateScoreBoard = (event) => {
 			this.updateScore(event.detail);
 		};
+		// this.handleCollision = (event) => {
+		// 	this.handleCollisionEffect(event.detail)
+		// }
 		this.endGame = (event) => {
 			isRunning = false;
 			this.handleGameEnd(
@@ -57,6 +60,7 @@ export default class PlayCanva extends BasePlayView {
 		window.removeEventListener("updateGame", this.updateGame);
 		window.removeEventListener("updateScore", this.updateScoreBoard);
 		window.removeEventListener("handleEndGame", this.endGame);
+		window.removeEventListener("handleCollision", this.handleCollision);
         this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
 	}
 
@@ -74,9 +78,8 @@ export default class PlayCanva extends BasePlayView {
 		window.addEventListener("updateGame", this.updateGame);
 		window.addEventListener("updateScore", this.updateScoreBoard);
 		window.addEventListener("handleEndGame", this.endGame);
-		// window.addEventListener("handleCollision", (event) => {
-		// 	this.handleCollision(event.detail);
-		// });
+		window.addEventListener("handleCollision", this.handleCollision);
+
 	}
 
 	initGame() {
@@ -312,6 +315,10 @@ export default class PlayCanva extends BasePlayView {
 			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
 			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
 		}
+	}
+
+	handleCollisionEffect(data) {
+
 	}
 
 	updateScore(data) {
