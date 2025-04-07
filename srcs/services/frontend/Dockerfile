@@ -1,11 +1,11 @@
 FROM nginx:1.24
 
+RUN mkdir -p /etc/nginx/ssl/
+RUN mkdir -p /certs/
+RUN mkdir -p /var/www/media/
 
-RUN mkdir -p /etc/nginx/ssl
-RUN mkdir -p /certs
-RUN mkdir -p /var/www/media
-
-COPY ./certs/* /certs
+COPY ./certs/* /certs/
+RUN chmod -R +r /certs/
 
 # RUN openssl req -x509 -nodes -days 365 \
 # 	-newkey rsa:2048 \
@@ -14,7 +14,7 @@ COPY ./certs/* /certs
 # 	-subj "/C=FR/ST=Paris/L=Paris/O=42_Paris/CN=["${DOMAIN}"](http://"${HOST}".42.fr/)/UID="${HOST}
 
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY public/ /usr/share/nginx/html/
 
-
-
+WORKDIR /usr/share/nginx/html/
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

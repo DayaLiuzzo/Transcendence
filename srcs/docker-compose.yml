@@ -5,10 +5,14 @@ services:
     build: services/frontend
     ports:
       - "4430:4430"
+    develop:
+      watch:
+        - action: sync
+          path: services/frontend/public/
+          target: /usr/share/nginx/html
     restart: on-failure
     volumes:
       - avatar_media:/var/www/media
-      - frontend_service_data:/usr/share/nginx/html
     env_file: .env
     depends_on:
       - api_gateway
@@ -268,14 +272,6 @@ services:
 
 volumes:
   auth_keys:
-  
-  frontend_service_data:
-    name: frontend_service_data
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: $PWD/srcs/services/frontend/public
 
   friends_service_data:
     name: friends_service_data
