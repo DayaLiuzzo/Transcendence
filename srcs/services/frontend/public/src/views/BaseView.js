@@ -265,6 +265,7 @@ export default class BaseView{
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
+                    console.log("avatar IMAGE SOURCE : ", avatarImg.src);
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
 

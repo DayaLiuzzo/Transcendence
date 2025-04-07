@@ -15,6 +15,31 @@ export default class BasePlayView extends BaseView{
         return container;
     }
 
+    async loadLogoLumon(){
+        fetch("/media/logo/lumonLogo.svg")
+        .then(response => response.text()) 
+        .then(svgText => {
+          const container = document.getElementById("logoLumon");
+          container.innerHTML = svgText;  
+          const svgElement = container.querySelector('svg');
+          const paths = svgElement.querySelectorAll('path');
+
+          paths.forEach(path => {
+            path.setAttribute('fill', '#b8e6ec');
+
+            path.setAttribute('stroke', '#b8e6ec');
+        });
+
+
+          // Ajouter une classe CSS à un élément spécifique
+          const globePath = svgElement.querySelector('path[title="Globe"]');
+          if (globePath) {
+              globePath.classList.add('globe-style');
+          }
+        
+        //   #b8e6ec
+        });
+    }
 
     createWaitingGameContainer(result){
         
@@ -56,10 +81,10 @@ export default class BasePlayView extends BaseView{
                     number.style.animation = `shake ${1 + shakeIntensity * 1}s infinite`; // Adjust shake intensity
                 } else {
                     if(number.classList.contains('emphasized')){
-                        console.log(number.innerHTML);
+                        // console.log(number.innerHTML);
                     }
                     else{
-                        console.log(number.innerHTML);
+                        // console.log(number.innerHTML);
                         number.style.fontSize = "1.5em"; 
                         number.style.animation = "none";
                     }
@@ -75,13 +100,16 @@ export default class BasePlayView extends BaseView{
             gameBox.innerHTML = names[i];
             gameBoxes.appendChild(gameBox);
         }
-        const logoLumon = document.createElement("img");
-        logoLumon.src = "/media/happy.svg";
+        
+        const logoLumon = document.createElement("div");
+        logoLumon.id = "logoLumon"
         logoLumon.alt = "logo";
-        logoLumon.className = "logoLumon"
 
+        this.loadLogoLumon(logoLumon)
+        
         progressBar.innerHTML = "Cold Harbour_____________57% Completed";
         
+        console.log("LOGOLUMON SRC ", logoLumon.src );
         
         waitingGameContainer.appendChild(headerCanva);
         headerCanva.appendChild(progressBar);
