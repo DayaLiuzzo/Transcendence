@@ -1,7 +1,7 @@
 import BaseView from './BaseView.js';
 
 export default class PlayMenu extends BaseView{
-    
+
     constructor(params){
         super(params);
     }
@@ -9,15 +9,27 @@ export default class PlayMenu extends BaseView{
     render(){
         return `
         <div>
-            <h2>Play Menu</h2>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
+            <div id="container">
+                <h2>Play Menu</h2>
+                <div class="play-menu">
+                    <div class="play-option" id="play-local">Play locally</div>
+                    <div class="play-option" id="play-remote">Play remote</div>
+                    <div class="play-option" id="play-tournament">Play in tournament</div>
 
-            <button id="play-local">Play localy</button>
-            <br>
-            <button id="play-remote">Play remote</button>
-            <br>
-            <button id="play-tournament">Play in tournament</button>
-            <br>
-            <button id="play-with-friends">Play in tournament</button>
+                </div>
+            </div>
         </div>
     `;
     }

@@ -1,4 +1,4 @@
-import BasePlayView from "./BasePlayView.js";
+import BasePlayView from "./BasePlayViewTournament.js";
 import { cleanUpThree } from "../three/utils.js";
 
 let keys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
@@ -36,7 +36,7 @@ export default class PlayCanva extends BasePlayView {
 		this.updateScoreBoard = (event) => {
 			this.updateScore(event.detail);
 		};
-		this.gameEnd = (event) => {
+		this.endGame = (event) => {
 			isRunning = false;
 			this.handleGameEnd(
 				event.detail,
@@ -58,7 +58,8 @@ export default class PlayCanva extends BasePlayView {
 		window.removeEventListener("initSettingsGame", this.initSettings);
 		window.removeEventListener("updateGame", this.updateGame);
 		window.removeEventListener("updateScore", this.updateScoreBoard);
-		window.removeEventListener("handleEndGame", this.gameEnd);
+		window.removeEventListener("handleEndGame", this.endGame);
+        this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
 	}
 
 	showError(message) {
@@ -71,17 +72,17 @@ export default class PlayCanva extends BasePlayView {
 			cursor.x = event.clientX / window.innerWidth - 0.5;
 			cursor.y = -(event.clientY / window.innerHeight - 0.5);
 		});
-
 		window.addEventListener("initSettingsGame", this.initSettings);
 		window.addEventListener("updateGame", this.updateGame);
 		window.addEventListener("updateScore", this.updateScoreBoard);
-		window.addEventListener("handleEndGame", this.gameEnd);
+		window.addEventListener("handleEndGame", this.endGame);
+		// window.addEventListener("handleCollision", (event) => {
+		// 	this.handleCollision(event.detail);
+		// });
 	}
 
 	initGame() {
 		console.log("Game Loading...");
-		isRunning = true;
-		console.log("Is running ?", isRunning);
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
 		const camera = new THREE.PerspectiveCamera(
@@ -113,16 +114,16 @@ export default class PlayCanva extends BasePlayView {
 		controls.minPolarAngle = Math.PI / 2.5;
 
 		function resizeHandler() {
-			const sizes = {
-				width: window.innerWidth,
-				height: window.innerHeight,
-			};
+			sizes.width = container.clientWidth;
+			sizes.height = container.clientHeight;
 
 			window.threeInstance.camera.aspect = sizes.width / sizes.height;
 			window.threeInstance.camera.updateProjectionMatrix();
+
 			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
-			window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+			window.threeInstance.effect.setSize(sizes.width, sizes.height);
 		}
+
 
 		window.threeInstance = {
 			scene,
@@ -140,17 +141,9 @@ export default class PlayCanva extends BasePlayView {
 		directionalLight.shadow.mapSize.height = 2048;
 		window.threeInstance.scene.add(directionalLight);
 
-		this.ballSpotlight = this.createSpotlight(window.threeInstance.scene);
-		this.player1Spotlight = this.createSpotlight(window.threeInstance.scene);
-		this.player2Spotlight = this.createSpotlight(window.threeInstance.scene);
-		window.threeInstance.scene.add(this.ballSpotlight);
-		window.threeInstance.scene.add(this.ballSpotlight.target);
-		window.threeInstance.scene.add(this.player1Spotlight);
-		window.threeInstance.scene.add(this.player1Spotlight.target);
-		window.threeInstance.scene.add(this.player2Spotlight);
-		window.threeInstance.scene.add(this.player2Spotlight.target);
-		console.log(this.ballSpotlight);
-
+		this.ballSpotlight = this.createSpotlight(scene);
+		this.player1Spotlight = this.createSpotlight(scene);
+		this.player2Spotlight = this.createSpotlight(scene);
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
@@ -172,6 +165,8 @@ export default class PlayCanva extends BasePlayView {
 			this.player1.y,
 			20
 		);
+		console.log("MESHPLAYER1", this.meshPlayer1);
+
 		this.meshPlayer2 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
 			paddleMaterial
@@ -192,8 +187,8 @@ export default class PlayCanva extends BasePlayView {
 		);
 		this.meshBall.castShadow = true;
 		this.meshBall.position.set(
-			this.ball.x - this.centerX,
-			this.ball.y - this.centerY,
+			this.ball.x,
+			this.ball.y,
 			16
 		);
 		const boardColor = new THREE.Color(0xD3D3D3);
@@ -225,17 +220,13 @@ export default class PlayCanva extends BasePlayView {
 		window.threeInstance.scene.add(this.meshPlayer1);
 		window.threeInstance.scene.add(this.meshPlayer2);
 		window.threeInstance.scene.add(this.meshBall);
+		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
 		const tick = () => {
 			if (isRunning === false) return;
 			requestAnimationFrame(tick);
 
-			this.updateSpotlight(this.ballSpotlight, this.meshBall);
-			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
-			console.log(this.player2Spotlight);
-
-			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
 			window.addEventListener("resize", window.threeInstance.resizeHandler);
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
@@ -260,15 +251,12 @@ export default class PlayCanva extends BasePlayView {
 		</div>
 		<div id="container">
 			<h2>Play remote</h2>
+			<div id="status"></div>
 			<div id="room-id"></div>
 			<div id="user-1"></div>
 			<div id="user-2"></div>
 			<div id="container-canvas">
 				<canvas class="webgl"></canvas>
-				<div id="ascii-output"></div>
-				<div id="scores"></div>
-			</div>
-				<div id="response-result"></div>
 			</div>
 		</div>
     `;
@@ -287,6 +275,9 @@ export default class PlayCanva extends BasePlayView {
 		spotlight.distance = 10;
 		spotlight.castShadow = true;
 
+		scene.add(spotlight);
+		scene.add(spotlight.target);
+
 		return spotlight;
 	}
 
@@ -298,6 +289,7 @@ export default class PlayCanva extends BasePlayView {
 		this.ballRadius = data.ball_radius;
 		this.scores.max_scores = data.max_scores;
 		this.scores.winner = false;
+		this.player1 = data.player1;
 		this.player1.x = data.player1.x - this.centerX + data.player_width / 2;
 		this.player1.y = data.player1.y - this.centerY + data.player_height / 2;
 		this.player1.username = data.player1.username;
@@ -313,6 +305,7 @@ export default class PlayCanva extends BasePlayView {
 		this.score_player1 = 0;
 		this.score_player2 = 0;
 
+		isRunning = true;
 		this.initGame();
 	}
 
@@ -329,6 +322,7 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	updateScore(data) {
+		console.log(this.scores);
 		this.scores.player1_score = data.player1;
 		this.scores.player2_score = data.player2;
 		this.updateScoreMesh();

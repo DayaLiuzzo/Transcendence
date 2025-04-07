@@ -1,23 +1,70 @@
-import BasePlayView from './BasePlayView.js';
+import BaseView from './BaseView.js';
 
-export default class PlayTournament extends BasePlayView{
+export default class PlayMenu extends BaseView{
+    
     constructor(params){
         super(params);
     }
-
+    
     render(){
         return `
         <div>
-            <h2>Play Tournament</h2>
-            
-            <ol>
-                <li>Integrer les call api</li>
-                <li>Integrer les websockets</li>
-                <li>Intgrer la 3d</li>
-            </ol>
-            <div id="response-result"></div>                 
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
+            <div id="container">
+                <h2>Play Tournament Menu</h2>
+                <div class="tournament-menu">
+                    <div class="tournament-option" id="create-tournament-button">Create a new tournament</div>
+                    <div class="tournament-option" id="join-tournament-button">Join a tournament with ID</div>
+                    <div class="tournament-option" id="list-tournament-button">List available tournaments</div>
+                    <div class="tournament-option" id="my-tournament-button">See my tournament page</div>
+                </div>
+            </div>
         </div>
     `;
     }
 
-}
+    attachEvents(){
+        console.log('Events attached (Play-Menu)');
+
+        const createTournamentButton = document.getElementById("create-tournament-button");
+        if (createTournamentButton) {
+            createTournamentButton.addEventListener("click", async () => {
+                this.navigateTo('/create-tournament');
+            });
+        }
+
+        const joinTournamentButton = document.getElementById("join-tournament-button");
+        if (joinTournamentButton) {
+            joinTournamentButton.addEventListener("click", async () => {
+                this.navigateTo('/join-tournament');
+            });
+        }
+
+        const listTournamentButton = document.getElementById("list-tournament-button");
+        if (listTournamentButton) {
+            listTournamentButton.addEventListener("click", async () => {
+                this.navigateTo('/list-tournament');
+            });
+        }
+        
+        const myTournamentButton = document.getElementById("my-tournament-button");
+        if (myTournamentButton) {
+            myTournamentButton.addEventListener("click", async () => {
+                this.navigateTo('/my-tournament');
+            });
+        }
+
+        }
+    }
+

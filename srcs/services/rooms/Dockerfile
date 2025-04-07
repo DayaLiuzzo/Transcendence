@@ -21,7 +21,7 @@ COPY rooms_service/ /service_code/
 RUN chown -R rooms_user /service_code/
 USER rooms_user
 
-WORKDIR /service_code
+WORKDIR /service_code/
 EXPOSE 8443
 
 ENTRYPOINT [ "/init/start.sh" ]

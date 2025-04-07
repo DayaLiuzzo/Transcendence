@@ -7,7 +7,8 @@ export default class LogIn extends BaseView{
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     }
 
-    
+
+
     getFormData(){
         return {
             username: document.getElementById("login-username").value,
@@ -55,10 +56,11 @@ export default class LogIn extends BaseView{
         }
         const userSession = {
             username: formData.username,
-            access_token: loginResponse.data.access_token,
-            refresh_token: loginResponse.data.refresh_token
+            access_token: loginResponse.data.access,
+            refresh_token: loginResponse.data.refresh
         };
-        sessionStorage.setItem("userSession", JSON.stringify(userSession));
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+        this.startUpdatingLastSeen();
         this.navigateTo("/home");
     }
     
@@ -93,11 +95,13 @@ export default class LogIn extends BaseView{
             if (response.success){
                 const userSession = {
                     username: formData.username,
-                    access_token: response.data.access_token,
-                    refresh_token: response.data.refresh_token
+                    access_token: response.data.access,
+                    refresh_token: response.data.refresh,
+                    two_factor_enabled: true
                 };
-                sessionStorage.setItem("userSession", JSON.stringify(userSession));
+                localStorage.setItem("userSession", JSON.stringify(userSession));
                 otpPopup.remove();
+                this.startUpdatingLastSeen();
                 this.navigateTo("/home");
             } else {
                 otpError.textContent = "Invalid OTP, try again.";
@@ -112,14 +116,27 @@ export default class LogIn extends BaseView{
 
     render(){
         return `
-        <div>
-            <h2>Login</h2>
-            <h3> please just be ok</h3>
-            <form id="login-form">
-                <input type="text" id="login-username" placeholder="Username" required>
-                <input type="password" id="login-password" placeholder="Password" required>
-                <button type="submit">Login</button>
-            </form>
+        <div>            
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>          
+            </div>
+            <div id="container">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <input type="text" id="login-username" placeholder="Username" required>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
         </div>
     `;
     }

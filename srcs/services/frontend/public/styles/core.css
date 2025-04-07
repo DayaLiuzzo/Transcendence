@@ -16,10 +16,19 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
     overflow-x: hidden;
+    overflow-y: hidden;
+    font-family: 'Roboto', sans-serif;
+}
+
+#match-history-field {
+  /* width: 600px; */
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
 }
 
   #navbar {
-
     position: fixed;
     background-color: transparent;
     transition: left 0.4s ease;
@@ -34,24 +43,20 @@ body {
     gap: 30px;
     z-index: 1000;
     font-size: 2em;
-
+    visibility: hidden;
   }
 
   #button-nav {
-    position: fixed;
-    top: 20px;
-    left: 20px;
     background-color: transparent;
     border: none;
     cursor: pointer;
     z-index: 1000;
-
   }
 
   #navbar.active {
     left: 0;
     height: 100%;
-    width: 350px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -60,6 +65,10 @@ body {
     top: 80px;
     z-index: 1000;
     font-size: 2em;
+    background-color: #ffffff;
+    padding-left: 18px;
+    padding-top: 12px;
+    visibility: visible;
   }
 
   #button-nav i.menuIcon.material-icons {
@@ -84,7 +93,6 @@ body {
   }
 
   #app {
-    display: flex;
     min-height: 100vh;
     align-items: space-evenly;
     flex-direction: row;
@@ -94,13 +102,20 @@ body {
   }
 
   #line {
-    position: fixed;
+    display: flex;
     height: 3px;
-    top : 40px;
-    width: 80%;
+    flex-grow: 1;
+    justify-content: flex-end;
     background-color: black;
-    z-index: 0;
+  }
 
+  #header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 4vh;
+    gap: 12px
   }
 
   #test-text-container {
@@ -145,6 +160,31 @@ body {
   font-size: 6rem;
 }
 
+#container {
+  margin: 0 12px;
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1500px) {
+  #test-text {
+    text-indent: 1em;
+    font-size: 6rem;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  #test-text-container {
+    text-indent: initial;
+  }
+  #outstanding{
+    text-indent: initial;
+    font-size: 4rem;
+  }
+  #test-text {
+    text-indent: initial;
+    font-size: 2rem;
+  }
+}
+
 #test-text span {
   transition: transform 0.5s ease;
   display:inline-block;
@@ -182,7 +222,7 @@ body {
   canvas {
     cursor: grab;
   }
-  
+
   canvas:active {
     cursor: grabbing;
   }
@@ -222,8 +262,12 @@ body {
     line-height: 80px;
   }
 
-  #login-username {
-    position: relative;
+  #login-username,
+  #login-password,
+  #createTournament-name,
+  #createTournament-maxuser,
+  #joinTournament-id
+  {
     width: 100%;
     height: 80px;
     outline: none;
@@ -233,11 +277,9 @@ body {
     border-bottom: 2px solid black;
     background: transparent;
     transition: 0.1s ease;
-    z-index: 1111;
   }
 
-  #login-password {
-    position: relative;
+  #signup-username, #signup-email, #signup-password, #signup-password2 {
     width: 100%;
     height: 80px;
     outline: none;
@@ -247,32 +289,367 @@ body {
     border-bottom: 2px solid black;
     background: transparent;
     transition: 0.1s ease;
-    z-index: 1111;
   }
 
+  #EditProfile-password, #EditProfile-new_password, #EditProfile-new_password2, #EditProfile-username{
+    width: 100%;
+    height: 60px;
+    outline: none;
+    font-size: 1em;
+    line-height: 80px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: transparent;
+    transition: 0.1s ease;
+  }
+
+  #EditProfile-password:focus,
+  #EditProfile-password:valid,
+  #EditProfile-new_password:focus,
+  #EditProfile-new_password:valid,
+  #EditProfile-new_password2:focus,
+  #EditProfile-new_password2:valid,
+  #EditProfile-username:focus,
+  #EditProfile-username:valid
+  {
+    border-color: #8dd4ab;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  #friend-username {
+    width: 50%;
+    height: 60px;
+    outline: none;
+    font-size: 1em;
+    line-height: 80px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: transparent;
+    transition: 0.1s ease;
+  }
+
+
+  #createTournament-name:focus,
+  #createTournament-name:valid,
+  #createTournament-maxuser:focus,
+  #createTournament-maxuser:valid,
+  #joinTournament-id:focus,
+  #joinTournament-id:valid,
   #login-username:focus,
-  #login-username:valid {
-    border-color: #8dd4ab;
-    font-family: 'Roboto', sans-serif;
-  }
-
+  #login-username:valid,
   #login-password:focus,
-  #login-password:valid {
+  #login-password:valid
+  {
     border-color: #8dd4ab;
     font-family: 'Roboto', sans-serif;
   }
 
-#login-form button {
-  position: relative;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
-  font-size: 1.5em;
-  top : 30px;
-  background-color: grey;
-  border: none;
-  width: 50%;
-  height: 30px;
-  background-color: transparent;
+  #signup-username:focus,
+  #signup-username:valid,
+  #signup-email:focus,
+  #signup-email:valid,
+  #signup-password:focus,
+  #signup-password:valid,
+  #signup-password2:focus,
+  #signup-password2:valid
+  {
+    border-color: #8dd4ab;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  #create-tournament-form button,
+  #join-tournament-form button,
+  #login-form button,
+  #signup-form button
+  {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1.5em;
+    border: none;
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  #tournament-info button,
+  #no-tournament button,
+  #tournament-launched button,
+  #tournament-mine-button,
+  #joinButton
+  {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    /* border: none; */
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+
+  #add-friend-form button,
+  #change-password-form button,
+  #change-username-form button {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    border: none;
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  #toggle-2fa-button {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1em;
+    border: none;
+    width: auto;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 26px;
+    transition: background-color 0.3s, color 0.3s;
+    border: 1px solid black;
+  }
+
+  /*  */
+  .remove-button {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 2px 4px;
+    margin-left: 16px;
+}
+
+  .remove-button:hover {
+    color: #f44336;
+  }
+
+  .remove-button:focus {
+      outline: none;
+  }
+
+
+  /* .joinButton {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 2px 4px;
+    margin-left: 16px;
+}
+
+   .joinButton:hover{
+    color: #46f436;
+  }
+
+  .joinButton:focus{
+      outline: none;
+  }  */
+
+  .friend-item {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .username {
+      margin-right: 10px;
+  }
+
+  .status-indicator {
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.8em;
+    margin-left: 12px;
+  }
+
+  .connected {
+      background-color: #94C973;
+  }
+
+  .disconnected {
+      background-color: rgba(255, 0, 0, 0.5);
+  }
+
+  #login-form button:hover,
+  #signup-form button:hover,
+  #upload-avatar-btn:hover,
+  #add-friend-form button:hover,
+  #change-password-form button:hover,
+  #change-username-form button:hover
+  {
+    color: #4CAF50;
+  }
+
+  #tournament-info button:hover,
+  #no-tournament button:hover,
+  #tournament-launched button:hover,
+  #tournament-mine-button:hover,
+  #joinButton:hover
+  {
+    color: #a0a0a0;
+  }
+
+  #username-form {
+    margin-top: 36px;
+  }
+
+  .avatar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: 2px solid black;
+    width: 60vh;
+    margin-top: 26px;
+  }
+
+  #upload-avatar-btn {
+      background-color: white;
+      color: black;
+      font-family: 'SaolDisplay-LightItalic';
+      border: 2px solid black;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+  }
+
+  #error {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+  }
+
+  .navbar-flex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 12px;
+  }
+
+  .navbar-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+  .welcome-text {
+      font-family: 'SaolDisplay-LightItalic';
+      font-size: 18px;
+      font-weight: bold;
+      text-align: left;
+  }
+
+  .navbar-bar {
+    width: 100%;
+    height: 3px;
+    background-color: #000;
+}
+
+
+.play-menu, .tournament-menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 10px;
+  padding-top: 16px;
+  font-family: 'SaolDisplay-LightItalic';
+}
+
+.play-option, .tournament-option {
+  padding: 20px;
+  font-size: 18px;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: 3px solid #333;
+  font-family: 'SaolDisplay-LightItalic';
+}
+
+.play-option:nth-child(3) {
+  grid-column: span 2;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #fff;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  animation: spin 1.5s linear infinite;
+  margin: 0 auto;
+  display: none;
+  margin-top: 26px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.username-container {
+  display: flex;
+}
+
+.avatar-img {
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+  border: 2px solid black;
+  border-radius: 2%;
+}
+
+.username-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.play-option:hover .tournament-option:hover{
+  background-color: black;
+  opacity: 0.5;
+  color: white;
+}
+
+
+#container-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%
+}
+
+#container-button {
+  display: flex;
+  gap: 16px;
+}
+
+#container-button i {
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#container-button i:hover {
+  opacity: 0.6;
 }
 
  @keyframes text-slide-infinite {
@@ -290,3 +667,23 @@ body {
       text-shadow: 0 0 1px darkgray;
     }
   }
+
+
+/* CSS STYLE FOR GAME PAGE*/
+  #webgl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    background: none;
+    overflow-y: hidden;
+  }
+
+  #webgl canvas {
+    cursor: grab;
+    background-color: transparent;
+    background: none;
+    overflow-y: hidden;
+  }
+
+

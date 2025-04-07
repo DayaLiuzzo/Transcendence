@@ -1,11 +1,8 @@
 
 from rest_framework import serializers
 
-from .models import Ball
-from .models import Game
-from .models import Paddle
 from .models import UserProfile
-
+from .models import Game
 
 ################################################################
 #                                                              #
@@ -19,42 +16,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['username']
 
-
-################################################################
-#                                                              #
-#                            Paddle                            #
-#                                                              #
-################################################################
-
-
-class PaddleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Paddle
-        fields = ['x_position', 'y_position', 'width', 'height', 'side']
-
-################################################################
-#                                                              #
-#                             Ball                             #
-#                                                              #
-################################################################
-
-class BallSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ball
-        fields = ['x_position', 'y_position', 'x_velocity', 'y_velocity', 'radius']
-
 ################################################################
 #                                                              #
 #                             Game                             #
 #                                                              #
 ################################################################
 
-class GameSerializer(serializers.ModelSerializer):
-    player1 = UserProfileSerializer()
-    player2 = UserProfileSerializer()
-    paddles = PaddleSerializer(many=True)
-    ball = BallSerializer()
-    
+class GameSerializer(serializers.Serializer):
+    room_id = serializers.CharField(max_length=100)
+    status = serializers.CharField(max_length=10)
+    winner = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), allow_null=True)
+    loser = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), allow_null=True)
+    score_player1 = serializers.IntegerField()
+    score_player2 = serializers.IntegerField()
+    date_played = serializers.DateTimeField(allow_null=True)
     class Meta:
         model = Game
-        fields = ['room_id', 'status', 'player1', 'player2', 'paddles', 'ball']
+        fields = ['player1', 'player2', 'room_id', 'status', 'winner', 'loser', 'score_player1', 'score_player2', 'date_played']

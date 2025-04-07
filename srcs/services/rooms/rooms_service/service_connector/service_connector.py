@@ -10,7 +10,7 @@ class MicroserviceClient:
         self.service_password = settings.SERVICE_CONNECTOR_SETTINGS['SERVICE_PASSWORD']
         self.token_url = settings.SERVICE_CONNECTOR_SETTINGS['INTERNAL_TOKEN_ENDPOINT']
 
-    def send_internal_request(self, url:str, method:str, data={}, headers={}):
+    def send_internal_request(self, url:str, method:str, no_wait=False, data={}, headers={}):
         token = self.get_service_token()
         headers = {
             "Authorization": f"Bearer {token}"
@@ -22,8 +22,16 @@ class MicroserviceClient:
         'update':requests.put,
         'patch':requests.patch,
         }
-        response = req_methods[method](url, json=data ,headers=headers)
-        return response
+
+        if no_wait:
+            try:
+                req_methods[method](url, json=data, headers=headers, timeout=1)
+            except requests.exceptions.ReadTimeout:
+                pass
+            return None
+        else:
+            response = req_methods[method](url, json=data ,headers=headers)
+            return response
 
     def get_new_service_token(self):
         body = {

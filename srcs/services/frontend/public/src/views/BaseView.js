@@ -29,12 +29,25 @@ export default class BaseView{
 
     //UPDATE THE HTML CONTENT WITH DYNAMIC DATA AND THEN ATTACH EVENTS
     async mount(){
-        try {
-            cleanUpThree();
+        console.log("BaseView mounted");
+    }
+
+    async isOnline(username){
+        const response = await this.sendGetRequest(this.API_URL_USERS + "/status/" + username + "/");
+        if (!response.success) {
+            this.showError(response.error, "app");
+            return;
         }
-        catch (error) {
-            console.error("Error in mount():", error);
-        }
+        return response.data.online;
+
+    }
+
+    startUpdatingLastSeen() {
+       this.router.startUpdatingLastSeen();
+    }
+
+    stopUpdatingLastSeen() {
+        this.router.stopUpdatingLastSeen();
     }
 
     showError(errors, formId) {
@@ -60,14 +73,90 @@ export default class BaseView{
 
     }
 
+    showAlert(message){
+        console.log(message);
+        const alertOverlay = document.createElement("div");
+        alertOverlay.id = "dynamic-alert";
+        alertOverlay.style.position = "fixed";
+        alertOverlay.style.top = "0";
+        alertOverlay.style.left = "0";
+        alertOverlay.style.width = "100%";
+        alertOverlay.style.height = "100%";
+        alertOverlay.style.background = "rgba(0, 0, 0, 0.6)";
+        alertOverlay.style.display = "flex";
+        alertOverlay.style.alignItems = "center";
+        alertOverlay.style.justifyContent = "center";
+        alertOverlay.style.zIndex = "1000";
+
+        const alertBox = document.createElement("div");
+        alertBox.style.background = "white";
+        alertBox.style.padding = "20px";
+        alertBox.style.borderRadius = "10px";
+        alertBox.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+        alertBox.style.textAlign = "center";
+        alertBox.style.width = "300px";
+        alertBox.style.fontFamily = "Arial, sans-serif";
+
+        const alertMessage = document.createElement("p");
+        alertMessage.textContent = message;
+        alertMessage.style.marginBottom = "15px";
+
+        const closeButton = document.createElement("button");
+        closeButton.textContent = "OK";
+        closeButton.style.background = "#101010";
+        closeButton.style.color = "white";
+        closeButton.style.border = "none";
+        closeButton.style.padding = "10px 20px";
+        closeButton.style.borderRadius = "5px";
+        closeButton.style.cursor = "pointer";
+        closeButton.style.fontSize = "16px";
+
+        closeButton.onmouseover = () => (closeButton.style.background = "#808080");
+        closeButton.onmouseleave = () => (closeButton.style.background = "#101010");
+
+        closeButton.onclick = () => alertOverlay.remove();
+
+        alertBox.appendChild(alertMessage);
+        alertBox.appendChild(closeButton);
+        alertOverlay.appendChild(alertBox);
+        document.body.appendChild(alertOverlay);
+
+    }
+    
+    customAlert(message){
+        let displayMessage = ""; 
+
+        if (typeof message === "string") {
+            displayMessage = message;
+        } else if (typeof message === "object" && message !== null) {
+            // Handle object with error arrays
+            const firstKey = Object.keys(message)[0]; 
+            if (Array.isArray(message[firstKey])) {
+                displayMessage = message[firstKey][0]; 
+            } else {
+                displayMessage = JSON.stringify(message); 
+            }
+        } else if (Array.isArray(message)) {
+            displayMessage = message.join("\n"); 
+        } else if (typeof message === "number" || typeof message === "boolean") {
+            displayMessage = message.toString();
+        } else {
+            displayMessage = "An unknown error occurred.";
+        }
+
+        this.showAlert(displayMessage);
+    }
+
     getErrorContainer(formId) {
         let errorContainer = document.getElementById(formId+ "-error-container");
 
         if (!errorContainer) {
             errorContainer = document.createElement("div");
-            errorContainer.id = formId+ "-error-container";  // Set a unique ID
-            errorContainer.classList.add("error-container");  // Optional: Add a class for styling
-            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild); // Insert at the top of the form
+            errorContainer.id = formId+ "-error-container";
+            errorContainer.classList.add("error-container");
+            console.log(formId);
+            
+            document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
 
         return errorContainer;
@@ -75,6 +164,10 @@ export default class BaseView{
 
     async navigateTo(path){
         this.router.navigateTo(path);
+    }
+
+    getRefreshToken(){
+        return this.router.getRefreshToken();
     }
 
     getAccessToken(){
@@ -107,6 +200,34 @@ export default class BaseView{
         }
     }
 
+    async refreshToken(){
+        const refresh_token = this.getRefreshToken();
+        const response = await this.sendPostRequest(this.API_URL+ 'refresh/', { refresh: refresh_token });
+        if (!response.success){
+            this.stopUpdatingLastSeen();
+            return false;
+        }
+        let userSession = this.getUserSession();
+        userSession.access_token = response.data.access;
+        userSession.refresh_token = response.data.refresh;
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+        return true;
+    }
+
+    async refreshToken(){
+        const refresh_token = this.getRefreshToken();
+        const response = await this.sendPostRequest(this.API_URL+ 'refresh/', { refresh: refresh_token });
+        if (!response.success){
+            this.stopUpdatingLastSeen();
+            return false;
+        }
+        let userSession = this.getUserSession();
+        userSession.access_token = response.data.access;
+        userSession.refresh_token = response.data.refresh;
+        localStorage.setItem("userSession", JSON.stringify(userSession));
+        return true;
+    }
+
     toggleMenu() {
         const closeIcon= document.querySelector(".closeIcon");
         const menuIcon = document.querySelector(".menuIcon");
@@ -133,34 +254,49 @@ export default class BaseView{
     }
 
     async updateNavbar() {
+        console.log("updating navbar");
         const navbar = document.getElementById("navbar");
 
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
-                navbar.innerHTML += `
-                <a href="/home">Home</a>
-                <a href="/play-menu">Play</a>
-                <a href="/profile">Profile</a>
-                <a href="/logout">Logout</a>
-                <button id="close-nav">Close</button>
-                `;
-
-                const avatarUrl =  await this.displayAvatar();
+                const avatarUrl = await this.displayAvatar();
+                console.log(avatarUrl)
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
-                    navbar.appendChild(avatarImg);
+
+                    const welcomeText = document.createElement("span");
+                    welcomeText.textContent = "Welcome " + this.getUsername();
+                    welcomeText.className = "welcome-text";
+
+                    const flexContainer = document.createElement("div");
+                    flexContainer.className = "navbar-flex";
+
+                    const bar = document.createElement("div");
+                    bar.className = "navbar-bar"
+
+                    flexContainer.appendChild(avatarImg);
+                    flexContainer.appendChild(welcomeText);
+
+                    navbar.appendChild(flexContainer);
+                    navbar.appendChild(bar);
                 }
+
+                navbar.innerHTML += `
+                <a href="/home">Home</a>
+                <a href="/play-menu">Play</a>
+                <a href="/profile">Profile</a>
+                `;
+
             } else {
                 navbar.innerHTML = `
                 <a href="/home">Home</a>
                 <a href="/log-in">Log in</a>
                 <a href="/sign-up">Sign up</a>
                 <a href="/play-menu">Game</a>
-                <button id="close-nav">Close</button>
                 `;
             }
             const menuButton = document.getElementById("button-nav");
@@ -170,8 +306,6 @@ export default class BaseView{
             menuIcon.style.display = "block";
             closeIcon.style.display = "none";
             menuButton.addEventListener("click", this.toggleMenu);
-            const closeNav = document.getElementById("close-nav");
-            closeNav.onclick = this.closeMenu;
             menuLinks.forEach(link => {
                 link.onclick = this.closeMenu;
             });
@@ -191,10 +325,24 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'GET',
                 headers: headers,
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'GET',
+                        headers: headers,
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendGetRequest():", url)
@@ -208,6 +356,7 @@ export default class BaseView{
         }
     }
 
+
     async sendPatchRequest(url, formData){
         try {
             let headers = {
@@ -217,11 +366,26 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'PATCH',
                 headers: headers,
                 body: JSON.stringify(formData),
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'PATCH',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendPatchRequest():", url)
@@ -245,11 +409,26 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'DELETE',
                 headers: headers,
                 body: JSON.stringify(formData),
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'DELETE',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendDeleteRequest():", url)
@@ -272,11 +451,26 @@ export default class BaseView{
                 headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
             }
 
-            const response = await fetch(url, {
+            let response = await fetch(url, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(formData),
             });
+            if (response.status === 403) {
+                const refreshed = await this.refreshToken();
+                if (!refreshed) {
+                    this.logout();
+                    return;
+                }
+                else{
+                    headers['Authorization'] = `Bearer ${this.getAccessToken()}`;
+                    response = await fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(formData),
+                    });
+                }
+            }
             const responseData = await response.json();
             if (!response.ok) {
                 console.error("Error in sendPostRequest():", url)
@@ -316,12 +510,11 @@ export default class BaseView{
     logout() {
         const refresh_token = this.getRefreshToken();
         if (refresh_token) {
-            console.log(refresh_token);
             this.sendPostRequest(this.API_URL + 'logout/', {refresh: refresh_token});
-            sessionStorage.removeItem("userSession");
-            this.navigateTo("/log-in");
+            this.stopUpdatingLastSeen();
         }
-        // this.sendPostRequest(this.API_URL + 'logout/', {});
+        localStorage.removeItem("userSession");
+        this.navigateTo("/log-in");
     }
 
 

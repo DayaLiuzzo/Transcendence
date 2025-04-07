@@ -48,10 +48,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             if not totp.verify(otp):
                 return Response({"error": "Invalid OTP."}, status=status.HTTP_401_UNAUTHORIZED)
         token = CustomTokenObtainPairSerializer.get_token(user)
-        # exp = token.access_token.get('exp')
         access_token = str(token.access_token)
         refresh_token = str(token)
-        return Response({"access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
+        return Response({"access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
 
 
 
@@ -68,7 +67,6 @@ class TwoFactorSetupView(APIView):
         serializer.is_valid(raise_exception=True)
         if serializer.validated_data.get('enable'):
             user.otp_secret = pyotp.random_base32()
-            user.two_factor_enabled = True
             user.save()
             return Response(TwoFactorSetupSerializer(user).data, status=status.HTTP_200_OK)
         user.two_factor_enabled = False
@@ -104,7 +102,8 @@ class SignUpView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
-        req_urls = [ 'http://users:8443/api/users/create/',
+        req_urls = [
+                    'http://users:8443/api/users/create/',
                     'http://game:8443/api/game/create/',
                     'http://rooms:8443/api/rooms/create/',
                     'http://tournament:8443/api/tournament/create/',
@@ -114,22 +113,6 @@ class SignUpView(generics.CreateAPIView):
             raise ValidationError("Error creating user")
         user = serializer.save()
         return user
-
-class DeleteUserView (generics.DestroyAPIView):
-    permission_classes = [IsOwner]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    lookup_field = 'username'
-
-    def perform_destroy(self, instance):
-        req_urls = [ f'http://users:8443/api/users/delete/{instance.username}/',
-                    f'http://game:8443/api/game/delete/{instance.username}/',
-                    f'http://rooms:8443/api/rooms/delete/{instance.username}/',
-                    f'http://tournament:8443/api/tournament/delete/{instance.username}/'
-                    ]
-        if send_delete_requests(urls=req_urls, body={'username': instance.username}) == False:
-            raise ValidationError("Error deleting user")
-        instance.delete()
 
 class UpdateUserView(generics.UpdateAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
@@ -151,17 +134,17 @@ class UpdateUserView(generics.UpdateAPIView):
             if send_update_requests(urls=req_urls, body={'username': old_username, 'old_username': old_username, 'new_username': new_username}) == False:
                 raise ValidationError("Error updating user")
             user.username = new_username
-            if user.two_factor_enabled:
-                user.otp_secret = pyotp.random_base32()
+            # if user.two_factor_enabled:
+            #     user.otp_secret = pyotp.random_base32()
             user.save()
             token = CustomTokenObtainPairSerializer.get_token(user)
             access_token = str(token.access_token)
             refresh_token = str(token)
         except Exception as e:
             raise ValidationError(f"Error updating user : {str(e)}")
-        if user.two_factor_enabled:
-            return Response({"message": "Success", "otp": user.otp_secret, "access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
-        return Response({"message": 'Success', "access_token": access_token, "refresh_token": refresh_token}, status=status.HTTP_200_OK)
+        # if user.two_factor_enabled:
+        #     return Response({"message": "Success", "otp": user.otp_secret, "access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
+        return Response({"message": 'Success', "access": access_token, "refresh": refresh_token}, status=status.HTTP_200_OK)
 
 class RetrieveUserView(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]

@@ -10,5 +10,5 @@ COPY ./conf/pg_hba.conf /etc/psql.conf/pg_hba.conf
 RUN chmod 777 /docker-entrypoint-initdb.d/init_db.sh
 RUN rm -rf /var/lib/postgresql/data/*
 
-
 RUN chown -R postgres:postgres /etc/psql.conf
+USER postgres

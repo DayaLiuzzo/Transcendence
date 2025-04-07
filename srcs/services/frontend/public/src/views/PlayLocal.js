@@ -1,161 +1,421 @@
-import BasePlayView from './BasePlayView.js';
+import { cleanUpThree } from "../three/utils.js";
+import BaseView from "./BaseView.js";
 
-export default class PlayLocal extends BasePlayView{
-    constructor(params){
-        super(params);
-    }
+export default class PlayCanva extends BaseView{
+	constructor(params) {
+		super(params);
 
-    showError(message){
-        alert(message);
-    }
+		this.ballVelocity = { x: 0.02, z: 0.02 };
+		this.speedIncrement = 1;
+		this.keys = { ArrowUp: false, ArrowDown: false, w: false, s:false};
+		this.gameOver = false;
 
-    // initGame(){
-    //     console.log("Game Loading...");
+		this.scores = {
+			max_score: 5,
+			player1_score: 0,
+			player2_score: 0,
+		};
+	}
 
-    //     // ON SELECTIONNE LES ELEMENTS HTML NECESSAIRES POUR METTRE EN PLACE NOTRE SCENE
-    //     const canvas = document.querySelector(".webgl");
-    //     const container = document.getElementById("container-canvas-game-local");
-    //     const asciiOutput = document.getElementById("ascii-effect-output");
+	unmount() {
+		console.log("Unmounted PlayCanva LOCAL");
+		document.getElementById("final-screen")?.remove();
+		this.gameOver = true;
+		cleanUpThree();
+	}
 
-    //     // CREATION DE LA SCENE THREEJS && CHARGER LES MODELES 3D GLTF VIA LE LOADER DE THREEJS
-    //     const scene = new THREE.Scene();
-    //     // const gltfLoader = new THREE.GLTFLoader();
-    //     // console.log(gltfLoader);
+	handlerEventsListeners() {
+		const cursor = { x: 0, y: 0 };
 
-    //     // gltfLoader.load(
-    //     //     "../../assets/models/",
-    //     //     (gltf) => {
-    //     //         console.log(gltf);
-    //     //         scene.add(gltf.scene);
-    //     //     }
-    //     // );
+		window.addEventListener("mousemove", (event) => {
+			cursor.x = event.clientX / window.innerWidth - 0.5;
+			cursor.y = -(event.clientY / window.innerHeight - 0.5);
+		});
 
-    //     const meshPaddleLeft = new THREE.Mesh(
-    //         new THREE.BoxGeometry(30, 1, 1),
-    //         new THREE.MeshBasicMaterial({ color: 0xff0000 })
-    //     );
+		window.addEventListener("keydown", (event) => {
+			if (this.keys.hasOwnProperty(event.key)) {
+				this.keys[event.key] = true;
+			}
+		});
 
-    //     const meshPaddleRight = new THREE.Mesh(
-    //         new THREE.BoxGeometry(30, 1, 1),
-    //         new THREE.MeshBasicMaterial({ color: 0x0000ff })
-    //     );
+		window.addEventListener("keyup", (event) => {
+			if (this.keys.hasOwnProperty(event.key)) {
+				this.keys[event.key] = false;
+			}
+		});
+	}
 
-    //     const meshBall = new THREE.Mesh(
-    //         new THREE.SphereGeometry(0.5, 32, 32),
-    //         new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    //     );
+    handleGameEnd(winner, looser, winner_score, looser_score){
+        console.log("game end")
+		this.gameOver = true;
 
-    //     const sizes = {
-    //         width: container.innerWidth,
-    //         height: container.innerHeight
-    //     };
+        const finalScreen = document.createElement("div");
+        finalScreen.id = "final-screen";
+        finalScreen.innerHTML = `
+            <h1>Game Over</h1>
+            <p>${winner} wins!</p>
+            <p>score: ${winner} ${winner_score} - ${looser} ${looser_score}</p>
+            <button id="back-to-lobby">Back to Lobby</button>
+        `;
+        finalScreen.style.cssText = `
+            position: absolute;
+            top: 5: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
 
-    //     scene.add(meshPaddleLeft);
-    //     scene.add(meshPaddleRight);
-    //     scene.add(meshBall);
+        `;
+        document.body.appendChild(finalScreen);
+        document.getElementById("back-to-lobby").addEventListener("click", () => {
+			document.body.removeChild(finalScreen);
+			this.gameOver = false;
+            this.navigateTo("/play-menu");
+        });
+	}
 
-    //     const light = new THREE.DirectionalLight(0xffffff, 1);
-    //     light.position.set(2, 2, 2);
-    //     scene.add(light);
+	resetScores() {
+		const fontLoader = new THREE.FontLoader();
+		fontLoader.load(
+			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+			(font) => {
+				const textMaterial = new THREE.MeshStandardMaterial({
+					color: 0x000000,
+					emissive: 0xffffff,
+					emissiveIntensity: 0.4,
+				});
 
-    //     const renderer = new THREE.WebGLRenderer({
-	// 		canvas: canvas,
-	// 		alpha: true,
-	// 	});
-	// 	renderer.setSize(sizes.width, sizes.height);
-	// 	renderer.setPixelRatio(window.devicePixelRatio);
+				const createScoreText = (score, position) => {
+					const geometry = new THREE.TextGeometry(score.toString(), {
+						font: font,
+						size: 0.5,
+						height: 0.1,
+					});
+					const mesh = new THREE.Mesh(geometry, textMaterial);
+					mesh.position.copy(position);
+					return mesh;
+				};
 
-    //     const asciiChar = " .:-+*=%@";
-	// 	const effect = new THREE.AsciiEffect(renderer, asciiChar, {
-	// 		invert: true,
-	// 		resolution: 0.25,
-	// 		scale: 1,
-	// 	});
-    //     effect.setSize(sizes.width, sizes.height);
-	// 	effect.domElement.style.color = "black";
-	// 	effect.domElement.style.backgroundColor = "none";
+				if (this.scores.player1_score_text) {
+					window.threeInstance.scene.remove(this.scores.player1_score_text);
+				}
+				if (this.scores.player2_score_text) {
+					window.threeInstance.scene.remove(this.scores.player2_score_text);
+				}
 
-	// 	// on cache le rendu de base pour laisser apparaitre le rendu ascii
-	// 	effect.domElement.classList.add("ascii-effect");
-	// 	effect.domElement.style.cursor = "grab";
-	// 	document.querySelector("#ascii-output").appendChild(effect.domElement);
-	// 	canvas.style.display = "none";
-	// 	// camera perspective etc
-	// 	const camera = new THREE.PerspectiveCamera(
-	// 		75,
-	// 		sizes.width / sizes.height
-	// 	);
-	// 	camera.position.z = 1;
-	// 	camera.position.y = 1;
-	// 	camera.lookAt(0, 0, 0);
-	// 	//camera.lookAt(mesh.position);
-	// 	scene.add(camera);
+				this.scores.player1_score_text = createScoreText(
+					this.scores.player1_score,
+					new THREE.Vector3(-2, 2, 0)
+				);
+				this.scores.player2_score_text = createScoreText(
+					this.scores.player2_score,
+					new THREE.Vector3(2, 2, 0)
+				);
+				window.threeInstance.scene.add(this.scores.player1_score_text);
+				window.threeInstance.scene.add(this.scores.player2_score_text);
 
-	// 	// controls for the camera
-	// 	const controls = new THREE.OrbitControls(camera, effect.domElement);
-	// 	controls.enableDamping = true;
-	// 	controls.enableZoom = true;
-	// 	renderer.domElement.style.cursor = "grab";
+					if (this.scores.player1_score >= 2 || this.scores.player2_score >= 2) {
+						if (this.scores.player1_score >= 1) {
+							this.handleGameEnd("Player 1", "Player 2", this.scores.player1_score, this.scores.player2_score);
+						} else {
+							this.handleGameEnd("Player 2", "Player 1", this.scores.player2_score, this.scores.player1_score);
+						}
+					}
+				});
+	}
 
-	// 	window.threeInstance = {
-	// 		scene,
-	// 		camera,
-	// 		renderer,
-	// 		effect,
-	// 		controls,
-	// 		animationId: null,
-	// 		canvas,
-	// 		container,
-	// 	};
+	updateSpotlight(spotlight, targetMesh) {
+		spotlight.position.set(targetMesh.position.x, 3, targetMesh.position.z);
+		spotlight.target.position.copy(targetMesh.position);
+	}
 
-	// 	const clock = new THREE.Clock();
+	createSpotlight(scene, intensity = 10) {
+		const spotlight = new THREE.SpotLight(0xffffff, intensity);
+		spotlight.angle = Math.PI / 6;
+		spotlight.penumbra = 0.3;
+		spotlight.decay = 1;
+		spotlight.distance = 10;
+		spotlight.castShadow = true;
 
-	// 	const tick = () => {
-	// 		const elapsedTime = clock.getElapsedTime();
-	// 		//mesh.rotation.y = elapsedTime * 0.5;
+		scene.add(spotlight);
+		scene.add(spotlight.target);
 
-	// 		controls.update();
-	// 		window.threeInstance.effect.render(scene, camera);
-	// 		window.threeInstance.animationId = requestAnimationFrame(tick);
-	// 	};
+		return spotlight;
+	}
 
-	// 	window.addEventListener("resize", () => {
-	// 		const rect = container.getBoundingClientRect();
+	initGame() {
+		console.log("Game Loading...");
 
-	// 		sizes.width = rect.width;
-	// 		sizes.height = rect.height;
+		const canvas = document.querySelector("canvas.webgl");
+		const scene = new THREE.Scene();
 
-	// 		camera.aspect = sizes.width / sizes.height;
-	// 		camera.updateProjectionMatrix();
+		const camera = new THREE.PerspectiveCamera(
+			75,
+			window.innerWidth / window.innerHeight,
+			0.1,
+			1000
+		);
+		camera.position.set(0, 5, 10);
+		camera.lookAt(0, 0, 0);
 
-	// 		window.threeInstance.renderer.setSize(sizes.width, sizes.height);
-	// 		window.threeInstance.effect.setSize(sizes.width, sizes.height);
-	// 		window.threeInstance.renderer.setPixelRatio(
-	// 			Math.min(window.devicePixelRatio, 2)
-	// 		);
-	// 	});
-
-	// 	tick();
-
-    // }
+		const renderer = new THREE.WebGLRenderer({
+			canvas: canvas,
+			alpha: true,
+			antialias: true
+		});
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 
-    render(){
-        return `
-        <div id="line"></div>
+		const controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.enablePan = false;
+		controls.enableDamping = true;
+		controls.enableZoom = true;
+		controls.maxPolarAngle = Math.PI / 2.1;
+		controls.minPolarAngle = Math.PI / 2.5;
+		controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
+		controls.maxAzimuthAngle = Math.PI / 4;
+		controls.enableRotate = true;
+		controls.minDistance = 5;
+		controls.maxDistance = 8;
+		//controls.autoRotate = true;
+		//controls.autoRotateSpeed = 1;
+		
+		function resizeHandler() {
+			const sizes = {
+				width: window.innerWidth,
+				height: window.innerHeight,
+			};
 
-        <div id="container-canvas-game-local">
+			window.threeInstance.camera.aspect = sizes.width / sizes.height;
+			window.threeInstance.camera.updateProjectionMatrix();
+			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
+			window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		}
+
+		window.threeInstance = {
+			scene,
+			camera,
+			renderer,
+			controls,
+			canvas,
+			resizeHandler,
+			animationId: null,
+		};
+
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		directionalLight.position.set(5, 10, 5);
+		directionalLight.castShadow = true;
+		directionalLight.shadow.mapSize.width = 2048;
+		directionalLight.shadow.mapSize.height = 2048;
+		window.threeInstance.scene.add(directionalLight);
+
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+		window.threeInstance.scene.add(ambientLight);
+
+		const ballSpotlight = this.createSpotlight(scene);
+		const player1Spotlight = this.createSpotlight(scene);
+		const player2Spotlight = this.createSpotlight(scene);
+
+		const paddleMaterial = new THREE.MeshStandardMaterial({
+			color: 0xffffff,
+			roughness: 0.2,
+			metalness: 1.5,
+			emissive: 0xffffff,
+			emissiveIntensity: 0.4,
+		});
+
+		const meshPlayer1 = new THREE.Mesh(
+			new THREE.BoxGeometry(0.5, 0.1, 1.5),
+			paddleMaterial
+		);
+		meshPlayer1.position.set(-4.5, 0.5, 0);
+
+		const meshPlayer2 = new THREE.Mesh(
+			new THREE.BoxGeometry(0.5, 0.1, 1.5),
+			paddleMaterial
+		);
+		meshPlayer2.position.set(4.5, 0.5, 0);
+
+		const meshBall = new THREE.Mesh(
+			new THREE.SphereGeometry(0.2, 32, 32),
+			paddleMaterial
+		);
+		meshBall.position.set(0, 0.2, 0);
+
+		const meshBoard = new THREE.Mesh(
+			new THREE.PlaneGeometry(10, 6),
+			new THREE.MeshStandardMaterial({
+				color: 0x000000,
+				roughness: 0.7,
+				metalness: 0.3,
+			})
+		);
+		meshBoard.rotation.x = -Math.PI / 2;
+		meshBoard.receiveShadow = true;
+
+		const boardLine = new THREE.Mesh(
+			new THREE.PlaneGeometry(0.05, 6),
+			new THREE.MeshStandardMaterial({
+				color: 0xffffff,
+				emissive: 0xffffff,
+				emissiveIntensity: 0.2,
+			})
+		);
+		boardLine.rotation.x = -Math.PI / 2;
+		boardLine.position.y = 0.01;
+
+		window.threeInstance.scene.add(boardLine);
+		window.threeInstance.scene.add(meshBoard);
+		window.threeInstance.scene.add(meshPlayer1);
+		window.threeInstance.scene.add(meshPlayer2);
+		window.threeInstance.scene.add(meshBall);
+
+		const particleCount = 100;
+		const particleGeometry = new THREE.BufferGeometry();
+		const particleMaterial = new THREE.PointsMaterial({
+			color: 0xffffff,
+			size: 0.05,
+			transparent: true,
+			opacity: 0.8,
+		});
+
+		const particlePositions = new Float32Array(particleCount * 3);
+		particleGeometry.setAttribute(
+			"position",
+			new THREE.BufferAttribute(particlePositions, 3)
+		);
+		const particles = new THREE.Points(particleGeometry, particleMaterial);
+		window.threeInstance.scene.add(particles);
+
+		let activeParticles = [];
+
+		this.resetScores();
+
+		function createCollisionParticles(position) {
+			for (let i = 0; i < particleCount; i++) {
+				activeParticles.push({
+					position: position.clone(),
+					velocity: new THREE.Vector3(
+						(Math.random() - 0.5) * 0.2,
+						Math.random() * 0.2,
+						(Math.random() - 0.5) * 0.2
+					),
+					life: 1.0,
+				});
+			}
+		}
+
+		function updateParticles() {
+			activeParticles = activeParticles.filter((particle) => {
+				particle.position.add(particle.velocity);
+				particle.life -= 0.02;
+				return particle.life > 0;
+			});
+
+			const positions = new Float32Array(particleCount * 3);
+			for (let i = 0; i < activeParticles.length; i++) {
+				const particle = activeParticles[i];
+				positions[i * 3] = particle.position.x;
+				positions[i * 3 + 1] = particle.position.y;
+				positions[i * 3 + 2] = particle.position.z;
+			}
+
+			particles.geometry.setAttribute(
+				"position",
+				new THREE.BufferAttribute(positions, 3)
+			);
+			particles.geometry.attributes.position.needsUpdate = true;
+		}
+
+		const tick = () => {
+			 if (this.gameOver === true) return;
+			requestAnimationFrame(tick);
+
+			if (this.keys.w && meshPlayer1.position.z > -2)
+				meshPlayer1.position.z -= 0.1;
+			if (this.keys.s && meshPlayer1.position.z < 2)
+				meshPlayer1.position.z += 0.1;
+			if (this.keys.ArrowUp && meshPlayer2.position.z > -2)
+				meshPlayer2.position.z -= 0.1;
+			if (this.keys.ArrowDown && meshPlayer2.position.z < 2)
+				meshPlayer2.position.z += 0.1;
+
+			meshBall.position.x += this.ballVelocity.x;
+			meshBall.position.z += this.ballVelocity.z;
+
+			this.updateSpotlight(ballSpotlight, meshBall);
+			this.updateSpotlight(player1Spotlight, meshPlayer1);
+			this.updateSpotlight(player2Spotlight, meshPlayer2);
+
+			updateParticles();
+			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
+				this.ballVelocity.z *= -1;
+				createCollisionParticles(meshBall.position);
+			}
+			if (
+				(meshBall.position.x <= meshPlayer1.position.x + 0.3 &&
+					meshBall.position.x >= meshPlayer1.position.x - 0.3 &&
+					Math.abs(meshBall.position.z - meshPlayer1.position.z) <
+						0.8) ||
+				(meshBall.position.x >= meshPlayer2.position.x - 0.3 &&
+					meshBall.position.x <= meshPlayer2.position.x + 0.3 &&
+					Math.abs(meshBall.position.z - meshPlayer2.position.z) <
+						0.8)
+			) {
+				this.ballVelocity.x *= -1;
+				createCollisionParticles(meshBall.position);
+			}
+			if (meshBall.position.x > 4.5) {
+				this.scores.player1_score++;
+				console.log("SCORES:", this.scores.player1_score);
+				this.resetScores();
+				meshBall.position.set(0, 0.2, 0);
+			} else if (meshBall.position.x < -4.5) {
+				console.log("SCORES:", this.scores.player2_score);
+				this.scores.player2_score++;
+				this.resetScores();
+				meshBall.position.set(0, 0.2, 0);
+			}
+			window.addEventListener("resize", window.threeInstance.resizeHandler);
+			window.threeInstance.controls.update();
+			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
+		};
+		if (this.gameOver === false) {
+			meshBall.position.set(0, 0.2, 0);
+			tick();
+		}
+	}
+
+	render() {
+		return `
+		        <div>
+            <div id="header">
+                <div>
+                    <button id="button-nav">
+                    <i class="menuIcon material-icons">menu</i>
+                    <i class="closeIcon material-icons" style="display: none;" >close</i>
+                    </button>
+                    <nav id="navbar">
+                    </nav>
+                </div>
+                <div id="line"></div>
+                </div>
+            </div>
+        <div id="container-canvas">
             <canvas class="webgl"></canvas>
-            <div id="ascii-effect-output"></div>
-        </div>
-            <div id="response-result"></div>
+			<div id="score"></div>
         </div>
     `;
-    }
+	}
 
-    attachEvents(){
-        console.log("Events attached (PlayLocal)");
-     // this.initGame();
-    }
-
+	attachEvents() {
+		console.log("Events attached (PlayCanva)");
+		this.handlerEventsListeners();
+		if (this.gameOver === false) {
+			this.initGame();
+		}
+	}
 }

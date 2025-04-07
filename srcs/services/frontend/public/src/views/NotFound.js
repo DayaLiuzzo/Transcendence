@@ -7,15 +7,16 @@ export default class NotFound extends BaseView{
     }
 
     showError(message){
-        alert(message);
+        this.customAlert(message);
     }
 
     
     render(){
         return `
-        <div>
-            <h2>404 biiiitch</h2>
-            <h3> please gtfo</h3>
+        <div id="error">
+            <div>
+                <h2>⚠️ 404 page not found</h2>
+            </div>
         </div>
     `;
     }

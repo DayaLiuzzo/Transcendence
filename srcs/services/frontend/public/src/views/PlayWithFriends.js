@@ -6,7 +6,7 @@ export default class PlayWithFriends extends BasePlayView{
     }
 
     showError(message){
-        alert(message);
+        this.customAlert(message);
     }
 
 

@@ -9,6 +9,7 @@ from rest_framework.status import HTTP_409_CONFLICT
 
 from django.shortcuts import get_object_or_404
 
+from django.utils import timezone
 from .models import UserProfile
 from .serializers import UserProfileSerializer
 from .serializers import FriendsSerializer
@@ -32,17 +33,12 @@ class CreateUserProfileView(generics.CreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-class DeleteUserProfileView(generics.DestroyAPIView):
-    permission_classes = [IsAuth]
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    lookup_field = "username"
-
 class RetrieveUserProfile(generics.RetrieveAPIView):
     permission_classes = [IsOwnerAndAuthenticated]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     lookup_field = "username"
+
 
 class UpdateUserProfileView(APIView):
     permission_classes = [IsAuth]
@@ -58,6 +54,32 @@ class UpdateUserProfileView(APIView):
         user_profile.username = new_username
         user_profile.save()
         return Response({"message": f"Username updated from {old_username} to {new_username}"}, status=HTTP_200_OK)
+
+class UpdateLastSeenView(APIView):
+    permission_classes = [IsOwner]
+    lookup_field = "username"
+    def patch(self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        isOnline = request.data.get("isOnline")
+        status_string = "default"
+        if isOnline == True:
+            status_string = "isOnline"
+            user_profile.is_online = True
+        if isOnline == False:
+            status_string = "isOffline"
+            user_profile.is_online = False        
+        user_profile.save()
+        return Response({"message": f"{username} {isOnline} {status_string}"},
+                        status=HTTP_200_OK)
+    
+
+class UserStatusView(APIView):
+    permission_classes = [IsOwner]
+    lookup_field = "username"
+    def get(self, request, username):
+        user_profile = get_object_or_404(UserProfile, username=username)
+        return Response({"isOnline": True if user_profile.is_online else False},
+                        status=HTTP_200_OK)
 
 #================================================
 #================= User Friends =================
@@ -124,6 +146,9 @@ class AvatarUpdateView(APIView):
             return Response({
                 'error': 'No avatar file provided.'
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 class AvatarView(APIView):
     permission_classes=[IsOwner]
