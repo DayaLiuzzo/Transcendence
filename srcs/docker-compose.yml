@@ -39,9 +39,16 @@ services:
     build: services/users
     expose:
       - "8443"
+    develop:
+      watch:
+        - action: sync+restart
+          path: services/users/users_service/users_app/models.py
+          target: /service_code/users_app/models.py
+        - action: sync
+          path: services/users/users_service/
+          target: /service_code
     restart: on-failure
     volumes:
-      - users_service_data:/service_code
       - auth_keys:/keys
     depends_on:
       db_users:
