@@ -22,6 +22,9 @@ export default class BasePlayView extends BaseView{
         const waitingGameContainer = document.createElement("div");
         waitingGameContainer.id = "waitingGameContainer";
 
+        const canvas = this.createContainer("waitingGameCanva");
+
+        const headerCanva = this.createContainer("headerCanva");
         const progressBar = this.createContainer("progressBar");
         const gameScreen = this.createContainer("gameScreen");
         const gameBoxes = this.createContainer("gameBoxes");
@@ -73,19 +76,25 @@ export default class BasePlayView extends BaseView{
             gameBoxes.appendChild(gameBox);
         }
         const logoLumon = document.createElement("img");
-        logoLumon.src = "/media/lumonLogo.svg";
+        logoLumon.src = "/media/happy.svg";
         logoLumon.alt = "logo";
         logoLumon.className = "logoLumon"
 
         progressBar.innerHTML = "Cold Harbour_____________57% Completed";
         
-        waitingGameContainer.appendChild(progressBar);
+        
+        waitingGameContainer.appendChild(headerCanva);
+        headerCanva.appendChild(progressBar);
         progressBar.appendChild(logoLumon);
         waitingGameContainer.appendChild(gameScreen);
         waitingGameContainer.appendChild(gameBoxes);
         
         const child = document.getElementById("container-canvas");
-        container.insertBefore(waitingGameContainer, child);
+        container.insertBefore(canvas, child);
+        const bezel = this.createContainer("bezel");
+        canvas.appendChild(bezel);
+        canvas.appendChild(waitingGameContainer);
+        // container.insertBefore(waitingGameContainer, child);
         return waitingGameContainer;
 
     }
