@@ -2,18 +2,23 @@ FROM python:3.12.5-bullseye
 
 ENV PYTHONUNBUFFERED=1
 
+RUN adduser --system --no-create-home avatar_user
 RUN apt-get update && apt-get install -y openssl
 
+RUN pip install --upgrade pip --no-input
+RUN --mount=type=bind,source=init/requirements.txt,target=/tmp/requirements.txt \
+    pip install -r /tmp/requirements.txt
 
-RUN mkdir -p /service_code
-RUN mkdir -p /init
-RUN mkdir -p /var/www/media
+RUN mkdir -p /service_code/
+RUN mkdir -p /init/
+RUN mkdir -p /var/www/media/
 
-COPY init/* /init 
-
+COPY init/start.sh /init/start.sh
 RUN chmod +x /init/start.sh
 
-WORKDIR /service_code
+COPY avatar_service/ /service_code/
+USER avatar_user
 
-EXPOSE 8005
-ENTRYPOINT [ "bash", "/init/start.sh" ]
+WORKDIR /service_code
+EXPOSE 8843
+ENTRYPOINT [ "/init/start.sh" ]

@@ -80,10 +80,14 @@ services:
     image: avatar
     container_name: avatar
     build: services/avatar
+    develop:
+      watch:
+        - action: sync
+          path: services/avatar/avatar_service/
+          target: /service_code/
     expose:
       - "8443"
     volumes:
-      - avatar_service_data:/service_code
       - avatar_media:/media
       - auth_keys:/keys
     restart: on-failure
@@ -282,14 +286,6 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/users/users_service
-
-  avatar_service_data:
-    name: avatar_service_data
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: $PWD/srcs/services/avatar/avatar_service
 
   avatar_media:
     name: avatar_media
