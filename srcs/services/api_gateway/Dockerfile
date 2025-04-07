@@ -16,6 +16,8 @@ COPY init/start.sh /init/start.sh
 RUN chmod +x /init/start.sh
 
 COPY api_gateway_service/ /service_code/
+
+RUN chown -R api_gateway_user /service_code/
 USER api_gateway_user
 
 WORKDIR /service_code/

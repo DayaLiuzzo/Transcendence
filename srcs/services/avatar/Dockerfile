@@ -17,6 +17,8 @@ COPY init/start.sh /init/start.sh
 RUN chmod +x /init/start.sh
 
 COPY avatar_service/ /service_code/
+
+RUN chown -R avatar_user /service_code/
 USER avatar_user
 
 WORKDIR /service_code
