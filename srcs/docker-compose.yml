@@ -23,10 +23,17 @@ services:
     container_name: auth
     expose:
       - "8443"
+    develop:
+      watch:
+        - action: sync+restart
+          path: services/auth/auth_service/auth_app/models.py
+          target: /service_code/auth_app/models.py
+        - action: sync
+          path: services/auth/auth_service/
+          target: /service_code
     restart: on-failure
     volumes:
       - auth_keys:/keys
-      - auth_service_data:/service_code
     depends_on:
       db_auth:
         condition: service_healthy
@@ -261,14 +268,6 @@ services:
 
 volumes:
   auth_keys:
-
-  auth_service_data:
-    name: auth_service_data
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: $PWD/srcs/services/auth/auth_service
   
   frontend_service_data:
     name: frontend_service_data
@@ -285,14 +284,6 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $PWD/srcs/services/friends/friends_service
-
-  users_service_data:
-    name: users_service_data
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: $PWD/srcs/services/users/users_service
 
   avatar_media:
     name: avatar_media
