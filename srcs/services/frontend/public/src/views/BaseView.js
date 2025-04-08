@@ -19,7 +19,7 @@ export default class BaseView{
 
         this.app = document.getElementById('app');
         if (!this.app) {
-            console.error("Error: Element with id 'app' not found in document");
+            // console.error("Error: Element with id 'app' not found in document");
         }
     }
     //RENDER THE VIEW WITH THE STATIC HTML
@@ -34,7 +34,7 @@ export default class BaseView{
     async isOnline(username){
         const response = await this.sendGetRequest(this.API_URL_USERS + "/status/" + username + "/");
         if (!response.success) {
-            this.showError(response.error, "app");
+            this.customAlert(response.error);
             return;
         }
         return response.data.online;
@@ -73,7 +73,7 @@ export default class BaseView{
     }
 
     showAlert(message){
-        console.log(message);
+        // console.log(message);
         const alertOverlay = document.createElement("div");
         alertOverlay.id = "dynamic-alert";
         alertOverlay.style.position = "fixed";
@@ -191,7 +191,7 @@ export default class BaseView{
     async displayAvatar(){
         const avatarResponse = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + "/avatar/");
         if (!avatarResponse.success) {
-            this.showError(avatarResponse.error, "app");
+            this.customAlert(avatarResponse.error);
             return;
         }
         else{
@@ -253,17 +253,18 @@ export default class BaseView{
     }
 
     async updateNavbar() {
-        console.log("updating navbar");
+        // console.log("updating navbar");
         const navbar = document.getElementById("navbar");
 
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
                 const avatarUrl = await this.displayAvatar();
-                console.log(avatarUrl)
+                // console.log(avatarUrl)
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
+                    console.log("avatar IMAGE SOURCE : ", avatarImg.src);
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
 
@@ -312,7 +313,7 @@ export default class BaseView{
     }
 
     unmount(){
-        console.log("BaseView unmounted");
+        // console.log("BaseView unmounted");
     }
 
     async sendGetRequest(url){
@@ -344,13 +345,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendGetRequest():", url)
+                // console.error("Error in sendGetRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -387,13 +388,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPatchRequest():", url)
+                // console.error("Error in sendPatchRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -430,13 +431,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendDeleteRequest():", url)
+                // console.error("Error in sendDeleteRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -472,19 +473,19 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPostRequest():", url)
+                // console.error("Error in sendPostRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
 
     attachEvents(){
-        console.log('Events attached');
+        // console.log('Events attached');
     }
 
     updateFieldContent(fieldId, content){

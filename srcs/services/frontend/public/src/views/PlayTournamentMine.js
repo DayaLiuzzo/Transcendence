@@ -300,19 +300,19 @@ export default class PlayTournamentMine extends BaseView{
     }
 
     async mount() {
-
+        // console.log('Mounting Play tournament Mine');
 
         try {
             this.renderTournamentInfo()
             this.router.RerenderTournamentInterval = setInterval(() => {this.renderTournamentInfo();}, 5000);
         }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 
     unmount() {
- 
+
 
         const tournamentLeaveField = document.getElementById("tournament-leave-button");
         if (tournamentLeaveField) {

@@ -23,6 +23,6 @@ export default class NotFound extends BaseView{
 
 
     attachEvents(){
-        console.log('Events attached (404)');
+        // console.log('Events attached (404)');
     }
 }

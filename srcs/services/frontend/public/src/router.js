@@ -110,13 +110,13 @@ class Router{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPostRequest():", url)
+                // console.error("Error in sendPostRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -152,13 +152,13 @@ class Router{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPatchRequest():", url)
+                // console.error("Error in sendPatchRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -174,14 +174,14 @@ class Router{
     }
 
     startUpdatingLastSeen() {
-        console.log("⏳ Last seen tracking started...");
+        // console.log("⏳ Last seen tracking started...");
         const username = this.getUsername();
         this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline: true});
     }
 
 
     stopUpdatingLastSeen() {
-        console.log("Stop tracking last seen");
+        // console.log("Stop tracking last seen");
         const username = this.getUsername();
         this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline: false});
         this.customClearInterval(this.RerenderFriendsInterval);
@@ -220,7 +220,7 @@ class Router{
         if(interval){
             clearInterval(interval);
             interval = null;
-            console.log("stopped interval")
+            // console.log("stopped interval")
         }
     }
 

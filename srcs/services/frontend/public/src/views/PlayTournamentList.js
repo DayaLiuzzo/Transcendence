@@ -43,7 +43,7 @@ export default class PlayTournamentList extends BaseView{
     async joinTournament(tournamentId) {
         const body = {};
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
-        if (!response.success) { return this.showError(response.error, "tournament-list-field"); }
+        if (!response.success) { return this.customAlert(response.error); }
 
         //add alerte avant redirection??
         this.navigateTo("/my-tournament");
@@ -141,11 +141,12 @@ export default class PlayTournamentList extends BaseView{
             this.renderTournamentList(tournaments, userIsIntournament);
         }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 
     unmount() {
+        console.log('Unmounting Play tournament List');
 
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {

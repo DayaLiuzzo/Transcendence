@@ -46,13 +46,13 @@ export default class LogIn extends BaseView{
 
     async login(formData) {
         const errorMessage = this.validateInputs(formData);
-        if (errorMessage) return this.showError(errorMessage)
+        if (errorMessage) return this.customAlert(errorMessage)
         const loginResponse = await this.sendPostRequest(this.API_URL_LOGIN, formData);
         if (!loginResponse.success && loginResponse.error.error === "OTP is required."){
             return await this.handleOtp(formData);
         }
         else if (!loginResponse.success){
-            return this.showError(loginResponse.error.error);
+            return this.customAlert(loginResponse.error.error);
         }
         const userSession = {
             username: formData.username,

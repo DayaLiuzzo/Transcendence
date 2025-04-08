@@ -25,6 +25,7 @@ export default class PlayTournamentJoin extends BaseView{
        if (checkIfTournamentExists.success) {
             if (!checkIfTournamentExists.data.exists) {
                 this.showError("Invalid tournament ID, please retry", "tournament-join-field");
+                this.customAlert("Invalid tournament ID, please retry");
                 return
             }
 
@@ -100,7 +101,7 @@ export default class PlayTournamentJoin extends BaseView{
                 }
             }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 
