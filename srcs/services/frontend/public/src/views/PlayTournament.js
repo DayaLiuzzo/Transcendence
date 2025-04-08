@@ -60,7 +60,7 @@ export default class PlayMenu extends BaseView{
 
         const listTournamentButton = document.getElementById("list-tournament-button");
         if (listTournamentButton) {
-            console.log("listTournamentButton CLICK CREATED");
+            // console.log("listTournamentButton CLICK CREATED");
             listTournamentButton.addEventListener("click", this.listTournamentFunction);
         }
 

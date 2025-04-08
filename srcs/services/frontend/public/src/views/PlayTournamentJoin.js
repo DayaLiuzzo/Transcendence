@@ -28,7 +28,7 @@ export default class PlayTournamentJoin extends BaseView{
                 this.customAlert("Invalid tournament ID, please retry");
                 return
             }
-            console.log("JOIN TOURNAMENT");
+            // console.log("JOIN TOURNAMENT");
             const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", {});
             if (!response.success) { return this.showError(response.error, "tournament-join-field"); }
 

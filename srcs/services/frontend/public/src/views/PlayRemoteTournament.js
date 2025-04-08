@@ -27,6 +27,10 @@ export default class PlayCanva extends BasePlayView {
 		this.camera = null;
 
 		this.initSettings = (event) => {
+			document.getElementById("room-id").innerText = "";
+            document.getElementById("status").innerText = "";
+            document.querySelector("canvas.webgl").innerText = "";
+            document.getElementById("user-2").innerText = "";
 			this.setDataObjects(event.detail);
 		};
 		this.updateGame = (event) => {
@@ -108,12 +112,12 @@ export default class PlayCanva extends BasePlayView {
 		controls.minPolarAngle = Math.PI / 3;
 
 		function resizeHandler() {
-			sizes.width = container.clientWidth;
-			sizes.height = container.clientHeight;
-
+			const sizes = {
+				width: window.innerWidth,
+				height: window.innerHeight,
+			};
 			window.threeInstance.camera.aspect = sizes.width / sizes.height;
 			window.threeInstance.camera.updateProjectionMatrix();
-
 			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
 			window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		}

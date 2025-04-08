@@ -82,6 +82,7 @@ export default class BasePlayView extends BaseView{
                 document.querySelector("canvas.webgl").innerText = "Loading...";
                 document.getElementById("user-2").innerText = "Waiting for opponent...";
 				if (!this.socketService || !this.socketService.isConnected) {
+					this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
 					this.openWebSocket(room.room_id);
 				}
             }

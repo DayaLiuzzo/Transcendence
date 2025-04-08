@@ -229,7 +229,7 @@ class Router{
     }
 
     async loadView(path){
-        console.log("ENTERING LOAD VIEW :", path);
+        // console.log("ENTERING LOAD VIEW :", path);
         this.customClearInterval(this.RerenderFriendsInterval);
         const route = this.getRoute(path);
         const ViewClass = route ? route.view : NotFound;
@@ -238,7 +238,7 @@ class Router{
         }
         if(this.currentView){
             cleanUpThree();
-            console.log("ENTERING LOAD VIEW :", path);
+            // console.log("ENTERING LOAD VIEW :", path);
             this.currentView.unmount();
         }
         document.getElementById('app').innerText = "";
@@ -246,14 +246,14 @@ class Router{
 
         document.getElementById("app").innerHTML = this.currentView.render();
         await this.currentView.updateNavbar();
-        console.log("MOUNTING IN LOAD VIEW :", path);
+        // console.log("MOUNTING IN LOAD VIEW :", path);
         await this.currentView.mount();
-        console.log("ATTACHING EVENTS IN LOAD VIEW:", path);
+        // console.log("ATTACHING EVENTS IN LOAD VIEW:", path);
         this.currentView.attachEvents();
         }
 
     async navigateTo(path){
-        console.log("ENTERING router Navigate_TO", path)
+        // console.log("ENTERING router Navigate_TO", path)
         const route = this.getRoute(path);
         const isLoggedIn = this.isAuthenticated();
         if (route && route.requiresAuth && !isLoggedIn) {
@@ -266,7 +266,7 @@ class Router{
         }
         history.pushState({ path }, "", path);
         
-        console.log("Navigate_TO in router", path)
+        // console.log("Navigate_TO in router", path)
         await this.loadView(path);
     }
 

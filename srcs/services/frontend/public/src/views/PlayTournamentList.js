@@ -42,7 +42,7 @@ export default class PlayTournamentList extends BaseView{
 
     async joinTournament(tournamentId) {
         const body = {};
-        console.log("TOURNAMENT LIST JOIN");
+        // console.log("TOURNAMENT LIST JOIN");
         const response = await this.sendPostRequest(this.API_URL_TOURNAMENT + "join/" + tournamentId + "/", body);
         if (!response.success) { return this.customAlert(response.error); }
 
@@ -69,7 +69,7 @@ export default class PlayTournamentList extends BaseView{
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
             tournamentListField.addEventListener("click", this.handleJoinTournamentClick.bind(this));
-            console.log("ATTACHED JOIN CLICK IN ATTACH EVENT");
+            // console.log("ATTACHED JOIN CLICK IN ATTACH EVENT");
         }
 
         const tournamentCreateMineField = document.getElementById("tournament-create-button");
@@ -153,7 +153,7 @@ export default class PlayTournamentList extends BaseView{
         const tournamentListField = document.getElementById("tournament-list-field");
         if (tournamentListField) {
             tournamentListField.removeEventListener("click", this.handleJoinTournamentClick);
-            console.log("REMOVED JOIN CLICK UNMOUNT");
+            // console.log("REMOVED JOIN CLICK UNMOUNT");
         }
 
         const tournamentCreateMineField = document.getElementById("tournament-create-button");
