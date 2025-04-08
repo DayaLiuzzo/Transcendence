@@ -29,7 +29,6 @@ export default class BaseView{
 
     //UPDATE THE HTML CONTENT WITH DYNAMIC DATA AND THEN ATTACH EVENTS
     async mount(){
-        console.log("BaseView mounted");
     }
 
     async isOnline(username){
@@ -122,22 +121,22 @@ export default class BaseView{
         document.body.appendChild(alertOverlay);
 
     }
-    
+
     customAlert(message){
-        let displayMessage = ""; 
+        let displayMessage = "";
 
         if (typeof message === "string") {
             displayMessage = message;
         } else if (typeof message === "object" && message !== null) {
             // Handle object with error arrays
-            const firstKey = Object.keys(message)[0]; 
+            const firstKey = Object.keys(message)[0];
             if (Array.isArray(message[firstKey])) {
-                displayMessage = message[firstKey][0]; 
+                displayMessage = message[firstKey][0];
             } else {
-                displayMessage = JSON.stringify(message); 
+                displayMessage = JSON.stringify(message);
             }
         } else if (Array.isArray(message)) {
-            displayMessage = message.join("\n"); 
+            displayMessage = message.join("\n");
         } else if (typeof message === "number" || typeof message === "boolean") {
             displayMessage = message.toString();
         } else {
@@ -155,7 +154,7 @@ export default class BaseView{
             errorContainer.id = formId+ "-error-container";
             errorContainer.classList.add("error-container");
             console.log(formId);
-            
+
             document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
 

@@ -1,11 +1,11 @@
 import BaseView from './BaseView.js';
 
 export default class PlayMenu extends BaseView{
-    
+
     constructor(params){
         super(params);
     }
-    
+
     render(){
         return `
         <div>
@@ -35,8 +35,6 @@ export default class PlayMenu extends BaseView{
     }
 
     attachEvents(){
-        console.log('Events attached (Play-Menu)');
-
         const createTournamentButton = document.getElementById("create-tournament-button");
         if (createTournamentButton) {
             createTournamentButton.addEventListener("click", async () => {
@@ -57,7 +55,7 @@ export default class PlayMenu extends BaseView{
                 this.navigateTo('/list-tournament');
             });
         }
-        
+
         const myTournamentButton = document.getElementById("my-tournament-button");
         if (myTournamentButton) {
             myTournamentButton.addEventListener("click", async () => {

@@ -40,7 +40,6 @@ export default class BasePlayView extends BaseView{
 			loser_username = player1.username;
 		}
 
-        console.log("game end")
 
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
@@ -96,12 +95,5 @@ export default class BasePlayView extends BaseView{
         }
     }
 
-    // async unmount() {
-    //     console.log('Unmounting Play');
-    //     if (this.socketService) {
-    //         this.socketService.closeConnection();
-    //         this.socketService = null;
-    //     }
-    // }
 }
 
