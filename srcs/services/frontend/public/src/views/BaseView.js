@@ -153,7 +153,7 @@ export default class BaseView{
             errorContainer = document.createElement("div");
             errorContainer.id = formId+ "-error-container";
             errorContainer.classList.add("error-container");
-            console.log(formId);
+            // console.log(formId);
 
             document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
@@ -190,7 +190,8 @@ export default class BaseView{
 
     async displayAvatar(){
         const avatarResponse = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + "/avatar/");
-        if (!avatarResponse.success) {
+        if (!avatarResponse || !avatarResponse.success) {
+            if(!avatarResponse) return this.customAlert("CLEAR THE CACHE");
             this.customAlert(avatarResponse.error);
             return;
         }
@@ -264,7 +265,7 @@ export default class BaseView{
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
-                    console.log("avatar IMAGE SOURCE : ", avatarImg.src);
+                    // console.log("avatar IMAGE SOURCE : ", avatarImg.src);
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
 

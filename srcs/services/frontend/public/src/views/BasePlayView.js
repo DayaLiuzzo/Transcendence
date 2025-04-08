@@ -107,7 +107,7 @@ export default class BasePlayView extends BaseView{
 
         progressBar.innerHTML = "Cold Harbour                                  57% Completed";
 
-        console.log("LOGOLUMON SRC ", logoLumon.src );
+        // console.log("LOGOLUMON SRC ", logoLumon.src );
 
         waitingGameContainer.appendChild(headerCanva);
         headerCanva.appendChild(progressBar);

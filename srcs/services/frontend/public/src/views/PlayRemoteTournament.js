@@ -299,8 +299,8 @@ export default class PlayCanva extends BasePlayView {
 		this.player2.height = data.player_height;
 		this.ball.x = data.ball.x - this.centerX + data.ball_radius;
 		this.ball.y = data.ball.y - this.centerY + data.ball_radius;
-		this.score_player1 = 0;
-		this.score_player2 = 0;
+		this.scores.player1_score = 0;
+		this.scores.player2_score = 0;
 
 		isRunning = true;
 		this.initGame();

@@ -102,7 +102,8 @@ export default class Profile extends BaseView {
                     opponent_username = match.player1_username;
                     opponent_score = match.score_player1;
                 }
-                if(match.winner = you_id){
+
+                if(match.winner === you_id){
                     winner = you_username;
                 }
                 else{
@@ -113,7 +114,8 @@ export default class Profile extends BaseView {
                 <h3>Game number ${index + 1}</h3>
                 <p>You are ${you_username}</p>
                 <p>Your opponent was ${opponent_username}</p>
-                <p>${winner} won (winner - ${you_score} | ${opponent_score} - loser)</p>
+                <p>the winner is ${winner}</p>
+                <p>${you_username} - ${you_score} | ${opponent_score} - ${opponent_username}</p>
                 
                 `;
                 matchHistoryField.appendChild(matchElement);
