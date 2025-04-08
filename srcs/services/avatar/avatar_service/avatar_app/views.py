@@ -71,7 +71,7 @@ def save_image(username: str, validated_data):
 
 def clear_avatar(username: str):
     extensions = ['.png', '.jpg', '.jpeg']
-    avatar_dir = Path(settings.MEDIA_ROOT) / 'users_avatars'
+    avatar_dir = Path(settings.MEDIA_ROOT) / 'users_avatar'
     for ext in extensions:
         avatar_path = avatar_dir / f"{username}{ext}"
         if avatar_path.exists(): 

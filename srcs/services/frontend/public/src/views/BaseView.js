@@ -260,7 +260,7 @@ export default class BaseView{
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
-                const avatarUrl = await this.displayAvatar();
+                const avatarUrl = await this.displayAvatar() + "?" + new Date().getTime();
                 console.log(avatarUrl)
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");

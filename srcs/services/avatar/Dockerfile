@@ -19,8 +19,8 @@ RUN chmod +x /init/start.sh
 COPY avatar_service/ /service_code/
 
 RUN chown -R avatar_user /service_code/
-USER avatar_user
+# USER avatar_user
 
 WORKDIR /service_code
-EXPOSE 8843
+EXPOSE 8005
 ENTRYPOINT [ "/init/start.sh" ]

@@ -269,17 +269,18 @@ export default class EditProfile extends BaseView {
         }
 
 
-        this.customAlert("Avatar uploaded successfully");
-        const avatarUrl = await this.displayAvatar();
+        const avatarUrl = await this.displayAvatar() + "?" + new Date().getTime();
         const avatarImg = document.createElement("img");
         avatarImg.src = avatarUrl;
         avatarImg.alt = "User Avatar";
         avatarImg.classList.add("avatar-img");
-
+        
         const container = document.createElement("div");
         container.appendChild(avatarImg);
         let avatarContainer = document.getElementById("placeholder");
         avatarContainer.replaceChildren(container);
+        await this.updateNavbar();
+        this.customAlert("Avatar uploaded successfully");
 
     }
 
