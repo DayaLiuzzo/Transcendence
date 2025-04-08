@@ -168,8 +168,8 @@ export default class PlayCanva extends BasePlayView {
 			paddleMaterial
 		);
 		this.meshPlayer1.position.set(
-			this.player1.x - this.centerX,
-			this.player1.y - this.centerY,
+			this.player1.x,
+			this.player1.y,
 			20
 		);
 		this.meshPlayer2 = new THREE.Mesh(
@@ -177,8 +177,8 @@ export default class PlayCanva extends BasePlayView {
 			paddleMaterial
 		);
 		this.meshPlayer2.position.set(
-			this.player2.x - this.centerX,
-			this.meshPlayer2.y - this.centerY,
+			this.player2.x,
+			this.meshPlayer2.y,
 			20
 		);
 
@@ -298,29 +298,30 @@ export default class PlayCanva extends BasePlayView {
 		this.ballRadius = data.ball_radius;
 		this.scores.max_scores = data.max_scores;
 		this.scores.winner = false;
-		this.player1.x = data.player1.x;
-		this.player1.y = data.player1.y;
-		this.player1 = data.player1;
+		this.player1.x = data.player1.x - this.centerX + data.player_width / 2;
+		this.player1.y = data.player1.y - this.centerY + data.player_height / 2;
+		this.player1.username = data.player1.username;
 		this.player1.width = data.player_width;
 		this.player1.height = data.player_height;
-		this.player2.x = data.player2.x ;
-		this.player2.y = data.player2.y ;
-		this.player2 = data.player2;
+		this.player2.x = data.player2.x - this.centerX + data.player_width / 2;
+		this.player2.y = data.player2.y - this.centerY + data.player_height / 2;
+		this.player2.username = data.player2.username;
 		this.player2.width = data.player_width ;
 		this.player2.height = data.player_height;
-		this.ball.x = data.ball.x ;
-		this.ball.y = data.ball.y;
-
+		this.ball.x = data.ball.x - this.centerX + data.ball_radius;
+		this.ball.y = data.ball.y - this.centerY + data.ball_radius;
+		this.score_player1 = 0;
+		this.score_player2 = 0;
 
 		this.initGame();
 	}
 
 	updateGameObjects(data) {
 		if (this.meshPlayer1 && this.meshPlayer2 && this.meshBall) {
-			this.meshPlayer1.position.y = data.player1_y - this.centerY;
-			this.meshPlayer2.position.y = data.player2_y - this.centerY;
-			this.meshBall.position.y = data.ball.y - this.centerY;
-			this.meshBall.position.x = data.ball.x - this.centerX;
+			this.meshPlayer1.position.y = data.player1_y - this.centerY + this.player1.height / 2;
+			this.meshPlayer2.position.y = data.player2_y - this.centerY + this.player2.height / 2;
+			this.meshBall.position.y = data.ball.y - this.centerY + this.ballRadius / 2;
+			this.meshBall.position.x = data.ball.x - this.centerX + this.ballRadius / 2;
 			this.updateSpotlight(this.ballSpotlight, this.meshBall);
 			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
 			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);

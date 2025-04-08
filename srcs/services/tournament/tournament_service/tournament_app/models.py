@@ -122,22 +122,25 @@ class Pool(models.Model):
             if not self.rooms.exists():
                 players = list(self.users.all())
                 players_in_room = []
-                for i in range(len(players)):
-                    for j in range(i+1, len(players)):
-                        status = 'waiting'
-                        if players[i] in players_in_room or players[j] in players_in_room:
-                            status = 'standby'
-                        else:
-                            players_in_room.append(players[i])
-                            players_in_room.append(players[j])
+                if len(players) == 1:
+                    self.pool.winner = players[0]
+                else:
+                    for i in range(len(players)):
+                        for j in range(i+1, len(players)):
+                            status = 'waiting'
+                            if players[i] in players_in_room or players[j] in players_in_room:
+                                status = 'standby'
+                            else:
+                                players_in_room.append(players[i])
+                                players_in_room.append(players[j])
 
-                        match = Room.objects.create(
-                            pool=self,  # Lier le match à la poule
-                            player1=players[i],
-                            player2=players[j],
-                            status=status
-                        )
-                        self.rooms.add(match)
+                            match = Room.objects.create(
+                                pool=self,  # Lier le match à la poule
+                                player1=players[i],
+                                player2=players[j],
+                                status=status
+                            )
+                            self.rooms.add(match)
             else:
                 players_in_room = []
                 rooms = self.rooms.filter(status='standby')

@@ -6,7 +6,6 @@ export default class BasePlayView extends BaseView{
         super(params);
         this.socketService = null;
         this.handleGameEnd = this.handleGameEnd.bind(this);
-        this.handleTournamentGameEnd = this.handleTournamentGameEnd.bind(this);
     }
 
     createContainer(containerName){
@@ -136,17 +135,13 @@ export default class BasePlayView extends BaseView{
         if (result.success) {
             this.displayWaitingGame(result.data.room_id);
             document.querySelector("canvas.webgl").innerText = "Loading...";
-            this.openWebSocket(result.data.room_id);
 
-            window.addEventListener("gameStarted", () => this.checkStart());
+			if (!this.socketService || !this.socketService.isConnected) {
+				this.openWebSocket(result.data.room_id);
+			}
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
         }
-    }
-
-
-
-    async handleTournamentGameEnd(){
     }
 
     handleGameEnd(data, player1, player2){
@@ -182,53 +177,10 @@ export default class BasePlayView extends BaseView{
         });
     }
 
-    checkStart(){
-        // console.log(this.socketService);
-        console.log("NAUR");
-        if (this.socketService.isplaying){
-            // const waitingGameCanva = document.querySelector("waitingGameCanva")
-            // console.log("HEEEEEELLO" , waitingGameCanva);
-            // console.log("coucou");
-            document.querySelector("canvas.webgl").innerText = "Playing...";
-            this.listenToKeyboard();
-            window.addEventListener("keyboard", () => this.listenToKeyboard());
-        }
-    }
-
-    listenToKeyboard() {
-        // console.log("Listening to keyboard")
-        if (this.socketService.isplaying){
-
-            window.addEventListener("keydown", (event) => {
-                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-                    const movement = event.key === "ArrowUp" ? "up" : "down";
-                    this.sendMovementToWebSocket(movement);
-                }
-
-            });
-            window.addEventListener("keyup", (event) => {
-                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-                    const movement = "idle";
-                    this.sendMovementToWebSocket(movement);
-                }
-            });
-
-        }
-    }
-
-    sendMovementToWebSocket(movement) {
-        // Si la connexion WebSocket est active et le jeu a commencé, envoyer le mouvement
-        //add condition pour checker que la websocket est ok
-        this.socketService.sendMessage(movement);
-
-    }
-
     // Ouvrir une WebSocket pour cette salle
     openWebSocket(roomId) {
-        if (!this.socketService) {
-            this.socketService = new WebSocketService(roomId);
-            this.socketService.name = "init"
-        }
+		this.socketService = new WebSocketService(roomId);
+		this.socketService.name = "init"
         //try puis mettre this.socketservice a null si fail
         this.socketService.connect();
         this.socketService.name = "after connexion"

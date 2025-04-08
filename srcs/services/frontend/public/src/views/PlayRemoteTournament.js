@@ -59,6 +59,7 @@ export default class PlayCanva extends BasePlayView {
 		window.removeEventListener("updateGame", this.updateGame);
 		window.removeEventListener("updateScore", this.updateScoreBoard);
 		window.removeEventListener("handleEndGame", this.endGame);
+        this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
 	}
 
 	showError(message) {
@@ -290,12 +291,12 @@ export default class PlayCanva extends BasePlayView {
 		this.scores.winner = false;
 		this.player1 = data.player1;
 		this.player1.x = data.player1.x - this.centerX + data.player_width / 2;
-		this.player1.y = data.player1.y - this.centerY + data.player_width / 2;
+		this.player1.y = data.player1.y - this.centerY + data.player_height / 2;
 		this.player1.username = data.player1.username;
 		this.player1.width = data.player_width;
 		this.player1.height = data.player_height;
 		this.player2.x = data.player2.x - this.centerX + data.player_width / 2;
-		this.player2.y = data.player2.y - this.centerY + data.player_width / 2;
+		this.player2.y = data.player2.y - this.centerY + data.player_height / 2;
 		this.player2.username = data.player2.username;
 		this.player2.width = data.player_width ;
 		this.player2.height = data.player_height;
