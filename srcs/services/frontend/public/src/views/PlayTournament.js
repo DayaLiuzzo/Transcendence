@@ -1,11 +1,24 @@
 import BaseView from './BaseView.js';
 
 export default class PlayMenu extends BaseView{
-    
+
     constructor(params){
         super(params);
+
+        this.createTournamentFunction = async () => {
+            await this.navigateTo('/create-tournament');
+        }
+        this.joinTournamentFunction = async () => {
+            await this.navigateTo('/join-tournament');
+        }
+        this.listTournamentFunction = async () => {
+            await this.navigateTo('/list-tournament');
+        }
+        this.myTournamentFunction = async () => {
+            await this.navigateTo('/my-tournament');
+        }
     }
-    
+
     render(){
         return `
         <div>
@@ -35,36 +48,50 @@ export default class PlayMenu extends BaseView{
     }
 
     attachEvents(){
-        console.log('Events attached (Play-Menu)');
-
         const createTournamentButton = document.getElementById("create-tournament-button");
         if (createTournamentButton) {
-            createTournamentButton.addEventListener("click", async () => {
-                this.navigateTo('/create-tournament');
-            });
+            createTournamentButton.addEventListener("click", this.createTournamentFunction);
         }
 
         const joinTournamentButton = document.getElementById("join-tournament-button");
         if (joinTournamentButton) {
-            joinTournamentButton.addEventListener("click", async () => {
-                this.navigateTo('/join-tournament');
-            });
+            joinTournamentButton.addEventListener("click", this.joinTournamentFunction);
         }
 
         const listTournamentButton = document.getElementById("list-tournament-button");
         if (listTournamentButton) {
-            listTournamentButton.addEventListener("click", async () => {
-                this.navigateTo('/list-tournament');
-            });
-        }
-        
-        const myTournamentButton = document.getElementById("my-tournament-button");
-        if (myTournamentButton) {
-            myTournamentButton.addEventListener("click", async () => {
-                this.navigateTo('/my-tournament');
-            });
+            // console.log("listTournamentButton CLICK CREATED");
+            listTournamentButton.addEventListener("click", this.listTournamentFunction);
         }
 
+        const myTournamentButton = document.getElementById("my-tournament-button");
+        if (myTournamentButton) {
+            myTournamentButton.addEventListener("click", this.myTournamentFunction);
+        }
+
+    }
+    
+    unmount(){
+        const createTournamentButton = document.getElementById("create-tournament-button");
+        if (createTournamentButton) {
+            createTournamentButton.removeEventListener("click", this.createTournamentFunction);
+        }
+
+        const joinTournamentButton = document.getElementById("join-tournament-button");
+        if (joinTournamentButton) {
+            joinTournamentButton.removeEventListener("click", this.joinTournamentFunction);
+        }
+
+        const listTournamentButton = document.getElementById("list-tournament-button");
+        if (listTournamentButton) {
+            listTournamentButton.removeEventListener("click", this.listTournamentFunction);
+        }
+
+        const myTournamentButton = document.getElementById("my-tournament-button");
+        if (myTournamentButton) {  
+            myTournamentButton.removeEventListener("click", this.myTournamentFunction);
         }
     }
+
+}
 

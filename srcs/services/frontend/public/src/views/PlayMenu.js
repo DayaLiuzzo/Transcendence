@@ -35,7 +35,6 @@ export default class PlayMenu extends BaseView{
     }
 
     attachEvents(){
-        console.log('Events attached (Play-Menu)');
 
         const playLocalButton = document.getElementById("play-local");
         if (playLocalButton) {

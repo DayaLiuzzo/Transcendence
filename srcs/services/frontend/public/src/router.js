@@ -110,13 +110,13 @@ class Router{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPostRequest():", url)
+                // console.error("Error in sendPostRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -152,13 +152,13 @@ class Router{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPatchRequest():", url)
+                // console.error("Error in sendPatchRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -174,14 +174,14 @@ class Router{
     }
 
     startUpdatingLastSeen() {
-        console.log("⏳ Last seen tracking started...");
+        // console.log("⏳ Last seen tracking started...");
         const username = this.getUsername();
         this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline: true});
     }
 
 
     stopUpdatingLastSeen() {
-        console.log("Stop tracking last seen");
+        // console.log("Stop tracking last seen");
         const username = this.getUsername();
         this.sendPatchRequest(this.API_URL_USERS + 'update_last_seen/' + username + '/', {isOnline: false});
         this.customClearInterval(this.RerenderFriendsInterval);
@@ -220,7 +220,7 @@ class Router{
         if(interval){
             clearInterval(interval);
             interval = null;
-            console.log("stopped interval")
+            // console.log("stopped interval")
         }
     }
 
@@ -229,6 +229,7 @@ class Router{
     }
 
     async loadView(path){
+        // console.log("ENTERING LOAD VIEW :", path);
         this.customClearInterval(this.RerenderFriendsInterval);
         const route = this.getRoute(path);
         const ViewClass = route ? route.view : NotFound;
@@ -237,17 +238,22 @@ class Router{
         }
         if(this.currentView){
             cleanUpThree();
+            // console.log("ENTERING LOAD VIEW :", path);
             this.currentView.unmount();
         }
+        document.getElementById('app').innerText = "";
         this.currentView = new ViewClass(this);
 
         document.getElementById("app").innerHTML = this.currentView.render();
         await this.currentView.updateNavbar();
+        // console.log("MOUNTING IN LOAD VIEW :", path);
         await this.currentView.mount();
+        // console.log("ATTACHING EVENTS IN LOAD VIEW:", path);
         this.currentView.attachEvents();
         }
 
     async navigateTo(path){
+        // console.log("ENTERING router Navigate_TO", path)
         const route = this.getRoute(path);
         const isLoggedIn = this.isAuthenticated();
         if (route && route.requiresAuth && !isLoggedIn) {
@@ -259,6 +265,8 @@ class Router{
             return;
         }
         history.pushState({ path }, "", path);
+        
+        // console.log("Navigate_TO in router", path)
         await this.loadView(path);
     }
 

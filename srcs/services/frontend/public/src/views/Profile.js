@@ -68,7 +68,7 @@ export default class Profile extends BaseView {
     async updateMatchHistoryField(){
         const matchHistoryField = document.getElementById("match-history-field");
         if(!matchHistoryField){
-            console.log('No match history field');
+            // console.log('No match history field');
             return;
         }
         const response = await this.sendGetRequest(this.API_URL_ROOMS + 'list_my_finished_rooms/');
@@ -102,7 +102,8 @@ export default class Profile extends BaseView {
                     opponent_username = match.player1_username;
                     opponent_score = match.score_player1;
                 }
-                if(match.winner = you_id){
+
+                if(match.winner === you_id){
                     winner = you_username;
                 }
                 else{
@@ -113,14 +114,15 @@ export default class Profile extends BaseView {
                 <h3>Game number ${index + 1}</h3>
                 <p>You are ${you_username}</p>
                 <p>Your opponent was ${opponent_username}</p>
-                <p>${winner} won (winner - ${you_score} | ${opponent_score} - loser)</p>
+                <p>the winner is ${winner}</p>
+                <p>${you_username} - ${you_score} | ${opponent_score} - ${opponent_username}</p>
                 
                 `;
                 matchHistoryField.appendChild(matchElement);
             });
         }
         else {
-        console.log('No match history found');
+        // console.log('No match history found');
             matchHistoryField.innerHTML = `
                 <h3>game {default} history</h3>
                 <p>username: default</p>
@@ -136,7 +138,7 @@ export default class Profile extends BaseView {
     async updateStatsField() {
         const statsField = document.getElementById("stats-field");
         if (!statsField){
-            console.log('No stats field');
+            // console.log('No stats field');
             return;
         }
         const username = this.getUsername();
@@ -164,12 +166,12 @@ export default class Profile extends BaseView {
         const username = this.getUsername();
         const body = {};
         if (username === friendUsername) {
-            this.showError("You cannot add yourself as a friend", "add-friend-form");
+            this.customAlert("You cannot add yourself as a friend");
             return;
         }
         const response = await this.sendPatchRequest(this.API_URL_USERS + username + "/friends/add/" + friendUsername + "/", body);
         if (!response.success) {
-            this.showError((response.error?.detail || response.error?.message), "add-friend-form");
+            this.customAlert((response.error?.detail || response.error?.message));
             return;
         }
         const friendsField = document.getElementById("friends-field");
@@ -206,12 +208,12 @@ export default class Profile extends BaseView {
         const username = this.getUsername();
         const body = {};
         if (username === friendUsername) {
-            this.showError("You cannot remove yourself as a friend", "friends-field");
+            this.customAlert("You cannot remove yourself as a friend", "friends-field");
             return;
         }
         const response = await this.sendDeleteRequest(this.API_URL_USERS + username + "/friends/remove/" + friendUsername + "/", body);
         if (!response.success) {
-            this.showError(response.error.detail, "friends-field");
+            this.customAlert(response.error.detail);
             return;
         }
         friendItem.remove();
@@ -245,7 +247,7 @@ export default class Profile extends BaseView {
     }
     
     attachEvents() {
-        console.log('Events attached (Profile)');
+        // console.log('Events attached (Profile)');
         const editProfileButton = document.getElementById("edit-profile");
         if (editProfileButton) {
             editProfileButton.addEventListener("click", this.handleEditProfileClick.bind(this));
@@ -341,12 +343,12 @@ export default class Profile extends BaseView {
             this.updateMatchHistoryField();
         }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 
     unmount() {
-        console.log('Unmounting Profile');
+        // console.log('Unmounting Profile');
 
         const addFriendForm = document.getElementById("add-friend-form");
         if (addFriendForm) {

@@ -550,28 +550,23 @@ class DeleteTournamentView(APIView):
     def delete(self, request):
         try:
             user = request.user
-            tournament = Tournament.objects.get(users=user)
+            tournament = Tournament.objects.get(users=user, status='waiting')
             # Vérifier que l'utilisateur est autorisé à supprimer ce tournoi (facultatif)
             # if user.is_staff or (user == tournament.owner and tournament.status != 'playing'):
-            if user == tournament.owner and tournament.status == 'waiting':
+            if user == tournament.owner:
                 ask_all_rooms_to_remove(tournament)
                 tournament.delete()
                 return Response({
                     "message": "Tournament deleted successfully"
                     }, status=status.HTTP_200_OK)
             else:
-                if tournament.status != 'waiting':
-                    return Response({
-                        "message": "Tournament has not finished yet"
-                        }, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    return Response({
-                        "message": "You are not the owner of this tournament"
-                        }, status=status.HTTP_403_FORBIDDEN)
+                return Response({
+                    "message": "You are not the owner of this tournament"
+                    }, status=status.HTTP_403_FORBIDDEN)
         
         except Tournament.DoesNotExist:
             return Response({
-                "message": "You are not in a tournament"
+                "message": "You don't belong to any waiting tournament"
                 }, status=status.HTTP_400_BAD_REQUEST)
 
 ################################################################

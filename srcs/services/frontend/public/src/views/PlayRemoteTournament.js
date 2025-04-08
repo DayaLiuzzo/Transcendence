@@ -1,7 +1,6 @@
 import BasePlayView from "./BasePlayViewTournament.js";
 import { cleanUpThree } from "../three/utils.js";
 
-let keys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
 let isRunning = false;
 let gameOver = false;
 
@@ -28,6 +27,10 @@ export default class PlayCanva extends BasePlayView {
 		this.camera = null;
 
 		this.initSettings = (event) => {
+			document.getElementById("room-id").innerText = "";
+            document.getElementById("status").innerText = "";
+            document.querySelector("canvas.webgl").innerText = "";
+            document.getElementById("user-2").innerText = "";
 			this.setDataObjects(event.detail);
 		};
 		this.updateGame = (event) => {
@@ -47,7 +50,6 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	unmount() {
-		console.log("Unmounted PlayCanva REMOTE");
 		document.getElementById("final-screen")?.remove();
 		isRunning = false;
 		if (this.socketService) {
@@ -76,19 +78,15 @@ export default class PlayCanva extends BasePlayView {
 		window.addEventListener("updateGame", this.updateGame);
 		window.addEventListener("updateScore", this.updateScoreBoard);
 		window.addEventListener("handleEndGame", this.endGame);
-		// window.addEventListener("handleCollision", (event) => {
-		// 	this.handleCollision(event.detail);
-		// });
 	}
 
 	initGame() {
-		console.log("Game Loading...");
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
 		const camera = new THREE.PerspectiveCamera(
-			75,
+			95,
 			this.gameBoard.width / this.gameBoard.height,
-			1,
+			40,
 			50000
 		);
 		camera.position.z = 900;
@@ -110,20 +108,19 @@ export default class PlayCanva extends BasePlayView {
 		controls.enablePan = false;
 		controls.enableDamping = true;
 		controls.enableZoom = true;
-		controls.maxPolarAngle = Math.PI / 2.1;
-		controls.minPolarAngle = Math.PI / 2.5;
+		controls.maxPolarAngle = Math.PI / 2.5;
+		controls.minPolarAngle = Math.PI / 3;
 
 		function resizeHandler() {
-			sizes.width = container.clientWidth;
-			sizes.height = container.clientHeight;
-
+			const sizes = {
+				width: window.innerWidth,
+				height: window.innerHeight,
+			};
 			window.threeInstance.camera.aspect = sizes.width / sizes.height;
 			window.threeInstance.camera.updateProjectionMatrix();
-
 			window.threeInstance.renderer.setSize(sizes.width, sizes.height);
-			window.threeInstance.effect.setSize(sizes.width, sizes.height);
+			window.threeInstance.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		}
-
 
 		window.threeInstance = {
 			scene,
@@ -134,16 +131,19 @@ export default class PlayCanva extends BasePlayView {
 			resizeHandler
 		};
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-		directionalLight.position.set(5, 10, 5);
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+		directionalLight.position.set(0, 0, -1);
 		directionalLight.castShadow = true;
 		directionalLight.shadow.mapSize.width = 2048;
 		directionalLight.shadow.mapSize.height = 2048;
 		window.threeInstance.scene.add(directionalLight);
 
-		this.ballSpotlight = this.createSpotlight(scene);
-		this.player1Spotlight = this.createSpotlight(scene);
-		this.player2Spotlight = this.createSpotlight(scene);
+		this.player1Spotlight = this.createSpotlight();
+		this.player2Spotlight = this.createSpotlight();
+		window.threeInstance.scene.add(this.player1Spotlight);
+		window.threeInstance.scene.add(this.player1Spotlight.target);
+		window.threeInstance.scene.add(this.player2Spotlight);
+		window.threeInstance.scene.add(this.player2Spotlight.target);
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
@@ -165,7 +165,6 @@ export default class PlayCanva extends BasePlayView {
 			this.player1.y,
 			20
 		);
-		console.log("MESHPLAYER1", this.meshPlayer1);
 
 		this.meshPlayer2 = new THREE.Mesh(
 			new THREE.BoxGeometry(this.player2.width, this.player2.height, 10),
@@ -191,11 +190,11 @@ export default class PlayCanva extends BasePlayView {
 			this.ball.y,
 			16
 		);
-		const boardColor = new THREE.Color(0xD3D3D3);
+		const colorBoard = new THREE.Color( 0x7da17e );
 		const meshBoard = new THREE.Mesh(
 			new THREE.PlaneGeometry(this.gameBoard.width, this.gameBoard.height),
 			new THREE.MeshStandardMaterial({
-				color: boardColor,
+				color: colorBoard,
 				roughness: 0.6,
 				metalness: 0.2,
 			})
@@ -203,30 +202,30 @@ export default class PlayCanva extends BasePlayView {
 		meshBoard.rotation.x -= Math.PI;
 		meshBoard.position.z = 35;
 		meshBoard.receiveShadow = true;
-		scene.add(meshBoard);
 
 		const boardLine = new THREE.Mesh(
 			new THREE.PlaneGeometry(10, this.gameBoard.height),
 			new THREE.MeshStandardMaterial({
-				color: 0x00000,
-				emissive: 0xffffff,
+				color: 0x98b6b0,
+				emissive: 0x98b6b0,
 				emissiveIntensity: 0.2,
 			})
 		);
 		boardLine.position.z = 34;
+		boardLine.position.y = 0;
+		boardLine.rotation.x -= Math.PI ;
 
+		this.createNameMesh();
 		window.threeInstance.scene.add(boardLine);
 		window.threeInstance.scene.add(meshBoard);
 		window.threeInstance.scene.add(this.meshPlayer1);
 		window.threeInstance.scene.add(this.meshPlayer2);
 		window.threeInstance.scene.add(this.meshBall);
-		console.log("SCOOOOOORE:", this.scores.player1_score)
 		this.updateScoreMesh();
 
 		const tick = () => {
 			if (isRunning === false) return;
 			requestAnimationFrame(tick);
-
 			window.addEventListener("resize", window.threeInstance.resizeHandler);
 			window.threeInstance.controls.update();
 			window.threeInstance.renderer.render(window.threeInstance.scene, window.threeInstance.camera);
@@ -263,21 +262,23 @@ export default class PlayCanva extends BasePlayView {
 	}
 
 	updateSpotlight(spotlight, targetMesh) {
-		spotlight.position.set(targetMesh.position.x, 3, targetMesh.position.z);
+		spotlight.position.set(
+			targetMesh.position.x,
+			targetMesh.position.y,
+			-600
+		);
 		spotlight.target.position.copy(targetMesh.position);
 	}
 
-	createSpotlight(scene, intensity = 10) {
-		const spotlight = new THREE.SpotLight(0xffffff, intensity);
-		spotlight.angle = Math.PI / 6;
-		spotlight.penumbra = 0.3;
-		spotlight.decay = 1;
-		spotlight.distance = 10;
-		spotlight.castShadow = true;
-
-		scene.add(spotlight);
-		scene.add(spotlight.target);
-
+	createSpotlight(intensity = 2) {
+		const spotlight = new THREE.SpotLight(0x98b6b0, intensity);
+		spotlight.angle -= Math.PI / 4;
+		spotlight.decay = 2;
+		spotlight.penumbra = 0.8;
+		spotlight.intensity = 1;
+		spotlight.distance = -5;
+		spotlight.target.position.set(0, 0, 0);
+		spotlight.position.set(0, 0, -600);
 		return spotlight;
 	}
 
@@ -302,8 +303,8 @@ export default class PlayCanva extends BasePlayView {
 		this.player2.height = data.player_height;
 		this.ball.x = data.ball.x - this.centerX + data.ball_radius;
 		this.ball.y = data.ball.y - this.centerY + data.ball_radius;
-		this.score_player1 = 0;
-		this.score_player2 = 0;
+		this.scores.player1_score = 0;
+		this.scores.player2_score = 0;
 
 		isRunning = true;
 		this.initGame();
@@ -315,14 +316,12 @@ export default class PlayCanva extends BasePlayView {
 			this.meshPlayer2.position.y = data.player2_y - this.centerY + this.player2.height / 2;
 			this.meshBall.position.y = data.ball.y - this.centerY + this.ballRadius / 2;
 			this.meshBall.position.x = data.ball.x - this.centerX + this.ballRadius / 2;
-			this.updateSpotlight(this.ballSpotlight, this.meshBall);
 			this.updateSpotlight(this.player1Spotlight, this.meshPlayer1);
 			this.updateSpotlight(this.player2Spotlight, this.meshPlayer2);
 		}
 	}
 
 	updateScore(data) {
-		console.log(this.scores);
 		this.scores.player1_score = data.player1;
 		this.scores.player2_score = data.player2;
 		this.updateScoreMesh();
@@ -335,14 +334,14 @@ export default class PlayCanva extends BasePlayView {
 		if (this.meshPlayer2Score) {
 			window.threeInstance.scene.remove(this.meshPlayer2Score);
 		}
-
+		const colorText = new THREE.Color( 0x163f38 );
 		const fontLoader = new THREE.FontLoader();
 		fontLoader.load(
 			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
 			(font) => {
 				const textMaterial = new THREE.MeshStandardMaterial({
-					color: 0x000000,
-					emissive: 0xffffff,
+					color: colorText,
+					emissive: 0x00000,
 					emissiveIntensity: 0.4,
 				});
 
@@ -377,42 +376,48 @@ export default class PlayCanva extends BasePlayView {
 		);
 	}
 
-	updateParticles() {
-		activeParticles = activeParticles.filter((particle) => {
-			particle.position.add(particle.velocity);
-			particle.life -= 0.02;
-			return particle.life > 0;
-		});
+	createNameMesh() {
+		const colorText = new THREE.Color(  0x98b6b0 );
+		const fontLoader = new THREE.FontLoader();
+		fontLoader.load(
+			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+			(font) => {
+				const textMaterial = new THREE.MeshStandardMaterial({
+					color: colorText,
+					emissive: colorText,
+					emissiveIntensity: 0.4,
+				});
 
-		const positions = new Float32Array(particleCount * 3);
-		for (let i = 0; i < activeParticles.length; i++) {
-			const particle = activeParticles[i];
-			positions[i * 3] = particle.position.x;
-			positions[i * 3 + 1] = particle.position.y;
-			positions[i * 3 + 2] = particle.position.z;
-		}
+				const createNameText = (name, position) => {
+					const geometry = new THREE.TextGeometry(name, {
+						font: font,
+						size: 50,
+						height: 0.1,
+					});
+					const mesh = new THREE.Mesh(geometry, textMaterial);
+					mesh.position.copy(position);
+					mesh.castShadow = true;
+					mesh.rotation.x = - Math.PI / 2;
+					mesh.rotation.z = 0;
+					return mesh;
+				};
 
-		particles.geometry.setAttribute(
-			"position",
-			new THREE.BufferAttribute(positions, 3)
+				this.meshPlayer1Name = createNameText(
+					this.player1.username,
+					new THREE.Vector3(-this.centerX + 100, 20, -150)
+				);
+				this.meshPlayer2Name = createNameText(
+					this.player2.username,
+					new THREE.Vector3(this.centerX - 100, 20, -150)
+				);
+
+				window.threeInstance.scene.add(this.meshPlayer1Name);
+				window.threeInstance.scene.add(this.meshPlayer2Name);
+			}
 		);
-		particles.geometry.attributes.position.needsUpdate = true;
-	}
-
-	handleCollision(data) {
-		const position = new THREE.Vector3(data.x, data.y, 0);
-		for (let i = 0; i < particleCount; i++) {
-			activeParticles.push({
-			position: position.clone(),
-			velocity: new THREE.Vector3(
-				(Math.random() - 0.5) * 0.2, Math.random() * 0.2,(Math.random() - 0.5) * 0.2),
-				life: 1.0,
-			});
-		}
 	}
 
 	attachEvents() {
-		console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
 	}
 }

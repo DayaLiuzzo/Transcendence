@@ -19,7 +19,7 @@ export default class BaseView{
 
         this.app = document.getElementById('app');
         if (!this.app) {
-            console.error("Error: Element with id 'app' not found in document");
+            // console.error("Error: Element with id 'app' not found in document");
         }
     }
     //RENDER THE VIEW WITH THE STATIC HTML
@@ -29,13 +29,12 @@ export default class BaseView{
 
     //UPDATE THE HTML CONTENT WITH DYNAMIC DATA AND THEN ATTACH EVENTS
     async mount(){
-        console.log("BaseView mounted");
     }
 
     async isOnline(username){
         const response = await this.sendGetRequest(this.API_URL_USERS + "/status/" + username + "/");
         if (!response.success) {
-            this.showError(response.error, "app");
+            this.customAlert(response.error);
             return;
         }
         return response.data.online;
@@ -74,7 +73,7 @@ export default class BaseView{
     }
 
     showAlert(message){
-        console.log(message);
+        // console.log(message);
         const alertOverlay = document.createElement("div");
         alertOverlay.id = "dynamic-alert";
         alertOverlay.style.position = "fixed";
@@ -122,22 +121,22 @@ export default class BaseView{
         document.body.appendChild(alertOverlay);
 
     }
-    
+
     customAlert(message){
-        let displayMessage = ""; 
+        let displayMessage = "";
 
         if (typeof message === "string") {
             displayMessage = message;
         } else if (typeof message === "object" && message !== null) {
             // Handle object with error arrays
-            const firstKey = Object.keys(message)[0]; 
+            const firstKey = Object.keys(message)[0];
             if (Array.isArray(message[firstKey])) {
-                displayMessage = message[firstKey][0]; 
+                displayMessage = message[firstKey][0];
             } else {
-                displayMessage = JSON.stringify(message); 
+                displayMessage = JSON.stringify(message);
             }
         } else if (Array.isArray(message)) {
-            displayMessage = message.join("\n"); 
+            displayMessage = message.join("\n");
         } else if (typeof message === "number" || typeof message === "boolean") {
             displayMessage = message.toString();
         } else {
@@ -154,8 +153,8 @@ export default class BaseView{
             errorContainer = document.createElement("div");
             errorContainer.id = formId+ "-error-container";
             errorContainer.classList.add("error-container");
-            console.log(formId);
-            
+            // console.log(formId);
+
             document.getElementById(formId).insertBefore(errorContainer, document.getElementById(formId).firstChild);
         }
 
@@ -191,8 +190,9 @@ export default class BaseView{
 
     async displayAvatar(){
         const avatarResponse = await this.sendGetRequest(this.API_URL_USERS + this.getUsername() + "/avatar/");
-        if (!avatarResponse.success) {
-            this.showError(avatarResponse.error, "app");
+        if (!avatarResponse || !avatarResponse.success) {
+            if(!avatarResponse) return this.customAlert("CLEAR THE CACHE");
+            this.customAlert(avatarResponse.error);
             return;
         }
         else{
@@ -254,17 +254,18 @@ export default class BaseView{
     }
 
     async updateNavbar() {
-        console.log("updating navbar");
+        // console.log("updating navbar");
         const navbar = document.getElementById("navbar");
 
         if (navbar) {
             navbar.innerHTML = "";
             if (this.isAuthenticated()) {
                 const avatarUrl = await this.displayAvatar() + "?" + new Date().getTime();
-                console.log(avatarUrl)
+                // console.log(avatarUrl)
                 if (avatarUrl) {
                     const avatarImg = document.createElement("img");
                     avatarImg.src = avatarUrl;
+                    // console.log("avatar IMAGE SOURCE : ", avatarImg.src);
                     avatarImg.alt = "User Avatar";
                     avatarImg.className = "navbar-avatar";
 
@@ -313,7 +314,7 @@ export default class BaseView{
     }
 
     unmount(){
-        console.log("BaseView unmounted");
+        // console.log("BaseView unmounted");
     }
 
     async sendGetRequest(url){
@@ -345,13 +346,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendGetRequest():", url)
+                // console.error("Error in sendGetRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -388,13 +389,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPatchRequest():", url)
+                // console.error("Error in sendPatchRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -431,13 +432,13 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendDeleteRequest():", url)
+                // console.error("Error in sendDeleteRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
@@ -473,19 +474,19 @@ export default class BaseView{
             }
             const responseData = await response.json();
             if (!response.ok) {
-                console.error("Error in sendPostRequest():", url)
+                // console.error("Error in sendPostRequest():", url)
                 return { success: false, error: responseData};
             }
             return { success: true, data: responseData};
         }
         catch (error) {
-            console.error("Network Error at ", url);
+            // console.error("Network Error at ", url);
             return { success: false, error: { message: "Network error"}};
         }
     }
 
     attachEvents(){
-        console.log('Events attached');
+        // console.log('Events attached');
     }
 
     updateFieldContent(fieldId, content){

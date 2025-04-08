@@ -15,20 +15,20 @@ export default class LogIn extends BaseView{
             password: document.getElementById("login-password").value,
         };
     }
-    
+
     getErrorContainer() {
         let errorContainer = document.getElementById("login-error-container");
-        
+
         if (!errorContainer) {
             errorContainer = document.createElement("div");
             errorContainer.id = "login-error-container";  // Set a unique ID
             errorContainer.classList.add("error-container");  // Optional: Add a class for styling
             document.getElementById("login-form").insertBefore(errorContainer, document.getElementById("login-form").firstChild); // Insert at the top of the form
         }
-        
+
         return errorContainer;
     }
-    
+
     handleLoginSubmit(event){
         event.preventDefault();
         const formData = this.getFormData();
@@ -46,13 +46,13 @@ export default class LogIn extends BaseView{
 
     async login(formData) {
         const errorMessage = this.validateInputs(formData);
-        if (errorMessage) return this.showError(errorMessage)
+        if (errorMessage) return this.customAlert(errorMessage)
         const loginResponse = await this.sendPostRequest(this.API_URL_LOGIN, formData);
         if (!loginResponse.success && loginResponse.error.error === "OTP is required."){
             return await this.handleOtp(formData);
-        } 
+        }
         else if (!loginResponse.success){
-            return this.showError(loginResponse.error.error);
+            return this.customAlert(loginResponse.error.error);
         }
         const userSession = {
             username: formData.username,
@@ -63,7 +63,7 @@ export default class LogIn extends BaseView{
         this.startUpdatingLastSeen();
         this.navigateTo("/home");
     }
-    
+
     async handleOtp(formData){
         const otpPopup = document.createElement("div");
         otpPopup.id = "otp-popup";
@@ -111,12 +111,12 @@ export default class LogIn extends BaseView{
         closeOtpBtn.addEventListener("click", () => {
             otpPopup.remove();
         })
-        
+
     }
 
     render(){
         return `
-        <div>            
+        <div>
             <div id="header">
                 <div>
                     <button id="button-nav">
@@ -127,7 +127,7 @@ export default class LogIn extends BaseView{
                     </nav>
                 </div>
                 <div id="line"></div>
-                </div>          
+                </div>
             </div>
             <div id="container">
                 <h2>Login</h2>
@@ -142,13 +142,11 @@ export default class LogIn extends BaseView{
     }
 
     unmount(){
-        console.log('unmounting login');
         document.getElementById("login-form")?.removeEventListener("submit", this.handleLoginSubmit);
-    
+
     }
 
     attachEvents(){
-        console.log('Events attached (LogIn)');
         document.getElementById("login-form")?.addEventListener("submit", this.handleLoginSubmit);
     }
 }

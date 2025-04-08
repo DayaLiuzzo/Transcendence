@@ -14,9 +14,9 @@ export default class Game extends BaseView{
 
     async fetchRoomInfo(){
         const response = await fetch('https://localhost:4430/api/rooms/test/')
-        console.log(response);
+        // console.log(response);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
     }
 
     render(){
@@ -41,6 +41,6 @@ export default class Game extends BaseView{
 
     attachEvents(){
         this.fetchRoomInfo();
-        console.log('Events attached (LogIn)');
+        // console.log('Events attached (LogIn)');
     }
 }

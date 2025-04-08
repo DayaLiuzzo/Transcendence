@@ -1,12 +1,12 @@
 import BaseView from './BaseView.js';
 
 export default class PlayTournamentCreate extends BaseView{
-    
+
     constructor(params){
         super(params);
         this.handleCreateTournamentSubmit = this.handleCreateTournamentSubmit.bind(this);
     }
-    
+
     validateInputs(formData){
         if (!formData.name || formData.name.length < 3) return "Tournament name must be at least 3 characters long.";
         if (formData.name.length > 32) return "Tournament name must be at most 32 characters long.";
@@ -23,22 +23,24 @@ export default class PlayTournamentCreate extends BaseView{
     async createTournament(formData) {
         const errorMessage = this.validateInputs(formData);
         if (errorMessage){ return this.showError(errorMessage); }
-        
+
+        if (errorMessage){ return this.customAlert(errorMessage); }
+
         const createTournamentResponse = await this.sendPostRequest(this.API_URL_TOURNAMENT + 'create_tournament/', formData);
-        if (!createTournamentResponse.success){ return this.showError(createTournamentResponse.error); }
+        if (!createTournamentResponse.success){ return this.customAlert(createTournamentResponse.error); }
 
         //add alerte avant redirection??
         this.navigateTo("/my-tournament");
     }
 
-    
+
     async seeMyTournament() {
         const body = {};
 
         //add alerte avant redirection??
         this.navigateTo("/my-tournament");
     }
-    
+
     handleMyTournamentClick(event) {
         if (event.target && event.target.tagName === "BUTTON" && event.target.textContent === "See my tournament page") {
             this.seeMyTournament();
@@ -65,7 +67,7 @@ export default class PlayTournamentCreate extends BaseView{
 
         return errorContainer;
     }
-    
+
     render(){
         return `
         <div>
@@ -92,34 +94,33 @@ export default class PlayTournamentCreate extends BaseView{
             <button id="tournament-mine-button" hidden>See my tournament page</button>
 
         </div>
-        
+
     `;
     }
 
     async mount() {
-        console.log('Mounting Play tournament create');
 
         try {
             const checkIfInTournament = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'is_in_tournament/');
             if (checkIfInTournament.success) {
-                if (checkIfInTournament.data.in_tournament){ 
-                    
+                if (checkIfInTournament.data.in_tournament){
+
                     // return this.navigateTo('/my-tournament')
-                    document.getElementById("tournament-mine-button").removeAttribute("hidden"); 
-                    document.getElementById("tournament-create-field").innerText = "You cannot create a tournament since you are already part of one"; 
+                    document.getElementById("tournament-mine-button").removeAttribute("hidden");
+                    document.getElementById("tournament-create-field").innerText = "You cannot create a tournament since you are already part of one";
                     return;
                 }
                 document.getElementById("create-tournament-form").removeAttribute("hidden");
-            
+
                 }
             }
         catch (error) {
-            console.error("Error in mount():", error);
+            // console.error("Error in mount():", error);
         }
     }
 
     unmount(){
-        console.log('unmounting create tournament');
+
         document.getElementById("create-tournament-form")?.removeEventListener("submit", this.handleCreateTournamentSubmit);
 
         const tournamentSeeMineField = document.getElementById("tournament-mine-button");
@@ -130,15 +131,15 @@ export default class PlayTournamentCreate extends BaseView{
     }
 
     attachEvents(){
-        console.log('Events attached (create tournament)');
+
         document.getElementById("create-tournament-form")?.addEventListener("submit", this.handleCreateTournamentSubmit);
-    
+
         const tournamentSeeMineField = document.getElementById("tournament-mine-button");
         if (tournamentSeeMineField) {
             tournamentSeeMineField.addEventListener("click", this.handleMyTournamentClick.bind(this));
         }
 
-        
+
     }
 
 }

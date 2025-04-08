@@ -27,7 +27,7 @@ export default class WebSocketService {
 
         this.socket.onopen = () => {
             this.isConnected = true;
-            console.log("Connexion WebSocket sécurisée établie!");
+            // console.log("Connexion WebSocket sécurisée établie!");
             if (this.token) {
                 this.sendMessage({ Authorization: `Bearer ${this.token}`});
             }
@@ -46,30 +46,35 @@ export default class WebSocketService {
         this.socket.onclose = (event) => {
             this.isConnected = false;
 			this.unlistenToKeyboard();
-            console.log("Connexion WebSocket fermée", event);
+            // console.log("Connexion WebSocket fermée", event);
         };
 
         this.socket.onerror = (error) => {
-            console.error("Erreur WebSocket: ", error);
+            // console.error("Erreur WebSocket: ", error);
         };
     }
 
     handleStart(event) {
         const data = JSON.parse(event.data);
-        console.log("Message reçu:", data);
+        // console.log("Message reçu:", data);
         if (data.message && data.message.state === 'START')
         {
+            if (document.getElementById("waitingGameCanva"))
+            {
+                const waitingGameCanva = document.getElementById("waitingGameCanva");
+                waitingGameCanva.remove();
+            }
             document.querySelector("canvas.webgl").innerText = "Playing...";
             this.isplaying = true;
             const event = new CustomEvent("initSettingsGame", { detail: data.message});
             window.dispatchEvent(event);
         }
-        console.log("Is playing ?", this.isplaying)
+        // console.log("Is playing ?", this.isplaying)
     }
 
     handleMessage(event) {
         const data = JSON.parse(event.data);
-        console.log("Msg reçu:", data.message);
+        // console.log("Msg reçu:", data.message);
         if (data.message.state === 'INFO') {
             const event = new CustomEvent("updateGame", { detail: data.message});
             window.dispatchEvent(event);
@@ -91,9 +96,9 @@ export default class WebSocketService {
     sendMessage(message) {
         if (this.isConnected && this.socket) {
             this.socket.send(JSON.stringify({message}));
-            console.log("Message envoyé:", message);
+            // console.log("Message envoyé:", message);
         } else {
-            console.error("La connexion WebSocket n'est pas établie.");
+            // console.error("La connexion WebSocket n'est pas établie.");
         }
     }
 
@@ -106,7 +111,7 @@ export default class WebSocketService {
 
     closeConnection() {
         if (this.isConnected && this.socket) {
-            console.log("HELLLOOOOOOOOOOO");
+            // console.log("HELLLOOOOOOOOOOO");
             this.socket.close();
             this.socket = null;
             this.isConnected = false;
@@ -131,13 +136,13 @@ export default class WebSocketService {
     }
 
     listenToKeyboard() {
-        console.log("Listening to keyboard")
+        // console.log("Listening to keyboard")
 		window.addEventListener("keydown", this.handleKeyDown);
 		window.addEventListener("keyup", this.handleKeyUp);
     }
 
     unlistenToKeyboard() {
-        console.log("Unlistening to keyboard")
+        // console.log("Unlistening to keyboard")
 		window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
     }

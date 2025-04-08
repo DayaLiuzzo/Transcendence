@@ -4,21 +4,18 @@ import BaseView from "./BaseView.js";
 export default class PlayCanva extends BaseView{
 	constructor(params) {
 		super(params);
-
 		this.ballVelocity = { x: 0.02, z: 0.02 };
-		this.speedIncrement = 1;
+		this.speedIncrement = 1.8;
 		this.keys = { ArrowUp: false, ArrowDown: false, w: false, s:false};
 		this.gameOver = false;
-
 		this.scores = {
-			max_score: 5,
+			max_score: 3,
 			player1_score: 0,
 			player2_score: 0,
 		};
 	}
 
 	unmount() {
-		console.log("Unmounted PlayCanva LOCAL");
 		document.getElementById("final-screen")?.remove();
 		this.gameOver = true;
 		cleanUpThree();
@@ -46,9 +43,8 @@ export default class PlayCanva extends BaseView{
 	}
 
     handleGameEnd(winner, looser, winner_score, looser_score){
-        console.log("game end")
-		this.gameOver = true;
 
+		this.gameOver = true;
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
@@ -77,13 +73,14 @@ export default class PlayCanva extends BaseView{
 	}
 
 	resetScores() {
+		const colorText = new THREE.Color( 0x163f38 );
 		const fontLoader = new THREE.FontLoader();
 		fontLoader.load(
 			"https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
 			(font) => {
 				const textMaterial = new THREE.MeshStandardMaterial({
-					color: 0x000000,
-					emissive: 0xffffff,
+					color: colorText,
+					emissive: colorText,
 					emissiveIntensity: 0.4,
 				});
 
@@ -116,8 +113,8 @@ export default class PlayCanva extends BaseView{
 				window.threeInstance.scene.add(this.scores.player1_score_text);
 				window.threeInstance.scene.add(this.scores.player2_score_text);
 
-					if (this.scores.player1_score >= 2 || this.scores.player2_score >= 2) {
-						if (this.scores.player1_score >= 1) {
+					if (this.scores.player1_score >= 3 || this.scores.player2_score >= 3) {
+						if (this.scores.player1_score >= 3) {
 							this.handleGameEnd("Player 1", "Player 2", this.scores.player1_score, this.scores.player2_score);
 						} else {
 							this.handleGameEnd("Player 2", "Player 1", this.scores.player2_score, this.scores.player1_score);
@@ -131,33 +128,28 @@ export default class PlayCanva extends BaseView{
 		spotlight.target.position.copy(targetMesh.position);
 	}
 
-	createSpotlight(scene, intensity = 10) {
-		const spotlight = new THREE.SpotLight(0xffffff, intensity);
+	createSpotlight(scene, intensity = 1) {
+		const spotlight = new THREE.SpotLight(0x98b6b0, intensity);
 		spotlight.angle = Math.PI / 6;
 		spotlight.penumbra = 0.3;
-		spotlight.decay = 1;
+		spotlight.decay = 2;
 		spotlight.distance = 10;
+		spotlight.intensity = 1;
 		spotlight.castShadow = true;
-
 		scene.add(spotlight);
 		scene.add(spotlight.target);
-
 		return spotlight;
 	}
 
 	initGame() {
-		console.log("Game Loading...");
-
 		const canvas = document.querySelector("canvas.webgl");
 		const scene = new THREE.Scene();
-
 		const camera = new THREE.PerspectiveCamera(
 			75,
 			window.innerWidth / window.innerHeight,
 			0.1,
 			1000
 		);
-		camera.position.set(0, 5, 10);
 		camera.lookAt(0, 0, 0);
 
 		const renderer = new THREE.WebGLRenderer({
@@ -168,21 +160,19 @@ export default class PlayCanva extends BaseView{
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-
 		const controls = new THREE.OrbitControls(camera, renderer.domElement);
 		controls.enablePan = false;
 		controls.enableDamping = true;
 		controls.enableZoom = true;
-		controls.maxPolarAngle = Math.PI / 2.1;
-		controls.minPolarAngle = Math.PI / 2.5;
-		controls.minAzimuthAngle = -Math.PI / 4; // Limite vers la gauche
-		controls.maxAzimuthAngle = Math.PI / 4;
+		controls.maxPolarAngle = Math.PI / 4;
+		controls.minPolarAngle = Math.PI / 3.8;
 		controls.enableRotate = true;
 		controls.minDistance = 5;
-		controls.maxDistance = 8;
-		//controls.autoRotate = true;
-		//controls.autoRotateSpeed = 1;
-		
+		controls.maxDistance = 10;
+		camera.position.set(0, 10, 8);
+		controls.minAzimuthAngle = -Math.PI / 4;
+		controls.maxAzimuthAngle = Math.PI / 4;
+
 		function resizeHandler() {
 			const sizes = {
 				width: window.innerWidth,
@@ -215,7 +205,6 @@ export default class PlayCanva extends BaseView{
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 		window.threeInstance.scene.add(ambientLight);
 
-		const ballSpotlight = this.createSpotlight(scene);
 		const player1Spotlight = this.createSpotlight(scene);
 		const player2Spotlight = this.createSpotlight(scene);
 
@@ -245,12 +234,13 @@ export default class PlayCanva extends BaseView{
 		);
 		meshBall.position.set(0, 0.2, 0);
 
+		const colorBoard = new THREE.Color( 0x7da17e );
 		const meshBoard = new THREE.Mesh(
 			new THREE.PlaneGeometry(10, 6),
 			new THREE.MeshStandardMaterial({
-				color: 0x000000,
-				roughness: 0.7,
-				metalness: 0.3,
+				color: colorBoard,
+				roughness: 0.6,
+				metalness: 0.2,
 			})
 		);
 		meshBoard.rotation.x = -Math.PI / 2;
@@ -259,8 +249,8 @@ export default class PlayCanva extends BaseView{
 		const boardLine = new THREE.Mesh(
 			new THREE.PlaneGeometry(0.05, 6),
 			new THREE.MeshStandardMaterial({
-				color: 0xffffff,
-				emissive: 0xffffff,
+				color: 0x98b6b0,
+				emissive: 0x98b6b0,
 				emissiveIntensity: 0.2,
 			})
 		);
@@ -289,7 +279,6 @@ export default class PlayCanva extends BaseView{
 		);
 		const particles = new THREE.Points(particleGeometry, particleMaterial);
 		window.threeInstance.scene.add(particles);
-
 		let activeParticles = [];
 
 		this.resetScores();
@@ -343,14 +332,13 @@ export default class PlayCanva extends BaseView{
 			if (this.keys.ArrowDown && meshPlayer2.position.z < 2)
 				meshPlayer2.position.z += 0.1;
 
-			meshBall.position.x += this.ballVelocity.x;
-			meshBall.position.z += this.ballVelocity.z;
+			meshBall.position.x += this.ballVelocity.x * this.speedIncrement;
+			meshBall.position.z += this.ballVelocity.z * this.speedIncrement;
 
-			this.updateSpotlight(ballSpotlight, meshBall);
 			this.updateSpotlight(player1Spotlight, meshPlayer1);
 			this.updateSpotlight(player2Spotlight, meshPlayer2);
-
 			updateParticles();
+
 			if (meshBall.position.z > 2.5 || meshBall.position.z < -2.5) {
 				this.ballVelocity.z *= -1;
 				createCollisionParticles(meshBall.position);
@@ -370,11 +358,9 @@ export default class PlayCanva extends BaseView{
 			}
 			if (meshBall.position.x > 4.5) {
 				this.scores.player1_score++;
-				console.log("SCORES:", this.scores.player1_score);
 				this.resetScores();
 				meshBall.position.set(0, 0.2, 0);
 			} else if (meshBall.position.x < -4.5) {
-				console.log("SCORES:", this.scores.player2_score);
 				this.scores.player2_score++;
 				this.resetScores();
 				meshBall.position.set(0, 0.2, 0);
@@ -412,7 +398,6 @@ export default class PlayCanva extends BaseView{
 	}
 
 	attachEvents() {
-		console.log("Events attached (PlayCanva)");
 		this.handlerEventsListeners();
 		if (this.gameOver === false) {
 			this.initGame();

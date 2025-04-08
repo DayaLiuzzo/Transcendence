@@ -30,9 +30,9 @@ export default class SignUp extends BaseView{
 
     async signup(formData) {
         const errorMessage = this.validateInputs(formData);
-        if (errorMessage) return this.showError(errorMessage);
+        if (errorMessage) return this.customAlert(errorMessage);
         const signUpResponse = await this.sendPostRequest(this.API_URL_SIGNUP, formData);
-        if (!signUpResponse.success) return this.showError(signUpResponse.error);
+        if (!signUpResponse.success) return this.customAlert(signUpResponse.error);
         this.navigateTo("/log-in");
     }
 
@@ -90,12 +90,12 @@ export default class SignUp extends BaseView{
     }
 
     unmount(){
-        console.log('unmounting signup');
+        // console.log('unmounting signup');
         document.getElementById("signup-form")?.removeEventListener("submit", this.handleSignupSubmit);
     }
 
     attachEvents(){
-        console.log('Events attached (signup)');
+        // console.log('Events attached (signup)');
         document.getElementById("signup-form")?.addEventListener("submit", this.handleSignupSubmit);
     }
 

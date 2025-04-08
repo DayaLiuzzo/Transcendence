@@ -23,7 +23,7 @@ export default class BasePlayView extends BaseView{
 
         if (!tournament.success) {
             this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
-            this.showError(tournament_result.error, "tournament-waiting-room");
+            this.customAlert(tournament_result.error);
             return;
         }
 
@@ -37,7 +37,7 @@ export default class BasePlayView extends BaseView{
 			}
             return;
         }
-        
+
         const rooms_data = await this.sendGetRequest(this.API_URL_TOURNAMENT + 'list_my_rooms/');
         if (rooms_data.success) {
             const data = rooms_data.data;
@@ -77,12 +77,12 @@ export default class BasePlayView extends BaseView{
 				}
             } else {
                 const room = rooms[0];
-                console.log(room);
                 document.getElementById("room-id").innerText = room.room_id;
                 document.getElementById("status").innerText = "Room available";
                 document.querySelector("canvas.webgl").innerText = "Loading...";
                 document.getElementById("user-2").innerText = "Waiting for opponent...";
 				if (!this.socketService || !this.socketService.isConnected) {
+					this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
 					this.openWebSocket(room.room_id);
 				}
             }
@@ -90,7 +90,6 @@ export default class BasePlayView extends BaseView{
     }
 
     async handleTournamentGameEnd(result) {
-		console.log("tournament ended");
 		document.getElementById("room-id").innerText = "";
 		document.querySelector("canvas.webgl").innerText = "";
 		document.getElementById("user-2").innerText = "";
@@ -123,7 +122,7 @@ export default class BasePlayView extends BaseView{
 			winner_username = player2.username;
 			loser_username = player1.username;
 		}
-        
+
         const finalScreen = document.createElement("div");
         finalScreen.id = "final-screen";
         finalScreen.innerHTML = `
@@ -144,13 +143,12 @@ export default class BasePlayView extends BaseView{
             text-align: center;
 
         `;
-		console.log("waiting_rooms");
 		cleanUpThree();
 		const container_canvas = document.getElementById("container-canvas");
 		container_canvas.innerHTML = `<canvas class="webgl"></canvas>`
         document.body.appendChild(finalScreen);
         document.getElementById("back-to-waiting-rooms").addEventListener("click", async () => {
-			console.log("waiting_rooms clicked");
+
             const finalScreen = document.getElementById("final-screen");
             finalScreen.remove();
 
@@ -159,7 +157,7 @@ export default class BasePlayView extends BaseView{
 			try {
 				this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
 			} catch (error) {
-				console.error("Error in mount():", error);
+				// console.error("Error in mount():", error);
 			}
         });
     }
@@ -195,12 +193,12 @@ export default class BasePlayView extends BaseView{
 		try {
 			this.router.RerenderTournamentIntervalPlay = setInterval(async () => { await this.waitRoom(); }, 5000);
 		} catch (error) {
-			console.error("Error in mount():", error);
+			// console.error("Error in mount():", error);
 		}
     }
 
     unmount () {
-		console.log("Unmounted BasePlayViewTournament");
+
         this.router.customClearInterval(this.router.RerenderTournamentIntervalPlay);
     }
 
