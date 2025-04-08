@@ -12,3 +12,4 @@ RUN rm -rf /var/lib/postgresql/data/*
 
 
 RUN chown -R postgres:postgres /etc/psql.conf
+USER postgres
