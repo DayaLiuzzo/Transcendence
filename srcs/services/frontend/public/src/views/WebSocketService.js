@@ -59,10 +59,11 @@ export default class WebSocketService {
         // console.log("Message reçu:", data);
         if (data.message && data.message.state === 'START')
         {
-            const waitingGameCanva = document.getElementById("waitingGameCanva");
-            console.log("HEEEEEELLO" , waitingGameCanva);
-            console.log("coucou");
-            waitingGameCanva.remove();
+            if (document.getElementById("waitingGameCanva"))
+            {
+                const waitingGameCanva = document.getElementById("waitingGameCanva");
+                waitingGameCanva.remove();
+            }
             document.querySelector("canvas.webgl").innerText = "Playing...";
             this.isplaying = true;
             const event = new CustomEvent("initSettingsGame", { detail: data.message});
