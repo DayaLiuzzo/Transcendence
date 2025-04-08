@@ -25,9 +25,8 @@ export default class BasePlayView extends BaseView{
           const paths = svgElement.querySelectorAll('path');
 
           paths.forEach(path => {
-            path.setAttribute('fill', '#b8e6ec');
-
-            path.setAttribute('stroke', '#b8e6ec');
+            path.style.fill = '#b8e6ec';
+            path.style.stroke = '#b8e6ec';
         });
 
 
@@ -107,7 +106,7 @@ export default class BasePlayView extends BaseView{
 
         this.loadLogoLumon(logoLumon)
         
-        progressBar.innerHTML = "Cold Harbour_____________57% Completed";
+        progressBar.innerHTML = "Cold Harbour                                  57% Completed";
         
         console.log("LOGOLUMON SRC ", logoLumon.src );
         
@@ -136,7 +135,9 @@ export default class BasePlayView extends BaseView{
         const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
         if (result.success) {
             this.displayWaitingGame(result.data.room_id);
+            document.querySelector("canvas.webgl").innerText = "Loading...";
             this.openWebSocket(result.data.room_id);
+
             window.addEventListener("gameStarted", () => this.checkStart());
         } else {
             document.getElementById("room-id").innerText = "No room found, please reload";
@@ -144,21 +145,6 @@ export default class BasePlayView extends BaseView{
     }
 
 
-
-    // async joinRoom() {
-    //     const result = await this.sendPostRequest(this.API_URL_ROOMS + 'join_room/', {});
-    //     if (result.success) {
-
-    //         document.getElementById("room-id").innerText = result.data.room_id;
-    //         // document.getElementById("user-1").innerText = this.getUsername();
-    //         document.getElementById("user-2").innerText = "Looking for opponent...";
-    //         document.querySelector("canvas.webgl").innerText = "Loading...";
-    //         this.openWebSocket(result.data.room_id);
-    //         window.addEventListener("gameStarted", () => this.checkStart());
-    //     } else {
-    //         document.getElementById("room-id").innerText = "No room found, please reload";
-    //     }
-    // }
 
     async handleTournamentGameEnd(){
     }
@@ -198,7 +184,11 @@ export default class BasePlayView extends BaseView{
 
     checkStart(){
         // console.log(this.socketService);
+        console.log("NAUR");
         if (this.socketService.isplaying){
+            // const waitingGameCanva = document.querySelector("waitingGameCanva")
+            // console.log("HEEEEEELLO" , waitingGameCanva);
+            // console.log("coucou");
             document.querySelector("canvas.webgl").innerText = "Playing...";
             this.listenToKeyboard();
             window.addEventListener("keyboard", () => this.listenToKeyboard());

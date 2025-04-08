@@ -42,6 +42,7 @@ body {
   
   #waitingGameContainer{
     position:absolute;
+    white-space: pre;
     height: 100%;
     background-color: #000014;
     font-family: 'Helvetica', monospace;
@@ -52,7 +53,7 @@ body {
     image-rendering: pixelated;
     filter: contrast(1.2) saturate(1.1) blur(0.5px) brightness(0.9);
     background-image: repeating-linear-gradient(
-      0deg, rgba(0, 25, 54, 0.98) 0px, rgba(0,3,4,255) 10px, 
+      0deg, rgba(0, 38, 82, 0.98) 0px, rgba(0,3,4,255) 10px, 
       rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px
       ), repeating-linear-gradient(
         90deg, rgba(0, 25, 54, 0.98) 0px, rgba(0,3,4,255) 10px, 
@@ -89,20 +90,22 @@ body {
         display: flex;
         flex-wrap: wrap;
         flex-direction:column;
-        align-items: center;
         justify-content: center;
         /* color: #b8e6ec; */
         border: 4px solid #c5fbffef;
         height: 30%;
         width: 80%;
+        padding:0;
     }
 
     #logoLumon {
       display: flex;
+      position:absolute;
+      right: 0;
       height: 100px;
       width: 100px;
-      object-fit: contain;
-      border: 4px solid #c5fbffef;
+      padding:0;
+      /* border: 4px solid #c5fbffef; */
     }
 
     #viewBox *{
